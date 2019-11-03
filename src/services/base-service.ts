@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { HeadersInit, Request, RequestInfo, RequestInit, Response } from 'node-fetch'
+import { Request } from 'node-fetch'
 import { SoapHelper } from '../helpers/soap-helper'
 import { parse } from 'fast-xml-parser'
 
@@ -10,28 +10,28 @@ export abstract class BaseService {
   abstract readonly eventSubUrl: string;
   abstract readonly scpUrl: string;
   abstract readonly serviceNane: string;
-  constructor(host: string, port: number = 1400) {
+  constructor(host: string, port = 1400) {
     this.host = host;
     this.port = port;
   }
 
   protected SoapRequest<TResponse>(action: string): Promise<TResponse> {
-    return this.handleRequestAndParseResponse<TResponse>(this.generateReuest<undefined>(action, undefined), action);
+    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
   protected SoapRequestNoResponse(action: string): Promise<boolean> {
-    return this.handleRequest(this.generateReuest<undefined>(action, undefined), action);
+    return this.handleRequest(this.generateRequest<undefined>(action, undefined));
   }
 
   protected SoapRequestWithBody<TRequest,TResponse>(action: string, body: TRequest): Promise<TResponse> {
-    return this.handleRequestAndParseResponse<TResponse>(this.generateReuest<TRequest>(action, body), action);
+    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TRequest>(action, body), action);
   }
 
   protected SoapRequestWithBodyNoResponse<TRequest>(action: string, body: TRequest): Promise<boolean> {
-    return this.handleRequest(this.generateReuest<TRequest>(action, body), action);
+    return this.handleRequest(this.generateRequest<TRequest>(action, body));
   }
 
-  private handleRequest(request: Request, action: string): Promise<boolean> {
+  private handleRequest(request: Request): Promise<boolean> {
     return fetch(request)
       .then(response => {
         if(response.ok) {
@@ -63,7 +63,7 @@ export abstract class BaseService {
       });
   }
 
-  private generateReuest<TBody>(action: string, body: TBody): Request{
+  private generateRequest<TBody>(action: string, body: TBody): Request{
     return new Request(
       this.getUrl(),
       { 
@@ -84,7 +84,7 @@ export abstract class BaseService {
   private messageBody<TBody>(action: string, body: TBody): string {
     let messageBody = `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${this.serviceNane}:1">`
     if (body) {
-      for (let [key, value] of Object.entries(body)) {
+      for (const [key, value] of Object.entries(body)) {
         messageBody += `<${key}>${value}</${key}>`;
       }
     }

@@ -39,14 +39,14 @@ export class ZoneHelper {
 }
 
 export interface ZoneGroup {
-  name: string,
-  coordinator: ZoneMember,
-  members: ZoneMember[]
+  name: string;
+  coordinator: ZoneMember;
+  members: ZoneMember[];
 }
 
 interface ZoneMember {
-  host: string,
-  port: number,
-  uuid: string,
-  name: string
+  host: string;
+  port: number;
+  uuid: string;
+  name: string;
 }

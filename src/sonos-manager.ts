@@ -1,12 +1,12 @@
 import { ZoneGroupTopologyService } from './services'
-import { SonosDevice, XmlHelper, ZoneHelper } from './'
+import { SonosDevice, ZoneHelper } from './'
 import { SonosGroup } from './models'
 export class SonosManager {
   private devices: SonosDevice[] = [];
   private groups: SonosGroup[] = [];
   private zoneService: ZoneGroupTopologyService | undefined
 
-  public InitializeFromDevice(host: string, port: number = 1400): Promise<boolean> {
+  public InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
     this.zoneService = new ZoneGroupTopologyService(host, port);
     return this.LoadAllGroups()
   }

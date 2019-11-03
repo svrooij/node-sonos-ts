@@ -26,7 +26,7 @@ export class XmlHelper {
    */
   static DecodeXml(text: string): string {
     return text.replace(/\&([^;]+);/g, function (entity, entityCode) {
-      var match;
+      let match;
 
       if (entityCode in htmlEntities) {
           return htmlEntities[entityCode];
@@ -54,10 +54,10 @@ export class XmlHelper {
     return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: '_' });
   }
 
-  static ParseDIDLTrack(parsedItem: any, host: string, port: number = 1400): Track {
+  static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track {
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     console.log('Parsing track %j', didlItem)
-    let track: Track = {
+    const track: Track = {
       Album: undefined,
       Artist: undefined,
       AlbumArtUri: undefined,

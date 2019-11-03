@@ -62,3 +62,6 @@ typings/
 
 # Skip build library
 lib/
+
+# Skip generated timestamp
+src/services/.generated
