@@ -1,5 +1,4 @@
-// Auto-generated on Sun Nov 03 2019 16:33:10 GMT+0100 (Central European Standard Time)
-export * from './models'
+// Auto-generated on Sun Nov 03 2019 18:03:41 GMT+0100 (Central European Standard Time)
 export * from './alarm-clock.service'
 export * from './audio-in.service'
 export * from './av-transport.service'

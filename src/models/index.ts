@@ -15,3 +15,5 @@ export interface Track {
   AlbumArtUri?: string,
   UpnpClass?: string
 }
+
+export * from './sonos-group'

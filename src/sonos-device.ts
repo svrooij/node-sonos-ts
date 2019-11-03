@@ -1,5 +1,5 @@
-import { SonosDeviceBase } from './snonos-device-base'
-import { GetZoneInfoResponse, GetZoneAttributesResponse } from './services' 
+import { SonosDeviceBase } from './sonos-device-base'
+import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse } from './services' 
 export class SonosDevice extends SonosDeviceBase {
 
   /**
@@ -41,6 +41,14 @@ export class SonosDevice extends SonosDeviceBase {
       return attr;
     }) 
   }
+
+  /**
+   * GetZoneGroupState() shortcut to .ZoneGroupTopologyService.GetZoneGroupState()
+   *
+   * @returns {Promise<GetZoneGroupStateResponse>}
+   * @memberof SonosDevice
+   */
+  public GetZoneGroupState(): Promise<GetZoneGroupStateResponse> { return this.ZoneGroupTopologyService.GetZoneGroupState() }
 
   /**
    * GetZoneInfo shortcut to .DevicePropertiesService.GetZoneInfo()

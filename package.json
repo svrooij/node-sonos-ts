@@ -38,6 +38,8 @@
   "files": [
     "README.md",
     "LICENSE",
-    "lib/**/*"
+    "Funding.yml",
+    "lib/**/*.ts",
+    "lib/**/*.js"
   ]
 }

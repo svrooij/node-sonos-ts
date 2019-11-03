@@ -6,7 +6,7 @@ const deviceUrl = `http://${process.env.SONOS_HOST || '192.168.96.56'}:1400`
 const deviceDescriptionUrl = `${deviceUrl}/xml/device_description.xml`
 
 const serviceDirectory = path.join(__dirname, '..', 'services')
-const sonosBaseFile = path.join(__dirname, '..', 'snonos-device-base.ts')
+const sonosBaseFile = path.join(__dirname, '..', 'sonos-device-base.ts')
 
 fetch(deviceDescriptionUrl)
   .then(response => {

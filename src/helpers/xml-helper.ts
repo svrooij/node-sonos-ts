@@ -1,5 +1,5 @@
 import { parse } from 'fast-xml-parser'
-import { Track } from '../services/models'
+import { Track } from '../models'
 
 const htmlEntities: any = {
   nbsp: ' ',
@@ -51,7 +51,7 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXml(encodedXml: string): any {
-    return parse(XmlHelper.DecodeXml(encodedXml));
+    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: '_' });
   }
 
   static ParseDIDLTrack(parsedItem: any, host: string, port: number = 1400): Track {
