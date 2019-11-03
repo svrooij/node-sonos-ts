@@ -67,7 +67,7 @@ const getServiceName = function (service) {
 }
 
 const generateServiceContent = function (service, name, variables, actions) {
-  const extraImport = actions.find(a => a.name === 'Browse') !== undefined ? 'import { BrowseResponse } from \'./models\'\r\n' : ''
+  const extraImport = actions.find(a => a.name === 'Browse') !== undefined ? 'import { BrowseResponse } from \'../models\'\r\n' : ''
   return `// Auto-generated on ${(new Date()).toString('yyyy-MM-dd')}
 import { BaseService } from './base-service';
 ${extraImport}
@@ -181,7 +181,6 @@ const getFilenameForService = function (name) {
 const generateIndexFile = function (services) {
   console.log('Generating index.ts file')
   let indexContent = `// Auto-generated on ${(new Date()).toString('yyyy-MM-dd')}\r\n`
-  indexContent += 'export * from \'./models\'\r\n'
 
   const serviceFileNames = services
     .map(s => getFilenameForService(getServiceName(s)))

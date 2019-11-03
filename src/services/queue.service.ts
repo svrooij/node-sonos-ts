@@ -1,6 +1,6 @@
-// Auto-generated on Sun Nov 03 2019 16:33:10 GMT+0100 (Central European Standard Time)
+// Auto-generated on Sun Nov 03 2019 18:03:41 GMT+0100 (Central European Standard Time)
 import { BaseService } from './base-service';
-import { BrowseResponse } from './models'
+import { BrowseResponse } from '../models'
 
 export class QueueService extends BaseService {
   readonly serviceNane: string = 'Queue';
