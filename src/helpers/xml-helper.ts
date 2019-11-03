@@ -1,3 +1,6 @@
+import { parse } from 'fast-xml-parser'
+import { Track } from '../services/models'
+
 const htmlEntities: any = {
   nbsp: ' ',
   cent: '¢',
@@ -13,7 +16,14 @@ const htmlEntities: any = {
   apos: '\''
 };
 export class XmlHelper {
-  
+  /**
+   * Decode an encoded xml string
+   *
+   * @static
+   * @param {string} text Encoded XML
+   * @returns {string} Decoded XML
+   * @memberof XmlHelper
+   */
   static DecodeXml(text: string): string {
     return text.replace(/\&([^;]+);/g, function (entity, entityCode) {
       var match;
@@ -32,13 +42,27 @@ export class XmlHelper {
     });
   }
 
-  static ParseDIDL(didlItem: any, host: string, port: number = 1400): any {
-    let track = {
-      Artist: null,
-      Title: null,
-      Album: null,
-      AlbumArtUri: null,
-      UpnpClass: null
+  /**
+   * DecodeAndParseXml will decode the encoded xml string and then try to parse it
+   *
+   * @static
+   * @param {string} encodedXml Encoded Xml string
+   * @returns {*} a parsed Object of the XML string
+   * @memberof XmlHelper
+   */
+  static DecodeAndParseXml(encodedXml: string): any {
+    return parse(XmlHelper.DecodeXml(encodedXml));
+  }
+
+  static ParseDIDLTrack(parsedItem: any, host: string, port: number = 1400): Track {
+    const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
+    console.log('Parsing track %j', didlItem)
+    let track: Track = {
+      Album: undefined,
+      Artist: undefined,
+      AlbumArtUri: undefined,
+      Title: undefined,
+      UpnpClass: undefined
     };
     if(didlItem['dc:title']) track.Title = didlItem['dc:title'];
     if(didlItem['dc:creator']) track.Artist = didlItem['dc:creator'];

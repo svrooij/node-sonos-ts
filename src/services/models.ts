@@ -7,3 +7,11 @@ export interface BrowseResponse {
   TotalMatches: number,
   UpdateID: number
 }
+
+export interface Track {
+  Artist?: string,
+  Title?: string,
+  Album?: string,
+  AlbumArtUri?: string,
+  UpnpClass?: string
+}
