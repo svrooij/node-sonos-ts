@@ -1,5 +1,5 @@
 import { ZoneGroupTopologyService } from './services'
-import { SonosDevice, ZoneHelper } from './'
+import { SonosDevice, SonosDeviceDiscovery, ZoneHelper } from './'
 import { SonosGroup } from './models'
 export class SonosManager {
   private devices: SonosDevice[] = [];
@@ -11,12 +11,14 @@ export class SonosManager {
     return this.LoadAllGroups()
   }
 
-  public InitializeWithDiscovery(): Promise<boolean> {
-    // Do discovery
-
-    // this.zoneService = new ZoneGroupTopologyService('192.168.96.56')
-    return this.LoadAllGroups()
-
+  public InitializeWithDiscovery(timeoutInSeconds: 10): Promise<boolean> {
+    const deviceDiscovery = new SonosDeviceDiscovery();
+    return deviceDiscovery
+      .SearchOne(timeoutInSeconds)
+      .then(player => {
+        this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
+        return this.LoadAllGroups();
+      })
   }
 
   private LoadAllGroups(): Promise<boolean> {
