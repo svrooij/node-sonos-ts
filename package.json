@@ -33,6 +33,7 @@
   "dependencies": {
     "@types/node-fetch": "^2.5.3",
     "fast-xml-parser": "^3.14.0",
+    "guid-typescript": "^1.0.9",
     "node-fetch": "^2.6.0"
   },
   "files": [

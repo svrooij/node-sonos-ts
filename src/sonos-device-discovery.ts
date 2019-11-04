@@ -34,8 +34,8 @@ export class SonosDeviceDiscovery {
   'ST: urn:schemas-upnp-org:device:ZonePlayer:1'].join('\r\n'))
 
   private sendBroadcast(): void {
-    ['239.255.255.250', '255.255.255.255'].map(this.sendBroadcastToAddress)
-    this.pollTimeout = setTimeout(this.sendBroadcast, 8000);
+    ['239.255.255.250', '255.255.255.255'].map(a => this.sendBroadcastToAddress(a))
+    this.pollTimeout = setTimeout(() => this.sendBroadcast, 8000);
   }
 
   private sendBroadcastToAddress(addr: string): void {
@@ -85,7 +85,9 @@ export class SonosDeviceDiscovery {
     if (this.searchTimeout !== undefined) {
       clearTimeout(this.searchTimeout)
     }
-    this.socket.close();
+    if(this.socket) {
+      this.socket.close();
+    }
   }
 }
 

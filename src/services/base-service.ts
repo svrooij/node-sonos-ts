@@ -2,6 +2,7 @@ import fetch from 'node-fetch'
 import { Request } from 'node-fetch'
 import { SoapHelper } from '../helpers/soap-helper'
 import { parse } from 'fast-xml-parser'
+import { Guid } from 'guid-typescript'
 
 export abstract class BaseService {
   protected readonly host: string;
@@ -10,7 +11,7 @@ export abstract class BaseService {
   abstract readonly eventSubUrl: string;
   abstract readonly scpUrl: string;
   abstract readonly serviceNane: string;
-  constructor(host: string, port = 1400) {
+  constructor(host: string, port = 1400, private uuid: string = Guid.create().toString()) {
     this.host = host;
     this.port = port;
   }

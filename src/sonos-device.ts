@@ -1,5 +1,5 @@
 import { SonosDeviceBase } from './sonos-device-base'
-import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse } from './services' 
+import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse } from './services'
 export class SonosDevice extends SonosDeviceBase {
 
   /**
@@ -9,7 +9,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async LoadDeviceData(): Promise<boolean> {
-    this.zoneAttributes = await this.GetZoneAttributes()
+    this.zoneAttributes = await this.GetZoneAttributes();
     return true
   }
 
