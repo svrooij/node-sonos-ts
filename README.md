@@ -2,7 +2,7 @@
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
 
-A node library to control a sonos device, written in Typescript. See[here](#improvements-over-node-sonos) why I've build it while there already is a sonos library.
+A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library.
 
 ## Usage
 
@@ -11,6 +11,9 @@ To use the library just add it to your project. `npm install @svrooij/sonos`. An
 You'll need to get the **SonosDevice** by one of the methods below, then explore all the services. All the services are generated from the sonos device discovery. So everything you can do with the Sonos Application on your mobile device or computer, you can do with this library.
 
 ```node
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+
+const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 sonosDevice.AVTransportService.Play({InstanceID: 0, Speed: 1}) // Start playing
 sonosDevice.AVTransportService.Pause() // Pause playing
 sonosDevice.AVTransportService.Next() // Go to next song
@@ -20,6 +23,9 @@ sonosDevice.AVTransportService.Previous() // Go to previous song
 ### Exposed services
 
 ```node
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+
+const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 sonosDevice.AVTransportService // -> Control the playback (play, pause, next, stop)
 sonosDevice.AlarmClockService // -> Control your alarms
 sonosDevice.AudioInService // -> ?
