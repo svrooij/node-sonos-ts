@@ -19,6 +19,7 @@ export interface Track {
   ParentId?: string;
   TrackUri?: string;
   ProtocolInfo?: string;
+  CdUdn?: string;
 }
 
 export { SonosGroup } from './sonos-group'
