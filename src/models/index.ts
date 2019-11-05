@@ -14,6 +14,12 @@ export interface Track {
   Album?: string;
   AlbumArtUri?: string;
   UpnpClass?: string;
+  Duration?: string;
+  ItemId?: string;
+  ParentId?: string;
+  TrackUri?: string;
+  ProtocolInfo?: string;
 }
 
-export * from './sonos-group'
+export { SonosGroup } from './sonos-group'
+export { SonosDeviceDescription } from './sonos-device-description'

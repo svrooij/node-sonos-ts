@@ -1,5 +1,4 @@
 import { parse } from 'fast-xml-parser'
-import { Track } from '../models'
 
 const htmlEntities: any = {
   nbsp: ' ',
@@ -25,6 +24,7 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeXml(text: string): string {
+    if(typeof text === 'undefined') return ''
     return text.replace(/\&([^;]+);/g, function (entity, entityCode) {
       let match;
 
@@ -42,7 +42,7 @@ export class XmlHelper {
     });
   }
 
-  /**
+   /**
    * DecodeAndParseXml will decode the encoded xml string and then try to parse it
    *
    * @static
@@ -54,24 +54,16 @@ export class XmlHelper {
     return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: '_' });
   }
 
-  static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track {
-    const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
-    console.log('Parsing track %j', didlItem)
-    const track: Track = {
-      Album: undefined,
-      Artist: undefined,
-      AlbumArtUri: undefined,
-      Title: undefined,
-      UpnpClass: undefined
-    };
-    if(didlItem['dc:title']) track.Title = didlItem['dc:title'];
-    if(didlItem['dc:creator']) track.Artist = didlItem['dc:creator'];
-    if(didlItem['upnp:album']) track.Album = didlItem['upnp:album'];
-    if(didlItem['upnp:albumArtURI']) {
-      const art = didlItem['upnp:albumArtURI'];
-      track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
-    } 
-    if(didlItem['upnp:class']) track.UpnpClass = didlItem['upnp:class'];
-    return track;
+  /**
+   * EncodeXml will encode a xml string so it is safe to send to sonos.
+   *
+   * @static
+   * @param {string} xml
+   * @returns {string}
+   * @memberof XmlHelper
+   */
+  static EncodeXml(xml: string): string {
+    if(typeof xml === 'undefined') return ''
+    return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
   }
 }

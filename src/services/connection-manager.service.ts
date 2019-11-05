@@ -6,7 +6,6 @@ export class ConnectionManagerService extends BaseService {
   readonly controlUrl: string = '/MediaRenderer/ConnectionManager/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/ConnectionManager/Event';
   readonly scpUrl: string = '/xml/ConnectionManager1.xml';
-  
 
   // Actions
   GetCurrentConnectionIDs(): Promise<GetCurrentConnectionIDsResponse> { return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }

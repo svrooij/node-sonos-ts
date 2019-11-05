@@ -6,7 +6,6 @@ export class ZoneGroupTopologyService extends BaseService {
   readonly controlUrl: string = '/ZoneGroupTopology/Control';  
   readonly eventSubUrl: string = '/ZoneGroupTopology/Event';
   readonly scpUrl: string = '/xml/ZoneGroupTopology1.xml';
-  
 
   // Actions
   BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BeginSoftwareUpdate', input); }

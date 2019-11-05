@@ -6,7 +6,6 @@ export class SystemPropertiesService extends BaseService {
   readonly controlUrl: string = '/SystemProperties/Control';  
   readonly eventSubUrl: string = '/SystemProperties/Event';
   readonly scpUrl: string = '/xml/SystemProperties1.xml';
-  
 
   // Actions
   AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }): Promise<AddAccountXResponse> { return this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }

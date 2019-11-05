@@ -12,3 +12,9 @@ sonos.DevicePropertiesService.GetZoneAttributes()
     console.log(properties)
   })
   .catch(console.error)
+
+// sonos.AVTransportService.DeviceDescription
+//   .then(description => {
+//     console.log(description)
+//   })
+//   .catch(console.error)

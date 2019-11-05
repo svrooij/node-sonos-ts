@@ -6,7 +6,6 @@ export class RenderingControlService extends BaseService {
   readonly controlUrl: string = '/MediaRenderer/RenderingControl/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/RenderingControl/Event';
   readonly scpUrl: string = '/xml/RenderingControl1.xml';
-  
 
   // Actions
   GetBass(input: { InstanceID: number } = { InstanceID: 0 }): Promise<GetBassResponse> { return this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }

@@ -6,7 +6,6 @@ export class GroupRenderingControlService extends BaseService {
   readonly controlUrl: string = '/MediaRenderer/GroupRenderingControl/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/GroupRenderingControl/Event';
   readonly scpUrl: string = '/xml/GroupRenderingControl1.xml';
-  
 
   // Actions
   GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }): Promise<GetGroupMuteResponse> { return this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }

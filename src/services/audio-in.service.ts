@@ -6,7 +6,6 @@ export class AudioInService extends BaseService {
   readonly controlUrl: string = '/AudioIn/Control';  
   readonly eventSubUrl: string = '/AudioIn/Event';
   readonly scpUrl: string = '/xml/AudioIn1.xml';
-  
 
   // Actions
   GetAudioInputAttributes(): Promise<GetAudioInputAttributesResponse> { return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }

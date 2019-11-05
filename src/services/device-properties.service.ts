@@ -6,7 +6,6 @@ export class DevicePropertiesService extends BaseService {
   readonly controlUrl: string = '/DeviceProperties/Control';  
   readonly eventSubUrl: string = '/DeviceProperties/Event';
   readonly scpUrl: string = '/xml/DeviceProperties1.xml';
-  
 
   // Actions
   AddBondedZones(input: { ChannelMapSet: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('AddBondedZones', input); }

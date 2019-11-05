@@ -6,7 +6,6 @@ export class MusicServicesService extends BaseService {
   readonly controlUrl: string = '/MusicServices/Control';  
   readonly eventSubUrl: string = '/MusicServices/Event';
   readonly scpUrl: string = '/xml/MusicServices1.xml';
-  
 
   // Actions
   GetSessionId(input: { ServiceId: number; Username: string }): Promise<GetSessionIdResponse> { return this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }

@@ -1,5 +1,5 @@
 {
-  "name": "sonos-ts",
+  "name": "@svrooij/sonos",
   "version": "0.0.1",
   "description": "A node library to control your sonos devices, written in typescript",
   "main": "lib/index.js",

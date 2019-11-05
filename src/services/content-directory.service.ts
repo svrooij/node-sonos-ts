@@ -7,7 +7,6 @@ export class ContentDirectoryService extends BaseService {
   readonly controlUrl: string = '/MediaServer/ContentDirectory/Control';  
   readonly eventSubUrl: string = '/MediaServer/ContentDirectory/Event';
   readonly scpUrl: string = '/xml/ContentDirectory1.xml';
-  
 
   // Actions
   Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> { return this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }

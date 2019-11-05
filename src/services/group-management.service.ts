@@ -6,7 +6,6 @@ export class GroupManagementService extends BaseService {
   readonly controlUrl: string = '/GroupManagement/Control';  
   readonly eventSubUrl: string = '/GroupManagement/Event';
   readonly scpUrl: string = '/xml/GroupManagement1.xml';
-  
 
   // Actions
   AddMember(input: { MemberID: string; BootSeq: number }): Promise<AddMemberResponse> { return this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
