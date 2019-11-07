@@ -25,13 +25,15 @@
   },
   "homepage": "https://github.com/svrooij/node-sonos-ts#readme",
   "devDependencies": {
+    "@types/debug": "^4.1.5",
+    "@types/node-fetch": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^2.6.0",
     "@typescript-eslint/parser": "^2.6.0",
     "eslint": "^6.6.0",
     "typescript": "^3.6.4"
   },
   "dependencies": {
-    "@types/node-fetch": "^2.5.3",
+    "debug": "^4.1.1",
     "fast-xml-parser": "^3.14.0",
     "guid-typescript": "^1.0.9",
     "node-fetch": "^2.6.0"

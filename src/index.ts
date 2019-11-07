@@ -1,4 +1,5 @@
 export { SonosDevice } from './sonos-device'
+export { SonosEvents, PlayNotificationOptions } from './models/'
 export { SonosManager } from './sonos-manager'
 export { SonosDeviceDiscovery } from './sonos-device-discovery'
 export { XmlHelper } from './helpers/xml-helper'

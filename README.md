@@ -13,18 +13,26 @@ You'll need to get the **SonosDevice** by one of the methods below, then explore
 ```node
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 
+// Using the SonosManager to get the devices is recommended, see below.
 const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
-sonosDevice.AVTransportService.Play({InstanceID: 0, Speed: 1}) // Start playing
-sonosDevice.AVTransportService.Pause() // Pause playing
-sonosDevice.AVTransportService.Next() // Go to next song
-sonosDevice.AVTransportService.Previous() // Go to previous song
+// Shortcut functions.
+sonosDevice.Play() // Start playing
+sonosDevice.Pause() // Pause playing
+sonosDevice.Next() // Go to next song
+sonosDevice.Previous() // Go to previous song
+sonosDevice.Stop() // Stop playback
+sonosDevice.SeekPosition('0:02:01') // Change position in track.
+sonosDevice.SeekTrack(5) // Just to other track in the queue.
+// Added functionality
+sonosDevice.PlayNotification(new PlayNotificationOptions(....)) // Play a single url and revert back to playlist/radiostream.
+sonosDevice.JoinGroup('Office') // Join a group by other device name.
 ```
 
 ### Exposed services
 
 ```node
 const SonosDevice = require('@svrooij/sonos').SonosDevice
-
+// Using the SonosManager to get the devices is recommended, see below.
 const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 sonosDevice.AVTransportService // -> Control the playback (play, pause, next, stop)
 sonosDevice.AlarmClockService // -> Control your alarms
@@ -88,6 +96,54 @@ sonos.LoadDeviceData()
   .catch(console.error)
 ```
 
+## Events
+
+Sonos devices have a wat to subscribe to **updates** of most device parameters. It works by sending a subscribe request to the device. The Sonos device will then start sending updates to the specified endpoint(s).
+
+This library includes a **SonosEventListener** which you'll never have to call yourself :wink:. Each **service** has an `.Events` property exposing the EventEmitter for that service. If you subscribe to events of a service, it will automatically subscribe to sonos events. If you stop listening, it will automatically unsubscribe. It is actually a small webservice just making sure the event notifications get send to the correct service.
+
+The **SonosDevice** also has an `.Events` property. Here you'll receive some specific events.
+
+```node
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const ServiceEvents = require('@svrooij/sonos').ServiceEvents
+const SonosEvents = require('@svrooij/sonos').SonosEvents
+const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+
+// SonosEvents
+sonosDevice.Events.on(SonosEvents.CurrentTrack, uri => {
+  console.log('Current track changed %s', uri)
+})
+
+sonosDevice.Events.on(SonosEvents.CurrentTrackMetadata, data => {
+  console.log('Current track metadata %s', JSON.stringify(data))
+})
+
+sonosDevice.Events.on(SonosEvents.Volume, volume => {
+  console.log('New volume %d', volume)
+})
+
+// Events from Services
+sonosDevice.AlarmClockService.Events.on(ServiceEvents.Data, data => {
+  console.log('AlarmClock data %s', JSON.stringify(data))
+})
+
+sonosDevice.AVTransportService.Events.on(ServiceEvents.LastChange, data => {
+  console.log('AVTransport lastchange %s', JSON.stringify(data, null, 2))
+})
+sonosDevice.RenderingControlService.Events.on(ServiceEvents.LastChange, data => {
+  console.log('RenderingControl lastchange %s', JSON.stringify(data, null, 2))
+})
+```
+
+The **SonosEventListener** has some configuration options, which you'll need in specific network environments or docker sitiuations. You can configure the following environment variables.
+
+- `SONOS_LISTENER_HOST` The hostname or ip of the device running the event listener. This is used as the callback host.
+- `SONOS_LISTENER_INTERFACE` If the host isn't set, the first non-internal ip of this interface is used.
+- `SONOS_LISTENER_PORT` The port the event listener should listen on. Also send to the device. `6329 = default`
+
+If none of these environment variables are set it will just use the default port and the first found non-internal ip.
+
 ## Improvements over [node-sonos](https://github.com/bencevans/node-sonos)
 
 The original [node-sonos](https://github.com/bencevans/node-sonos) is started a long time ago, before async programming in node.
@@ -100,7 +156,7 @@ One of the most important parts of this new library is the [**service-generator*
 - [x] Strong typed (auto generated) client
 - [x] Starting from auto discovery or one sonos host ip
 - [x] Zone groups as a starting point (logical devices)
-- [ ] Using the events even more
+- [x] All events parsed and some custom properties
 - [x] The sonos device will expose all the generated services, or an extended version of them.
 - [x] The sonos device will contain extra features and shortcuts to services.
 
