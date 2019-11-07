@@ -8,9 +8,12 @@
       "type": "node",
       "request": "launch",
       "name": "Launch Program",
-      "program": "${workspaceFolder}/examples/get-position-info.js",
+      "program": "${workspaceFolder}/examples/events.js",
       "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/lib/**/*.js"]
+      "outFiles": ["${workspaceFolder}/lib/**/*.js"],
+      "env": {
+        "DEBUG":"sonos:*"
+      }
     }
   ]
 }

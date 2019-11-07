@@ -1,6 +1,9 @@
 import { Track } from '../models'
+import debug = require('debug')
 
 export class MetadataHelper {
+
+  private static debug = debug('sonos:metadata')
 
   /**
    * ParseDIDLTrack will parse track metadata for you.
@@ -48,7 +51,9 @@ export class MetadataHelper {
    * @returns {string} XML string (be sure to encode before using)
    * @memberof MetadataHelper
    */
-  static TrackToMetaData(track: Track, includeResource = false, cdudn = 'RINCON_AssociatedZPUDN'): string {
+  static TrackToMetaData(track: Track | undefined, includeResource = false, cdudn = 'RINCON_AssociatedZPUDN'): string {
+    if (track === undefined) return ''
+
     if(track.CdUdn !== undefined) cdudn = track.CdUdn
     if(track.ProtocolInfo === undefined) track.ProtocolInfo = 'http-get:*:audio/mpeg:*'
     if(track.ItemId === undefined) track.ItemId = '-1'
@@ -65,7 +70,7 @@ export class MetadataHelper {
     return metadata
   }
 
-  static GuessTrack(trackUri: string, spotifyRegion = '3079'): Track {
+  static GuessTrack(trackUri: string, spotifyRegion = '3079'): Track | undefined {
     let title = ''
     const match = /.*\/(.*)$/g.exec(trackUri.replace(/\.[a-zA-Z0-9]{3}$/, ''))
     if (match) {
@@ -173,7 +178,8 @@ export class MetadataHelper {
       }
     }
 
-    return track;
+    MetadataHelper.debug('Don\'t support this TrackUri (yet) %s', trackUri)
+    return undefined
   }
 
   private static GetUpnpClass = function (parentID: string): string {
