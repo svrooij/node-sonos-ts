@@ -3,9 +3,9 @@ const ServiceEvents = require('../lib/models/sonos-events').ServiceEvents
 
 const kantoor = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56', 1400, 'RINCON_000Esecret1400')
 
-// kantoor.AlarmClockService.Events.on('data', data => {
-//   console.log('AlarmClock data %s', JSON.stringify(data))
-// })
+kantoor.AlarmClockService.Events.on(ServiceEvents.Data, data => {
+  console.log('AlarmClock data %s', JSON.stringify(data))
+})
 
 // kantoor.ZoneGroupTopologyService.Events.on('data', data => {
 //   console.log('ZoneGroupTopology data %s', JSON.stringify(data))
