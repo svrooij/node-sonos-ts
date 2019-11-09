@@ -174,7 +174,7 @@ export abstract class BaseService {
         if (typeof value === 'object' && key.indexOf('MetaData') > -1)
           messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if(typeof value === 'string' && key.endsWith('URI'))
-          messageBody += `<${key}>${XmlHelper.EncodeXml(value)}</${key}>`;
+          messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
           else
           messageBody += `<${key}>${value}</${key}>`;
 
@@ -256,13 +256,18 @@ export abstract class BaseService {
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
     // Currently only parsed properties that end with 'MetaData'
     // should maybe extended to all?
-    const keys = Object.keys(input).filter(k => k.indexOf('MetaData') > -1);
-    keys.forEach(k => {
+    const metadataKeys = Object.keys(input).filter(k => k.indexOf('MetaData') > -1);
+    metadataKeys.forEach(k => {
       const originalValue = input[k] as string;
       if(originalValue.startsWith('&lt;')) {
         input[k] = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
       }
     });
+    const uriKeys = Object.keys(input).filter(k => k.indexOf('URI') > -1);
+    uriKeys.forEach(k => {
+      const originalValue = input[k] as string;
+      input[k] = XmlHelper.DecodeTrackUri(originalValue);
+    })
     return input;
   }
   //#endregion

@@ -66,4 +66,13 @@ export class XmlHelper {
     if(typeof xml === 'undefined') return ''
     return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
   }
+
+  static EncodeTrackUri(trackUri: string): string {
+    const index = trackUri.indexOf(':') + 1
+    return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
+  }
+
+  static DecodeTrackUri(input: string): string {
+    return XmlHelper.DecodeXml(decodeURIComponent(input));
+  }
 }
