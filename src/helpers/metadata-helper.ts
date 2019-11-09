@@ -1,5 +1,6 @@
 import { Track } from '../models'
 import debug = require('debug')
+import { XmlHelper } from './xml-helper';
 
 export class MetadataHelper {
 
@@ -36,7 +37,7 @@ export class MetadataHelper {
     
     if(didlItem.res) {
       track.Duration = didlItem.res._duration
-      track.TrackUri = didlItem.res['#text']
+      track.TrackUri = XmlHelper.DecodeTrackUri(didlItem.res['#text'])
       track.ProtocolInfo = didlItem.res._protocolInfo
     }
 
