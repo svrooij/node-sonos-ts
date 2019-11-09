@@ -22,7 +22,7 @@ sonosDevice.Next() // Go to next song
 sonosDevice.Previous() // Go to previous song
 sonosDevice.Stop() // Stop playback
 sonosDevice.SeekPosition('0:02:01') // Change position in track.
-sonosDevice.SeekTrack(5) // Just to other track in the queue.
+sonosDevice.SeekTrack(5) // Jump to other track in the queue.
 // Added functionality
 sonosDevice.PlayNotification(new PlayNotificationOptions(....)) // Play a single url and revert back to playlist/radiostream.
 sonosDevice.JoinGroup('Office') // Join a group by other device name.
@@ -98,7 +98,7 @@ sonos.LoadDeviceData()
 
 ## Events
 
-Sonos devices have a wat to subscribe to **updates** of most device parameters. It works by sending a subscribe request to the device. The Sonos device will then start sending updates to the specified endpoint(s).
+Sonos devices have a way to subscribe to **updates** of most device parameters. It works by sending a subscribe request to the device. The Sonos device will then start sending updates to the specified endpoint(s).
 
 This library includes a **SonosEventListener** which you'll never have to call yourself :wink:. Each **service** has an `.Events` property exposing the EventEmitter for that service. If you subscribe to events of a service, it will automatically subscribe to sonos events. If you stop listening, it will automatically unsubscribe. It is actually a small webservice just making sure the event notifications get send to the correct service.
 
@@ -160,7 +160,7 @@ One of the most important parts of this new library is the [**service-generator*
 - [x] The sonos device will expose all the generated services, or an extended version of them.
 - [x] The sonos device will contain extra features and shortcuts to services.
 
-## Devloper section
+## Developer section
 
 This will contain usefull information if you want to fix a bug you've found in this library. You always start with cloning the repo and doing a `npm install` in the folder.
 
