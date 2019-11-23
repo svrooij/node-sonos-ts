@@ -1,9 +1,12 @@
 import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse } from './services'
-import { PlayNotificationOptions, TransportState, ServiceEvents, SonosEvents } from './models'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
+import { XmlHelper } from './helpers/xml-helper'
+import { parse } from 'path'
+import { MetadataHelper } from '.'
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
   private groupName: string | undefined;
@@ -38,6 +41,46 @@ export class SonosDevice extends SonosDeviceBase {
   }
 
   //#region Added functionality
+  public async AlarmList(): Promise<Alarm[]> {
+    return this.AlarmClockService.ListAlarms()
+      .then(response => XmlHelper.DecodeAndParseXml(response.CurrentAlarmList, ''))
+      .then(parsedList => {
+        return Array.isArray(parsedList.Alarms.Alarm) ? parsedList.Alarms.Alarm : [parsedList.Alarms.Alarm]
+      })
+      .then((alarms: any[]) => {
+        alarms.forEach(alarm => {
+          alarm.Enabled = alarm.Enabled === '1'
+          alarm.ID = parseInt(alarm.ID)
+          alarm.IncludeLinkedZones = alarm.IncludeLinkedZones === '1'
+          alarm.Volume = parseInt(alarm.Volume)
+          // Alarm had StartTime, but updates expect StartLocalTime, why??
+          alarm.StartLocalTime = alarm.StartTime
+          delete alarm.StartTime
+          if(typeof alarm.ProgramMetaData === 'string')
+            alarm.ProgramMetaData = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port);
+          alarm.ProgramURI = XmlHelper.DecodeTrackUri(alarm.ProgramURI)
+        });
+        return alarms;
+      })
+  }
+
+  public async AlarmPatch(options: PatchAlarm): Promise<boolean> {
+    return this.AlarmList().then(alarms => {
+      const alarm = alarms.find(a => a.ID === options.ID)
+      if(alarm === undefined) throw new Error(`Alarm with ID ${options.ID} not found`)
+      if(options.Duration !== undefined) alarm.Duration = options.Duration;
+      if(options.Enabled !== undefined) alarm.Enabled = options.Enabled;
+      if(options.PlayMode !== undefined) alarm.PlayMode = options.PlayMode;
+      if(options.Recurrence !== undefined) alarm.Recurrence = options.Recurrence;
+      if(options.StartLocalTime !== undefined) alarm.StartLocalTime = options.StartLocalTime;
+      if(options.Volume !== undefined) alarm.Volume = options.Volume;
+
+      return this.AlarmClockService.UpdateAlarm(alarm);
+    })
+  }
+
+
+
   /**
    * Join this device to an other group, if you know the coordinator uuid you can do .AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${uuid}`, CurrentURIMetaData: ''})
    *
@@ -53,6 +96,7 @@ export class SonosDevice extends SonosDeviceBase {
     if(groupToJoin === undefined) throw new Error(`Player '${otherDevice}' isn't found!`)
     return this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: ''})
   }
+
   /**
    * Play some url, and revert back to what was playing before. Very usefull for playing a notification or TTS sound.
    *
@@ -109,6 +153,39 @@ export class SonosDevice extends SonosDeviceBase {
 
     return true;
 
+  }
+
+  /**
+   * Switch playback to line in (which will always be playing)
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public async SwitchToLineIn(): Promise<boolean> {
+    return this.AVTransportService
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}0${this.port}`, CurrentURIMetaData: '' })
+  }
+
+  /**
+   * Switch playback to the queue
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public async SwitchToQueue(): Promise<boolean> {
+    return this.AVTransportService
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}0${this.port}#0`, CurrentURIMetaData: '' })
+  }
+
+  /**
+   * Switch playback to TV Input (only on Playbar)
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public async SwitchToTV(): Promise<boolean> {
+    return this.AVTransportService
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}0${this.port}:spdiff`, CurrentURIMetaData: '' })
   }
   //#endregion
 
@@ -300,56 +377,56 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public GetZoneInfo(): Promise<GetZoneInfoResponse> { return this.DevicePropertiesService.GetZoneInfo() }
   /**
-   * Play next song, shortcut to .AVTransportService.Next()
+   * Play next song, shortcut to .Coordinator.AVTransportService.Next()
    *
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Next(): Promise<boolean> { return this.AVTransportService.Next() }
+  public Next(): Promise<boolean> { return this.Coordinator.AVTransportService.Next() }
  /**
-   * Pause playback, shortcut to .AVTransportService.Pause()
+   * Pause playback, shortcut to .Coordinator.AVTransportService.Pause()
    *
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Pause(): Promise<boolean> { return this.AVTransportService.Pause() }
+  public Pause(): Promise<boolean> { return this.Coordinator.AVTransportService.Pause() }
   /**
-   * Start playing, shortcut to .AVTransportService.Play({InstanceID: 0, Speed: '1'})
+   * Start playing, shortcut to .Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'})
    *
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Play(): Promise<boolean> { return this.AVTransportService.Play({InstanceID: 0, Speed: '1'}) }
+  public Play(): Promise<boolean> { return this.Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'}) }
   /**
-   * Play previous song, shortcut to .AVTransportService.Previous()
+   * Play previous song, shortcut to .Coordinator.AVTransportService.Previous()
    *
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Previous(): Promise<boolean> { return this.AVTransportService.Previous() }
+  public Previous(): Promise<boolean> { return this.Coordinator.AVTransportService.Previous() }
   /**
-   * Seek position in the current track, shortcut to .AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})
+   * Seek position in the current track, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})
    *
    * @param {string} trackTime
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeekPosition(trackTime: string): Promise<boolean> { return this.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})}
+  public SeekPosition(trackTime: string): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})}
   /**
-   * Go to other track in queue, shortcut to .AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()})
+   * Go to other track in queue, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()})
    *
    * @param {number} trackNr The track number to go to.
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeeKTrack(trackNr: number): Promise<boolean> { return this.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
+  public SeeKTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
   /**
-   * Stop playback, shortcut to .AVTransportService.Stop()
+   * Stop playback, shortcut to .Coordinator.AVTransportService.Stop()
    *
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Stop(): Promise<boolean> { return this.AVTransportService.Stop() }
+  public Stop(): Promise<boolean> { return this.Coordinator.AVTransportService.Stop() }
 
 
   //#endregion

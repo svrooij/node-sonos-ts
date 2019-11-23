@@ -50,8 +50,8 @@ export class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXml(encodedXml: string): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: '_' });
+  static DecodeAndParseXml(encodedXml: string, attributeNamePrefix = '_'): any {
+    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: attributeNamePrefix });
   }
 
   /**
