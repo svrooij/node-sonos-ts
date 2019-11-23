@@ -51,9 +51,18 @@ sonosDevice.VirtualLineInService // => ?
 sonosDevice.ZoneGroupTopologyService // Zone management, used by the SonosManager to get all the groups.
 ```
 
+## SonosManager and logical devices
+
+This library has a **SonosManager** that resolves all your sonos groups for you. It also manages group updates. Every **SonosDevice** created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
+
+```node
+device.Coordinator // this will always point to the correct coordinator (or the current device if it doesn't have a coordinator.)
+device.GroupName // this will always have the group name in it. Like 'Kitchen + 2'
+```
+
 ### SonosManager - Device discovery
 
-This library has a **SonosManager** that resolves all your sonos groups for you. The recommended way to use it is by doing device discovery.
+You can discover all the devices in the current network using device discovery
 
 ```node
 const SonosManager = require('@svrooij/sonos').SonosManager
@@ -61,14 +70,14 @@ const manager = new SonosManager()
 manager.InitializeWithDiscovery(10)
   .then(console.log)
   .then(() => {
-    manager.Groups.forEach(g => console.log(g.Name))
+    manager.Devices.forEach(d => console.log('Device %s (%s) is joined in %s', d.Name, d.uuid, d.GroupName))
   })
   .catch(console.error)
 ```
 
 ### SonosManager - Single IP
 
-In some cases device discovery doesn't work (think docker or complex networks), you can also start the manager by submitting one know sonos IP.
+In some cases device discovery doesn't work (think docker or complex networks), you can also start the manager by submitting one known sonos IP.
 
 ```node
 const SonosManager = require('@svrooij/sonos').SonosManager
@@ -76,14 +85,14 @@ const manager = new SonosManager()
 manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .then(console.log)
   .then(() => {
-    manager.Groups.forEach(g => console.log(g.Name))
+    manager.Devices.forEach(d => console.log('Device %s (%s) is joined in %s', d.Name, d.uuid, d.GroupName))
   })
   .catch(console.error)
 ```
 
 ### Advanced usage
 
-This library also supports direct using it without the **SonosManager**.
+This library also supports direct using it without the **SonosManager**. The group stuff won't work this way!
 
 ```node
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -100,7 +109,9 @@ sonos.LoadDeviceData()
 
 Sonos devices have a way to subscribe to **updates** of most device parameters. It works by sending a subscribe request to the device. The Sonos device will then start sending updates to the specified endpoint(s).
 
-This library includes a **SonosEventListener** which you'll never have to call yourself :wink:. Each **service** has an `.Events` property exposing the EventEmitter for that service. If you subscribe to events of a service, it will automatically subscribe to sonos events. If you stop listening, it will automatically unsubscribe. It is actually a small webservice just making sure the event notifications get send to the correct service.
+This library includes a **SonosEventListener** which you'll never have to call yourself :wink:. Each **service** has an `.Events` property exposing the EventEmitter for that service. If you subscribe to events of a service, it will automatically ask the sonos device to start sending updates for that service. If you stop listening, it will tell sonos to stop sending events.
+
+If you subscribed to events of one service, or on the sonos device events. A small webservice is created automatically to receive the updates from sonos. This webservices is running on port 6329 by default, but can be changed (see below).
 
 The **SonosDevice** also has an `.Events` property. Here you'll receive some specific events.
 

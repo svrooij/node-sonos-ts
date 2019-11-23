@@ -1,6 +1,6 @@
 {
   "name": "@svrooij/sonos",
-  "version": "0.0.3",
+  "version": "0.4.0",
   "description": "A node library to control your sonos devices, written in typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.js",

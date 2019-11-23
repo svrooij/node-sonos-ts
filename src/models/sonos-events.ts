@@ -25,5 +25,13 @@ export enum SonosEvents {
    */
   RenderingControl = "service.renderingcontrol",
   Mute = "renderingcontrol.mute",
-  Volume = "renderingcontrol.volume"
+  Volume = "renderingcontrol.volume",
+  /**
+   * This event is emitted if the coordinator of this device changed
+   */
+  Coordinator = "grouped.coordinator",
+  /**
+   * This event is emitted if the groupname changes.
+   */
+  GroupName = "grouped.groupname"
 }

@@ -5,6 +5,23 @@ import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
 export class SonosDevice extends SonosDeviceBase {
+  private name: string | undefined;
+  private groupName: string | undefined;
+  private coordinator: SonosDevice | undefined;
+
+  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: {coordinator: SonosDevice, name: string, managerEvents: EventEmitter} | undefined = undefined) {
+    super(host, port, uuid);
+    this.name = name;
+    if(groupConfig) {
+      this.groupName = groupConfig.name;
+      if(uuid !== groupConfig.coordinator.uuid) {
+        this.coordinator = groupConfig.coordinator;
+      }
+      if (uuid) {
+        groupConfig.managerEvents.on(uuid, this._handleGroupUpdate)
+      }
+    }
+  }
 
   /**
    * Preload some device data, should be called before accessing most properties of this class.
@@ -14,6 +31,7 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async LoadDeviceData(): Promise<boolean> {
     this.zoneAttributes = await this.GetZoneAttributes();
+    this.name = this.zoneAttributes.CurrentZoneName;
     this.volume = await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(r => r.CurrentVolume)
     this.muted = await this.RenderingControlService.GetMute({InstanceID: 0, Channel: 'Master'}).then(m => m.CurrentMute)
     return true
@@ -172,8 +190,49 @@ export class SonosDevice extends SonosDeviceBase {
       }
     }
   }
-  //#endregion
+    //#endregion
 
+  //#region Group stuff
+  private _handleGroupUpdate = this.handleGroupUpdate.bind(this)
+  private handleGroupUpdate(data: { coordinator: SonosDevice, name: string}) : void {
+    if(data.coordinator && data.coordinator.uuid !== this.uuid && (!this.coordinator || this.coordinator.uuid !== data.coordinator.uuid)) {
+      this.debug('Coordinator changed for %s', this.uuid)
+      this.coordinator = data.coordinator;
+      if(this.events !== undefined){
+        this.events.emit(SonosEvents.Coordinator, this.coordinator.uuid);
+      }
+    }
+    if(this.coordinator && data.coordinator.uuid === this.uuid) {
+      this.debug('Coordinator removed for %s', this.uuid)
+      this.coordinator = undefined;
+      if(this.events !== undefined){
+        this.events.emit(SonosEvents.Coordinator, this.uuid);
+      }
+    }
+    if(data.name && data.name !== this.groupName){
+      this.groupName = data.name;
+      this.debug('Groupname changed for %s to %s', this.uuid, this.groupName)
+      if(this.events !== undefined){
+        this.events.emit(SonosEvents.GroupName, this.groupName);
+      }
+    }
+  }
+
+  /**
+   * Get the current coordinator for this group, or the device itself if if doesn't have a coordinator.
+   *
+   * @readonly
+   * @type {SonosDevice}
+   * @memberof SonosDevice
+   */
+  public get Coordinator() : SonosDevice {
+    return this.coordinator || this;
+  }
+  public get GroupName() : string | undefined {
+    return this.groupName;
+  }
+  //#endregion
+  
   //#region Properties
   private currentTrackUri?: string;
   public get CurrentTrackUri(): string | undefined {
@@ -199,6 +258,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public get Name(): string {
+    if(this.name !== undefined) return this.name;
     if (this.zoneAttributes === undefined) throw new Error('Zone attributes not loaded')
     return this.zoneAttributes.CurrentZoneName
   }
