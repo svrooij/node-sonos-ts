@@ -1,6 +1,8 @@
 import { networkInterfaces } from 'os'
 import { BaseService } from './services/base-service'
 import { Server, createServer, IncomingMessage, ServerResponse } from 'http';
+import { Debugger } from 'debug'
+import debug = require('debug')
 
 /**
  * SonosEventListener is the internal webservice to handle events.
@@ -38,19 +40,24 @@ export class SonosEventListener {
 
   private readonly listenerHost: string;
   private readonly port: number;
+  private readonly debug: Debugger;
   private isListening = false;
   private subscriptions: {[key: string]: BaseService} = {}
   private server: Server;
   private constructor() {
+    this.debug = debug('sonos:eventlistener');
     this.listenerHost = process.env.SONOS_LISTENER_HOST || SonosEventListener.getHostIp();
     this.port = parseInt(process.env.SONOS_LISTENER_PORT || '6329');
     this.server = createServer((req, resp) => this.requestHandler(req, resp))
+    this.debug('Listener created host: %s port: %d', this.listenerHost, this.port);
   }
 
   private requestHandler(req: IncomingMessage, resp: ServerResponse): void {
     const sid = req.rawHeaders[req.rawHeaders.findIndex(v => v ==='SID') + 1];
+    this.debug('Got event on %s SID: %s', req.url, sid);
     const service = this.subscriptions[sid];
     if(service === undefined) {
+      this.debug('Subscription %s not found, sending 404 to stop messages', sid);
       resp.statusCode = 404;
       resp.end();
       return;
@@ -60,7 +67,6 @@ export class SonosEventListener {
       .on('data', (chunk: any) => { body.push(chunk) })
       .on('end', () => {
         const bodyString = Buffer.concat(body).toString();
-        //this.messageHandler(req, resp, bodyString)
         service.ParseEvent(bodyString);
         resp.statusCode = 200
         resp.end('OK')
@@ -76,6 +82,7 @@ export class SonosEventListener {
 
   public RegisterSubscription(sid: string, service: BaseService): void {
     if(this.isListening !== true) {
+      this.debug('Start listening on port %d', this.port);
       this.server.listen(this.port);
       this.isListening = true;
     }

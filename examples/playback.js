@@ -1,0 +1,17 @@
+const SonosDevice = require('../lib').SonosDevice
+
+const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+
+// sonos.TogglePlayback()
+//   .then(success => console.log(success))
+//   .catch(err => console.error(err))
+
+sonos.AVTransportService.GetPositionInfo()
+  .then(response => {
+    console.log(JSON.stringify(response, null, 2))
+  })
+  .catch(err => console.error(err))
+
+sonos.AddUriToQueue('spotify:track:7dVjKRYCkszdHEHIBj9OMc')
+  .then(success => console.log(success))
+  .catch(err => console.error(err))

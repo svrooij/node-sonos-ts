@@ -1,6 +1,7 @@
 export enum ServiceEvents {
   Data = "service.data",
   LastChange = "service.lastchange",
+  Unprocessed = "service.raw"
 }
 
 export enum SonosEvents {
@@ -16,6 +17,7 @@ export enum SonosEvents {
    * Changes in TransportState
    */
   CurrentTransportState = "avtransport.CurrentTransportState",
+  CurrentTransportStateSimple = "avtransport.CurrentTransportState.Simple",
   /**
    * If the CurrentTransportState changed to STOPPED
    */

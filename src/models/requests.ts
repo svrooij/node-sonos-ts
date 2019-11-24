@@ -2,7 +2,7 @@ import { Track } from "./index";
 import { MetadataHelper } from '../helpers/metadata-helper'
 
 export class PlayNotificationOptions {
-  public MetaData: string;
+  public MetaData: Track | string;
   /**
    * Creates an instance of PlayNotificationOptions.
    * @param {string} TrackUri The URL you want to play
@@ -12,13 +12,9 @@ export class PlayNotificationOptions {
    * @param {number} [Timeout=20] Specify a timeout after which the state should return to normal (in case the notifications don't work)
    * @memberof PlayNotificationOptions
    */
-  constructor(public TrackUri: string, public OnlyWhenPlaying: boolean, MetaData?: string | Track, public Volume?: number, public Timeout = 20) {
-    if (typeof MetaData === 'string') {
-      this.MetaData = MetaData
-    } else if (MetaData === undefined) {
-      this.MetaData = MetadataHelper.TrackToMetaData(MetadataHelper.GuessTrack(TrackUri))
-    } else {
-      this.MetaData = MetadataHelper.TrackToMetaData(MetaData)
-    }
+  constructor(public TrackUri: string, public OnlyWhenPlaying = false, public Volume: number | undefined = undefined, public Timeout = 20) {
+    const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(TrackUri);
+    this.TrackUri = guessedMetaData.trackUri;
+    this.MetaData = guessedMetaData.metedata;
   }
 }

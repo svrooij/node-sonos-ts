@@ -12,4 +12,12 @@ module.exports =  {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off"
   },
+  overrides: [
+    {
+      files: ['src/services/virtual-line-in.service.ts'],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "off"
+      }
+    }
+  ]
 };

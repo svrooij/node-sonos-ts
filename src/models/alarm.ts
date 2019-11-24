@@ -1,4 +1,5 @@
 import { Track } from "./track";
+import { PlayMode } from './playmode'
 
 export interface PatchAlarm { 
   ID: number; 
@@ -9,7 +10,7 @@ export interface PatchAlarm {
   //RoomUUID?: string; 
   //ProgramURI?: string; 
   //ProgramMetaData?: string | Track; 
-  PlayMode?: string; 
+  PlayMode?: PlayMode; 
   Volume?: number;
   //IncludeLinkedZones?: boolean
 }
@@ -23,7 +24,7 @@ export interface Alarm {
   RoomUUID: string; 
   ProgramURI: string; 
   ProgramMetaData: string | Track; 
-  PlayMode: string; 
+  PlayMode: PlayMode; 
   Volume: number;
-  IncludeLinkedZones: boolean
+  IncludeLinkedZones: boolean;
 }

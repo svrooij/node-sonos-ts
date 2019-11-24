@@ -6,59 +6,67 @@ A node library to control a sonos device, written in Typescript. See [here](#imp
 
 ## Usage
 
-To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it.
+To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself.
 
-You'll need to get the **SonosDevice** by one of the methods below, then explore all the services. All the services are generated from the sonos device discovery. So everything you can do with the Sonos Application on your mobile device or computer, you can do with this library.
+You'll need to get the **SonosDevice** by one of the [methods below](#sonosmanager-and-logical-devices), and start using the [shortcuts](#shortcuts), the extra [functionality](#extra-functionality) or the [exposed services](#exposed-services). This library allows you to do **everything** you can do with the Sonos application.
 
-```node
-const SonosDevice = require('@svrooij/sonos').SonosDevice
+### Shortcuts
 
-// Using the SonosManager to get the devices is recommended, see below.
-const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
-// Shortcut functions.
-sonosDevice.Play() // Start playing
-sonosDevice.Pause() // Pause playing
-sonosDevice.Next() // Go to next song
-sonosDevice.Previous() // Go to previous song
-sonosDevice.Stop() // Stop playback
-sonosDevice.SeekPosition('0:02:01') // Change position in track.
-sonosDevice.SeekTrack(5) // Jump to other track in the queue.
-// Added functionality
-sonosDevice.PlayNotification(new PlayNotificationOptions(....)) // Play a single url and revert back to playlist/radiostream.
-sonosDevice.JoinGroup('Office') // Join a group by other device name.
-```
+Each **Sonos Device** has the following shortcuts (things you can do by using one of the exposed services):
+
+- **.GetZoneGroupState()** - Get current group info.
+- **.GetZoneInfo()** - Get info about current player.
+- **.Play()** - Start playing *.
+- **.Pause()** - Pause playing *.
+- **.Next()** - Go to next song (when playing the queue) *.
+- **.Previous()** - Go to previous song (when playing the queue) *.
+- **.Stop()** - Stop playing (most of the time it's better to pause playback) *.
+- **.SeekPosition('0:03:01')** - Go to other postion in track *.
+- **.SeekTrack(3)** - Go to other track in the queue *.
+
+These operations (marked with `*`) are send to the coordinator if the device is created by the **SonosManager**. So you can send **.Next()** to each device in a group and it will be send to the correct device.
+
+### Extra functionality
+
+I also implemented extra functionatity for each player. (mostly combining calls):
+
+- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed.
+- **.AlarmList()** - List all your alarms
+- **.AlarmPatch({ ID: 1, ... })** - Update some properties of one of your alarms.
+- **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator.
+- **.PlayNotification(new PlayNotificationOptions(....))** - Play a single url and revert back to previous music source (playlist/radiostream).
+- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed. This doens't start playback all the time!
+- **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it.
+- **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
+- **.SwitchToTV()** - On your playbar you can use this to switch to TV input.
+- **.TogglePlayback()** - If playing or transitioning your playback is paused. If stopped or paused your playback is resumed.
 
 ### Exposed services
 
-```node
-const SonosDevice = require('@svrooij/sonos').SonosDevice
-// Using the SonosManager to get the devices is recommended, see below.
-const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
-sonosDevice.AVTransportService // -> Control the playback (play, pause, next, stop)
-sonosDevice.AlarmClockService // -> Control your alarms
-sonosDevice.AudioInService // -> ?
-sonosDevice.ConnectionManagerService // => ?
-sonosDevice.ContentDirectoryService // => Control your content??
-sonosDevice.DevicePropertiesService // => Change your device properties (led, SterioPair, AutoPlay)
-sonosDevice.GroupManagementService // => Manage your groups (what's the differance with ZoneGroupTopologyService)
-sonosDevice.GroupRenderingControlService // => RenderingControlService for groups
-sonosDevice.MusicServicesService // => All your music services
-sonosDevice.QPlayService // => To authorize QPlay, needs explaining
-sonosDevice.QueueService // => Queue management
-sonosDevice.RenderingControlService // => Rendering service is for volume eg.
-sonosDevice.SystemPropertiesService // => Manage connected accounts
-sonosDevice.VirtualLineInService // => ?
-sonosDevice.ZoneGroupTopologyService // Zone management, used by the SonosManager to get all the groups.
-```
+Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`). This library uses a [generator](./src/generator/service-generator.js) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
+
+- **.AVTransportService** - Control the playback (play, pause, next, stop).
+- **.AlarmClockService** - Control your alarms.
+- **.AudioInService** - ?
+- **.ConnectionManagerService** - ?
+- **.ContentDirectoryService** - Control your content?
+- **.DevicePropertiesService** - Change your device properties (led, StereoPair, AutoPlay).
+- **.GroupManagementService** - Manage your groups (what's the differance with ZoneGroupTopologyService?).
+- **.GroupRenderingControlService** - RenderingControlService for groups.
+- **.MusicServicesService** - All your music services.
+- **.QPlayService** - To authorize QPlay, needs explaining.
+- **.QueueService** - Queue management
+- **.RenderingControlService** - Control rendering (eg. volume)
+- **.SystemPropertiesService** - Manage connected accounts
+- **.VirtualLineInService** - ?
+- **.ZoneGroupTopologyService** - Zone management, mostly used under the covers by [SonosManager](./src/sonos-manager.ts)
 
 ## SonosManager and logical devices
 
 This library has a **SonosManager** that resolves all your sonos groups for you. It also manages group updates. Every **SonosDevice** created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
 
-```node
-device.Coordinator // this will always point to the correct coordinator (or the current device if it doesn't have a coordinator.)
-device.GroupName // this will always have the group name in it. Like 'Kitchen + 2'
-```
+- **.Coordinator** - Point to the devices' group coordinator (or to itself when it's the coordinator).
+- **.GroupName** - The name of the group this device is in. eg 'Kitchen + 2'
 
 ### SonosManager - Device discovery
 
@@ -155,14 +163,46 @@ The **SonosEventListener** has some configuration options, which you'll need in 
 
 If none of these environment variables are set it will just use the default port and the first found non-internal ip.
 
+## Contributing
+
+You can contribute in many ways. Asking good questions, solving bugs, sponsoring me on github. This library is build in my spare time, so don't be rude about it.
+
+If you're using a music service that currently isn't supported for metadata generation, you should check out the [metadata generator](./src/helpers/metadata-helper.ts).
+It works by taking an url (which you can get by running the [get-position-info sample](./examples/get-position-info.js)). And generating a **Track** for it. Use the information out the console to get the right values.
+The values you'll be looking for are `ProtocolInfo`, `TrackUri`, `UpnpClass`, `ItemID` and `ParentID`
+
+[![Support me on Github][badge_sponsor]][link_sponsor]
+
+## Developer section
+
+This will contain usefull information if you want to fix a bug you've found in this library. You always start with cloning the repo and doing a `npm install` in the folder. I like consistancy so everything is in a specific order :wink:.
+
+### Running example code
+
+This library has two VSCode launch configurations.
+
+One for running the current open example, you can set breakpoints in the example file and in the typescript code! Be sure to change the IP to your own in `.vscode/launch.json`, so you don't have to edit all the example files.
+
+And it has a launch configuration to run the current Mocha test file, be sure to have a mocha test (in test folder) open.
+
+### (Re-)generate services
+
+I've created a one-liner to regenerate all the generated services. `SONOS_HOST=192.168.x.x npm run gen-srv`.
+This will parse the device properties and will (re)create all the services in the `/src/services` folder. New services will have the **new-** filename prefix, and should be added in the **getFilenameForService** method.
+
+### Compile the library
+
+Because the library is written in typescript, you'll need to compile it before using it. Run `npm run build` to have the compiler generate the actual library in the `lib` folder.
+
 ## Improvements over [node-sonos](https://github.com/bencevans/node-sonos)
 
-The original [node-sonos](https://github.com/bencevans/node-sonos) is started a long time ago, before async programming in node.
-While it works great, it has some rough edges that are hard to solve.
+The original [node-sonos](https://github.com/bencevans/node-sonos) is started a long time ago, before async programming in node. Which I'm a contributor as well.
+Some design decisions cannot be fixed without breaking compatibility with all the applications using it. For instance the `.play()` function serves multiple purposes, starting playback and switching urls. A lot of applications depend on it, and they would all break if I would remove support for it.
 
 This new library is build from the ground up using `node-fetch` for the requests and `fast-xml-parser` for the xml stuff.
 
-One of the most important parts of this new library is the [**service-generator**](./src/generator/service-generator.js), it parses the `/xml/device_description.xml` file from the sonos device. And generates a strong typed service class for it. This means that we can support all the possible actions your sonos device has. And it also means that it will tell your which parameters it expects.
+One of the most important parts of this new library is the [**service-generator**](./src/generator/service-generator.js), it parses the `/xml/device_description.xml` file from the sonos device. And generates a strong typed service class for it. This means that this library will support everything the sonos controller can do.
+And it also means that it will tell your which parameters it expects.
 
 - [x] Strong typed (auto generated) client
 - [x] Starting from auto discovery or one sonos host ip
@@ -170,21 +210,9 @@ One of the most important parts of this new library is the [**service-generator*
 - [x] All events parsed and some custom properties
 - [x] The sonos device will expose all the generated services, or an extended version of them.
 - [x] The sonos device will contain extra features and shortcuts to services.
+- [x] Easier implementing [metadata generation](./src/helpers/metadata-helper.ts) for new services.
 
-## Developer section
-
-This will contain usefull information if you want to fix a bug you've found in this library. You always start with cloning the repo and doing a `npm install` in the folder.
-
-### (Re-)generate services
-
-I've created a one-liner to regenerate all the generated services. `SONOS_HOST=192.168.x.x npm run gen-srv`.
-This will parse the device properties and will create all the services in the `/src/services` folder. New services will have the **new-** filename prefix, and should be added in the **getFilenameForService** method.
-
-### Compile the library
-
-Because the library is written in typescript, you'll need to compile it before using it. Run `npm run build` to have the compiler generate the actual library in the `lib` folder.
-
-## Big thanks to all the original contributors
+### Big thanks to all the original contributors
 
 Creating a library from scratch is quite hard, and I'm using a lot of stuff from the original library. That wouldn't exists without the [contributors](https://github.com/bencevans/node-sonos/graphs/contributors).
 
