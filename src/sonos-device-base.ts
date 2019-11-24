@@ -6,7 +6,8 @@ import debug = require('debug')
 export class SonosDeviceBase {
   protected readonly host: string;
   protected readonly port: number;
-  protected readonly debug: Debugger = debug('sonos:device');
+  private _debugger?: Debugger;
+  protected get debug(): Debugger { if (this._debugger === undefined) this._debugger = debug('sonos:device'); return this._debugger; }
   public readonly uuid: string;
   constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
     this.host = host;

@@ -24,7 +24,7 @@ export abstract class BaseService {
   protected readonly port: number;
   private _debugger?: Debugger;
   protected get debug(): Debugger {
-    if(this._debugger === undefined) this._debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}`)
+    if(this._debugger === undefined) this._debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}:${this.host}`)
     return this._debugger;
   }
   private events: EventEmitter | undefined;
@@ -175,10 +175,10 @@ export abstract class BaseService {
           messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if(typeof value === 'string' && key.endsWith('URI'))
           messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
-          else
+        else if (typeof value === 'boolean')
+          messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
+        else
           messageBody += `<${key}>${value}</${key}>`;
-
-
       }
     }
     messageBody += `</u:${action}>`;
@@ -288,7 +288,8 @@ export abstract class BaseService {
       this.events = new EventEmitter();
       this.events.on('removeListener', () => {
         this.debug('Listener removed')
-        const events = this.events!.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
+        if(this.events === undefined) return;
+        const events = this.events.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
         if (this.sid !== undefined && events.length === 0) this.cancelSubscription(this.sid)
       })
       this.events.on('newListener', () => {
@@ -380,7 +381,9 @@ export abstract class BaseService {
    * @memberof BaseService
    */
   public ParseEvent(xml: string): void {
+    this.debug('Got event')
     const rawBody = parse(xml)['e:propertyset']['e:property']
+    this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if(rawBody.LastChange) {
       const rawEventWrapper = XmlHelper.DecodeAndParseXml(rawBody.LastChange);
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event

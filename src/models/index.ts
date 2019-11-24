@@ -3,6 +3,7 @@
 
 export { BrowseResponse } from './browse-response'
 export * from './sonos-events'
+export { PatchAlarm, Alarm } from './alarm'
 export { PlayMode } from './playmode'
 export * from './requests'
 export { SonosGroup } from './sonos-group'

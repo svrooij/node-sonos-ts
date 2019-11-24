@@ -17,6 +17,7 @@ export class MetadataHelper {
    * @memberof MetadataHelper
    */
   static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track {
+    MetadataHelper.debug('Parsing DIDL %o', parsedItem)
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
       Album: didlItem['upnp:album'],
@@ -71,7 +72,17 @@ export class MetadataHelper {
     return metadata
   }
 
-  static GuessTrack(trackUri: string, spotifyRegion = '3079'): Track | undefined {
+  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion = '2311'): { trackUri: string; metedata: Track | string }{
+    const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
+
+    return {
+      trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri),
+      metedata: metadata || ''
+    }
+  }
+
+  static GuessTrack(trackUri: string, spotifyRegion = '2311'): Track | undefined {
+    MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = ''
     const match = /.*\/(.*)$/g.exec(trackUri.replace(/\.[a-zA-Z0-9]{3}$/, ''))
     if (match) {
@@ -142,7 +153,7 @@ export class MetadataHelper {
       // track.ParentId = '';
       track.CdUdn = `SA_RINCON${spotifyRegion}_X_#Svc${spotifyRegion}-0-Token`
       if (parts[1] === 'track') {
-        track.TrackUri = `x-sonos-spotify:${spotifyUri}`;
+        track.TrackUri = `x-sonos-spotify:${spotifyUri}?sid=9&amp;flags=8224&amp;sn=7`;
         track.ItemId = `00032020${spotifyUri}`;
         track.UpnpClass = 'object.item.audioItem.musicTrack';
         

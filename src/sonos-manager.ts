@@ -3,6 +3,12 @@ import { SonosDevice, SonosDeviceDiscovery, ZoneHelper } from './'
 import { ServiceEvents } from './models'
 import { EventEmitter } from 'events';
 import { ZoneGroup } from './helpers/zone-helper';
+/**
+ * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
+ *
+ * @export
+ * @class SonosManager
+ */
 export class SonosManager {
   private readonly events: EventEmitter;
   private devices: SonosDevice[] = [];
@@ -11,6 +17,14 @@ export class SonosManager {
     this.events = new EventEmitter();
   }
 
+  /**
+   * Initialize the manager with one known device. Usefull in special network environments.
+   *
+   * @param {string} host
+   * @param {number} [port=1400]
+   * @returns {Promise<boolean>}
+   * @memberof SonosManager
+   */
   public InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
     this.zoneService = new ZoneGroupTopologyService(host, port);
     return this.LoadAllGroups()
@@ -18,6 +32,13 @@ export class SonosManager {
       .then(success => this.SubscribeForGroupEvents(success));
   }
 
+  /**
+   * Initialize the manager by searching for one Sonos device in your network.
+   *
+   * @param {10} timeoutInSeconds
+   * @returns {Promise<boolean>}
+   * @memberof SonosManager
+   */
   public InitializeWithDiscovery(timeoutInSeconds: 10): Promise<boolean> {
     const deviceDiscovery = new SonosDeviceDiscovery();
     return deviceDiscovery
@@ -59,7 +80,7 @@ export class SonosManager {
   }
 
   private zoneEventSubscription = this.handleZoneEventData.bind(this)
-  private handleZoneEventData(data: any){ // The data from this event isn't used. It's just a trigger to reload stuff.
+  private handleZoneEventData(): void { // The data from this event isn't used. It's just a trigger to reload stuff.
     this.LoadAllGroups().then(groups => {
       groups.forEach(g => {
         const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid)
@@ -68,6 +89,11 @@ export class SonosManager {
         })
       })
     })
+  }
+
+  public CancelSubscription(): void {
+    if(this.zoneService !== undefined)
+      this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
   }
 
   public get Devices(): SonosDevice[] {

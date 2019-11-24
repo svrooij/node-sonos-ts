@@ -17,3 +17,10 @@ manager.InitializeWithDiscovery(10)
     manager.Devices.forEach(d => console.log('Device %s (%s) is joined in %s', d.Name, d.uuid, d.GroupName))
   })
   .catch(console.error)
+
+process.on('SIGINT', () => {
+  manager.CancelSubscription()
+  setTimeout(() => {
+    process.exit(0)
+  }, 100)
+})

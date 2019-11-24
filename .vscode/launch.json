@@ -7,13 +7,32 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/examples/use-manager.js",
+      "name": "Run current example",
+      "program": "${file}",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "env": {
-        "DEBUG":"sonos:*"
-      }
-    }
+        "DEBUG":"sonos:*",
+        "SONOS_HOST":"192.168.96.56"
+      },
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Mocha Current File",
+      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "args": [
+        "--no-timeouts",
+        "--colors",
+        "${file}",
+        "--require",
+        "ts-node/register"
+      ],
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "internalConsoleOptions": "neverOpen"
+    },
   ]
 }
