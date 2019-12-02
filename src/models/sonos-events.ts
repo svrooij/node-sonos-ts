@@ -11,6 +11,8 @@ export enum SonosEvents {
   AVTransport = "service.avtransport",
   CurrentTrack = "avtransport.CurrentTrackUri",
   CurrentTrackMetadata = "avtransport.CurrentTrackMetaData",
+  EnqueuedTransport = "avtransport.EnqueuedTransportUri",
+  EnqueuedTransportMetadata = "avtransport.EnqueuedTransportUriMetaData",
   NextTrack = "avtransport.NextTrackUri",
   NextTrackMetadata = "avtransport.NextTrackMetaData",
   /**

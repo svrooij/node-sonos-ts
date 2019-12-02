@@ -57,8 +57,8 @@ export class SonosEventListener {
     this.debug('Got event on %s SID: %s', req.url, sid);
     const service = this.subscriptions[sid];
     if(service === undefined) {
-      this.debug('Subscription %s not found, sending 404 to stop messages', sid);
-      resp.statusCode = 404;
+      this.debug('Subscription %s not found, sending 412 to stop messages', sid);
+      resp.statusCode = 412;
       resp.end();
       return;
     }

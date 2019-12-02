@@ -11,12 +11,12 @@ export class SonosDevice extends SonosDeviceBase {
   private groupName: string | undefined;
   private coordinator: SonosDevice | undefined;
 
-  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: {coordinator: SonosDevice; name: string; managerEvents: EventEmitter} | undefined = undefined) {
+  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: {coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined = undefined) {
     super(host, port, uuid);
     this.name = name;
     if(groupConfig) {
       this.groupName = groupConfig.name;
-      if(uuid !== groupConfig.coordinator.uuid) {
+      if(groupConfig.coordinator !== undefined && uuid !== groupConfig.coordinator.uuid) {
         this.coordinator = groupConfig.coordinator;
       }
       if (uuid) {
@@ -267,6 +267,15 @@ export class SonosDevice extends SonosDeviceBase {
   //#region Events 
   private events?: EventEmitter;
   private isSubscribed = false;
+  public CancelEvents(): void {
+    if(this.events !== undefined) {
+      const eventNames = this.events.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
+      eventNames.forEach(e => {
+        if(this.events !== undefined)
+        this.events.removeAllListeners(e);
+      })
+    }
+  }
   /**
    * Access to the sonos event emitter. All the possible events are in the SonosEvents enum.
    * Calling this will automatically subscribe for events from the device.
@@ -319,10 +328,16 @@ export class SonosDevice extends SonosDeviceBase {
       if(data.CurrentTrackMetaData) this.Events.emit(SonosEvents.CurrentTrackMetadata, data.CurrentTrackMetaData)
     }
 
-    if (data.NextTrackURI && this.currentTrackUri !== data.NextTrackURI) {
-      this.nextTrackUri = data.CurrentTrackURI
+    if (data.NextTrackURI && this.nextTrackUri !== data.NextTrackURI) {
+      this.nextTrackUri = data.NextTrackURI
       this.Events.emit(SonosEvents.NextTrack, this.nextTrackUri);
       if(data.NextTrackMetaData) this.Events.emit(SonosEvents.NextTrackMetadata, data.NextTrackMetaData)
+    }
+
+    if (data.EnqueuedTransportURI && this.enqueuedTransportUri !== data.EnqueuedTransportURI) {
+      this.enqueuedTransportUri = data.EnqueuedTransportURI
+      this.Events.emit(SonosEvents.EnqueuedTransport, this.enqueuedTransportUri);
+      if(data.EnqueuedTransportURIMetaData) this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData)
     }
   }
   private _handleRenderingControlEvent = this.handleRenderingControlEvent.bind(this)
@@ -349,7 +364,7 @@ export class SonosDevice extends SonosDeviceBase {
 
   //#region Group stuff
   private _handleGroupUpdate = this.handleGroupUpdate.bind(this)
-  private handleGroupUpdate(data: { coordinator: SonosDevice; name: string}): void {
+  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string}): void {
     if(data.coordinator && data.coordinator.uuid !== this.uuid && (!this.coordinator || this.coordinator.uuid !== data.coordinator.uuid)) {
       this.debug('Coordinator changed for %s', this.uuid)
       this.coordinator = data.coordinator;
@@ -357,7 +372,7 @@ export class SonosDevice extends SonosDeviceBase {
         this.events.emit(SonosEvents.Coordinator, this.coordinator.uuid);
       }
     }
-    if(this.coordinator && data.coordinator.uuid === this.uuid) {
+    if(this.coordinator && (data.coordinator === undefined || data.coordinator.uuid === this.uuid)) {
       this.debug('Coordinator removed for %s', this.uuid)
       this.coordinator = undefined;
       if(this.events !== undefined){
@@ -400,6 +415,10 @@ export class SonosDevice extends SonosDeviceBase {
   private currentTrackUri?: string;
   public get CurrentTrackUri(): string | undefined {
     return this.currentTrackUri;
+  }
+  private enqueuedTransportUri?: string;
+  public get EnqueuedTransportUri(): string | undefined {
+    return this.enqueuedTransportUri;
   }
   private nextTrackUri?: string;
   public get NextTrackUri(): string | undefined {

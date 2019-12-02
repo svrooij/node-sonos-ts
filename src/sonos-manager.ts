@@ -61,11 +61,13 @@ export class SonosManager {
 
   private InitializeDevices(groups: ZoneGroup[]): boolean {
     groups.forEach(g => {
-      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid);
+      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events });
+      if(this.devices.findIndex(v => v.uuid === coordinator.uuid) === -1)
+        this.devices.push(coordinator);
       g.members.forEach(m => {
         // Check if device exists
         if(this.devices.findIndex(v => v.uuid === m.uuid) === -1){
-          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: coordinator, name: g.name, managerEvents: this.events }));
+          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events }));
         }
       })
     })
@@ -83,9 +85,9 @@ export class SonosManager {
   private handleZoneEventData(): void { // The data from this event isn't used. It's just a trigger to reload stuff.
     this.LoadAllGroups().then(groups => {
       groups.forEach(g => {
-        const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid)
+        const coordinator = this.devices.find(d => d.uuid === g.coordinator.uuid) || new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name);
         g.members.forEach(m => {
-          this.events.emit(m.uuid, {coordinator: coordinator, name: g.name});
+          this.events.emit(m.uuid, {coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name});
         })
       })
     })

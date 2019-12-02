@@ -32,7 +32,7 @@ export class MetadataHelper {
       ProtocolInfo: undefined
     };
     if(didlItem['upnp:albumArtURI']) {
-      const art = (didlItem['upnp:albumArtURI'] as string).replace(/&amp;/, '&');
+      const art = (didlItem['upnp:albumArtURI'] as string).replace(/&amp;/gi, '&').replace(/%25/g, '%').replace(/%3a/gi,':');
       track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
     }
     
