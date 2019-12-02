@@ -167,6 +167,8 @@ const getFilenameForService = function (name) {
       return 'group-management.service'
     case 'GroupRenderingControl':
       return 'group-rendering-control.service'
+    case 'HTControl':
+      return 'ht-control.service'
     case 'MusicServices':
       return 'music-services.service'
     case 'QPlay':
