@@ -18,7 +18,10 @@
     "url": "git+https://github.com/svrooij/node-sonos-ts.git"
   },
   "keywords": [
-    "sonos"
+    "sonos",
+    "typescript",
+    "real-time",
+    "home-automation"
   ],
   "author": "Stephan van Rooij <github@svrooij.nl> (https://svrooij.nl)",
   "license": "MIT",
