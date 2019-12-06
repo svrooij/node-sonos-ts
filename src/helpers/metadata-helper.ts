@@ -121,6 +121,14 @@ export class MetadataHelper {
       track.CdUdn = 'RINCON_AssociatedZPUDN'
       return track;
     }
+
+    if (trackUri.startsWith('x-sonosapi-stream:')){
+      track.UpnpClass = 'object.item.audioItem.audioBroadcast',
+      track.Title = 'Some radio station'
+      track.ItemId = '10092020' + '_xxx_xxxx' // Add station ID from url (regex?)
+      return track;
+    }
+
     if (trackUri.startsWith('x-rincon-cpcontainer:1006206ccatalog')) { // Amazon prime container
       track.TrackUri = trackUri;
       track.ItemId = trackUri.replace('x-rincon-cpcontainer:', '')

@@ -12,6 +12,12 @@ sonos.AVTransportService.GetPositionInfo()
   })
   .catch(err => console.error(err))
 
-sonos.AddUriToQueue('spotify:track:7dVjKRYCkszdHEHIBj9OMc')
-  .then(success => console.log(success))
-  .catch(err => console.error(err))
+// sonos.AddUriToQueue('spotify:track:7dVjKRYCkszdHEHIBj9OMc')
+//   .then(success => console.log(success))
+//   .catch(err => console.error(err))
+
+sonos.SetAVTransportURI('x-sonosapi-stream:station_KISNFM?sid=162')
+  .then(success => {
+    return sonos.Play()
+  })
+  .catch(console.error)
