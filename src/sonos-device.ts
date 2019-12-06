@@ -6,6 +6,8 @@ import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
 import { XmlHelper } from './helpers/xml-helper'
 import { MetadataHelper } from './helpers/metadata-helper'
+import { SmapiClient } from './musicservices/smapi-client'
+
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
   private groupName: string | undefined;
@@ -44,7 +46,6 @@ export class SonosDevice extends SonosDeviceBase {
    * Add One track to the queue
    *
    * @param {string} trackUri
-   * @param {(string | Track)} [metadata]
    * @param {number} [positionInQueue=0]
    * @param {boolean} [enqueueAsNext=true]
    * @returns {Promise<AddURIToQueueResponse>}
@@ -135,6 +136,36 @@ export class SonosDevice extends SonosDeviceBase {
     const groupToJoin = zones.find(z => z.members.some(m => m.name.toLowerCase() === otherDevice.toLowerCase()))
     if(groupToJoin === undefined) throw new Error(`Player '${otherDevice}' isn't found!`)
     return this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: ''})
+  }
+
+  private allMusicServices?: any[];
+  public async MusicServicesList(): Promise<any[] | undefined> {
+    if(this.allMusicServices === undefined) {
+      return this.MusicServicesService.ListAvailableServices().then(resp => {
+        const musicServiceList = XmlHelper.DecodeAndParseXml(resp.AvailableServiceDescriptorList, '')
+        if(musicServiceList.Services && Array.isArray(musicServiceList.Services.Service) ){
+          this.allMusicServices = musicServiceList.Services.Service;
+          //this.debug('MusicList loaded %O', this.allMusicServices)
+          return this.allMusicServices;
+        }
+        throw new Error('Music list could not be downloaded')
+      })
+    }
+    return this.allMusicServices;
+  }
+  private deviceId?: string;
+  public async MusicServicesClient(name: string): Promise<SmapiClient> {
+    if(this.deviceId === undefined) this.deviceId = (await this.SystemPropertiesService.GetString({ VariableName: 'R_TrialZPSerial' })).StringValue;
+    return this.MusicServicesList()
+      .then(services => {
+        if(services === undefined) throw new Error('Music list could not be loaded');
+        const service = services.find(s => s.Name === name);
+        if(service === undefined) throw new Error(`MusicService could not be found`);
+
+        if(service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)')
+
+        return new SmapiClient({ name: name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id })
+      });
   }
 
   /**
