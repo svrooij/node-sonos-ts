@@ -7,6 +7,7 @@ import { EventEmitter } from 'events';
 import { XmlHelper } from './helpers/xml-helper'
 import { MetadataHelper } from './helpers/metadata-helper'
 import { SmapiClient } from './musicservices/smapi-client'
+import { JsonHelper } from './helpers/json-helper'
 
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
@@ -120,6 +121,52 @@ export class SonosDevice extends SonosDeviceBase {
 
       return this.AlarmClockService.UpdateAlarm(alarm);
     })
+  }
+
+  /**
+   * Execute any sonos command by name, see examples/commands.js
+   *
+   * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
+   * @param {(string | object | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
+   * @returns {Promise<any>}
+   * @memberof SonosDevice
+   */
+  public async ExecuteCommand(command: string, options: string | object | number | undefined): Promise<any> {
+    let service = '';
+
+    if(command.indexOf('.') > -1) {
+      const split = command.split('.', 2);
+      service = split[0];
+      command = split[1];
+    }
+
+    const objectToCall: {[key: string]: Function} = service !== '' ? this.executeCommandGetService(service) || this.executeCommandGetFunctions() : this.executeCommandGetFunctions();
+
+    if(typeof(objectToCall[command]) === 'function') {
+      if(options === undefined) {
+        return objectToCall[command]();
+      } else if(typeof(options) === 'string') {
+        const parsedOptions = JsonHelper.TryParse(options);
+        return objectToCall[command](parsedOptions);
+      } else { // number or object options;
+        return objectToCall[command](options);
+      }
+    }
+    throw new Error(`Command ${command} isn't a function`);
+  }
+
+  private executeCommandGetFunctions(): {[key: string]: Function} {
+    // This code looks weird, but is required to convince TypeScript this is actually what we want.
+    return this as unknown as {[key: string]: Function};
+  }
+
+  private executeCommandGetService(serviceName: string): {[key: string]: Function} | undefined {
+    if(serviceName.indexOf('Service') === -1) // Name doesn't have 'Service' in it.
+      return undefined;
+    
+    const serviceDictionary = this.executeCommandGetFunctions();
+    if(serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
+    return undefined;
   }
 
   /**
