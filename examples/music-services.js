@@ -26,8 +26,6 @@ const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 //   console.log('GetString R_CustomerID %s', resp.StringValue)
 // }).catch(console.error)
 
-
-
 // sonos.MusicServicesService.GetSessionId({ ServiceId: 254, Username: '' }).then(resp => {
 //   console.log(resp.SessionId)
 // }).catch(console.error)

@@ -5,11 +5,19 @@ This is the current work-in-progress of support for external music services.
 I always wanted support for external music services in node-sonos, but never got to it. The main thing I'm trying to accomplish it to **Search external services**, like the normal sonos controller apps can.
 So have it check the available services, pick one by name and search for some music.
 
+## Current status
+
+- [x] Connect to music services without authentication (mainly radio services).
+- [x] Search radio stations
+- [ ] Browse for all stations
+- [ ] Search for artists
+- [ ] Connect to music service with authentication (need help, or sonos insider please contact me :wink:)
+
 Challenges:
 
 1. SMAPI protocol is badly [documented](https://developer.sonos.com/build/content-service-get-started/playback-on-sonos/).
 2. Client authentication, from the app/user perspective isn't documented at all (if you found the documentation, please let me know).
-3. Service 'Capabilities' aren't documented, I suspect a bitmask.
+3. Service 'Capabilities' aren't documented, I suspect a [bitmask](https://dev.to/somedood/bitmasks-a-very-esoteric-and-impractical-way-of-managing-booleans-1hlf).
 4. Sonos controller app directly connects to MusicService [SMAPI](https://developer.sonos.com/build/content-service-get-started/soap-requests-and-responses/) server over https, so no way to sniff traffic.
 5. Sonos controller app "loads" credentials from somewhere, not sure where they are stored or how to retrieve.
 
@@ -34,11 +42,11 @@ Each music service has certain capabilities, like `search` and `Requires Device 
           1000000001    513     radioPup
           1000000001    513     Spreaker
 
-1 = Search
-7 = Account logging ?
-10 = Extended metadata
+first position = Search
+7th position = Account logging ?
+10th position = Extended metadata
 
-13 = Receive actions for getMediaUri
+13th position = Receive actions for getMediaUri
 ```
 
 ## All current services
