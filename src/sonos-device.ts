@@ -225,25 +225,31 @@ export class SonosDevice extends SonosDeviceBase {
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
     this.debug('PlayNotification(%o)', options);
 
+    if(options.metadata === undefined){
+      const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(options.trackUri);
+      options.metadata = guessedMetaData.metedata;
+      options.trackUri = guessedMetaData.trackUri;
+    }
+
     const originalState = await this.AVTransportService.GetTransportInfo().then(info => info.CurrentTransportState as TransportState)
     this.debug('Current state is %s', originalState);
-    if (options.OnlyWhenPlaying && (originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
+    if (options.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Notification cancelled, player not playing')
       return false;
     }
 
     // Original data to revert to
-    const originalVolume = options.Volume !== undefined ? await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(resp => resp.CurrentVolume) : undefined;
+    const originalVolume = options.volume !== undefined ? await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(resp => resp.CurrentVolume) : undefined;
     const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
     const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
 
     // Start the notification
-    await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.TrackUri, CurrentURIMetaData: options.MetaData})
-    if (options.Volume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.Volume})
-    await this.Play();
+    await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.trackUri, CurrentURIMetaData: options.metadata})
+    if (options.volume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
+    await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
 
     // Wait for event (or timeout)
-    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, 10).catch(err => this.debug('AsyncEvent failed %o', err))
+    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, options.timeout).catch(err => this.debug('AsyncEvent timeout fired', err))
 
     // Revert everything back
     this.debug('Reverting everything back to normal')
@@ -266,7 +272,7 @@ export class SonosDevice extends SonosDeviceBase {
     }
 
     if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-      await this.Play();
+      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
     }
 
     return true;

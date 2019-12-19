@@ -9,7 +9,7 @@
       "request": "launch",
       "name": "Run current example",
       "program": "${file}",
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "preLaunchTask": "npm: build",
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "env": {
         "DEBUG":"sonos:*",
