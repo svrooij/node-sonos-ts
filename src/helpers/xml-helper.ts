@@ -68,6 +68,9 @@ export class XmlHelper {
   }
 
   static EncodeTrackUri(trackUri: string): string {
+    if(trackUri.startsWith('http') && trackUri.indexOf('?') === -1)
+      return trackUri.replace(/ /g, '+');
+    
     const index = trackUri.indexOf(':') + 1
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
   }

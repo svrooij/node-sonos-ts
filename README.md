@@ -1,6 +1,8 @@
 # Node Sonos (the typescript version)
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
+[![github issues][badge_issues]][link_issues]
+[![npm][badge_npm]][link_npm]
 
 A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library written in node.
 
@@ -10,7 +12,7 @@ To use the library just add it to your project. `npm install @svrooij/sonos`. An
 
 You'll need to get the **SonosDevice** by one of the [methods below](#sonosmanager-and-logical-devices), and start using the extra [functionality](#extra-functionality), the [shortcuts](#shortcuts) or the [exposed services](#exposed-services). There also is an [Eventlistener](#events) that allows you to subscribe to all the events your sonos sends out. This library allows you to do **everything** you can do with the Sonos application (except search external [music services](./src/musicservices) :cry:).
 
-```node
+```JavaScript
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeWithDiscovery(10) // Search for all devices in your network, for max 10 seconds.
@@ -30,6 +32,7 @@ I also implemented extra functionatity for each player. (mostly combining calls)
 - **.AlarmPatch({ ID: 1, ... })** - Update some properties of one of your alarms.
 - **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator.
 - **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream). See [play-notification.js](./examples/play-notification.js)
+- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source. See [Text-to-Speech](#text-to-speech)
 - **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed. This doens't start playback all the time!
 - **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it.
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
@@ -76,7 +79,7 @@ Your sonos device has several *services* defined in it's *device description* (a
 
 This library also has a command parser, so every listed command can also be executed if you only know the string name (eg. user input :wink:)
 
-```node
+```JavaScript
 const SonosDevice = require('../lib').SonosDevice
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 // Send Play command to AVTransportService (with auto json parsing)
@@ -102,7 +105,7 @@ This library has a **SonosManager** that resolves all your sonos groups for you.
 
 You can discover all the devices in the current network using device discovery
 
-```node
+```JavaScript
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeWithDiscovery(10)
@@ -117,7 +120,7 @@ manager.InitializeWithDiscovery(10)
 
 In some cases device discovery doesn't work (think docker or complex networks), you can also start the manager by submitting one known sonos IP.
 
-```node
+```JavaScript
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
@@ -128,11 +131,11 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .catch(console.error)
 ```
 
-### Advanced usage
+### Control a single known device
 
-This library also supports direct using it without the **SonosManager**. The group stuff won't work this way!
+This library also supports direct using it without the **SonosManager**. The group updates need the manager, so you're missing some features!
 
-```node
+```JavaScript
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
@@ -141,6 +144,36 @@ sonos.LoadDeviceData()
     console.log(sonos.Name)
   })
   .catch(console.error)
+```
+
+## Text to speech
+
+A lot of people want to send text to sonos to use for notifications (or a welcome message in your B&B). This library has support for text-to-speech but you'll need a text-to-speech endpoint. To keep this library as clean as possible, the text-to-speech server is build in a seperate package. See [node-sonos-tts-polly](https://github.com/svrooij/node-sonos-tts-polly) for a text-to-speech server that uses Amazon Polly for speech generation.
+
+For my [sponsors](link_sponsor) I've setup a hosted version, so if you don't want to setup your own server, you know what to do.
+
+The text-to-speech works as following:
+
+1. Request the TTS endpoint what the url of the supplied text is.
+2. If the server doesn't have this file, it will generate the mp3 file on the fly.
+3. The TTS endpoint returns the url of the mp3.
+4. We call the regular `.PlayNotification({})` command, with the tts url.
+
+You can also set the endpoint with the `SONOS_TTS_ENDPOINT` environment variable, so you don't have to supply it every time.
+
+The server I've build is based on Amazon Polly, but I invite eveybody to build their own if you want to support an other tts service.
+
+```JavaScript
+const SonosDevice = require('../lib').SonosDevice
+const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+sonos.PlayTTS({ text: 'Someone at the front-door', lang: 'en-US', gender: 'male', volume: 50, endpoint: 'https://your.tts.endpoint/api/generate' })
+  .then(played => {
+    console.log('Played notification %o', played)
+    // Timeout to allow event subscriptions to cancel.
+    setTimeout(() => {
+      process.exit(0)
+    }, 500)
+  })
 ```
 
 ## Events
@@ -153,7 +186,7 @@ If you subscribed to events of one service, or on the sonos device events. A sma
 
 The **SonosDevice** also has an `.Events` property. Here you'll receive some specific events.
 
-```node
+```JavaScript
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 const ServiceEvents = require('@svrooij/sonos').ServiceEvents
 const SonosEvents = require('@svrooij/sonos').SonosEvents
@@ -259,4 +292,9 @@ And it also means that it will tell your which parameters it expects.
 Creating a library from scratch is quite hard, and I'm using a lot of stuff from the original library. That wouldn't exists without the [contributors](https://github.com/bencevans/node-sonos/graphs/contributors).
 
 [badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red
+[badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts
+[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos.svg?style=flat-square
+
 [link_sponsor]: https://github.com/sponsors/svrooij
+[link_issues]: https://github.com/svrooij/node-sonos-ts/issues
+[link_npm]: https://www.npmjs.com/package/@svrooij/sonos-ts

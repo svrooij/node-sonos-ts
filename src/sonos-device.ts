@@ -1,6 +1,6 @@
 import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
-import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm } from './models'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
@@ -8,6 +8,7 @@ import { XmlHelper } from './helpers/xml-helper'
 import { MetadataHelper } from './helpers/metadata-helper'
 import { SmapiClient } from './musicservices/smapi-client'
 import { JsonHelper } from './helpers/json-helper'
+import { TtsHelper } from './helpers/tts-helper'
 
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
@@ -245,8 +246,10 @@ export class SonosDevice extends SonosDeviceBase {
 
     // Start the notification
     await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.trackUri, CurrentURIMetaData: options.metadata})
-    if (options.volume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
-    await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
+    if (options.volume !== undefined) {
+      await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
+    }
+    await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch(err => { this.debug('Play threw error, wrong url? %o', err); });
 
     // Wait for event (or timeout)
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, options.timeout).catch(err => this.debug('AsyncEvent timeout fired', err))
@@ -277,6 +280,24 @@ export class SonosDevice extends SonosDeviceBase {
 
     return true;
 
+  }
+
+  public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTS(%o)', options);
+
+    if(options.endpoint === undefined) {
+      options.endpoint = process.env.SONOS_TTS_ENDPOINT;
+      if (options.endpoint === undefined) throw new Error('No TTS Endpoint defined, check the documentation.')
+    }
+      
+    if(options.text === '' || options.lang === '') {
+      this.debug('Cancelling TTS, not all required parameters are set');
+      return false;
+    }
+
+    const uri = await TtsHelper.GetTtsUriFromEndpoint(options.endpoint, options.text, options.lang, options.gender);
+
+    return this.PlayNotification({ trackUri: uri, onlyWhenPlaying: options.onlyWhenPlaying, volume: options.volume, timeout: options.timeout || 120});
   }
 
   /**
