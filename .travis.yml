@@ -4,11 +4,16 @@ node_js:
   - 10
   - 13
 
+branches:
+  only:
+    - "master"
+
 jobs:
   include:
     # Define the release stage that runs semantic-release
     - stage: release
       node_js: lts/*
+      if: branch = master
       # Advanced: optionally overwrite your default `script` step to skip the tests
       # script: skip
       deploy:
