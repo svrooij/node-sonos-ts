@@ -299,5 +299,5 @@ Creating a library from scratch is quite hard, and I'm using a lot of stuff from
 
 [link_sponsor]: https://github.com/sponsors/svrooij
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
-[link_npm]: https://www.npmjs.com/package/@svrooij/sonos-ts
+[link_npm]: https://www.npmjs.com/package/@svrooij/sonos
 [link_travis]: https://travis-ci.org/svrooij/node-sonos-ts
