@@ -226,17 +226,18 @@ export class SonosDevice extends SonosDeviceBase {
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
     this.debug('PlayNotification(%o)', options);
 
-    if(options.metadata === undefined){
-      const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(options.trackUri);
-      options.metadata = guessedMetaData.metedata;
-      options.trackUri = guessedMetaData.trackUri;
-    }
-
     const originalState = await this.AVTransportService.GetTransportInfo().then(info => info.CurrentTransportState as TransportState)
     this.debug('Current state is %s', originalState);
     if (options.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Notification cancelled, player not playing')
       return false;
+    }
+
+    // Generate metadata if needed
+    if(options.metadata === undefined){
+      const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(options.trackUri);
+      options.metadata = guessedMetaData.metedata;
+      options.trackUri = guessedMetaData.trackUri;
     }
 
     // Original data to revert to

@@ -13,8 +13,7 @@
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "env": {
         "DEBUG":"sonos:*",
-        "SONOS_HOST":"192.168.96.56",
-        "SONOS_TTS_ENDPOINT": "https://sonos-tts.svrooij.nl/api/generate"
+        "SONOS_HOST":"192.168.96.56"
       },
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
