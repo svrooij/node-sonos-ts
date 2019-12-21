@@ -1,12 +1,14 @@
 import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
-import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm } from './models'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
 import { XmlHelper } from './helpers/xml-helper'
 import { MetadataHelper } from './helpers/metadata-helper'
 import { SmapiClient } from './musicservices/smapi-client'
+import { JsonHelper } from './helpers/json-helper'
+import { TtsHelper } from './helpers/tts-helper'
 
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
@@ -123,6 +125,52 @@ export class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * Execute any sonos command by name, see examples/commands.js
+   *
+   * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
+   * @param {(string | object | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
+   * @returns {Promise<any>}
+   * @memberof SonosDevice
+   */
+  public async ExecuteCommand(command: string, options: string | object | number | undefined): Promise<any> {
+    let service = '';
+
+    if(command.indexOf('.') > -1) {
+      const split = command.split('.', 2);
+      service = split[0];
+      command = split[1];
+    }
+
+    const objectToCall: {[key: string]: Function} = service !== '' ? this.executeCommandGetService(service) || this.executeCommandGetFunctions() : this.executeCommandGetFunctions();
+
+    if(typeof(objectToCall[command]) === 'function') {
+      if(options === undefined) {
+        return objectToCall[command]();
+      } else if(typeof(options) === 'string') {
+        const parsedOptions = JsonHelper.TryParse(options);
+        return objectToCall[command](parsedOptions);
+      } else { // number or object options;
+        return objectToCall[command](options);
+      }
+    }
+    throw new Error(`Command ${command} isn't a function`);
+  }
+
+  private executeCommandGetFunctions(): {[key: string]: Function} {
+    // This code looks weird, but is required to convince TypeScript this is actually what we want.
+    return this as unknown as {[key: string]: Function};
+  }
+
+  private executeCommandGetService(serviceName: string): {[key: string]: Function} | undefined {
+    if(serviceName.indexOf('Service') === -1) // Name doesn't have 'Service' in it.
+      return undefined;
+    
+    const serviceDictionary = this.executeCommandGetFunctions();
+    if(serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
+    return undefined;
+  }
+
+  /**
    * Join this device to an other group, if you know the coordinator uuid you can do .AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${uuid}`, CurrentURIMetaData: ''})
    *
    * @param {string} otherDevice The name of the other device, (to find the needed coordinator uuid)
@@ -180,23 +228,32 @@ export class SonosDevice extends SonosDeviceBase {
 
     const originalState = await this.AVTransportService.GetTransportInfo().then(info => info.CurrentTransportState as TransportState)
     this.debug('Current state is %s', originalState);
-    if (options.OnlyWhenPlaying && (originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
+    if (options.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Notification cancelled, player not playing')
       return false;
     }
 
+    // Generate metadata if needed
+    if(options.metadata === undefined){
+      const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(options.trackUri);
+      options.metadata = guessedMetaData.metedata;
+      options.trackUri = guessedMetaData.trackUri;
+    }
+
     // Original data to revert to
-    const originalVolume = options.Volume !== undefined ? await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(resp => resp.CurrentVolume) : undefined;
+    const originalVolume = options.volume !== undefined ? await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(resp => resp.CurrentVolume) : undefined;
     const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
     const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
 
     // Start the notification
-    await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.TrackUri, CurrentURIMetaData: options.MetaData})
-    if (options.Volume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.Volume})
-    await this.Play();
+    await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.trackUri, CurrentURIMetaData: options.metadata})
+    if (options.volume !== undefined) {
+      await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
+    }
+    await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch(err => { this.debug('Play threw error, wrong url? %o', err); });
 
     // Wait for event (or timeout)
-    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, 10).catch(err => this.debug('AsyncEvent failed %o', err))
+    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, options.timeout).catch(err => this.debug('AsyncEvent timeout fired', err))
 
     // Revert everything back
     this.debug('Reverting everything back to normal')
@@ -219,11 +276,29 @@ export class SonosDevice extends SonosDeviceBase {
     }
 
     if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-      await this.Play();
+      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
     }
 
     return true;
 
+  }
+
+  public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTS(%o)', options);
+
+    if(options.endpoint === undefined) {
+      options.endpoint = process.env.SONOS_TTS_ENDPOINT;
+      if (options.endpoint === undefined) throw new Error('No TTS Endpoint defined, check the documentation.')
+    }
+      
+    if(options.text === '' || options.lang === '') {
+      this.debug('Cancelling TTS, not all required parameters are set');
+      return false;
+    }
+
+    const uri = await TtsHelper.GetTtsUriFromEndpoint(options.endpoint, options.text, options.lang, options.gender);
+
+    return this.PlayNotification({ trackUri: uri, onlyWhenPlaying: options.onlyWhenPlaying, volume: options.volume, timeout: options.timeout || 120});
   }
 
   /**
