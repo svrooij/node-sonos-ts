@@ -1,5 +1,5 @@
 import { XmlHelper } from '../src'
-import { expect, assert}  from 'chai'
+import { expect }  from 'chai'
 import 'mocha';
 
 describe('XmlHelper', function () {
