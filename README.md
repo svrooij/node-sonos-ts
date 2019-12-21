@@ -1,6 +1,7 @@
 # Node Sonos (the typescript version)
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
+[![travis][badge_travis]][link_travis]
 [![github issues][badge_issues]][link_issues]
 [![npm][badge_npm]][link_npm]
 
@@ -293,8 +294,10 @@ Creating a library from scratch is quite hard, and I'm using a lot of stuff from
 
 [badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts
-[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos.svg?style=flat-square
+[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos
+[badge_travis]: https://img.shields.io/travis/svrooij/node-sonos-ts
 
 [link_sponsor]: https://github.com/sponsors/svrooij
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
 [link_npm]: https://www.npmjs.com/package/@svrooij/sonos-ts
+[link_travis]: https://travis-ci.org/svrooij/node-sonos-ts
