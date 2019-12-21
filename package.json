@@ -1,6 +1,6 @@
 {
   "name": "@svrooij/sonos",
-  "version": "0.4.2",
+  "version": "0.0.0-development",
   "description": "A node library to control your sonos devices, written in typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.js",
@@ -12,11 +12,12 @@
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
     "gen-srv": "node ./src/generator/service-generator.js",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
-    "postinstall": "echo \"Check out the documentation in https://github.com/svrooij/node-sonos-ts or give me a shoutout on twitter @svrooij\""
+    "postinstall": "echo \"Check out the documentation in https://github.com/svrooij/node-sonos-ts or give me a shoutout on twitter @svrooij\"",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/svrooij/node-sonos-ts.git"
+    "url": "https://github.com/svrooij/node-sonos-ts.git"
   },
   "keywords": [
     "sonos",
@@ -41,6 +42,7 @@
     "eslint": "^6.7.0",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
+    "semantic-release": "^15.4.0",
     "ts-node": "^8.5.2",
     "typescript": "^3.7.2"
   },
