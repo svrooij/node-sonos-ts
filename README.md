@@ -28,17 +28,17 @@ manager.InitializeWithDiscovery(10) // Search for all devices in your network, f
 
 I also implemented extra functionatity for each player. (mostly combining calls):
 
-- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed.
-- **.AlarmList()** - List all your alarms
-- **.AlarmPatch({ ID: 1, ... })** - Update some properties of one of your alarms.
-- **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator.
-- **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream). See [play-notification.js](./examples/play-notification.js)
-- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source. See [Text-to-Speech](#text-to-speech)
-- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed. This doens't start playback all the time!
-- **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it.
+- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed :musical_note:.
+- **.AlarmList()** - List all your alarms :alarm_clock:
+- **.AlarmPatch({ ID: 1, ... })** - Update some properties of one of your alarms :clock330:.
+- **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator :speaker:.
+- **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream) :bell:. See [play-notification.js](./examples/play-notification.js)
+- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source :mega:. See [Text-to-Speech](#text-to-speech)
+- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed :musical_note:. This doens't start playback all the time!
+- **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it :microphone:.
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
-- **.SwitchToTV()** - On your playbar you can use this to switch to TV input.
-- **.TogglePlayback()** - If playing or transitioning your playback is paused. If stopped or paused your playback is resumed.
+- **.SwitchToTV()** - On your playbar you can use this to switch to TV input :tv:.
+- **.TogglePlayback()** - If playing or transitioning your playback is paused :arrow_forward:. If stopped or paused your playback is resumed.
 
 ### Shortcuts
 
