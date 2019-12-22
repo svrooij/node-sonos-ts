@@ -1,9 +1,10 @@
 # Node Sonos (the typescript version)
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
+[![npm][badge_npm]][link_npm]
 [![travis][badge_travis]][link_travis]
 [![github issues][badge_issues]][link_issues]
-[![npm][badge_npm]][link_npm]
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library written in node.
 
