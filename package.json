@@ -15,7 +15,6 @@
     "postinstall": "echo \"Check out the documentation in https://github.com/svrooij/node-sonos-ts or give me a shoutout on twitter @svrooij\"",
     "semantic-release": "semantic-release",
     "prepack": "npm run build"
-
   },
   "repository": {
     "type": "git",
