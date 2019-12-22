@@ -547,12 +547,13 @@ export class SonosDevice extends SonosDeviceBase {
       return this.currentTransportState === TransportState.Playing || this.currentTransportState === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
     }
   }
+  public get Host(): string { return this.host; }
   private muted?: boolean;
   public get Muted(): boolean | undefined {
     return this.muted;
   }
   /**
-   * Name of this player, call 'LoadDeviceData()' first.
+   * Name of this player, set by manager or by calling LoadDeviceData()
    *
    * @readonly
    * @type {string}
@@ -563,6 +564,8 @@ export class SonosDevice extends SonosDeviceBase {
     if (this.zoneAttributes === undefined) throw new Error('Zone attributes not loaded')
     return this.zoneAttributes.CurrentZoneName
   }
+  public get Port(): number { return this.port; }
+  public get Uuid(): string {return this.uuid; }
   private volume?: number;
   public get Volume(): number | undefined {
     return this.volume;
