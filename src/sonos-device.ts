@@ -262,7 +262,7 @@ export class SonosDevice extends SonosDeviceBase {
 
     if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
       this.debug('Selecting track %d', originalPositionInfo.Track)
-      await this.SeeKTrack(originalPositionInfo.Track)
+      await this.SeekTrack(originalPositionInfo.Track)
         .catch(err => {
           this.debug('Error selecting track, happens with some music services %o', err)
         })
@@ -652,7 +652,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeeKTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
+  public SeekTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
 
   /**
    * Stop playback, shortcut to .Coordinator.AVTransportService.Stop()
