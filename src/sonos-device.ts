@@ -574,6 +574,29 @@ export class SonosDevice extends SonosDeviceBase {
   //#endregion
 
   //#region Shortcuts
+
+  /**
+   * Get nightmode status of playbar.
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public GetNightMode(): Promise<boolean> {
+    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })
+      .then(resp => resp.CurrentValue === 1)
+  }
+
+  /**
+   * Get Speech Enhancement status of playbar
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public GetSpeechEnhancement(): Promise<boolean> {
+    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })
+      .then(resp => resp.CurrentValue === 1)
+  }
+  
   /**
    * GetZoneAttributes shortcut to .DevicePropertiesService.GetZoneAttributes()
    *
@@ -654,6 +677,54 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public SeekTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
 
+  /**
+   * Turn on/off night mode, on your playbar.
+   *
+   * @param {boolean} nightmode
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetNightMode(nightmode: boolean): Promise<boolean> {
+    return this.RenderingControlService
+      .SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 })
+  }
+
+  /**
+   * Set relative volume, shortcut to .RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
+   *
+   * @param {number} volumeAdjustment the adjustment, positive or negative
+   * @returns {Promise<number>}
+   * @memberof SonosDevice
+   */
+  public SetRelativeVolume(volumeAdjustment: number): Promise<number> {
+    return this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
+      .then(resp => resp.NewVolume);
+  }
+
+  /**
+   * Turn on/off speech enhancement, on your playbar,
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
+   *
+   * @param {boolean} dialogLevel
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return this.RenderingControlService
+      .SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
+  }
+
+  /**
+   * Set the volume, shortcut to .RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
+   *
+   * @param {number} volume new Volume (between 0 and 100)
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetVolume(volume: number): Promise<boolean> {
+    if (volume < 0 || volume > 100) throw new Error('Volume should be between 0 and 100');
+    return this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
+  }
   /**
    * Stop playback, shortcut to .Coordinator.AVTransportService.Stop()
    *
