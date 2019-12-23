@@ -41,16 +41,31 @@ I also implemented extra functionatity for each player. (mostly combining calls)
 - **.SwitchToTV()** - On your playbar you can use this to switch to TV input :tv:.
 - **.TogglePlayback()** - If playing or transitioning your playback is paused :arrow_forward:. If stopped or paused your playback is resumed.
 
+You can also browse content, see [content.js](./examples/content.js)
+
+- **.Browse({...})** - Browse local content.
+- **.BrowseWithDefaults({...})** - Browse local content by only specifying the ObjectID, the rest will be set to default.
+- **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
+- **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
+- **.GetFavorites({...})** - Get your favorite songs
+- **.GetQueue({...})** - Get the current queue
+
 ### Shortcuts
 
 Each **Sonos Device** has the following shortcuts (things you could also do by using one of the exposed services):
 
+- **.GetNightMode()** - Get NightMode status (playbar)
+- **.GetSpeechEnhancement()** - Get Speech enhancement status (playbar)
 - **.GetZoneGroupState()** - Get current group info.
 - **.GetZoneInfo()** - Get info about current player.
 - **.Play()** - Start playing *.
 - **.Pause()** - Pause playing *.
 - **.Next()** - Go to next song (when playing the queue) *.
 - **.Previous()** - Go to previous song (when playing the queue) *.
+- **.SetNightMode(desiredState)** - Turn on/off nightmode on your playbar.
+- **.SetRelativeVolume(adjustment)** - Change the volume relative to current.
+- **.SetSpeechEnhancement(desiredState)** - Turn on/off speech enhancement on your playbar.
+- **.SetVolume(newVolume)** - Change the volume.
 - **.Stop()** - Stop playing (most of the time it's better to pause playback) *.
 - **.SeekPosition('0:03:01')** - Go to other postion in track *.
 - **.SeekTrack(3)** - Go to other track in the queue *.

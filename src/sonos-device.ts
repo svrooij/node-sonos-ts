@@ -1,6 +1,6 @@
 import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
-import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions } from './models'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
@@ -123,6 +123,43 @@ export class SonosDevice extends SonosDeviceBase {
       return this.AlarmClockService.UpdateAlarm(alarm);
     })
   }
+  /**
+   * Browse or search content directory
+   *
+   * @param {{ ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }} input
+   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
+   * @param {string} BrowseFlag 'BrowseDirectChildren' is default, could also be 'BrowseMetadata'
+   * @param {string} Filter Which fields should be returned '*' for all.
+   * @param {number} StartingIndex Where to start in the results, (could be used for paging)
+   * @param {number} RequestedCount How many items should be returned, 0 for all.
+   * @param {string} SortCriteria Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title.
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   * @see http://www.upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
+   */
+  public async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
+    return this.ContentDirectoryService.Browse(input)
+      .then(resp => {
+        if(typeof resp.Result === 'string' && resp.NumberReturned > 0) {
+          const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
+          const itemObject = parsedData.item || parsedData.container;
+          const items = Array.isArray(itemObject) ? itemObject : [itemObject];
+          resp.Result = items.map(i => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
+        }
+        return resp;
+      })
+  }
+
+  /**
+   * Same as browse but with all parameters set to default.
+   *
+   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
+  public async BrowseWithDefaults(ObjectID: string): Promise<BrowseResponse> {
+    return this.Browse({ObjectID: ObjectID, BrowseFlag: 'BrowseDirectChildren', Filter: '*', StartingIndex: 0, RequestedCount: 0,  SortCriteria: '' });
+  }
 
   /**
    * Execute any sonos command by name, see examples/commands.js
@@ -167,7 +204,26 @@ export class SonosDevice extends SonosDeviceBase {
     
     const serviceDictionary = this.executeCommandGetFunctions();
     if(serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
+    // Do case insensitive lookup
+    const checkedName = Object.keys(serviceDictionary).find(k => k.toLowerCase() === serviceName.toLowerCase())
+    if(checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
     return undefined;
+  }
+
+  public async GetFavoriteRadioShows(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('R:0/1');
+  }
+
+  public async GetFavoriteRadioStations(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('R:0/0');
+  }
+
+  public async GetFavorites(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('FV:2');
+  }
+  
+  public async GetQueue(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('Q:0');
   }
 
   /**
@@ -262,7 +318,7 @@ export class SonosDevice extends SonosDeviceBase {
 
     if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
       this.debug('Selecting track %d', originalPositionInfo.Track)
-      await this.SeeKTrack(originalPositionInfo.Track)
+      await this.SeekTrack(originalPositionInfo.Track)
         .catch(err => {
           this.debug('Error selecting track, happens with some music services %o', err)
         })
@@ -574,6 +630,29 @@ export class SonosDevice extends SonosDeviceBase {
   //#endregion
 
   //#region Shortcuts
+
+  /**
+   * Get nightmode status of playbar.
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public GetNightMode(): Promise<boolean> {
+    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })
+      .then(resp => resp.CurrentValue === 1)
+  }
+
+  /**
+   * Get Speech Enhancement status of playbar
+   *
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public GetSpeechEnhancement(): Promise<boolean> {
+    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })
+      .then(resp => resp.CurrentValue === 1)
+  }
+  
   /**
    * GetZoneAttributes shortcut to .DevicePropertiesService.GetZoneAttributes()
    *
@@ -652,8 +731,56 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeeKTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
+  public SeekTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
 
+  /**
+   * Turn on/off night mode, on your playbar.
+   *
+   * @param {boolean} nightmode
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetNightMode(nightmode: boolean): Promise<boolean> {
+    return this.RenderingControlService
+      .SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 })
+  }
+
+  /**
+   * Set relative volume, shortcut to .RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
+   *
+   * @param {number} volumeAdjustment the adjustment, positive or negative
+   * @returns {Promise<number>}
+   * @memberof SonosDevice
+   */
+  public SetRelativeVolume(volumeAdjustment: number): Promise<number> {
+    return this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
+      .then(resp => resp.NewVolume);
+  }
+
+  /**
+   * Turn on/off speech enhancement, on your playbar,
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
+   *
+   * @param {boolean} dialogLevel
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return this.RenderingControlService
+      .SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
+  }
+
+  /**
+   * Set the volume, shortcut to .RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
+   *
+   * @param {number} volume new Volume (between 0 and 100)
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public SetVolume(volume: number): Promise<boolean> {
+    if (volume < 0 || volume > 100) throw new Error('Volume should be between 0 and 100');
+    return this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
+  }
   /**
    * Stop playback, shortcut to .Coordinator.AVTransportService.Stop()
    *
