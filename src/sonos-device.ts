@@ -167,6 +167,9 @@ export class SonosDevice extends SonosDeviceBase {
     
     const serviceDictionary = this.executeCommandGetFunctions();
     if(serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
+    // Do case insensitive lookup
+    const checkedName = Object.keys(serviceDictionary).find(k => k.toLowerCase() === serviceName.toLowerCase())
+    if(checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
     return undefined;
   }
 
