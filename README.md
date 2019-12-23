@@ -41,6 +41,15 @@ I also implemented extra functionatity for each player. (mostly combining calls)
 - **.SwitchToTV()** - On your playbar you can use this to switch to TV input :tv:.
 - **.TogglePlayback()** - If playing or transitioning your playback is paused :arrow_forward:. If stopped or paused your playback is resumed.
 
+You can also browse content, see [content.js](./examples/content.js)
+
+- **.Browse({...})** - Browse local content.
+- **.BrowseWithDefaults({...})** - Browse local content by only specifying the ObjectID, the rest will be set to default.
+- **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
+- **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
+- **.GetFavorites({...})** - Get your favorite songs
+- **.GetQueue({...})** - Get the current queue
+
 ### Shortcuts
 
 Each **Sonos Device** has the following shortcuts (things you could also do by using one of the exposed services):

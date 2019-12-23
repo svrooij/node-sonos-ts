@@ -1,6 +1,6 @@
 import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
-import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions } from './models'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
@@ -123,6 +123,43 @@ export class SonosDevice extends SonosDeviceBase {
       return this.AlarmClockService.UpdateAlarm(alarm);
     })
   }
+  /**
+   * Browse or search content directory
+   *
+   * @param {{ ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }} input
+   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
+   * @param {string} BrowseFlag 'BrowseDirectChildren' is default, could also be 'BrowseMetadata'
+   * @param {string} Filter Which fields should be returned '*' for all.
+   * @param {number} StartingIndex Where to start in the results, (could be used for paging)
+   * @param {number} RequestedCount How many items should be returned, 0 for all.
+   * @param {string} SortCriteria Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title.
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   * @see http://www.upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
+   */
+  public async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
+    return this.ContentDirectoryService.Browse(input)
+      .then(resp => {
+        if(typeof resp.Result === 'string' && resp.NumberReturned > 0) {
+          const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
+          const itemObject = parsedData.item || parsedData.container;
+          const items = Array.isArray(itemObject) ? itemObject : [itemObject];
+          resp.Result = items.map(i => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
+        }
+        return resp;
+      })
+  }
+
+  /**
+   * Same as browse but with all parameters set to default.
+   *
+   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
+  public async BrowseWithDefaults(ObjectID: string): Promise<BrowseResponse> {
+    return this.Browse({ObjectID: ObjectID, BrowseFlag: 'BrowseDirectChildren', Filter: '*', StartingIndex: 0, RequestedCount: 0,  SortCriteria: '' });
+  }
 
   /**
    * Execute any sonos command by name, see examples/commands.js
@@ -171,6 +208,22 @@ export class SonosDevice extends SonosDeviceBase {
     const checkedName = Object.keys(serviceDictionary).find(k => k.toLowerCase() === serviceName.toLowerCase())
     if(checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
     return undefined;
+  }
+
+  public async GetFavoriteRadioShows(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('R:0/1');
+  }
+
+  public async GetFavoriteRadioStations(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('R:0/0');
+  }
+
+  public async GetFavorites(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('FV:2');
+  }
+  
+  public async GetQueue(): Promise<BrowseResponse> {
+    return this.BrowseWithDefaults('Q:0');
   }
 
   /**
