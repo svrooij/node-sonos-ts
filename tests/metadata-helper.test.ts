@@ -1,4 +1,4 @@
-import { MetadataHelper } from '../src'
+import { MetadataHelper } from '../src/helpers/metadata-helper'
 import { expect, assert}  from 'chai'
 import 'mocha';
 const GenerateMetadata = require('./legacy-helpers').GenerateMetadata

@@ -1,4 +1,4 @@
-import { XmlHelper } from '../src'
+import { XmlHelper } from '../src/helpers/xml-helper'
 import { expect }  from 'chai'
 import 'mocha';
 

@@ -64,5 +64,14 @@
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*", "examples", "src/generator"]
+  "exclude": ["node_modules", "**/__tests__/*", "examples", "src/generator"],
+  "typedocOptions": { /* For TypeDoc  */
+    "mode": "modules",
+    "out": "docs",
+    "theme": "minimal",
+    "exclude": [
+      "**/*-helper.ts",
+      "**/*+(index|.spec|.e2e|.test).ts"
+    ]
+}
 }

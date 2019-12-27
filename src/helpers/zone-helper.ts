@@ -1,5 +1,5 @@
 import { GetZoneGroupStateResponse } from '../services'
-import { XmlHelper } from '../'
+import { XmlHelper } from './xml-helper'
 import { URL } from 'url'
 export class ZoneHelper {
   static ParseZoneGroupStateResponse(zoneGroupStateResponse: GetZoneGroupStateResponse): ZoneGroup[] {
