@@ -3,12 +3,12 @@ import { XmlHelper } from '../'
 import { URL } from 'url'
 export class ZoneHelper {
   static ParseZoneGroupStateResponse(zoneGroupStateResponse: GetZoneGroupStateResponse): ZoneGroup[] {
-    return this.DecodedObjectToGroups(XmlHelper.DecodeAndParseXml(zoneGroupStateResponse.ZoneGroupState))
+    return ZoneHelper.DecodedObjectToGroups(XmlHelper.DecodeAndParseXml(zoneGroupStateResponse.ZoneGroupState))
   }
 
   static DecodedObjectToGroups(state: any): ZoneGroup[] {
     const groups = Array.isArray(state.ZoneGroupState.ZoneGroups.ZoneGroup) ? state.ZoneGroupState.ZoneGroups.ZoneGroup : [state.ZoneGroupState.ZoneGroups.ZoneGroup]
-    return groups.map(this.ParseGroup)
+    return groups.map(ZoneHelper.ParseGroup)
   }
 
   private static ParseGroup(group: any): ZoneGroup {
