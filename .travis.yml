@@ -6,7 +6,7 @@ node_js:
 
 branches:
   only:
-    - "master"
+    - master
 
 jobs:
   include:
@@ -19,5 +19,7 @@ jobs:
       deploy:
         provider: script
         skip_cleanup: true
+        on:
+          branch: master
         script:
-          - npx semantic-release
+          - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then npx semantic-release; else echo "No deploy on PR"; fi

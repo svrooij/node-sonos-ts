@@ -65,3 +65,5 @@ lib/
 
 # Skip generated timestamp
 src/services/.generated
+
+docs/
