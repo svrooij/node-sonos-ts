@@ -1,0 +1,29 @@
+{
+  "AlarmClockService":{
+    "_service": "Control the sonos alarms"
+  },
+  "AVTransportService":{
+    "_service": "Service that controls stuff related to transport (play/pause/next/special urls)"
+  },
+  "ContentDirectoryService":{
+    "_service": "Browse for local content"
+  },
+  "DevicePropertiesService":{
+    "_service": "Modify device properties, like led status and stereo pairs"
+  },
+  "GroupRenderingControlService":{
+    "_service": "Volume related controls for groups"
+  },
+  "MusicServicesService":{
+    "_service": "External music services"
+  },
+  "QueueService":{
+    "_service": "Modify and browse queues"
+  },
+  "RenderingControlService":{
+    "_service": "Volume related controls"
+  },
+  "ZoneGroupTopologyService":{
+    "_service": "Zone config stuff, eg getting all the configured sonos zones."
+  }
+}

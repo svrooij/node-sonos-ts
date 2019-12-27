@@ -1,8 +1,9 @@
 import { ZoneGroupTopologyService } from './services'
-import { SonosDevice, SonosDeviceDiscovery, ZoneHelper } from './'
+import { SonosDevice } from './sonos-device'
+import { SonosDeviceDiscovery } from './sonos-device-discovery'
 import { ServiceEvents } from './models'
 import { EventEmitter } from 'events';
-import { ZoneGroup } from './helpers/zone-helper';
+import { ZoneGroup,ZoneHelper } from './helpers/zone-helper';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
@@ -35,11 +36,11 @@ export class SonosManager {
   /**
    * Initialize the manager by searching for one Sonos device in your network.
    *
-   * @param {10} timeoutInSeconds
+   * @param {number} [timeoutInSeconds=10]
    * @returns {Promise<boolean>}
    * @memberof SonosManager
    */
-  public InitializeWithDiscovery(timeoutInSeconds: 10): Promise<boolean> {
+  public InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
     const deviceDiscovery = new SonosDeviceDiscovery();
     return deviceDiscovery
       .SearchOne(timeoutInSeconds)
@@ -93,11 +94,23 @@ export class SonosManager {
     })
   }
 
+  /**
+   * Cancel the subscription (this will unsubscribe for zone events)
+   *
+   * @memberof SonosManager
+   */
   public CancelSubscription(): void {
     if(this.zoneService !== undefined)
       this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
   }
 
+  /**
+   * Get all found devices, call InitializeWithDiscovery or InitializeFromDevice first.
+   *
+   * @readonly
+   * @type {SonosDevice[]}
+   * @memberof SonosManager
+   */
   public get Devices(): SonosDevice[] {
     if (this.devices.length === 0) throw new Error('No Devices available!')
     return this.devices;

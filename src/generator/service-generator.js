@@ -8,6 +8,8 @@ const deviceDescriptionUrl = `${deviceUrl}/xml/device_description.xml`
 const serviceDirectory = path.join(__dirname, '..', 'services')
 const sonosBaseFile = path.join(__dirname, '..', 'sonos-device-base.ts')
 
+const documentation = require(path.join(__dirname, 'documentation.json'))
+
 fetch(deviceDescriptionUrl)
   .then(response => {
     if (response.ok) {
@@ -216,6 +218,11 @@ const generateSonosBaseFile = function (services) {
   output += 'import { Guid } from \'guid-typescript\'\r\n'
   output += 'import { Debugger } from \'debug\'\r\n'
   output += 'import debug = require(\'debug\')\r\n'
+  output += '/**\r\n' +
+  '* SonosDeviceBase is auto-generated to give access to all available services of your Sonos Device\r\n' +
+  '*\r\n' +
+  '* @export\r\n' +
+  '* @class SonosDeviceBase\r\n' + '*/\r\n'
   output += 'export class SonosDeviceBase {\r\n'
   output += '  protected readonly host: string;\r\n'
   output += '  protected readonly port: number;\r\n'
@@ -227,6 +234,7 @@ const generateSonosBaseFile = function (services) {
 
   // Add all the services
   output += serviceNames.map(s => `  private ${s.toLowerCase()}: ${s} | undefined;\r\n` +
+    getServiceBaseDescription(s) +
     `  public get ${s}(): ${s} {\r\n` +
     `    if (this.${s.toLowerCase()} === undefined) this.${s.toLowerCase()} = new ${s}(this.host, this.port, this.uuid);\r\n` +
     `    return this.${s.toLowerCase()};\r\n` +
@@ -237,6 +245,20 @@ const generateSonosBaseFile = function (services) {
   output += '\r\n}\r\n'
 
   fs.writeFileSync(sonosBaseFile, output)
+}
+
+const getServiceBaseDescription = function (name) {
+  if (documentation[name] && documentation[name]['_service']) {
+    return `  /**
+    * ${documentation[name]['_service']}
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {${name}}
+    * @memberof SonosDeviceBase
+    */\r\n`
+  }
+  return ''
 }
 
 const dynamicCompare = function (property) {

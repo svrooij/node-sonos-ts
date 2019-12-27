@@ -9,6 +9,7 @@ import debug = require('debug')
  *
  * @description the SonosEventListener is created automatically by the first service you start using. You should not call this service by yourself!
  * @export
+ * @internal
  * @class SonosEventListener
  */
 export class SonosEventListener {

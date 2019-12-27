@@ -10,11 +10,27 @@ import { SmapiClient } from './musicservices/smapi-client'
 import { JsonHelper } from './helpers/json-helper'
 import { TtsHelper } from './helpers/tts-helper'
 
+/**
+ * Main class to control a single sonos device.
+ *
+ * @export
+ * @class SonosDevice
+ * @extends {SonosDeviceBase}
+ */
 export class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
   private groupName: string | undefined;
   private coordinator: SonosDevice | undefined;
 
+  /**
+   * Creates an instance of SonosDevice.
+   * @param {string} host the ip or host of the speaker you want to add
+   * @param {number} [port=1400] the port (is always 1400)
+   * @param {(string | undefined)} [uuid=undefined] the uuid of the speaker, is set by the SonosManager by default
+   * @param {(string | undefined)} [name=undefined] the name of the speaker, is set by the SonosManager by default
+   * @param {({coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined)} [groupConfig=undefined] groupConfig is used by the SonosManager to setup group change events.
+   * @memberof SonosDevice
+   */
   constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: {coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined = undefined) {
     super(host, port, uuid);
     this.name = name;
@@ -24,7 +40,7 @@ export class SonosDevice extends SonosDeviceBase {
         this.coordinator = groupConfig.coordinator;
       }
       if (uuid) {
-        groupConfig.managerEvents.on(uuid, this._handleGroupUpdate)
+        groupConfig.managerEvents.on(uuid, this._handleGroupUpdate) 
       }
     }
   }
@@ -210,18 +226,42 @@ export class SonosDevice extends SonosDeviceBase {
     return undefined;
   }
 
+  /**
+   * Get your favorite radio shows, just a browse shortcut.
+   *
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
   public async GetFavoriteRadioShows(): Promise<BrowseResponse> {
     return this.BrowseWithDefaults('R:0/1');
   }
 
+  /**
+   * Get your favorite radio stations, just a browse shortcut.
+   *
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
   public async GetFavoriteRadioStations(): Promise<BrowseResponse> {
     return this.BrowseWithDefaults('R:0/0');
   }
 
+  /**
+   * Get your favorite songs, just a browse shortcut.
+   *
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
   public async GetFavorites(): Promise<BrowseResponse> {
     return this.BrowseWithDefaults('FV:2');
   }
   
+  /**
+   * Get the current queue, just a browse shortcut.
+   *
+   * @returns {Promise<BrowseResponse>}
+   * @memberof SonosDevice
+   */
   public async GetQueue(): Promise<BrowseResponse> {
     return this.BrowseWithDefaults('Q:0');
   }
@@ -243,6 +283,12 @@ export class SonosDevice extends SonosDeviceBase {
   }
 
   private allMusicServices?: any[];
+  /**
+   * Load all available music services
+   *
+   * @returns {(Promise<any[] | undefined>)}
+   * @memberof SonosDevice
+   */
   public async MusicServicesList(): Promise<any[] | undefined> {
     if(this.allMusicServices === undefined) {
       return this.MusicServicesService.ListAvailableServices().then(resp => {
@@ -258,6 +304,14 @@ export class SonosDevice extends SonosDeviceBase {
     return this.allMusicServices;
   }
   private deviceId?: string;
+
+  /**
+   * Create a client for a specific music serivce
+   *
+   * @param {string} name The name of the music service, see MusicServicesList
+   * @returns {Promise<SmapiClient>}
+   * @memberof SonosDevice
+   */
   public async MusicServicesClient(name: string): Promise<SmapiClient> {
     if(this.deviceId === undefined) this.deviceId = (await this.SystemPropertiesService.GetString({ VariableName: 'R_TrialZPSerial' })).StringValue;
     return this.MusicServicesList()
@@ -339,6 +393,13 @@ export class SonosDevice extends SonosDeviceBase {
 
   }
 
+  /**
+   * Download the url for the specified text, play as a notification and revert back to current track.
+   *
+   * @param {PlayTtsOptions} options
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
   public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
     this.debug('PlayTTS(%o)', options);
 
@@ -429,6 +490,11 @@ export class SonosDevice extends SonosDeviceBase {
   //#region Events 
   private events?: EventEmitter;
   private isSubscribed = false;
+  /**
+   * Cancel all subscriptions and unsubscribe for events from this device.
+   *
+   * @memberof SonosDevice
+   */
   public CancelEvents(): void {
     if(this.events !== undefined) {
       const eventNames = this.events.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
@@ -575,18 +641,46 @@ export class SonosDevice extends SonosDeviceBase {
   
   //#region Properties
   private currentTrackUri?: string;
+  /**
+   * Current track uri, only set when subscribed to events.
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
   public get CurrentTrackUri(): string | undefined {
     return this.currentTrackUri;
   }
   private enqueuedTransportUri?: string;
+  /**
+   * Current EnqueuedTransportUri only set when listening to events
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
   public get EnqueuedTransportUri(): string | undefined {
     return this.enqueuedTransportUri;
   }
   private nextTrackUri?: string;
+  /**
+   * Next Track Uri only set when listening to events
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
   public get NextTrackUri(): string | undefined {
     return this.nextTrackUri;
   }
   private currentTransportState?: TransportState;
+  /**
+   * Current transport state, only set when listening for events
+   *
+   * @readonly
+   * @type {(TransportState | undefined)}
+   * @memberof SonosDevice
+   */
   public get CurrentTransportState(): TransportState | undefined {
     return this.currentTransportState;
   }
@@ -603,8 +697,22 @@ export class SonosDevice extends SonosDeviceBase {
       return this.currentTransportState === TransportState.Playing || this.currentTransportState === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
     }
   }
+  /**
+   * The IP of the speaker
+   *
+   * @readonly
+   * @type {string}
+   * @memberof SonosDevice
+   */
   public get Host(): string { return this.host; }
   private muted?: boolean;
+  /**
+   * Device muted, only set when subscribed for events.
+   *
+   * @readonly
+   * @type {(boolean | undefined)}
+   * @memberof SonosDevice
+   */
   public get Muted(): boolean | undefined {
     return this.muted;
   }
@@ -621,8 +729,22 @@ export class SonosDevice extends SonosDeviceBase {
     return this.zoneAttributes.CurrentZoneName
   }
   public get Port(): number { return this.port; }
+  /**
+   * UUID of the player, if set by the SonosManager or an guid otherwise.
+   *
+   * @readonly
+   * @type {string}
+   * @memberof SonosDevice
+   */
   public get Uuid(): string {return this.uuid; }
   private volume?: number;
+  /**
+   * Current volume of the player, only set when subscribed for events.
+   *
+   * @readonly
+   * @type {(number | undefined)}
+   * @memberof SonosDevice
+   */
   public get Volume(): number | undefined {
     return this.volume;
   }

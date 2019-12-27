@@ -57,7 +57,7 @@ export class SonosDeviceDiscovery {
     }, timeoutSeconds * 1000)
   }
 
-  public SearchOne(timeoutSeconds: 10): Promise<Player> {
+  public SearchOne(timeoutSeconds = 10): Promise<Player> {
     this.debug('Search one device in %d seconds', timeoutSeconds)
     return new Promise<Player>((resolve, reject) => {
       this.events.once(this.DeviceAvailable, player => {
@@ -72,7 +72,7 @@ export class SonosDeviceDiscovery {
     })
   }
 
-  public Search(timeoutSeconds: 30): Promise<Player[]> {
+  public Search(timeoutSeconds = 30): Promise<Player[]> {
     this.debug('Search all devices in %d seconds', timeoutSeconds)
     return new Promise<Player[]>((resolve, reject) => {
       this.events.once('timeout', () => {
