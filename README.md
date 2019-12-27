@@ -243,6 +243,15 @@ The **SonosEventListener** has some configuration options, which you'll need in 
 
 If none of these environment variables are set it will just use the default port and the first found non-internal ip.
 
+## Others using node-sonos-ts
+
+|Name|Maintainer|Description|
+|----|----------|----------|
+|[sonos2mqtt](https://github.com/svrooij/sonos2mqtt)|[@svrooij](https://github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
+|[sonos-cli](https://github.com/svrooij/sonos-cli)|[@svrooij](https://github.com/svrooij)|An experimental command line interface for your sonos devices.|
+
+Also using this library, but not in the list? Send a PR.
+
 ## Debugging
 
 This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
