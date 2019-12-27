@@ -12,7 +12,7 @@ A node library to control a sonos device, written in Typescript. See [here](#imp
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
 
-You'll need to get the **SonosDevice** by one of the [methods below](#sonosmanager-and-logical-devices), and start using the extra [functionality](#extra-functionality), the [shortcuts](#shortcuts) or the [exposed services](#exposed-services). There also is an [Eventlistener](#events) that allows you to subscribe to all the events your sonos sends out. This library allows you to do **everything** you can do with the Sonos application (except search external [music services](./src/musicservices) :cry:).
+You'll need to get the [**SonosDevice**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_device_.sonosdevice.html) by one of the [methods below](#sonosmanager-and-logical-devices), and start using the extra [functionality](#extra-functionality), the [shortcuts](#shortcuts) or the [exposed services](#exposed-services). There also is an [Eventlistener](#events) that allows you to subscribe to all the events your sonos sends out. This library allows you to do **everything** you can do with the Sonos application (except search external [music services](./src/musicservices) :cry:).
 
 ```JavaScript
 const SonosManager = require('@svrooij/sonos').SonosManager
@@ -113,7 +113,7 @@ sonos.ExecuteCommand('SendSomeLove').catch(console.error)
 
 ## SonosManager and logical devices
 
-This library has a **SonosManager** that resolves all your sonos groups for you. It also manages group updates. Every **SonosDevice** created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
+This library has a [**SonosManager**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_manager_.sonosmanager.html) that resolves all your sonos groups for you. It also manages group updates. Every **SonosDevice** created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
 
 - **.Coordinator** - Point to the devices' group coordinator (or to itself when it's the coordinator).
 - **.GroupName** - The name of the group this device is in. eg 'Kitchen + 2'
