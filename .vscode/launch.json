@@ -32,7 +32,10 @@
       ],
       "console": "integratedTerminal",
       "sourceMaps": true,
-      "internalConsoleOptions": "neverOpen"
+      "internalConsoleOptions": "neverOpen",
+      "env": {
+        "SONOS_HOST":"192.168.96.56"
+      },
     },
   ]
 }
