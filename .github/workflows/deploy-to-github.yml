@@ -1,0 +1,19 @@
+name: Deploy to github packages
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Build
+      run: |
+        npm install
+        npm run build
+        npm run test

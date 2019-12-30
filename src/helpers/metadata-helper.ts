@@ -31,8 +31,16 @@ export class MetadataHelper {
       TrackUri: undefined,
       ProtocolInfo: undefined
     };
+    if(didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
+      const streamContent = (didlItem['r:streamContent'] as string).split('-');
+      if(streamContent.length === 2) {
+        track.Artist = streamContent[0].trim();
+        track.Title = streamContent[1].trim();
+      }
+    }
     if(didlItem['upnp:albumArtURI']) {
-      const art = (didlItem['upnp:albumArtURI'] as string).replace(/&amp;/gi, '&').replace(/%25/g, '%').replace(/%3a/gi,':');
+      const uri = Array.isArray(didlItem['upnp:albumArtURI']) ? didlItem['upnp:albumArtURI'][0] : didlItem['upnp:albumArtURI'];
+      const art = (uri as string).replace(/&amp;/gi, '&').replace(/%25/g, '%').replace(/%3a/gi,':');
       track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
     }
     
