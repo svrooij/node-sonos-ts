@@ -27,7 +27,7 @@ manager.InitializeWithDiscovery(10) // Search for all devices in your network, f
 
 ### Extra functionality
 
-I also implemented extra functionatity for each player. (mostly combining calls):
+These methods aren't possible with the generated services. This is added functionality:
 
 - **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed :musical_note:.
 - **.AlarmList()** - List all your alarms :alarm_clock:
@@ -40,15 +40,6 @@ I also implemented extra functionatity for each player. (mostly combining calls)
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
 - **.SwitchToTV()** - On your playbar you can use this to switch to TV input :tv:.
 - **.TogglePlayback()** - If playing or transitioning your playback is paused :arrow_forward:. If stopped or paused your playback is resumed.
-
-You can also browse content, see [content.js](./examples/content.js)
-
-- **.Browse({...})** - Browse local content.
-- **.BrowseWithDefaults({...})** - Browse local content by only specifying the ObjectID, the rest will be set to default.
-- **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
-- **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
-- **.GetFavorites({...})** - Get your favorite songs
-- **.GetQueue({...})** - Get the current queue
 
 ### Shortcuts
 
@@ -72,25 +63,38 @@ Each **Sonos Device** has the following shortcuts (things you could also do by u
 
 These operations (marked with `*`) are send to the coordinator if the device is created by the **SonosManager**. So you can send **.Next()** to each device in a group and it will be send to the correct device.
 
+### Content
+
+You can also browse content, see [content.js](./examples/content.js), these are actually all shortcuts to the browse method.
+
+- **.Browse({...})** - Browse local content.
+- **.BrowseWithDefaults({...})** - Browse local content by only specifying the ObjectID, the rest will be set to default.
+- **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
+- **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
+- **.GetFavorites({...})** - Get your favorite songs
+- **.GetQueue({...})** - Get the current queue
+
 ### Exposed services
 
 Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`). This library uses a [generator](./src/generator/service-generator.js) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
 
-- **.AVTransportService** - Control the playback (play, pause, next, stop).
-- **.AlarmClockService** - Control your alarms.
-- **.AudioInService** - ?
-- **.ConnectionManagerService** - ?
-- **.ContentDirectoryService** - Control your content?
-- **.DevicePropertiesService** - Change your device properties (led, StereoPair, AutoPlay).
-- **.GroupManagementService** - Manage your groups (what's the differance with ZoneGroupTopologyService?).
-- **.GroupRenderingControlService** - RenderingControlService for groups.
-- **.MusicServicesService** - All your music services.
-- **.QPlayService** - To authorize QPlay, needs explaining.
-- **.QueueService** - Queue management
-- **.RenderingControlService** - Control rendering (eg. volume)
-- **.SystemPropertiesService** - Manage connected accounts
-- **.VirtualLineInService** - ?
-- **.ZoneGroupTopologyService** - Zone management, mostly used under the covers by [SonosManager](./src/sonos-manager.ts)
+|Service name|Description|
+|------------|-----------|
+|`.AVTransportService`|Control the playback (play, pause, next, stop).|
+|`.AlarmClockService`|Control your alarms.|
+|`.AudioInService`|?|
+|`.ConnectionManagerService`|?|
+|`.ContentDirectoryService`|Browse and modify for local content|
+|`.DevicePropertiesService`|Change your device properties (led, StereoPair, AutoPlay).|
+|`.GroupManagementService`|Manage your groups (what's the differance with ZoneGroupTopologyService?).|
+|`.GroupRenderingControlService`|RenderingControlService for groups.|
+|`.MusicServicesService`|All your music services.|
+|`.QPlayService`|To authorize QPlay, needs explaining.|
+|`.QueueService`|Queue management|
+|`.RenderingControlService`|Control rendering (eg. volume)|
+|`.SystemPropertiesService`|Manage connected accounts|
+|`.VirtualLineInService`|?|
+|`.ZoneGroupTopologyService`|Zone management, mostly used under the covers by [SonosManager](./src/sonos-manager.ts)|
 
 ### Commands
 
@@ -257,12 +261,14 @@ Also using this library, but not in the list? Send a PR.
 This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
 If you run the examples with the VSCode debug task, this variable is set to `sonos:*` so you should see all the logs.
 
-- `DEBUG=sonos:*` -> See all debug logs.
-- `DEBUG=sonos:device` -> See all debug logs from the SonosDevice class.
-- `DEBUG=sonos:service:*` -> See all debug logs for all the various services (this is where most of the magic happens).
-- `DEBUG=sonos:service:[service_name]` -> See all debug logs for a specific service.
-- `DEBUG=sonos:service:*:[ip]` -> See all debug logs for all the various services for a single device (this is where most of the magic happens).
-- `DEBUG=sonos:metadata` -> See all debug logs for the metadata helper.
+|Environment variable|What will log|
+|--------------------|-------------|
+|`DEBUG=sonos:*`|See all debug logs.|
+|`DEBUG=sonos:device`|See all debug logs from the SonosDevice class.|
+|`DEBUG=sonos:service:*`|See all debug logs for all the various services (this is where most of the magic happens).|
+|`DEBUG=sonos:service:[service_name]`|See all debug logs for a specific service.|
+|`DEBUG=sonos:service:*:[ip]`|See all debug logs for all the various services for a single device (this is where most of the magic happens).|
+|`DEBUG=sonos:metadata`|See all debug logs for the metadata helper.|
 
 ## Contributing
 
