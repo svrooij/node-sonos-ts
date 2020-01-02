@@ -76,7 +76,7 @@ You can also browse content, see [content.js](./examples/content.js), these are 
 
 ### Exposed services
 
-Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`). This library uses a [generator](./src/generator/service-generator.js) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
+Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`). This library uses a [generator](./src/generator/) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
 
 |Service name|Description|
 |------------|-----------|
@@ -276,7 +276,9 @@ You can contribute in many ways. Asking good questions, solving bugs, sponsoring
 
 If you're using a music service that currently isn't supported for metadata generation, you should check out the [metadata generator](./src/helpers/metadata-helper.ts).
 It works by taking an url (which you can get by running the [get-position-info sample](./examples/get-position-info.js)). And generating a **Track** for it. Use the information out the console to get the right values.
-The values you'll be looking for are `ProtocolInfo`, `TrackUri`, `UpnpClass`, `ItemID` and `ParentID`
+The values you'll be looking for are `ProtocolInfo`, `TrackUri`, `UpnpClass`, `ItemID` and `ParentID`.
+
+Currently I'm also looking for a way to add documentation to the automatic generated services, so if you got any ideas, be sure to let me know.
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
 
