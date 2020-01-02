@@ -10,9 +10,8 @@
     "specs": "mocha -r ts-node/register tests/**/*.test.ts",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
-    "gen-srv": "node ./src/generator/service-generator.js",
+    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
-    "postinstall": "echo \"Check out the documentation in https://github.com/svrooij/node-sonos-ts or give me a shoutout on twitter @svrooij\"",
     "semantic-release": "semantic-release",
     "prepack": "npm run build",
     "docs": "typedoc ./src"
@@ -42,6 +41,7 @@
     "@typescript-eslint/parser": "^2.8.0",
     "chai": "^4.2.0",
     "eslint": "^6.7.0",
+    "handlebars": "^4.5.3",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "semantic-release": "^15.4.0",
@@ -51,7 +51,7 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "fast-xml-parser": "^3.15.0",
+    "fast-xml-parser": "^3.15.1",
     "guid-typescript": "^1.0.9",
     "node-fetch": "^2.6.0"
   },

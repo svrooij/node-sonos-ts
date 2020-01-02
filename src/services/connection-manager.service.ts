@@ -7,13 +7,19 @@ export class ConnectionManagerService extends BaseService {
   readonly eventSubUrl: string = '/MediaRenderer/ConnectionManager/Event';
   readonly scpUrl: string = '/xml/ConnectionManager1.xml';
 
-  // Actions
-  GetCurrentConnectionIDs(): Promise<GetCurrentConnectionIDsResponse> { return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
-  GetCurrentConnectionInfo(input: { ConnectionID: number }): Promise<GetCurrentConnectionInfoResponse> { return this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
-  GetProtocolInfo(): Promise<GetProtocolInfoResponse> { return this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
+  //#region methods
+  GetCurrentConnectionIDs():
+    Promise<GetCurrentConnectionIDsResponse>{ return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
+
+  GetCurrentConnectionInfo(input: { ConnectionID: number }):
+    Promise<GetCurrentConnectionInfoResponse>{ return this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
+
+  GetProtocolInfo():
+    Promise<GetProtocolInfoResponse>{ return this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
+  //#endregion
 }
 
-// Response classes
+// Generated responses
 export interface GetCurrentConnectionIDsResponse {
   ConnectionIDs: string;
 }

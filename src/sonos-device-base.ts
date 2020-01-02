@@ -3,6 +3,7 @@ import { AVTransportService, AlarmClockService, AudioInService, ConnectionManage
 import { Guid } from 'guid-typescript'
 import { Debugger } from 'debug'
 import debug = require('debug')
+
 /**
  * SonosDeviceBase is auto-generated to link to all available services of your Sonos Device
  *

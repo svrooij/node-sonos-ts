@@ -1,29 +1,62 @@
 {
-  "AlarmClockService":{
-    "_service": "Control the sonos alarms"
+  "AlarmClockService": {
+    "Description": "Control the sonos alarms",
+    "File": "alarm-clock.service.ts"
   },
-  "AVTransportService":{
-    "_service": "Service that controls stuff related to transport (play/pause/next/special urls)"
+  "AudioInService": {
+    "Description": "",
+    "File": "audio-in.service.ts"
   },
-  "ContentDirectoryService":{
-    "_service": "Browse for local content"
+  "AVTransportService": {
+    "Description": "Service that controls stuff related to transport (play/pause/next/special urls)",
+    "File": "av-transport.service.ts"
   },
-  "DevicePropertiesService":{
-    "_service": "Modify device properties, like led status and stereo pairs"
+  "ConnectionManagerService": {
+    "Description": "",
+    "File": "connection-manager.service.ts"
   },
-  "GroupRenderingControlService":{
-    "_service": "Volume related controls for groups"
+  "ContentDirectoryService": {
+    "Description": "Browse for local content",
+    "File": "content-directory.service.ts"
   },
-  "MusicServicesService":{
-    "_service": "External music services"
+  "DevicePropertiesService": {
+    "Description": "Modify device properties, like led status and stereo pairs",
+    "File": "device-properties.service.ts"
   },
-  "QueueService":{
-    "_service": "Modify and browse queues"
+  "GroupManagementService": {
+    "Description": "",
+    "File": "group-management.service.ts"
   },
-  "RenderingControlService":{
-    "_service": "Volume related controls"
+  "GroupRenderingControlService": {
+    "Description": "Volume related controls for groups",
+    "File": "group-rendering-control.service.ts"
   },
-  "ZoneGroupTopologyService":{
-    "_service": "Zone config stuff, eg getting all the configured sonos zones."
+  "MusicServicesService": {
+    "Description": "External music services",
+    "File": "music-services.service.ts"
+  },
+  "QPlayService": {
+    "Description": "",
+    "File": "q-play.service.ts"
+  },
+  "QueueService": {
+    "Description": "Modify and browse queues",
+    "File": "queue.service.ts"
+  },
+  "RenderingControlService": {
+    "Description": "Volume related controls",
+    "File": "rendering-control.service.ts"
+  },
+  "SystemPropertiesService": {
+    "Description": "",
+    "File": "system-properties.service.ts"
+  },
+  "VirtualLineInService": {
+    "Description": "",
+    "File": "virtual-line-in.service.ts"
+  },
+  "ZoneGroupTopologyService": {
+    "Description": "Zone config stuff, eg getting all the configured sonos zones.",
+    "File": "zone-group-topology.service.ts"
   }
 }
