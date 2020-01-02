@@ -173,7 +173,7 @@ const addResponsesToService = function (service) {
 }
 
 const getTemplate = function (template) {
-  return Handlebars.compile(fs.readFileSync(path.join(__dirname, 'templates', `${template}.template.hndlbr`)).toString())
+  return Handlebars.compile(fs.readFileSync(path.join(__dirname, 'templates', `${template}.template.hbs`)).toString())
 }
 
 const generateServiceFile = function (service) {
