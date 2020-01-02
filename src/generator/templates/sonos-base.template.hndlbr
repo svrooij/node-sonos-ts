@@ -30,6 +30,7 @@ export class SonosDeviceBase {
     * will be initialized on first use.
     *
     * @readonly
+    * @type -{-{{name}}-}-
     * @memberof SonosDeviceBase
     */
   {{/if}}

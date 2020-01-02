@@ -29,7 +29,7 @@ export class {{svcName}} extends BaseService {
     Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
     {{/if}}
   {{else}}
-    {{name}}():
+  {{name}}():
     {{#if responseType}}
     Promise<{{responseType}}>{ return this.SoapRequest<{{responseType}}>('{{name}}'); }
     {{else}}

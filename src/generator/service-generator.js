@@ -178,6 +178,7 @@ const getTemplate = function (template) {
 
 const generateServiceFile = function (service) {
   if (service.docs && service.docs.File) {
+    service.parsed.responses = service.parsed.responses.filter(resp => resp.name !== 'BrowseResponse')
     const template = getTemplate('service')
     const generatedService = template(service)
     fs.writeFileSync(path.join(__dirname, '..', 'services', service.docs.File), generatedService)
@@ -211,7 +212,7 @@ const generateBaseFile = function (allServices) {
     .sort(dynamicCompare('name'))
 
   const template = getTemplate('sonos-base')
-  const generatedBase = template({ services: services })
+  const generatedBase = template({ services: services }).replace(/-{-/g, '{').replace(/-}-/g, '}')
   fs.writeFileSync(path.join(__dirname, '..', 'sonos-device-base.ts'), generatedBase)
   console.log('Generated sonos-device-base.ts')
 }
