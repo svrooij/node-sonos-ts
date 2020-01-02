@@ -1,0 +1,4 @@
+// Automaticly generated service index
+{{#each services}}
+export * from './{{this}}'
+{{/each}}
