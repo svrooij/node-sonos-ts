@@ -7,17 +7,31 @@ export class AudioInService extends BaseService {
   readonly eventSubUrl: string = '/AudioIn/Event';
   readonly scpUrl: string = '/xml/AudioIn1.xml';
 
-  // Actions
-  GetAudioInputAttributes(): Promise<GetAudioInputAttributesResponse> { return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
-  GetLineInLevel(): Promise<GetLineInLevelResponse> { return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
-  SelectAudio(input: { ObjectID: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
-  SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
-  SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
-  StartTransmissionToGroup(input: { CoordinatorID: string }): Promise<StartTransmissionToGroupResponse> { return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
-  StopTransmissionToGroup(input: { CoordinatorID: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
+  //#region methods
+  GetAudioInputAttributes():
+    Promise<GetAudioInputAttributesResponse>{ return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
+
+  GetLineInLevel():
+    Promise<GetLineInLevelResponse>{ return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
+
+  SelectAudio(input: { ObjectID: string }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
+
+  SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
+
+  SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
+
+  StartTransmissionToGroup(input: { CoordinatorID: string }):
+    Promise<StartTransmissionToGroupResponse>{ return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
+
+  StopTransmissionToGroup(input: { CoordinatorID: string }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
+  //#endregion
 }
 
-// Response classes
+// Generated responses
 export interface GetAudioInputAttributesResponse {
   CurrentName: string;
   CurrentIcon: string;

@@ -7,14 +7,22 @@ export class GroupManagementService extends BaseService {
   readonly eventSubUrl: string = '/GroupManagement/Event';
   readonly scpUrl: string = '/xml/GroupManagement1.xml';
 
-  // Actions
-  AddMember(input: { MemberID: string; BootSeq: number }): Promise<AddMemberResponse> { return this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
-  RemoveMember(input: { MemberID: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
-  ReportTrackBufferingResult(input: { MemberID: string; ResultCode: number }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
-  SetSourceAreaIds(input: { DesiredSourceAreaIds: string }): Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
+  //#region methods
+  AddMember(input: { MemberID: string; BootSeq: number }):
+    Promise<AddMemberResponse>{ return this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
+
+  RemoveMember(input: { MemberID: string }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
+
+  ReportTrackBufferingResult(input: { MemberID: string; ResultCode: number }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
+
+  SetSourceAreaIds(input: { DesiredSourceAreaIds: string }):
+    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
+  //#endregion
 }
 
-// Response classes
+// Generated responses
 export interface AddMemberResponse {
   CurrentTransportSettings: string;
   CurrentURI: string;
