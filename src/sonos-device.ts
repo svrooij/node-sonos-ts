@@ -550,8 +550,11 @@ export class SonosDevice extends SonosDeviceBase {
       }
     }
 
-    this.currentTrackUri = data.CurrentTrackURI
-    this.Events.emit(SonosEvents.CurrentTrack, this.currentTrackUri);
+    if (data.CurrentTrackURI && this.currentTrackUri !== data.CurrentTrackURI) {
+      this.currentTrackUri = data.CurrentTrackURI
+      this.Events.emit(SonosEvents.CurrentTrack, this.currentTrackUri);
+    }
+    
     if(data.CurrentTrackMetaData) this.Events.emit(SonosEvents.CurrentTrackMetadata, data.CurrentTrackMetaData)
 
     if (data.NextTrackURI && this.nextTrackUri !== data.NextTrackURI) {
