@@ -1,0 +1,27 @@
+{
+  "projectName": "node-sonos-ts",
+  "projectOwner": "svrooij",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "svrooij",
+      "name": "Stephan van Rooij",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1292510?v=4",
+      "profile": "https://svrooij.nl",
+      "contributions": [
+        "code",
+        "doc",
+        "ideas",
+        "maintenance"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
