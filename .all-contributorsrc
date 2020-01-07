@@ -21,6 +21,15 @@
         "ideas",
         "maintenance"
       ]
+    },
+    {
+      "login": "cheanrod",
+      "name": "Sven Werner",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/35066927?v=4",
+      "profile": "https://github.com/cheanrod",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7
