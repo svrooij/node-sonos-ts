@@ -36,6 +36,12 @@ export class MetadataHelper {
       if(streamContent.length === 2) {
         track.Artist = streamContent[0].trim();
         track.Title = streamContent[1].trim();
+      } else {
+        track.Artist = streamContent[0].trim();
+        if(didlItem['r:radioShowMd'] && typeof didlItem['r:radioShowMd'] === 'string') {
+          const radioShowMd = (didlItem['r:radioShowMd'] as string).split(',');
+          track.Title = radioShowMd[0].trim();
+        }
       }
     }
     if(didlItem['upnp:albumArtURI']) {
