@@ -15,89 +15,89 @@ export class RenderingControlService extends BaseService {
   readonly scpUrl: string = '/xml/RenderingControl1.xml';
 
   //#region methods
-  GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetBassResponse>{ return this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
+  async GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetBassResponse>{ return await this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
 
-  GetEQ(input: { InstanceID: number; EQType: string }):
-    Promise<GetEQResponse>{ return this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
+  async GetEQ(input: { InstanceID: number; EQType: string }):
+    Promise<GetEQResponse>{ return await this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
 
-  GetHeadphoneConnected(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetHeadphoneConnectedResponse>{ return this.SoapRequestWithBody<typeof input, GetHeadphoneConnectedResponse>('GetHeadphoneConnected', input); }
+  async GetHeadphoneConnected(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetHeadphoneConnectedResponse>{ return await this.SoapRequestWithBody<typeof input, GetHeadphoneConnectedResponse>('GetHeadphoneConnected', input); }
 
-  GetLoudness(input: { InstanceID: number; Channel: string }):
-    Promise<GetLoudnessResponse>{ return this.SoapRequestWithBody<typeof input, GetLoudnessResponse>('GetLoudness', input); }
+  async GetLoudness(input: { InstanceID: number; Channel: string }):
+    Promise<GetLoudnessResponse>{ return await this.SoapRequestWithBody<typeof input, GetLoudnessResponse>('GetLoudness', input); }
 
-  GetMute(input: { InstanceID: number; Channel: string }):
-    Promise<GetMuteResponse>{ return this.SoapRequestWithBody<typeof input, GetMuteResponse>('GetMute', input); }
+  async GetMute(input: { InstanceID: number; Channel: string }):
+    Promise<GetMuteResponse>{ return await this.SoapRequestWithBody<typeof input, GetMuteResponse>('GetMute', input); }
 
-  GetOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetOutputFixedResponse>{ return this.SoapRequestWithBody<typeof input, GetOutputFixedResponse>('GetOutputFixed', input); }
+  async GetOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetOutputFixedResponse>{ return await this.SoapRequestWithBody<typeof input, GetOutputFixedResponse>('GetOutputFixed', input); }
 
-  GetRoomCalibrationStatus(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetRoomCalibrationStatusResponse>{ return this.SoapRequestWithBody<typeof input, GetRoomCalibrationStatusResponse>('GetRoomCalibrationStatus', input); }
+  async GetRoomCalibrationStatus(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetRoomCalibrationStatusResponse>{ return await this.SoapRequestWithBody<typeof input, GetRoomCalibrationStatusResponse>('GetRoomCalibrationStatus', input); }
 
-  GetSupportsOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetSupportsOutputFixedResponse>{ return this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
+  async GetSupportsOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetSupportsOutputFixedResponse>{ return await this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
 
-  GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetTrebleResponse>{ return this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
+  async GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetTrebleResponse>{ return await this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
 
-  GetVolume(input: { InstanceID: number; Channel: string }):
-    Promise<GetVolumeResponse>{ return this.SoapRequestWithBody<typeof input, GetVolumeResponse>('GetVolume', input); }
+  async GetVolume(input: { InstanceID: number; Channel: string }):
+    Promise<GetVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, GetVolumeResponse>('GetVolume', input); }
 
-  GetVolumeDB(input: { InstanceID: number; Channel: string }):
-    Promise<GetVolumeDBResponse>{ return this.SoapRequestWithBody<typeof input, GetVolumeDBResponse>('GetVolumeDB', input); }
+  async GetVolumeDB(input: { InstanceID: number; Channel: string }):
+    Promise<GetVolumeDBResponse>{ return await this.SoapRequestWithBody<typeof input, GetVolumeDBResponse>('GetVolumeDB', input); }
 
-  GetVolumeDBRange(input: { InstanceID: number; Channel: string }):
-    Promise<GetVolumeDBRangeResponse>{ return this.SoapRequestWithBody<typeof input, GetVolumeDBRangeResponse>('GetVolumeDBRange', input); }
+  async GetVolumeDBRange(input: { InstanceID: number; Channel: string }):
+    Promise<GetVolumeDBRangeResponse>{ return await this.SoapRequestWithBody<typeof input, GetVolumeDBRangeResponse>('GetVolumeDBRange', input); }
 
-  RampToVolume(input: { InstanceID: number; Channel: string; RampType: string; DesiredVolume: number; ResetVolumeAfter: boolean; ProgramURI: string }):
-    Promise<RampToVolumeResponse>{ return this.SoapRequestWithBody<typeof input, RampToVolumeResponse>('RampToVolume', input); }
+  async RampToVolume(input: { InstanceID: number; Channel: string; RampType: string; DesiredVolume: number; ResetVolumeAfter: boolean; ProgramURI: string }):
+    Promise<RampToVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, RampToVolumeResponse>('RampToVolume', input); }
 
-  ResetBasicEQ(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<ResetBasicEQResponse>{ return this.SoapRequestWithBody<typeof input, ResetBasicEQResponse>('ResetBasicEQ', input); }
+  async ResetBasicEQ(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<ResetBasicEQResponse>{ return await this.SoapRequestWithBody<typeof input, ResetBasicEQResponse>('ResetBasicEQ', input); }
 
-  ResetExtEQ(input: { InstanceID: number; EQType: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ResetExtEQ', input); }
+  async ResetExtEQ(input: { InstanceID: number; EQType: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ResetExtEQ', input); }
 
-  RestoreVolumePriorToRamp(input: { InstanceID: number; Channel: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RestoreVolumePriorToRamp', input); }
+  async RestoreVolumePriorToRamp(input: { InstanceID: number; Channel: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RestoreVolumePriorToRamp', input); }
 
-  SetBass(input: { InstanceID: number; DesiredBass: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetBass', input); }
+  async SetBass(input: { InstanceID: number; DesiredBass: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBass', input); }
 
-  SetChannelMap(input: { InstanceID: number; ChannelMap: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
+  async SetChannelMap(input: { InstanceID: number; ChannelMap: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
 
-  SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetEQ', input); }
+  async SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetEQ', input); }
 
-  SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLoudness', input); }
+  async SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLoudness', input); }
 
-  SetMute(input: { InstanceID: number; Channel: string; DesiredMute: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetMute', input); }
+  async SetMute(input: { InstanceID: number; Channel: string; DesiredMute: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetMute', input); }
 
-  SetOutputFixed(input: { InstanceID: number; DesiredFixed: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetOutputFixed', input); }
+  async SetOutputFixed(input: { InstanceID: number; DesiredFixed: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetOutputFixed', input); }
 
-  SetRelativeVolume(input: { InstanceID: number; Channel: string; Adjustment: number }):
-    Promise<SetRelativeVolumeResponse>{ return this.SoapRequestWithBody<typeof input, SetRelativeVolumeResponse>('SetRelativeVolume', input); }
+  async SetRelativeVolume(input: { InstanceID: number; Channel: string; Adjustment: number }):
+    Promise<SetRelativeVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, SetRelativeVolumeResponse>('SetRelativeVolume', input); }
 
-  SetRoomCalibrationStatus(input: { InstanceID: number; RoomCalibrationEnabled: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationStatus', input); }
+  async SetRoomCalibrationStatus(input: { InstanceID: number; RoomCalibrationEnabled: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationStatus', input); }
 
-  SetRoomCalibrationX(input: { InstanceID: number; CalibrationID: string; Coefficients: string; CalibrationMode: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationX', input); }
+  async SetRoomCalibrationX(input: { InstanceID: number; CalibrationID: string; Coefficients: string; CalibrationMode: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationX', input); }
 
-  SetTreble(input: { InstanceID: number; DesiredTreble: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTreble', input); }
+  async SetTreble(input: { InstanceID: number; DesiredTreble: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTreble', input); }
 
-  SetVolume(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
+  async SetVolume(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
 
-  SetVolumeDB(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
+  async SetVolumeDB(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
   //#endregion
 }
 

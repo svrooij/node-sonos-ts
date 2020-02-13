@@ -8,8 +8,8 @@ export class QPlayService extends BaseService {
   readonly scpUrl: string = '/xml/QPlay1.xml';
 
   //#region methods
-  QPlayAuth(input: { Seed: string }):
-    Promise<QPlayAuthResponse>{ return this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
+  async QPlayAuth(input: { Seed: string }):
+    Promise<QPlayAuthResponse>{ return await this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
   //#endregion
 }
 

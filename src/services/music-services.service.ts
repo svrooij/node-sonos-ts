@@ -15,14 +15,14 @@ export class MusicServicesService extends BaseService {
   readonly scpUrl: string = '/xml/MusicServices1.xml';
 
   //#region methods
-  GetSessionId(input: { ServiceId: number; Username: string }):
-    Promise<GetSessionIdResponse>{ return this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
+  async GetSessionId(input: { ServiceId: number; Username: string }):
+    Promise<GetSessionIdResponse>{ return await this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
 
-  ListAvailableServices():
-    Promise<ListAvailableServicesResponse>{ return this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }
+  async ListAvailableServices():
+    Promise<ListAvailableServicesResponse>{ return await this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }
 
-  UpdateAvailableServices():
-    Promise<boolean> { return this.SoapRequestNoResponse('UpdateAvailableServices'); }
+  async UpdateAvailableServices():
+    Promise<boolean> { return await this.SoapRequestNoResponse('UpdateAvailableServices'); }
   //#endregion
 }
 

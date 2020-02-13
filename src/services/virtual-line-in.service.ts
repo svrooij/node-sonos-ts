@@ -9,29 +9,29 @@ export class VirtualLineInService extends BaseService {
   readonly scpUrl: string = '/xml/VirtualLineIn1.xml';
 
   //#region methods
-  Next(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
+  async Next(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
 
-  Pause(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
+  async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
 
-  Play(input: { InstanceID: number; Speed: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
+  async Play(input: { InstanceID: number; Speed: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
-  Previous(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
+  async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
-  SetVolume(input: { InstanceID: number; DesiredVolume: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
+  async SetVolume(input: { InstanceID: number; DesiredVolume: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
 
-  StartTransmission(input: { InstanceID: number; CoordinatorID: string }):
-    Promise<StartTransmissionResponse>{ return this.SoapRequestWithBody<typeof input, StartTransmissionResponse>('StartTransmission', input); }
+  async StartTransmission(input: { InstanceID: number; CoordinatorID: string }):
+    Promise<StartTransmissionResponse>{ return await this.SoapRequestWithBody<typeof input, StartTransmissionResponse>('StartTransmission', input); }
 
-  Stop(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
+  async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
 
-  StopTransmission(input: { InstanceID: number; CoordinatorID: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmission', input); }
+  async StopTransmission(input: { InstanceID: number; CoordinatorID: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmission', input); }
   //#endregion
 }
 

@@ -15,29 +15,29 @@ export class ZoneGroupTopologyService extends BaseService {
   readonly scpUrl: string = '/xml/ZoneGroupTopology1.xml';
 
   //#region methods
-  BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BeginSoftwareUpdate', input); }
+  async BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('BeginSoftwareUpdate', input); }
 
-  CheckForUpdate(input: { UpdateType: string; CachedOnly: boolean; Version: string }):
-    Promise<CheckForUpdateResponse>{ return this.SoapRequestWithBody<typeof input, CheckForUpdateResponse>('CheckForUpdate', input); }
+  async CheckForUpdate(input: { UpdateType: string; CachedOnly: boolean; Version: string }):
+    Promise<CheckForUpdateResponse>{ return await this.SoapRequestWithBody<typeof input, CheckForUpdateResponse>('CheckForUpdate', input); }
 
-  GetZoneGroupAttributes():
-    Promise<GetZoneGroupAttributesResponse>{ return this.SoapRequest<GetZoneGroupAttributesResponse>('GetZoneGroupAttributes'); }
+  async GetZoneGroupAttributes():
+    Promise<GetZoneGroupAttributesResponse>{ return await this.SoapRequest<GetZoneGroupAttributesResponse>('GetZoneGroupAttributes'); }
 
-  GetZoneGroupState():
-    Promise<GetZoneGroupStateResponse>{ return this.SoapRequest<GetZoneGroupStateResponse>('GetZoneGroupState'); }
+  async GetZoneGroupState():
+    Promise<GetZoneGroupStateResponse>{ return await this.SoapRequest<GetZoneGroupStateResponse>('GetZoneGroupState'); }
 
-  RegisterMobileDevice(input: { MobileDeviceName: string; MobileDeviceUDN: string; MobileIPAndPort: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RegisterMobileDevice', input); }
+  async RegisterMobileDevice(input: { MobileDeviceName: string; MobileDeviceUDN: string; MobileIPAndPort: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RegisterMobileDevice', input); }
 
-  ReportAlarmStartedRunning():
-    Promise<boolean> { return this.SoapRequestNoResponse('ReportAlarmStartedRunning'); }
+  async ReportAlarmStartedRunning():
+    Promise<boolean> { return await this.SoapRequestNoResponse('ReportAlarmStartedRunning'); }
 
-  ReportUnresponsiveDevice(input: { DeviceUUID: string; DesiredAction: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportUnresponsiveDevice', input); }
+  async ReportUnresponsiveDevice(input: { DeviceUUID: string; DesiredAction: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ReportUnresponsiveDevice', input); }
 
-  SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
-    Promise<SubmitDiagnosticsResponse>{ return this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
+  async SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
+    Promise<SubmitDiagnosticsResponse>{ return await this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
   //#endregion
 }
 

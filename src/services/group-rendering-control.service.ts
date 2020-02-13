@@ -15,23 +15,23 @@ export class GroupRenderingControlService extends BaseService {
   readonly scpUrl: string = '/xml/GroupRenderingControl1.xml';
 
   //#region methods
-  GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetGroupMuteResponse>{ return this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
+  async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetGroupMuteResponse>{ return await this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
 
-  GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetGroupVolumeResponse>{ return this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
+  async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetGroupVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
 
-  SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
+  async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
 
-  SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
+  async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
 
-  SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
-    Promise<SetRelativeGroupVolumeResponse>{ return this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
+  async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
+    Promise<SetRelativeGroupVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
 
-  SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
+  async SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   //#endregion
 }
 

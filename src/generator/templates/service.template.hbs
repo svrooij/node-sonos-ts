@@ -22,18 +22,18 @@ export class {{svcName}} extends BaseService {
   //#region methods
   {{#each parsed.methods}}
   {{#if parameters}}
-  {{name}}(input: { {{#each parameters}}{{name}}: {{relatedStateVariable.ttype}}{{#unless @last}}; {{/unless}}{{/each}} }{{{defaultInput}}}):
+  async {{name}}(input: { {{#each parameters}}{{name}}: {{relatedStateVariable.ttype}}{{#unless @last}}; {{/unless}}{{/each}} }{{{defaultInput}}}):
     {{#if responseType}}
-    Promise<{{responseType}}>{ return this.SoapRequestWithBody<typeof input, {{responseType}}>('{{name}}', input); }
+    Promise<{{responseType}}>{ return await this.SoapRequestWithBody<typeof input, {{responseType}}>('{{name}}', input); }
     {{else}}
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
     {{/if}}
   {{else}}
-  {{name}}():
+  async {{name}}():
     {{#if responseType}}
-    Promise<{{responseType}}>{ return this.SoapRequest<{{responseType}}>('{{name}}'); }
+    Promise<{{responseType}}>{ return await this.SoapRequest<{{responseType}}>('{{name}}'); }
     {{else}}
-    Promise<boolean> { return this.SoapRequestNoResponse('{{name}}'); }
+    Promise<boolean> { return await this.SoapRequestNoResponse('{{name}}'); }
     {{/if}}
   {{/if}}
   {{#unless @last}}
