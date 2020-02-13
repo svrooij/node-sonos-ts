@@ -9,7 +9,21 @@
   },
   "AVTransportService": {
     "Description": "Service that controls stuff related to transport (play/pause/next/special urls)",
-    "File": "av-transport.service.ts"
+    "File": "av-transport.service.ts",
+    "Methods": {
+      "BecomeCoordinatorOfStandaloneGroup": {
+        "Description": "Leave the current group and revert to a single player."
+      },
+      "SnoozeAlarm": {
+        "Description": "Snooze the current alarm for some time.",
+        "Params": {
+          "Duration": "Snooze time as hh:mm:ss, 10 minutes = 00:10:00"
+        }
+      },
+      "Stop": {
+        "Description": "Stop playback"
+      }
+    }
   },
   "ConnectionManagerService": {
     "Description": "",

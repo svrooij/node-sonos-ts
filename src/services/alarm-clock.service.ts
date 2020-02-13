@@ -16,56 +16,56 @@ export class AlarmClockService extends BaseService {
   readonly scpUrl: string = '/xml/AlarmClock1.xml';
 
   //#region methods
-  CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
-    Promise<CreateAlarmResponse>{ return this.SoapRequestWithBody<typeof input, CreateAlarmResponse>('CreateAlarm', input); }
+  async CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
+    Promise<CreateAlarmResponse>{ return await this.SoapRequestWithBody<typeof input, CreateAlarmResponse>('CreateAlarm', input); }
 
-  DestroyAlarm(input: { ID: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DestroyAlarm', input); }
+  async DestroyAlarm(input: { ID: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyAlarm', input); }
 
-  GetDailyIndexRefreshTime():
-    Promise<GetDailyIndexRefreshTimeResponse>{ return this.SoapRequest<GetDailyIndexRefreshTimeResponse>('GetDailyIndexRefreshTime'); }
+  async GetDailyIndexRefreshTime():
+    Promise<GetDailyIndexRefreshTimeResponse>{ return await this.SoapRequest<GetDailyIndexRefreshTimeResponse>('GetDailyIndexRefreshTime'); }
 
-  GetFormat():
-    Promise<GetFormatResponse>{ return this.SoapRequest<GetFormatResponse>('GetFormat'); }
+  async GetFormat():
+    Promise<GetFormatResponse>{ return await this.SoapRequest<GetFormatResponse>('GetFormat'); }
 
-  GetHouseholdTimeAtStamp(input: { TimeStamp: string }):
-    Promise<GetHouseholdTimeAtStampResponse>{ return this.SoapRequestWithBody<typeof input, GetHouseholdTimeAtStampResponse>('GetHouseholdTimeAtStamp', input); }
+  async GetHouseholdTimeAtStamp(input: { TimeStamp: string }):
+    Promise<GetHouseholdTimeAtStampResponse>{ return await this.SoapRequestWithBody<typeof input, GetHouseholdTimeAtStampResponse>('GetHouseholdTimeAtStamp', input); }
 
-  GetTimeNow():
-    Promise<GetTimeNowResponse>{ return this.SoapRequest<GetTimeNowResponse>('GetTimeNow'); }
+  async GetTimeNow():
+    Promise<GetTimeNowResponse>{ return await this.SoapRequest<GetTimeNowResponse>('GetTimeNow'); }
 
-  GetTimeServer():
-    Promise<GetTimeServerResponse>{ return this.SoapRequest<GetTimeServerResponse>('GetTimeServer'); }
+  async GetTimeServer():
+    Promise<GetTimeServerResponse>{ return await this.SoapRequest<GetTimeServerResponse>('GetTimeServer'); }
 
-  GetTimeZone():
-    Promise<GetTimeZoneResponse>{ return this.SoapRequest<GetTimeZoneResponse>('GetTimeZone'); }
+  async GetTimeZone():
+    Promise<GetTimeZoneResponse>{ return await this.SoapRequest<GetTimeZoneResponse>('GetTimeZone'); }
 
-  GetTimeZoneAndRule():
-    Promise<GetTimeZoneAndRuleResponse>{ return this.SoapRequest<GetTimeZoneAndRuleResponse>('GetTimeZoneAndRule'); }
+  async GetTimeZoneAndRule():
+    Promise<GetTimeZoneAndRuleResponse>{ return await this.SoapRequest<GetTimeZoneAndRuleResponse>('GetTimeZoneAndRule'); }
 
-  GetTimeZoneRule(input: { Index: number }):
-    Promise<GetTimeZoneRuleResponse>{ return this.SoapRequestWithBody<typeof input, GetTimeZoneRuleResponse>('GetTimeZoneRule', input); }
+  async GetTimeZoneRule(input: { Index: number }):
+    Promise<GetTimeZoneRuleResponse>{ return await this.SoapRequestWithBody<typeof input, GetTimeZoneRuleResponse>('GetTimeZoneRule', input); }
 
-  ListAlarms():
-    Promise<ListAlarmsResponse>{ return this.SoapRequest<ListAlarmsResponse>('ListAlarms'); }
+  async ListAlarms():
+    Promise<ListAlarmsResponse>{ return await this.SoapRequest<ListAlarmsResponse>('ListAlarms'); }
 
-  SetDailyIndexRefreshTime(input: { DesiredDailyIndexRefreshTime: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetDailyIndexRefreshTime', input); }
+  async SetDailyIndexRefreshTime(input: { DesiredDailyIndexRefreshTime: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetDailyIndexRefreshTime', input); }
 
-  SetFormat(input: { DesiredTimeFormat: string; DesiredDateFormat: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetFormat', input); }
+  async SetFormat(input: { DesiredTimeFormat: string; DesiredDateFormat: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetFormat', input); }
 
-  SetTimeNow(input: { DesiredTime: string; TimeZoneForDesiredTime: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeNow', input); }
+  async SetTimeNow(input: { DesiredTime: string; TimeZoneForDesiredTime: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeNow', input); }
 
-  SetTimeServer(input: { DesiredTimeServer: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeServer', input); }
+  async SetTimeServer(input: { DesiredTimeServer: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeServer', input); }
 
-  SetTimeZone(input: { Index: number; AutoAdjustDst: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeZone', input); }
+  async SetTimeZone(input: { Index: number; AutoAdjustDst: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeZone', input); }
 
-  UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
+  async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
   //#endregion
 }
 

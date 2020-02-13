@@ -16,38 +16,38 @@ export class QueueService extends BaseService {
   readonly scpUrl: string = '/xml/Queue1.xml';
 
   //#region methods
-  AddMultipleURIs(input: { QueueID: number; UpdateID: number; ContainerURI: string; ContainerMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean; NumberOfURIs: number; EnqueuedURIsAndMetaData: string }):
-    Promise<AddMultipleURIsResponse>{ return this.SoapRequestWithBody<typeof input, AddMultipleURIsResponse>('AddMultipleURIs', input); }
+  async AddMultipleURIs(input: { QueueID: number; UpdateID: number; ContainerURI: string; ContainerMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean; NumberOfURIs: number; EnqueuedURIsAndMetaData: string }):
+    Promise<AddMultipleURIsResponse>{ return await this.SoapRequestWithBody<typeof input, AddMultipleURIsResponse>('AddMultipleURIs', input); }
 
-  AddURI(input: { QueueID: number; UpdateID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
-    Promise<AddURIResponse>{ return this.SoapRequestWithBody<typeof input, AddURIResponse>('AddURI', input); }
+  async AddURI(input: { QueueID: number; UpdateID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
+    Promise<AddURIResponse>{ return await this.SoapRequestWithBody<typeof input, AddURIResponse>('AddURI', input); }
 
-  AttachQueue(input: { QueueOwnerID: string }):
-    Promise<AttachQueueResponse>{ return this.SoapRequestWithBody<typeof input, AttachQueueResponse>('AttachQueue', input); }
+  async AttachQueue(input: { QueueOwnerID: string }):
+    Promise<AttachQueueResponse>{ return await this.SoapRequestWithBody<typeof input, AttachQueueResponse>('AttachQueue', input); }
 
-  Backup():
-    Promise<boolean> { return this.SoapRequestNoResponse('Backup'); }
+  async Backup():
+    Promise<boolean> { return await this.SoapRequestNoResponse('Backup'); }
 
-  Browse(input: { QueueID: number; StartingIndex: number; RequestedCount: number }):
-    Promise<BrowseResponse>{ return this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
+  async Browse(input: { QueueID: number; StartingIndex: number; RequestedCount: number }):
+    Promise<BrowseResponse>{ return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
 
-  CreateQueue(input: { QueueOwnerID: string; QueueOwnerContext: string; QueuePolicy: string }):
-    Promise<CreateQueueResponse>{ return this.SoapRequestWithBody<typeof input, CreateQueueResponse>('CreateQueue', input); }
+  async CreateQueue(input: { QueueOwnerID: string; QueueOwnerContext: string; QueuePolicy: string }):
+    Promise<CreateQueueResponse>{ return await this.SoapRequestWithBody<typeof input, CreateQueueResponse>('CreateQueue', input); }
 
-  RemoveAllTracks(input: { QueueID: number; UpdateID: number }):
-    Promise<RemoveAllTracksResponse>{ return this.SoapRequestWithBody<typeof input, RemoveAllTracksResponse>('RemoveAllTracks', input); }
+  async RemoveAllTracks(input: { QueueID: number; UpdateID: number }):
+    Promise<RemoveAllTracksResponse>{ return await this.SoapRequestWithBody<typeof input, RemoveAllTracksResponse>('RemoveAllTracks', input); }
 
-  RemoveTrackRange(input: { QueueID: number; UpdateID: number; StartingIndex: number; NumberOfTracks: number }):
-    Promise<RemoveTrackRangeResponse>{ return this.SoapRequestWithBody<typeof input, RemoveTrackRangeResponse>('RemoveTrackRange', input); }
+  async RemoveTrackRange(input: { QueueID: number; UpdateID: number; StartingIndex: number; NumberOfTracks: number }):
+    Promise<RemoveTrackRangeResponse>{ return await this.SoapRequestWithBody<typeof input, RemoveTrackRangeResponse>('RemoveTrackRange', input); }
 
-  ReorderTracks(input: { QueueID: number; StartingIndex: number; NumberOfTracks: number; InsertBefore: number; UpdateID: number }):
-    Promise<ReorderTracksResponse>{ return this.SoapRequestWithBody<typeof input, ReorderTracksResponse>('ReorderTracks', input); }
+  async ReorderTracks(input: { QueueID: number; StartingIndex: number; NumberOfTracks: number; InsertBefore: number; UpdateID: number }):
+    Promise<ReorderTracksResponse>{ return await this.SoapRequestWithBody<typeof input, ReorderTracksResponse>('ReorderTracks', input); }
 
-  ReplaceAllTracks(input: { QueueID: number; UpdateID: number; ContainerURI: string; ContainerMetaData: string | Track; CurrentTrackIndex: number; NewCurrentTrackIndices: string; NumberOfURIs: number; EnqueuedURIsAndMetaData: string }):
-    Promise<ReplaceAllTracksResponse>{ return this.SoapRequestWithBody<typeof input, ReplaceAllTracksResponse>('ReplaceAllTracks', input); }
+  async ReplaceAllTracks(input: { QueueID: number; UpdateID: number; ContainerURI: string; ContainerMetaData: string | Track; CurrentTrackIndex: number; NewCurrentTrackIndices: string; NumberOfURIs: number; EnqueuedURIsAndMetaData: string }):
+    Promise<ReplaceAllTracksResponse>{ return await this.SoapRequestWithBody<typeof input, ReplaceAllTracksResponse>('ReplaceAllTracks', input); }
 
-  SaveAsSonosPlaylist(input: { QueueID: number; Title: string; ObjectID: string }):
-    Promise<SaveAsSonosPlaylistResponse>{ return this.SoapRequestWithBody<typeof input, SaveAsSonosPlaylistResponse>('SaveAsSonosPlaylist', input); }
+  async SaveAsSonosPlaylist(input: { QueueID: number; Title: string; ObjectID: string }):
+    Promise<SaveAsSonosPlaylistResponse>{ return await this.SoapRequestWithBody<typeof input, SaveAsSonosPlaylistResponse>('SaveAsSonosPlaylist', input); }
   //#endregion
 }
 

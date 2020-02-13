@@ -16,53 +16,53 @@ export class ContentDirectoryService extends BaseService {
   readonly scpUrl: string = '/xml/ContentDirectory1.xml';
 
   //#region methods
-  Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
-    Promise<BrowseResponse>{ return this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
+  async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
+    Promise<BrowseResponse>{ return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
 
-  CreateObject(input: { ContainerID: string; Elements: string }):
-    Promise<CreateObjectResponse>{ return this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
+  async CreateObject(input: { ContainerID: string; Elements: string }):
+    Promise<CreateObjectResponse>{ return await this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
 
-  DestroyObject(input: { ObjectID: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
+  async DestroyObject(input: { ObjectID: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
 
-  FindPrefix(input: { ObjectID: string; Prefix: string }):
-    Promise<FindPrefixResponse>{ return this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
+  async FindPrefix(input: { ObjectID: string; Prefix: string }):
+    Promise<FindPrefixResponse>{ return await this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
 
-  GetAlbumArtistDisplayOption():
-    Promise<GetAlbumArtistDisplayOptionResponse>{ return this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
+  async GetAlbumArtistDisplayOption():
+    Promise<GetAlbumArtistDisplayOptionResponse>{ return await this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
 
-  GetAllPrefixLocations(input: { ObjectID: string }):
-    Promise<GetAllPrefixLocationsResponse>{ return this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
+  async GetAllPrefixLocations(input: { ObjectID: string }):
+    Promise<GetAllPrefixLocationsResponse>{ return await this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
 
-  GetBrowseable():
-    Promise<GetBrowseableResponse>{ return this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
+  async GetBrowseable():
+    Promise<GetBrowseableResponse>{ return await this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
 
-  GetLastIndexChange():
-    Promise<GetLastIndexChangeResponse>{ return this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
+  async GetLastIndexChange():
+    Promise<GetLastIndexChangeResponse>{ return await this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
 
-  GetSearchCapabilities():
-    Promise<GetSearchCapabilitiesResponse>{ return this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
+  async GetSearchCapabilities():
+    Promise<GetSearchCapabilitiesResponse>{ return await this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
 
-  GetShareIndexInProgress():
-    Promise<GetShareIndexInProgressResponse>{ return this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
+  async GetShareIndexInProgress():
+    Promise<GetShareIndexInProgressResponse>{ return await this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
 
-  GetSortCapabilities():
-    Promise<GetSortCapabilitiesResponse>{ return this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
+  async GetSortCapabilities():
+    Promise<GetSortCapabilitiesResponse>{ return await this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
 
-  GetSystemUpdateID():
-    Promise<GetSystemUpdateIDResponse>{ return this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
+  async GetSystemUpdateID():
+    Promise<GetSystemUpdateIDResponse>{ return await this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
 
-  RefreshShareIndex(input: { AlbumArtistDisplayOption: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
+  async RefreshShareIndex(input: { AlbumArtistDisplayOption: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
 
-  RequestResort(input: { SortOrder: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
+  async RequestResort(input: { SortOrder: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
 
-  SetBrowseable(input: { Browseable: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
+  async SetBrowseable(input: { Browseable: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
 
-  UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
+  async UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   //#endregion
 }
 

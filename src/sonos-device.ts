@@ -215,7 +215,7 @@ export class SonosDevice extends SonosDeviceBase {
   }
 
   private executeCommandGetService(serviceName: string): {[key: string]: Function} | undefined {
-    if(serviceName.indexOf('Service') === -1) // Name doesn't have 'Service' in it.
+    if(serviceName.toLowerCase().indexOf('service') === -1) // Name doesn't have 'Service' in it.
       return undefined;
     
     const serviceDictionary = this.executeCommandGetFunctions();

@@ -135,7 +135,11 @@ const addMethodsToService = function (service) {
     const args = action.argumentList && action.argumentList.argument ? forceArray(action.argumentList.argument) : []
     const hasOutput = args.findIndex(a => a.direction === 'out') > -1
     const inArgs = args.filter(a => a.direction === 'in')
-    service.parsed.methods.push({
+    let docs = (service.docs.Methods && service.docs.Methods[action.name])
+      ? service.docs.Methods[action.name]
+      : {}
+
+    const actionObject = {
       name: action.name,
       responseType: hasOutput ? `${action.name}Response` : undefined,
       parameters: inArgs.map(a => {
@@ -143,11 +147,23 @@ const addMethodsToService = function (service) {
         if (a.relatedStateVariable) {
           a.relatedStateVariable = getRelatedVariable(service, a.relatedStateVariable)
         }
+        if (docs.Params && docs.Params[a.name]) {
+          a.description = docs.Params[a.name]
+        } else if (a.name === 'InstanceID') {
+          a.description = 'InstanceID meaning unknown, just set to 0'
+        }
         return a
       }),
       defaultInput: inArgs.length === 1 && inArgs[0].name === 'InstanceID' ? ' = { InstanceID: 0 }' : undefined
-    })
+    }
+
+    if (docs.Description) {
+      actionObject.description = docs.Description
+    }
+
+    service.parsed.methods.push(actionObject)
   })
+  delete service.docs.Methods
   return service
 }
 
@@ -180,7 +196,7 @@ const generateServiceFile = function (service) {
   if (service.docs && service.docs.File) {
     service.parsed.responses = service.parsed.responses.filter(resp => resp.name !== 'BrowseResponse')
     const template = getTemplate('service')
-    const generatedService = template(service)
+    const generatedService = template(service).replace(/-{-/g, '{').replace(/-}-/g, '}')
     fs.writeFileSync(path.join(__dirname, '..', 'services', service.docs.File), generatedService)
 
     console.log('Service %s generated', service.name)

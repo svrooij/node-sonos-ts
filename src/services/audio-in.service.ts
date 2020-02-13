@@ -8,26 +8,26 @@ export class AudioInService extends BaseService {
   readonly scpUrl: string = '/xml/AudioIn1.xml';
 
   //#region methods
-  GetAudioInputAttributes():
-    Promise<GetAudioInputAttributesResponse>{ return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
+  async GetAudioInputAttributes():
+    Promise<GetAudioInputAttributesResponse>{ return await this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
 
-  GetLineInLevel():
-    Promise<GetLineInLevelResponse>{ return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
+  async GetLineInLevel():
+    Promise<GetLineInLevelResponse>{ return await this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
 
-  SelectAudio(input: { ObjectID: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
+  async SelectAudio(input: { ObjectID: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
 
-  SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
+  async SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
 
-  SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
+  async SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
 
-  StartTransmissionToGroup(input: { CoordinatorID: string }):
-    Promise<StartTransmissionToGroupResponse>{ return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
+  async StartTransmissionToGroup(input: { CoordinatorID: string }):
+    Promise<StartTransmissionToGroupResponse>{ return await this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
 
-  StopTransmissionToGroup(input: { CoordinatorID: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
+  async StopTransmissionToGroup(input: { CoordinatorID: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
   //#endregion
 }
 

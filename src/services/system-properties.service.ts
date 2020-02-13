@@ -8,56 +8,56 @@ export class SystemPropertiesService extends BaseService {
   readonly scpUrl: string = '/xml/SystemProperties1.xml';
 
   //#region methods
-  AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
-    Promise<AddAccountXResponse>{ return this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }
+  async AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
+    Promise<AddAccountXResponse>{ return await this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }
 
-  AddOAuthAccountX(input: { AccountType: number; AccountToken: string; AccountKey: string; OAuthDeviceID: string; AuthorizationCode: string; RedirectURI: string; UserIdHashCode: string; AccountTier: number }):
-    Promise<AddOAuthAccountXResponse>{ return this.SoapRequestWithBody<typeof input, AddOAuthAccountXResponse>('AddOAuthAccountX', input); }
+  async AddOAuthAccountX(input: { AccountType: number; AccountToken: string; AccountKey: string; OAuthDeviceID: string; AuthorizationCode: string; RedirectURI: string; UserIdHashCode: string; AccountTier: number }):
+    Promise<AddOAuthAccountXResponse>{ return await this.SoapRequestWithBody<typeof input, AddOAuthAccountXResponse>('AddOAuthAccountX', input); }
 
-  DoPostUpdateTasks():
-    Promise<boolean> { return this.SoapRequestNoResponse('DoPostUpdateTasks'); }
+  async DoPostUpdateTasks():
+    Promise<boolean> { return await this.SoapRequestNoResponse('DoPostUpdateTasks'); }
 
-  EditAccountMd(input: { AccountType: number; AccountID: string; NewAccountMd: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountMd', input); }
+  async EditAccountMd(input: { AccountType: number; AccountID: string; NewAccountMd: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountMd', input); }
 
-  EditAccountPasswordX(input: { AccountType: number; AccountID: string; NewAccountPassword: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountPasswordX', input); }
+  async EditAccountPasswordX(input: { AccountType: number; AccountID: string; NewAccountPassword: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountPasswordX', input); }
 
-  EnableRDM(input: { RDMValue: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EnableRDM', input); }
+  async EnableRDM(input: { RDMValue: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EnableRDM', input); }
 
-  GetRDM():
-    Promise<GetRDMResponse>{ return this.SoapRequest<GetRDMResponse>('GetRDM'); }
+  async GetRDM():
+    Promise<GetRDMResponse>{ return await this.SoapRequest<GetRDMResponse>('GetRDM'); }
 
-  GetString(input: { VariableName: string }):
-    Promise<GetStringResponse>{ return this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }
+  async GetString(input: { VariableName: string }):
+    Promise<GetStringResponse>{ return await this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }
 
-  GetWebCode(input: { AccountType: number }):
-    Promise<GetWebCodeResponse>{ return this.SoapRequestWithBody<typeof input, GetWebCodeResponse>('GetWebCode', input); }
+  async GetWebCode(input: { AccountType: number }):
+    Promise<GetWebCodeResponse>{ return await this.SoapRequestWithBody<typeof input, GetWebCodeResponse>('GetWebCode', input); }
 
-  ProvisionCredentialedTrialAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
-    Promise<ProvisionCredentialedTrialAccountXResponse>{ return this.SoapRequestWithBody<typeof input, ProvisionCredentialedTrialAccountXResponse>('ProvisionCredentialedTrialAccountX', input); }
+  async ProvisionCredentialedTrialAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
+    Promise<ProvisionCredentialedTrialAccountXResponse>{ return await this.SoapRequestWithBody<typeof input, ProvisionCredentialedTrialAccountXResponse>('ProvisionCredentialedTrialAccountX', input); }
 
-  RefreshAccountCredentialsX(input: { AccountType: number; AccountUID: number; AccountToken: string; AccountKey: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshAccountCredentialsX', input); }
+  async RefreshAccountCredentialsX(input: { AccountType: number; AccountUID: number; AccountToken: string; AccountKey: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RefreshAccountCredentialsX', input); }
 
-  Remove(input: { VariableName: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Remove', input); }
+  async Remove(input: { VariableName: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Remove', input); }
 
-  RemoveAccount(input: { AccountType: number; AccountID: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAccount', input); }
+  async RemoveAccount(input: { AccountType: number; AccountID: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAccount', input); }
 
-  ReplaceAccountX(input: { AccountUDN: string; NewAccountID: string; NewAccountPassword: string; AccountToken: string; AccountKey: string; OAuthDeviceID: string }):
-    Promise<ReplaceAccountXResponse>{ return this.SoapRequestWithBody<typeof input, ReplaceAccountXResponse>('ReplaceAccountX', input); }
+  async ReplaceAccountX(input: { AccountUDN: string; NewAccountID: string; NewAccountPassword: string; AccountToken: string; AccountKey: string; OAuthDeviceID: string }):
+    Promise<ReplaceAccountXResponse>{ return await this.SoapRequestWithBody<typeof input, ReplaceAccountXResponse>('ReplaceAccountX', input); }
 
-  ResetThirdPartyCredentials():
-    Promise<boolean> { return this.SoapRequestNoResponse('ResetThirdPartyCredentials'); }
+  async ResetThirdPartyCredentials():
+    Promise<boolean> { return await this.SoapRequestNoResponse('ResetThirdPartyCredentials'); }
 
-  SetAccountNicknameX(input: { AccountUDN: string; AccountNickname: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAccountNicknameX', input); }
+  async SetAccountNicknameX(input: { AccountUDN: string; AccountNickname: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAccountNicknameX', input); }
 
-  SetString(input: { VariableName: string; StringValue: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
+  async SetString(input: { VariableName: string; StringValue: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   //#endregion
 }
 

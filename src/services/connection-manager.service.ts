@@ -8,14 +8,14 @@ export class ConnectionManagerService extends BaseService {
   readonly scpUrl: string = '/xml/ConnectionManager1.xml';
 
   //#region methods
-  GetCurrentConnectionIDs():
-    Promise<GetCurrentConnectionIDsResponse>{ return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
+  async GetCurrentConnectionIDs():
+    Promise<GetCurrentConnectionIDsResponse>{ return await this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
 
-  GetCurrentConnectionInfo(input: { ConnectionID: number }):
-    Promise<GetCurrentConnectionInfoResponse>{ return this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
+  async GetCurrentConnectionInfo(input: { ConnectionID: number }):
+    Promise<GetCurrentConnectionInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
 
-  GetProtocolInfo():
-    Promise<GetProtocolInfoResponse>{ return this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
+  async GetProtocolInfo():
+    Promise<GetProtocolInfoResponse>{ return await this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
   //#endregion
 }
 

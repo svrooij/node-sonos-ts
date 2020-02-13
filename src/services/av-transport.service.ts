@@ -16,131 +16,147 @@ export class AVTransportService extends BaseService {
   readonly scpUrl: string = '/xml/AVTransport1.xml';
 
   //#region methods
-  AddMultipleURIsToQueue(input: { InstanceID: number; UpdateID: number; NumberOfURIs: number; EnqueuedURIs: string; EnqueuedURIsMetaData: string | Track; ContainerURI: string; ContainerMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
-    Promise<AddMultipleURIsToQueueResponse>{ return this.SoapRequestWithBody<typeof input, AddMultipleURIsToQueueResponse>('AddMultipleURIsToQueue', input); }
+  async AddMultipleURIsToQueue(input: { InstanceID: number; UpdateID: number; NumberOfURIs: number; EnqueuedURIs: string; EnqueuedURIsMetaData: string | Track; ContainerURI: string; ContainerMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
+    Promise<AddMultipleURIsToQueueResponse>{ return await this.SoapRequestWithBody<typeof input, AddMultipleURIsToQueueResponse>('AddMultipleURIsToQueue', input); }
 
-  AddURIToQueue(input: { InstanceID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
-    Promise<AddURIToQueueResponse>{ return this.SoapRequestWithBody<typeof input, AddURIToQueueResponse>('AddURIToQueue', input); }
+  async AddURIToQueue(input: { InstanceID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
+    Promise<AddURIToQueueResponse>{ return await this.SoapRequestWithBody<typeof input, AddURIToQueueResponse>('AddURIToQueue', input); }
 
-  AddURIToSavedQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; AddAtIndex: number }):
-    Promise<AddURIToSavedQueueResponse>{ return this.SoapRequestWithBody<typeof input, AddURIToSavedQueueResponse>('AddURIToSavedQueue', input); }
+  async AddURIToSavedQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number; EnqueuedURI: string; EnqueuedURIMetaData: string | Track; AddAtIndex: number }):
+    Promise<AddURIToSavedQueueResponse>{ return await this.SoapRequestWithBody<typeof input, AddURIToSavedQueueResponse>('AddURIToSavedQueue', input); }
 
-  BackupQueue(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BackupQueue', input); }
+  async BackupQueue(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('BackupQueue', input); }
 
-  BecomeCoordinatorOfStandaloneGroup(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<BecomeCoordinatorOfStandaloneGroupResponse>{ return this.SoapRequestWithBody<typeof input, BecomeCoordinatorOfStandaloneGroupResponse>('BecomeCoordinatorOfStandaloneGroup', input); }
+  /**
+   * Leave the current group and revert to a single player.
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
+  async BecomeCoordinatorOfStandaloneGroup(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<BecomeCoordinatorOfStandaloneGroupResponse>{ return await this.SoapRequestWithBody<typeof input, BecomeCoordinatorOfStandaloneGroupResponse>('BecomeCoordinatorOfStandaloneGroup', input); }
 
-  BecomeGroupCoordinator(input: { InstanceID: number; CurrentCoordinator: string; CurrentGroupID: string; OtherMembers: string; TransportSettings: string; CurrentURI: string; CurrentURIMetaData: string | Track; SleepTimerState: string; AlarmState: string; StreamRestartState: string; CurrentQueueTrackList: string; CurrentVLIState: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BecomeGroupCoordinator', input); }
+  async BecomeGroupCoordinator(input: { InstanceID: number; CurrentCoordinator: string; CurrentGroupID: string; OtherMembers: string; TransportSettings: string; CurrentURI: string; CurrentURIMetaData: string | Track; SleepTimerState: string; AlarmState: string; StreamRestartState: string; CurrentQueueTrackList: string; CurrentVLIState: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('BecomeGroupCoordinator', input); }
 
-  BecomeGroupCoordinatorAndSource(input: { InstanceID: number; CurrentCoordinator: string; CurrentGroupID: string; OtherMembers: string; CurrentURI: string; CurrentURIMetaData: string | Track; SleepTimerState: string; AlarmState: string; StreamRestartState: string; CurrentAVTTrackList: string; CurrentQueueTrackList: string; CurrentSourceState: string; ResumePlayback: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BecomeGroupCoordinatorAndSource', input); }
+  async BecomeGroupCoordinatorAndSource(input: { InstanceID: number; CurrentCoordinator: string; CurrentGroupID: string; OtherMembers: string; CurrentURI: string; CurrentURIMetaData: string | Track; SleepTimerState: string; AlarmState: string; StreamRestartState: string; CurrentAVTTrackList: string; CurrentQueueTrackList: string; CurrentSourceState: string; ResumePlayback: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('BecomeGroupCoordinatorAndSource', input); }
 
-  ChangeCoordinator(input: { InstanceID: number; CurrentCoordinator: string; NewCoordinator: string; NewTransportSettings: string; CurrentAVTransportURI: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ChangeCoordinator', input); }
+  async ChangeCoordinator(input: { InstanceID: number; CurrentCoordinator: string; NewCoordinator: string; NewTransportSettings: string; CurrentAVTransportURI: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ChangeCoordinator', input); }
 
-  ChangeTransportSettings(input: { InstanceID: number; NewTransportSettings: string; CurrentAVTransportURI: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ChangeTransportSettings', input); }
+  async ChangeTransportSettings(input: { InstanceID: number; NewTransportSettings: string; CurrentAVTransportURI: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ChangeTransportSettings', input); }
 
-  ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ConfigureSleepTimer', input); }
+  async ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ConfigureSleepTimer', input); }
 
-  CreateSavedQueue(input: { InstanceID: number; Title: string; EnqueuedURI: string; EnqueuedURIMetaData: string | Track }):
-    Promise<CreateSavedQueueResponse>{ return this.SoapRequestWithBody<typeof input, CreateSavedQueueResponse>('CreateSavedQueue', input); }
+  async CreateSavedQueue(input: { InstanceID: number; Title: string; EnqueuedURI: string; EnqueuedURIMetaData: string | Track }):
+    Promise<CreateSavedQueueResponse>{ return await this.SoapRequestWithBody<typeof input, CreateSavedQueueResponse>('CreateSavedQueue', input); }
 
-  DelegateGroupCoordinationTo(input: { InstanceID: number; NewCoordinator: string; RejoinGroup: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DelegateGroupCoordinationTo', input); }
+  async DelegateGroupCoordinationTo(input: { InstanceID: number; NewCoordinator: string; RejoinGroup: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DelegateGroupCoordinationTo', input); }
 
-  EndDirectControlSession(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EndDirectControlSession', input); }
+  async EndDirectControlSession(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EndDirectControlSession', input); }
 
-  GetCrossfadeMode(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetCrossfadeModeResponse>{ return this.SoapRequestWithBody<typeof input, GetCrossfadeModeResponse>('GetCrossfadeMode', input); }
+  async GetCrossfadeMode(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetCrossfadeModeResponse>{ return await this.SoapRequestWithBody<typeof input, GetCrossfadeModeResponse>('GetCrossfadeMode', input); }
 
-  GetCurrentTransportActions(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetCurrentTransportActionsResponse>{ return this.SoapRequestWithBody<typeof input, GetCurrentTransportActionsResponse>('GetCurrentTransportActions', input); }
+  async GetCurrentTransportActions(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetCurrentTransportActionsResponse>{ return await this.SoapRequestWithBody<typeof input, GetCurrentTransportActionsResponse>('GetCurrentTransportActions', input); }
 
-  GetDeviceCapabilities(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetDeviceCapabilitiesResponse>{ return this.SoapRequestWithBody<typeof input, GetDeviceCapabilitiesResponse>('GetDeviceCapabilities', input); }
+  async GetDeviceCapabilities(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetDeviceCapabilitiesResponse>{ return await this.SoapRequestWithBody<typeof input, GetDeviceCapabilitiesResponse>('GetDeviceCapabilities', input); }
 
-  GetMediaInfo(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetMediaInfoResponse>{ return this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
+  async GetMediaInfo(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetMediaInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
 
-  GetPositionInfo(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetPositionInfoResponse>{ return this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
+  async GetPositionInfo(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetPositionInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
 
-  GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetRemainingSleepTimerDurationResponse>{ return this.SoapRequestWithBody<typeof input, GetRemainingSleepTimerDurationResponse>('GetRemainingSleepTimerDuration', input); }
+  async GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetRemainingSleepTimerDurationResponse>{ return await this.SoapRequestWithBody<typeof input, GetRemainingSleepTimerDurationResponse>('GetRemainingSleepTimerDuration', input); }
 
-  GetRunningAlarmProperties(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetRunningAlarmPropertiesResponse>{ return this.SoapRequestWithBody<typeof input, GetRunningAlarmPropertiesResponse>('GetRunningAlarmProperties', input); }
+  async GetRunningAlarmProperties(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetRunningAlarmPropertiesResponse>{ return await this.SoapRequestWithBody<typeof input, GetRunningAlarmPropertiesResponse>('GetRunningAlarmProperties', input); }
 
-  GetTransportInfo(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetTransportInfoResponse>{ return this.SoapRequestWithBody<typeof input, GetTransportInfoResponse>('GetTransportInfo', input); }
+  async GetTransportInfo(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetTransportInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetTransportInfoResponse>('GetTransportInfo', input); }
 
-  GetTransportSettings(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<GetTransportSettingsResponse>{ return this.SoapRequestWithBody<typeof input, GetTransportSettingsResponse>('GetTransportSettings', input); }
+  async GetTransportSettings(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<GetTransportSettingsResponse>{ return await this.SoapRequestWithBody<typeof input, GetTransportSettingsResponse>('GetTransportSettings', input); }
 
-  Next(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
+  async Next(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
 
-  NotifyDeletedURI(input: { InstanceID: number; DeletedURI: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('NotifyDeletedURI', input); }
+  async NotifyDeletedURI(input: { InstanceID: number; DeletedURI: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('NotifyDeletedURI', input); }
 
-  Pause(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
+  async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
 
-  Play(input: { InstanceID: number; Speed: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
+  async Play(input: { InstanceID: number; Speed: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
-  Previous(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
+  async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
-  RemoveAllTracksFromQueue(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAllTracksFromQueue', input); }
+  async RemoveAllTracksFromQueue(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAllTracksFromQueue', input); }
 
-  RemoveTrackFromQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveTrackFromQueue', input); }
+  async RemoveTrackFromQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveTrackFromQueue', input); }
 
-  RemoveTrackRangeFromQueue(input: { InstanceID: number; UpdateID: number; StartingIndex: number; NumberOfTracks: number }):
-    Promise<RemoveTrackRangeFromQueueResponse>{ return this.SoapRequestWithBody<typeof input, RemoveTrackRangeFromQueueResponse>('RemoveTrackRangeFromQueue', input); }
+  async RemoveTrackRangeFromQueue(input: { InstanceID: number; UpdateID: number; StartingIndex: number; NumberOfTracks: number }):
+    Promise<RemoveTrackRangeFromQueueResponse>{ return await this.SoapRequestWithBody<typeof input, RemoveTrackRangeFromQueueResponse>('RemoveTrackRangeFromQueue', input); }
 
-  ReorderTracksInQueue(input: { InstanceID: number; StartingIndex: number; NumberOfTracks: number; InsertBefore: number; UpdateID: number }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReorderTracksInQueue', input); }
+  async ReorderTracksInQueue(input: { InstanceID: number; StartingIndex: number; NumberOfTracks: number; InsertBefore: number; UpdateID: number }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ReorderTracksInQueue', input); }
 
-  ReorderTracksInSavedQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number; TrackList: string; NewPositionList: string }):
-    Promise<ReorderTracksInSavedQueueResponse>{ return this.SoapRequestWithBody<typeof input, ReorderTracksInSavedQueueResponse>('ReorderTracksInSavedQueue', input); }
+  async ReorderTracksInSavedQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number; TrackList: string; NewPositionList: string }):
+    Promise<ReorderTracksInSavedQueueResponse>{ return await this.SoapRequestWithBody<typeof input, ReorderTracksInSavedQueueResponse>('ReorderTracksInSavedQueue', input); }
 
-  RunAlarm(input: { InstanceID: number; AlarmID: number; LoggedStartTime: string; Duration: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RunAlarm', input); }
+  async RunAlarm(input: { InstanceID: number; AlarmID: number; LoggedStartTime: string; Duration: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RunAlarm', input); }
 
-  SaveQueue(input: { InstanceID: number; Title: string; ObjectID: string }):
-    Promise<SaveQueueResponse>{ return this.SoapRequestWithBody<typeof input, SaveQueueResponse>('SaveQueue', input); }
+  async SaveQueue(input: { InstanceID: number; Title: string; ObjectID: string }):
+    Promise<SaveQueueResponse>{ return await this.SoapRequestWithBody<typeof input, SaveQueueResponse>('SaveQueue', input); }
 
-  Seek(input: { InstanceID: number; Unit: string; Target: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Seek', input); }
+  async Seek(input: { InstanceID: number; Unit: string; Target: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Seek', input); }
 
-  SetAVTransportURI(input: { InstanceID: number; CurrentURI: string; CurrentURIMetaData: string | Track }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAVTransportURI', input); }
+  async SetAVTransportURI(input: { InstanceID: number; CurrentURI: string; CurrentURIMetaData: string | Track }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAVTransportURI', input); }
 
-  SetCrossfadeMode(input: { InstanceID: number; CrossfadeMode: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetCrossfadeMode', input); }
+  async SetCrossfadeMode(input: { InstanceID: number; CrossfadeMode: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetCrossfadeMode', input); }
 
-  SetNextAVTransportURI(input: { InstanceID: number; NextURI: string; NextURIMetaData: string | Track }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetNextAVTransportURI', input); }
+  async SetNextAVTransportURI(input: { InstanceID: number; NextURI: string; NextURIMetaData: string | Track }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetNextAVTransportURI', input); }
 
-  SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetPlayMode', input); }
+  async SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetPlayMode', input); }
 
-  SnoozeAlarm(input: { InstanceID: number; Duration: string }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SnoozeAlarm', input); }
+  /**
+   * Snooze the current alarm for some time.
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.Duration - Snooze time as hh:mm:ss, 10 minutes = 00:10:00
+   */
+  async SnoozeAlarm(input: { InstanceID: number; Duration: string }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnoozeAlarm', input); }
 
-  StartAutoplay(input: { InstanceID: number; ProgramURI: string; ProgramMetaData: string | Track; Volume: number; IncludeLinkedZones: boolean; ResetVolumeAfter: boolean }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StartAutoplay', input); }
+  async StartAutoplay(input: { InstanceID: number; ProgramURI: string; ProgramMetaData: string | Track; Volume: number; IncludeLinkedZones: boolean; ResetVolumeAfter: boolean }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StartAutoplay', input); }
 
-  Stop(input: { InstanceID: number } = { InstanceID: 0 }):
-    Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
+  /**
+   * Stop playback
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
+  async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
+    Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
   //#endregion
 }
 
