@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import { Request } from 'node-fetch'
+import { Request, Response } from 'node-fetch'
 import { SoapHelper } from '../helpers/soap-helper'
 import { XmlHelper } from '../helpers/xml-helper'
 import { MetadataHelper } from '../helpers/metadata-helper'
@@ -8,6 +8,7 @@ import { Guid } from 'guid-typescript'
 import { EventEmitter } from 'events'
 import { SonosEventListener } from '../sonos-event-listener'
 import { ServiceEvents } from '../models/sonos-events'
+import { SonosError } from '../models/sonos-error'
 import { Debugger } from 'debug'
 import debug = require('debug')
 
@@ -83,9 +84,9 @@ export abstract class BaseService {
    * @returns {Promise<TResponse>} Will return a promise of the requested response
    * @memberof BaseService
    */
-  protected SoapRequest<TResponse>(action: string): Promise<TResponse> {
+  protected async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
-    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
     /**
@@ -99,9 +100,9 @@ export abstract class BaseService {
    * @returns {Promise<TResponse>}
    * @memberof BaseService
    */
-  protected SoapRequestWithBody<TBody,TResponse>(action: string, body: TBody): Promise<TResponse> {
+  protected async SoapRequestWithBody<TBody,TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
-    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
   }
 
   /**
@@ -112,9 +113,9 @@ export abstract class BaseService {
    * @returns {Promise<boolean>} boolean returns true if command is send succesfull and sonos responded with ok
    * @memberof BaseService
    */
-  protected SoapRequestNoResponse(action: string): Promise<boolean> {
+  protected async SoapRequestNoResponse(action: string): Promise<boolean> {
     this.debug('%s()', action);
-    return this.handleRequest(this.generateRequest<undefined>(action, undefined));
+    return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
   }
 
 
@@ -128,9 +129,9 @@ export abstract class BaseService {
    * @returns {Promise<boolean>} boolean returns true if command is send succesfull and sonos responded with ok
    * @memberof BaseService
    */
-  protected SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
+  protected async SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
     this.debug('%s(%o)', action, body);
-    return this.handleRequest(this.generateRequest<TBody>(action, body));
+    return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
   }
   //#endregion
 
@@ -195,18 +196,13 @@ export abstract class BaseService {
    * @returns {Promise<boolean>} boolean returns true if command is send succesfull and sonos responded with ok
    * @memberof BaseService
    */
-  private handleRequest(request: Request): Promise<boolean> {
-    return fetch(request)
-      .then(response => {
-        if(response.ok) {
-          // this.debug('handleRequest success')
-          return true
-        } else {
-          this.debug('handleRequest error %d %s', response.status, response.statusText)
-          
-          throw new Error(`Http status ${response.status} (${response.statusText})`);
-        }
-      })
+  private async handleRequest(request: Request, action: string): Promise<boolean> {
+    const response = await fetch(request);
+    if(response.ok) {
+      return true
+    } else {
+      return await this.handleErrorResponse<boolean>(action, response);
+    }
   }
 
   /**
@@ -219,29 +215,41 @@ export abstract class BaseService {
    * @returns {Promise<TResponse>} a promise with the requested result
    * @memberof BaseService
    */
-  private handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
-    return fetch(request)
-      .then(response => {
-        if(response.ok) {
-          return response.text();
-        } else {
-          this.debug('handleRequest error %d %s', response.status, response.statusText)
-          throw new Error(`Http status ${response.status} (${response.statusText})`);
-        }
-      })
-      .then(parse)
-      .then(result => {
-        if (!result || !result['s:Envelope']) {
-          this.debug('Invalid response for %s %o', action, result)
-          throw new Error(`Invalid response for ${action}: ${result}`)
-        }
-        if (typeof result['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
-          this.debug('Soap error %s %o', action, result['s:Envelope']['s:Body']['s:Fault'])
-          throw new Error(result['s:Envelope']['s:Body']['s:Fault'])
-        }
-        // this.debug('handleRequest success')
-        return this.parseEmbeddedXml<TResponse>(result['s:Envelope']['s:Body'][`u:${action}Response`]);
-      })
+  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
+    const response = await fetch(request);
+    const responseText = response.ok === true ? 
+      await response.text() : 
+      await this.handleErrorResponse<string>(action, response);
+
+    const result = parse(responseText);
+    if (!result || !result['s:Envelope']) {
+      this.debug('Invalid response for %s %o', action, result)
+      throw new Error(`Invalid response for ${action}: ${result}`)
+    }
+    return this.parseEmbeddedXml<TResponse>(result['s:Envelope']['s:Body'][`u:${action}Response`]);
+  }
+
+  /**
+   * This method will handle the error responses, it will always throw an error, after debug output.
+   *
+   * @private
+   * @template TResponse
+   * @param {Response} response
+   * @returns {Promise<TResponse>}
+   * @memberof BaseService
+   */
+  private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse>  {
+    const responseText = await response.text();
+    if(responseText !== '') {
+      const errorResponse = parse(responseText)
+      if (typeof errorResponse['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
+        const error = errorResponse['s:Envelope']['s:Body']['s:Fault']
+        this.debug('Sonos error on %s %o', action, error)
+        throw new SonosError(action, error.faultcode, error.faultstring, error.detail?.UPnPError?.errorCode)
+      }
+    }
+    this.debug('handleRequest error %d %s', response.status, response.statusText)
+    throw new Error(`Http status ${response.status} (${response.statusText})`);
   }
 
   /**
