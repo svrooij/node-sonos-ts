@@ -21,6 +21,17 @@ export class {{svcName}} extends BaseService {
 
   //#region methods
   {{#each parsed.methods}}
+  {{#if description}}
+  /**
+   * {{description}}
+  {{#if parameters}}
+   *
+  {{/if}}
+  {{#each parameters}}
+   * @param -{-{{relatedStateVariable.ttype}}-}- input.{{name}} - {{{description}}}
+  {{/each}}
+   */
+  {{/if}}
   {{#if parameters}}
   async {{name}}(input: { {{#each parameters}}{{name}}: {{relatedStateVariable.ttype}}{{#unless @last}}; {{/unless}}{{/each}} }{{{defaultInput}}}):
     {{#if responseType}}

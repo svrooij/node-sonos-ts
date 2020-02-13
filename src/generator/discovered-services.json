@@ -27,7 +27,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "UpdateID",
@@ -105,7 +106,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "EnqueuedURI",
@@ -151,7 +153,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "ObjectID",
@@ -204,7 +207,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -219,10 +223,12 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Leave the current group and revert to a single player."
         },
         {
           "name": "BecomeGroupCoordinator",
@@ -233,7 +239,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CurrentCoordinator",
@@ -334,7 +341,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CurrentCoordinator",
@@ -443,7 +451,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CurrentCoordinator",
@@ -488,7 +497,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "NewTransportSettings",
@@ -517,7 +527,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "NewSleepTimerDuration",
@@ -539,7 +550,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Title",
@@ -576,7 +588,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "NewCoordinator",
@@ -605,7 +618,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -620,7 +634,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -635,7 +650,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -650,7 +666,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -665,7 +682,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -680,7 +698,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -695,7 +714,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -710,7 +730,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -725,7 +746,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -740,7 +762,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -754,7 +777,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -768,7 +792,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DeletedURI",
@@ -789,7 +814,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -803,7 +829,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Speed",
@@ -827,7 +854,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -841,7 +869,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -855,7 +884,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "ObjectID",
@@ -885,7 +915,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "UpdateID",
@@ -922,7 +953,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "StartingIndex",
@@ -968,7 +1000,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "ObjectID",
@@ -1013,7 +1046,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "AlarmID",
@@ -1102,7 +1136,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Title",
@@ -1131,7 +1166,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Unit",
@@ -1167,7 +1203,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CurrentURI",
@@ -1196,7 +1233,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CrossfadeMode",
@@ -1217,7 +1255,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "NextURI",
@@ -1246,7 +1285,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "NewPlayMode",
@@ -1278,7 +1318,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Duration",
@@ -1286,9 +1327,11 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Snooze time as hh:mm:ss, 10 minutes = 00:10:00"
             }
-          ]
+          ],
+          "description": "Snooze the current alarm for some time."
         },
         {
           "name": "StartAutoplay",
@@ -1299,7 +1342,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "ProgramURI",
@@ -1352,10 +1396,12 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Stop playback"
         }
       ],
       "responses": [
@@ -4225,7 +4271,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -4240,7 +4287,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -4254,7 +4302,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredMute",
@@ -4275,7 +4324,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredVolume",
@@ -4302,7 +4352,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Adjustment",
@@ -4323,7 +4374,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5212,7 +5264,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5227,7 +5280,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "EQType",
@@ -5249,7 +5303,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5264,7 +5319,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5293,7 +5349,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5323,7 +5380,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5338,7 +5396,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5353,7 +5412,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5368,7 +5428,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5383,7 +5444,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5412,7 +5474,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5441,7 +5504,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5470,7 +5534,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5543,7 +5608,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -5557,7 +5623,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "EQType",
@@ -5578,7 +5645,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5606,7 +5674,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredBass",
@@ -5632,7 +5701,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "ChannelMap",
@@ -5653,7 +5723,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "EQType",
@@ -5682,7 +5753,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5718,7 +5790,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5755,7 +5828,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredFixed",
@@ -5777,7 +5851,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5813,7 +5888,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "RoomCalibrationEnabled",
@@ -5834,7 +5910,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CalibrationID",
@@ -5871,7 +5948,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredTreble",
@@ -5897,7 +5975,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -5938,7 +6017,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Channel",
@@ -6815,7 +6895,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -6829,7 +6910,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -6843,7 +6925,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "Speed",
@@ -6864,7 +6947,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -6878,7 +6962,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "DesiredVolume",
@@ -6900,7 +6985,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CoordinatorID",
@@ -6921,7 +7007,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
           "defaultInput": " = { InstanceID: 0 }"
@@ -6935,7 +7022,8 @@
                 "name": "A_ARG_TYPE_InstanceID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "InstanceID meaning unknown, just set to 0"
             },
             {
               "name": "CoordinatorID",

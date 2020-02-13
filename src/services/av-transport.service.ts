@@ -28,6 +28,11 @@ export class AVTransportService extends BaseService {
   async BackupQueue(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('BackupQueue', input); }
 
+  /**
+   * Leave the current group and revert to a single player.
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async BecomeCoordinatorOfStandaloneGroup(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<BecomeCoordinatorOfStandaloneGroupResponse>{ return await this.SoapRequestWithBody<typeof input, BecomeCoordinatorOfStandaloneGroupResponse>('BecomeCoordinatorOfStandaloneGroup', input); }
 
@@ -133,12 +138,23 @@ export class AVTransportService extends BaseService {
   async SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetPlayMode', input); }
 
+  /**
+   * Snooze the current alarm for some time.
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.Duration - Snooze time as hh:mm:ss, 10 minutes = 00:10:00
+   */
   async SnoozeAlarm(input: { InstanceID: number; Duration: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnoozeAlarm', input); }
 
   async StartAutoplay(input: { InstanceID: number; ProgramURI: string; ProgramMetaData: string | Track; Volume: number; IncludeLinkedZones: boolean; ResetVolumeAfter: boolean }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StartAutoplay', input); }
 
+  /**
+   * Stop playback
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
   //#endregion
