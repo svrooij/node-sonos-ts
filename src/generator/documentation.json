@@ -132,7 +132,33 @@
   },
   "GroupRenderingControlService": {
     "Description": "Volume related controls for groups",
-    "File": "group-rendering-control.service.ts"
+    "File": "group-rendering-control.service.ts",
+    "Methods": {
+      "GetGroupMute": {
+        "Description": "Get if the group is muted"
+      },
+      "GetGroupVolume": {
+        "Description": "Get the average group volume"
+      },
+      "SetGroupMute": {
+        "Description": "(Un-/)Mute the entire group",
+        "Params": {
+          "DesiredMute": "True for mute, false for unmute"
+        }
+      },
+      "SetGroupVolume": {
+        "Description": "Change group volume, players will be changed proportionally",
+        "Params": {
+          "DesiredVolume": "New volume"
+        }
+      },
+      "SetRelativeGroupVolume": {
+        "Description": "Relativly change group volume",
+        "Params": {
+          "Adjustment": "number between -100 / +100"
+        }
+      }
+    }
   },
   "MusicServicesService": {
     "Description": "External music services",

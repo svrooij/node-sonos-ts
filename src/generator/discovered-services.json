@@ -4317,7 +4317,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get if the group is muted"
         },
         {
           "name": "GetGroupVolume",
@@ -4333,7 +4334,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get the average group volume"
         },
         {
           "name": "SetGroupMute",
@@ -4353,9 +4355,11 @@
                 "name": "GroupMute",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "True for mute, false for unmute"
             }
-          ]
+          ],
+          "description": "(Un-/)Mute the entire group"
         },
         {
           "name": "SetGroupVolume",
@@ -4380,9 +4384,11 @@
                   "step": 1
                 },
                 "ttype": "number"
-              }
+              },
+              "description": "New volume"
             }
-          ]
+          ],
+          "description": "Change group volume, players will be changed proportionally"
         },
         {
           "name": "SetRelativeGroupVolume",
@@ -4403,9 +4409,11 @@
                 "name": "A_ARG_TYPE_VolumeAdjustment",
                 "dataType": "i4",
                 "ttype": "number"
-              }
+              },
+              "description": "number between -100 / +100"
             }
-          ]
+          ],
+          "description": "Relativly change group volume"
         },
         {
           "name": "SnapshotGroupVolume",
