@@ -1984,7 +1984,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The starttime as hh:mm:ss"
             },
             {
               "name": "Duration",
@@ -1992,7 +1993,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The duration as hh:mm:ss"
             },
             {
               "name": "Recurrence",
@@ -2008,7 +2010,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "Repeat this alarm on"
             },
             {
               "name": "Enabled",
@@ -2016,7 +2019,8 @@
                 "name": "A_ARG_TYPE_AlarmEnabled",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Alarm enabled after creation"
             },
             {
               "name": "RoomUUID",
@@ -2024,7 +2028,8 @@
                 "name": "A_ARG_TYPE_AlarmRoomUUID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The UUID of the speaker you want this alarm for"
             },
             {
               "name": "ProgramURI",
@@ -2032,7 +2037,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The sound uri"
             },
             {
               "name": "ProgramMetaData",
@@ -2040,7 +2046,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "The sound metadata, can be empty string"
             },
             {
               "name": "PlayMode",
@@ -2057,7 +2064,8 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "string"
-              }
+              },
+              "description": "Alarm playmode"
             },
             {
               "name": "Volume",
@@ -2065,7 +2073,8 @@
                 "name": "A_ARG_TYPE_AlarmVolume",
                 "dataType": "ui2",
                 "ttype": "number"
-              }
+              },
+              "description": "Volume between 0 and 100"
             },
             {
               "name": "IncludeLinkedZones",
@@ -2073,9 +2082,11 @@
                 "name": "A_ARG_TYPE_AlarmIncludeLinkedZones",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Should grouped palyers also play the alarm?"
             }
-          ]
+          ],
+          "description": "Create a single alarm, all properties are required"
         },
         {
           "name": "DestroyAlarm",
@@ -2086,9 +2097,11 @@
                 "name": "A_ARG_TYPE_AlarmID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "The Alarm ID, see ListAndParseAlarms"
             }
-          ]
+          ],
+          "description": "Delete an alarm"
         },
         {
           "name": "GetDailyIndexRefreshTime",
@@ -2151,7 +2164,8 @@
         {
           "name": "ListAlarms",
           "responseType": "ListAlarmsResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get the AlarmList as XML, use ListAndParseAlarms for parsed version"
         },
         {
           "name": "SetDailyIndexRefreshTime",
@@ -2251,7 +2265,8 @@
                 "name": "A_ARG_TYPE_AlarmID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "The ID of the alarm see ListAndParseAlarms"
             },
             {
               "name": "StartLocalTime",
@@ -2259,7 +2274,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The starttime as hh:mm:ss"
             },
             {
               "name": "Duration",
@@ -2267,7 +2283,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The duration as hh:mm:ss"
             },
             {
               "name": "Recurrence",
@@ -2283,7 +2300,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "Repeat this alarm on"
             },
             {
               "name": "Enabled",
@@ -2291,7 +2309,8 @@
                 "name": "A_ARG_TYPE_AlarmEnabled",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Alarm enabled after creation"
             },
             {
               "name": "RoomUUID",
@@ -2299,7 +2318,8 @@
                 "name": "A_ARG_TYPE_AlarmRoomUUID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The UUID of the speaker you want this alarm for"
             },
             {
               "name": "ProgramURI",
@@ -2307,7 +2327,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The sound uri"
             },
             {
               "name": "ProgramMetaData",
@@ -2315,7 +2336,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "The sound metadata, can be empty string"
             },
             {
               "name": "PlayMode",
@@ -2332,7 +2354,8 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "string"
-              }
+              },
+              "description": "Alarm playmode"
             },
             {
               "name": "Volume",
@@ -2340,7 +2363,8 @@
                 "name": "A_ARG_TYPE_AlarmVolume",
                 "dataType": "ui2",
                 "ttype": "number"
-              }
+              },
+              "description": "Volume between 0 and 100"
             },
             {
               "name": "IncludeLinkedZones",
@@ -2348,9 +2372,11 @@
                 "name": "A_ARG_TYPE_AlarmIncludeLinkedZones",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Should grouped palyers also play the alarm?"
             }
-          ]
+          ],
+          "description": "Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter"
         }
       ],
       "responses": [

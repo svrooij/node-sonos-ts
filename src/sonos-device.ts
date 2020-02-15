@@ -85,29 +85,11 @@ export class SonosDevice extends SonosDeviceBase {
    * Get a parsed list of all alarms.
    *
    * @returns {Promise<Alarm[]>}
+   * @deprecated Will be removed in favor of Extended AlarmClockService
    * @memberof SonosDevice
    */
   public async AlarmList(): Promise<Alarm[]> {
-    return this.AlarmClockService.ListAlarms()
-      .then(response => XmlHelper.DecodeAndParseXml(response.CurrentAlarmList, ''))
-      .then(parsedList => {
-        return Array.isArray(parsedList.Alarms.Alarm) ? parsedList.Alarms.Alarm : [parsedList.Alarms.Alarm]
-      })
-      .then((alarms: any[]) => {
-        alarms.forEach(alarm => {
-          alarm.Enabled = alarm.Enabled === '1'
-          alarm.ID = parseInt(alarm.ID)
-          alarm.IncludeLinkedZones = alarm.IncludeLinkedZones === '1'
-          alarm.Volume = parseInt(alarm.Volume)
-          // Alarm response has StartTime, but updates expect StartLocalTime, why??
-          alarm.StartLocalTime = alarm.StartTime
-          delete alarm.StartTime
-          if(typeof alarm.ProgramMetaData === 'string')
-            alarm.ProgramMetaData = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port);
-          alarm.ProgramURI = XmlHelper.DecodeTrackUri(alarm.ProgramURI)
-        });
-        return alarms;
-      })
+    return await this.AlarmClockService.ListAndParseAlarms();
   }
 
   /**
@@ -121,23 +103,12 @@ export class SonosDevice extends SonosDeviceBase {
    * @param {boolean | undefined} options.Enabled Should this alarm be enabled
    * @param {PlayMode | undefined} options.PlayMode What playmode should be used
    * @param {number | undefined} options.Volume The requested alarm volume
+   * @deprecated Will be removed in favor of Extended AlarmClockService
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
   public async AlarmPatch(options: PatchAlarm): Promise<boolean> {
-    this.debug('AlarmPatch(%o)', options)
-    return this.AlarmList().then(alarms => {
-      const alarm = alarms.find(a => a.ID === options.ID)
-      if(alarm === undefined) throw new Error(`Alarm with ID ${options.ID} not found`)
-      if(options.Duration !== undefined) alarm.Duration = options.Duration;
-      if(options.Enabled !== undefined) alarm.Enabled = options.Enabled;
-      if(options.PlayMode !== undefined) alarm.PlayMode = options.PlayMode;
-      if(options.Recurrence !== undefined) alarm.Recurrence = options.Recurrence;
-      if(options.StartLocalTime !== undefined) alarm.StartLocalTime = options.StartLocalTime;
-      if(options.Volume !== undefined) alarm.Volume = options.Volume;
-
-      return this.AlarmClockService.UpdateAlarm(alarm);
-    })
+    return await this.AlarmClockService.PatchAlarm(options)
   }
   /**
    * Browse or search content directory
@@ -195,7 +166,9 @@ export class SonosDevice extends SonosDeviceBase {
     }
 
     const objectToCall: {[key: string]: Function} = service !== '' ? this.executeCommandGetService(service) || this.executeCommandGetFunctions() : this.executeCommandGetFunctions();
-
+    if(objectToCall[command] === undefined) {
+      command = Object.keys(objectToCall).find(k => k.toLowerCase() === command.toLowerCase()) || command
+    }
     if(typeof(objectToCall[command]) === 'function') {
       if(options === undefined) {
         return objectToCall[command]();

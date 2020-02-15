@@ -1,7 +1,49 @@
 {
   "AlarmClockService": {
     "Description": "Control the sonos alarms",
-    "File": "alarm-clock.service.ts"
+    "File": "alarm-clock.service.ts",
+    "Methods": {
+      "CreateAlarm": {
+        "Description": "Create a single alarm, all properties are required",
+        "Params": {
+          "StartLocalTime": "The starttime as hh:mm:ss",
+          "Duration": "The duration as hh:mm:ss",
+          "Recurrence": "Repeat this alarm on",
+          "Enabled": "Alarm enabled after creation",
+          "RoomUUID": "The UUID of the speaker you want this alarm for",
+          "ProgramURI": "The sound uri",
+          "ProgramMetaData": "The sound metadata, can be empty string",
+          "PlayMode": "Alarm playmode",
+          "Volume": "Volume between 0 and 100",
+          "IncludeLinkedZones": "Should grouped palyers also play the alarm?"
+        }
+      },
+      "DestroyAlarm": {
+        "Description": "Delete an alarm",
+        "Params": {
+          "ID": "The Alarm ID, see ListAndParseAlarms"
+        }
+      },
+      "ListAlarms": {
+        "Description": "Get the AlarmList as XML, use ListAndParseAlarms for parsed version"
+      },
+      "UpdateAlarm": {
+        "Description": "Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter",
+        "Params": {
+          "ID": "The ID of the alarm see ListAndParseAlarms",
+          "StartLocalTime": "The starttime as hh:mm:ss",
+          "Duration": "The duration as hh:mm:ss",
+          "Recurrence": "Repeat this alarm on",
+          "Enabled": "Alarm enabled after creation",
+          "RoomUUID": "The UUID of the speaker you want this alarm for",
+          "ProgramURI": "The sound uri",
+          "ProgramMetaData": "The sound metadata, can be empty string",
+          "PlayMode": "Alarm playmode",
+          "Volume": "Volume between 0 and 100",
+          "IncludeLinkedZones": "Should grouped palyers also play the alarm?"
+        }
+      }
+    }
   },
   "AudioInService": {
     "Description": "",

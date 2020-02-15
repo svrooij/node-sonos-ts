@@ -6,19 +6,38 @@ import { Track } from '../models';
  * Control the sonos alarms
  *
  * @export
- * @class AlarmClockService
+ * @class AlarmClockServiceBase
  * @extends {BaseService}
  */
-export class AlarmClockService extends BaseService {
+export class AlarmClockServiceBase extends BaseService {
   readonly serviceNane: string = 'AlarmClock';
   readonly controlUrl: string = '/AlarmClock/Control';  
   readonly eventSubUrl: string = '/AlarmClock/Event';
   readonly scpUrl: string = '/xml/AlarmClock1.xml';
 
   //#region methods
+  /**
+   * Create a single alarm, all properties are required
+   *
+   * @param {string} input.StartLocalTime - The starttime as hh:mm:ss
+   * @param {string} input.Duration - The duration as hh:mm:ss
+   * @param {string} input.Recurrence - Repeat this alarm on [ ONCE,WEEKDAYS,WEEKENDS,DAILY ]
+   * @param {boolean} input.Enabled - Alarm enabled after creation
+   * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for
+   * @param {string} input.ProgramURI - The sound uri
+   * @param {string | Track} input.ProgramMetaData - The sound metadata, can be empty string
+   * @param {string} input.PlayMode - Alarm playmode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
+   * @param {number} input.Volume - Volume between 0 and 100
+   * @param {boolean} input.IncludeLinkedZones - Should grouped palyers also play the alarm?
+   */
   async CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
     Promise<CreateAlarmResponse>{ return await this.SoapRequestWithBody<typeof input, CreateAlarmResponse>('CreateAlarm', input); }
 
+  /**
+   * Delete an alarm
+   *
+   * @param {number} input.ID - The Alarm ID, see ListAndParseAlarms
+   */
   async DestroyAlarm(input: { ID: number }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyAlarm', input); }
 
@@ -46,6 +65,9 @@ export class AlarmClockService extends BaseService {
   async GetTimeZoneRule(input: { Index: number }):
     Promise<GetTimeZoneRuleResponse>{ return await this.SoapRequestWithBody<typeof input, GetTimeZoneRuleResponse>('GetTimeZoneRule', input); }
 
+  /**
+   * Get the AlarmList as XML, use ListAndParseAlarms for parsed version
+   */
   async ListAlarms():
     Promise<ListAlarmsResponse>{ return await this.SoapRequest<ListAlarmsResponse>('ListAlarms'); }
 
@@ -64,6 +86,21 @@ export class AlarmClockService extends BaseService {
   async SetTimeZone(input: { Index: number; AutoAdjustDst: boolean }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeZone', input); }
 
+  /**
+   * Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter
+   *
+   * @param {number} input.ID - The ID of the alarm see ListAndParseAlarms
+   * @param {string} input.StartLocalTime - The starttime as hh:mm:ss
+   * @param {string} input.Duration - The duration as hh:mm:ss
+   * @param {string} input.Recurrence - Repeat this alarm on [ ONCE,WEEKDAYS,WEEKENDS,DAILY ]
+   * @param {boolean} input.Enabled - Alarm enabled after creation
+   * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for
+   * @param {string} input.ProgramURI - The sound uri
+   * @param {string | Track} input.ProgramMetaData - The sound metadata, can be empty string
+   * @param {string} input.PlayMode - Alarm playmode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
+   * @param {number} input.Volume - Volume between 0 and 100
+   * @param {boolean} input.IncludeLinkedZones - Should grouped palyers also play the alarm?
+   */
   async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
   //#endregion
@@ -116,4 +153,73 @@ export interface GetTimeZoneRuleResponse {
 export interface ListAlarmsResponse {
   CurrentAlarmList: string;
   CurrentAlarmListVersion: string;
+}
+
+import { Alarm, PatchAlarm } from '../models'
+import { XmlHelper } from '../helpers/xml-helper';
+import { MetadataHelper } from '../helpers/metadata-helper';
+import { ArrayHelper } from '../helpers/array-helper';
+
+/**
+ * Extended AlarmClockService
+ *
+ * @export
+ * @class AlarmClockService
+ * @extends {AlarmClockServiceBase}
+ */
+export class AlarmClockService extends AlarmClockServiceBase {
+
+  /**
+   * Get a parsed list of all alarms.
+   *
+   * @returns {Promise<Alarm[]>}
+   * @memberof SonosDevice
+   */
+  public async ListAndParseAlarms(): Promise<Alarm[]> {
+    const alarmList = await super.ListAlarms()
+    const parsedList = XmlHelper.DecodeAndParseXml(alarmList.CurrentAlarmList, '')
+    const alarms = ArrayHelper.ForceArray<any>(parsedList.Alarms.Alarm)
+    alarms.forEach(alarm => {
+      alarm.Enabled = alarm.Enabled === '1'
+      alarm.ID = parseInt(alarm.ID)
+      alarm.IncludeLinkedZones = alarm.IncludeLinkedZones === '1'
+      alarm.Volume = parseInt(alarm.Volume)
+      // Alarm response has StartTime, but updates expect StartLocalTime, why??
+      alarm.StartLocalTime = alarm.StartTime
+      delete alarm.StartTime
+      if(typeof alarm.ProgramMetaData === 'string')
+        alarm.ProgramMetaData = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port);
+      alarm.ProgramURI = XmlHelper.DecodeTrackUri(alarm.ProgramURI)
+    });
+    return alarms;
+  }
+
+    /**
+   * Patch a single alarm. Only the ID and one property you want to change are required.
+   *
+   * @param {PatchAlarm} [options]
+   * @param {number} options.ID The ID of the alarm to update
+   * @param {string | undefined} options.StartLocalTime The time the alarm has to start 'hh:mm:ss'
+   * @param {string | undefined} options.Duration The duration of the alarm 'hh:mm:ss'
+   * @param {string | undefined} options.Recurrence What should the recurrence be ['DAILY','ONCE','WEEKDAYS']
+   * @param {boolean | undefined} options.Enabled Should this alarm be enabled
+   * @param {PlayMode | undefined} options.PlayMode What playmode should be used
+   * @param {number | undefined} options.Volume The requested alarm volume
+   * @returns {Promise<boolean>}
+   * @memberof SonosDevice
+   */
+  public async PatchAlarm(options: PatchAlarm): Promise<boolean> {
+    this.debug('AlarmPatch(%o)', options)
+    const alarms = await this.ListAndParseAlarms()
+    const alarm = alarms.find(a => a.ID === options.ID)
+    if(alarm === undefined) throw new Error(`Alarm with ID ${options.ID} not found`)
+    if(options.Duration !== undefined) alarm.Duration = options.Duration;
+    if(options.Enabled !== undefined) alarm.Enabled = options.Enabled;
+    if(options.PlayMode !== undefined) alarm.PlayMode = options.PlayMode;
+    if(options.Recurrence !== undefined) alarm.Recurrence = options.Recurrence;
+    if(options.StartLocalTime !== undefined) alarm.StartLocalTime = options.StartLocalTime;
+    if(options.Volume !== undefined) alarm.Volume = options.Volume;
+
+    return await this.UpdateAlarm(alarm);
+  }
 }
