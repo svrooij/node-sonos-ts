@@ -56,6 +56,53 @@
       "BecomeCoordinatorOfStandaloneGroup": {
         "Description": "Leave the current group and revert to a single player."
       },
+      "ConfigureSleepTimer": {
+        "Description": "Stop playing after set sleep timer",
+        "Params": {
+          "NewSleepTimerDuration": "Time to stop after, as hh:mm:ss"
+        }
+      },
+      "GetMediaInfo": {
+        "Description": "Get information about the current playing media (queue)"
+      },
+      "GetPositionInfo": {
+        "Description": "Get information about current position (position in queue and Time in current song)"
+      },
+      "GetRemainingSleepTimerDuration": {
+        "Description": "Get Time left on sleeptimer"
+      },
+      "Next": {
+        "Description": "Go to next song, not always supported"
+      },
+      "Pause": {
+        "Description": "Pause playback"
+      },
+      "Play": {
+        "Description": "Start playing the set TransportURI"
+      },
+      "Previous": {
+        "Description": "Go to previous song, not always supported"
+      },
+      "Seek": {
+        "Description": "Seek track in queue, time delta or absolute time in song",
+        "Params": {
+          "Unit": "What to seek",
+          "Target": "number for track in queue, hh:mm:ss for absolute time in track"
+        }
+      },
+      "SetAVTransportURI": {
+        "Description": "Set the transport URI, to a song, a stream, the queue and a lot more",
+        "Params": {
+          "CurrentURI": "The track URI",
+          "Target": "The metadata, see MetadataHelper.GuessTrack to guess based on track uri"
+        }
+      },
+      "SetPlayMode": {
+        "Description": "Set the PlayMode",
+        "Params": {
+          "NewPlayMode": "PlayMode"
+        }
+      },
       "SnoozeAlarm": {
         "Description": "Snooze the current alarm for some time.",
         "Params": {

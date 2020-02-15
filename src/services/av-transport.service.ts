@@ -48,6 +48,12 @@ export class AVTransportService extends BaseService {
   async ChangeTransportSettings(input: { InstanceID: number; NewTransportSettings: string; CurrentAVTransportURI: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ChangeTransportSettings', input); }
 
+  /**
+   * Stop playing after set sleep timer
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.NewSleepTimerDuration - Time to stop after, as hh:mm:ss
+   */
   async ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ConfigureSleepTimer', input); }
 
@@ -69,12 +75,27 @@ export class AVTransportService extends BaseService {
   async GetDeviceCapabilities(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetDeviceCapabilitiesResponse>{ return await this.SoapRequestWithBody<typeof input, GetDeviceCapabilitiesResponse>('GetDeviceCapabilities', input); }
 
+  /**
+   * Get information about the current playing media (queue)
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async GetMediaInfo(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetMediaInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
 
+  /**
+   * Get information about current position (position in queue and Time in current song)
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async GetPositionInfo(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetPositionInfoResponse>{ return await this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
 
+  /**
+   * Get Time left on sleeptimer
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetRemainingSleepTimerDurationResponse>{ return await this.SoapRequestWithBody<typeof input, GetRemainingSleepTimerDurationResponse>('GetRemainingSleepTimerDuration', input); }
 
@@ -87,18 +108,39 @@ export class AVTransportService extends BaseService {
   async GetTransportSettings(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetTransportSettingsResponse>{ return await this.SoapRequestWithBody<typeof input, GetTransportSettingsResponse>('GetTransportSettings', input); }
 
+  /**
+   * Go to next song, not always supported
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async Next(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
 
   async NotifyDeletedURI(input: { InstanceID: number; DeletedURI: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('NotifyDeletedURI', input); }
 
+  /**
+   * Pause playback
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
 
+  /**
+   * Start playing the set TransportURI
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.Speed -  [ 1 ]
+   */
   async Play(input: { InstanceID: number; Speed: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
+  /**
+   * Go to previous song, not always supported
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
@@ -123,9 +165,23 @@ export class AVTransportService extends BaseService {
   async SaveQueue(input: { InstanceID: number; Title: string; ObjectID: string }):
     Promise<SaveQueueResponse>{ return await this.SoapRequestWithBody<typeof input, SaveQueueResponse>('SaveQueue', input); }
 
+  /**
+   * Seek track in queue, time delta or absolute time in song
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.Unit - What to seek [ TRACK_NR,REL_TIME,TIME_DELTA ]
+   * @param {string} input.Target - number for track in queue, hh:mm:ss for absolute time in track
+   */
   async Seek(input: { InstanceID: number; Unit: string; Target: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Seek', input); }
 
+  /**
+   * Set the transport URI, to a song, a stream, the queue and a lot more
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {string} input.CurrentURI - The track URI
+   * @param {string | Track} input.CurrentURIMetaData - 
+   */
   async SetAVTransportURI(input: { InstanceID: number; CurrentURI: string; CurrentURIMetaData: string | Track }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAVTransportURI', input); }
 
@@ -135,6 +191,12 @@ export class AVTransportService extends BaseService {
   async SetNextAVTransportURI(input: { InstanceID: number; NextURI: string; NextURIMetaData: string | Track }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetNextAVTransportURI', input); }
 
+  /**
+   * Set the PlayMode
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {PlayMode} input.NewPlayMode - PlayMode [ NORMAL,REPEAT_ALL,REPEAT_ONE,SHUFFLE_NOREPEAT,SHUFFLE,SHUFFLE_REPEAT_ONE ]
+   */
   async SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetPlayMode', input); }
 

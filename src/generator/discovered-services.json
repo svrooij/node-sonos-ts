@@ -536,9 +536,11 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Time to stop after, as hh:mm:ss"
             }
-          ]
+          ],
+          "description": "Stop playing after set sleep timer"
         },
         {
           "name": "CreateSavedQueue",
@@ -686,7 +688,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get information about the current playing media (queue)"
         },
         {
           "name": "GetPositionInfo",
@@ -702,7 +705,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get information about current position (position in queue and Time in current song)"
         },
         {
           "name": "GetRemainingSleepTimerDuration",
@@ -718,7 +722,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get Time left on sleeptimer"
         },
         {
           "name": "GetRunningAlarmProperties",
@@ -781,7 +786,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Go to next song, not always supported"
         },
         {
           "name": "NotifyDeletedURI",
@@ -818,7 +824,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Pause playback"
         },
         {
           "name": "Play",
@@ -843,7 +850,8 @@
                 "ttype": "string"
               }
             }
-          ]
+          ],
+          "description": "Start playing the set TransportURI"
         },
         {
           "name": "Previous",
@@ -858,7 +866,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Go to previous song, not always supported"
         },
         {
           "name": "RemoveAllTracksFromQueue",
@@ -1182,7 +1191,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "What to seek"
             },
             {
               "name": "Target",
@@ -1190,9 +1200,11 @@
                 "name": "A_ARG_TYPE_SeekTarget",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "number for track in queue, hh:mm:ss for absolute time in track"
             }
-          ]
+          ],
+          "description": "Seek track in queue, time delta or absolute time in song"
         },
         {
           "name": "SetAVTransportURI",
@@ -1212,7 +1224,8 @@
                 "name": "AVTransportURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The track URI"
             },
             {
               "name": "CurrentURIMetaData",
@@ -1222,7 +1235,8 @@
                 "ttype": "string | Track"
               }
             }
-          ]
+          ],
+          "description": "Set the transport URI, to a song, a stream, the queue and a lot more"
         },
         {
           "name": "SetCrossfadeMode",
@@ -1305,9 +1319,11 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "PlayMode"
-              }
+              },
+              "description": "PlayMode"
             }
-          ]
+          ],
+          "description": "Set the PlayMode"
         },
         {
           "name": "SnoozeAlarm",
