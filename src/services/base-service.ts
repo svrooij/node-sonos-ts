@@ -294,28 +294,27 @@ export abstract class BaseService {
   public get Events(): EventEmitter {
     if (this.events === undefined) {
       this.events = new EventEmitter();
-      this.events.on('removeListener', () => {
+      this.events.on('removeListener', async () => {
         this.debug('Listener removed')
         if(this.events === undefined) return;
         const events = this.events.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
-        if (this.sid !== undefined && events.length === 0) this.cancelSubscription(this.sid)
+        if (this.sid !== undefined && events.length === 0) await this.cancelSubscription(this.sid)
       })
-      this.events.on('newListener', () => {
+      this.events.on('newListener', async () => {
         this.debug('Listener added')
         if (this.sid === undefined) {
           this.debug('Subscribing to events')
-          return this.subscribeForEvents().then(sid => {
-            SonosEventListener.DefaultInstance.RegisterSubscription(sid, this);
-          })
+          const sid = await this.subscribeForEvents();
+          SonosEventListener.DefaultInstance.RegisterSubscription(sid, this);
         }
       })
     }
     return this.events;
   }
 
-  private subscribeForEvents(): Promise<string> {
+  private async subscribeForEvents(): Promise<string> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane)
-    return fetch(new Request(
+    const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
@@ -326,23 +325,22 @@ export abstract class BaseService {
         }
       }
     ))
-      .then(resp => {
-        if(resp.ok)
-          return resp.headers.get('sid') as string
-        throw new Error('No subscription id received')
-      })
-      .then(sid => {
-        this.sid = sid;
-        this.eventRenewTimeout = setTimeout(() => {
-          if (this.sid !== undefined) this.renewEventSubscription(this.sid)
-        }, 3500 * 1000)
-        return this.sid;
-      })
+    const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
+    if(sid === undefined || sid === '') {
+      throw new Error('No subscription id received')
+    }
+    this.sid = sid;
+    this.eventRenewTimeout = setTimeout(async () => {
+      if (this.sid !== undefined) 
+        return await this.renewEventSubscription(this.sid)
+    }, 3500 * 1000);
+
+    return sid;
   }
 
-  private renewEventSubscription(sid: string): Promise<boolean> {
+  private async renewEventSubscription(sid: string): Promise<boolean> {
     this.debug('Renewing event subscription')
-    return fetch(new Request(
+    const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
@@ -351,20 +349,26 @@ export abstract class BaseService {
           Timeout: 'Second-3600'
         }
       }
-    ))
-    .then(resp => resp.ok)
-    .then(success => {
+    ));
+    if(resp.ok) {
       this.debug('Renewed event subscription')
-      this.eventRenewTimeout = setTimeout(() => {
-        if (this.sid !== undefined) this.renewEventSubscription(this.sid)
+      this.eventRenewTimeout = setTimeout(async () => {
+        if (this.sid !== undefined) await this.renewEventSubscription(this.sid)
       }, 3500 * 1000)
-      return success;
-    })
+      return true;
+    }
+
+    this.debug('Renew event subscription failed, trying to resubscribe')
+    const newSid = await this.subscribeForEvents();
+    SonosEventListener.DefaultInstance.RegisterSubscription(newSid, this);
+    return true;
   }
 
-  private cancelSubscription(sid: string): Promise<boolean> {
+  private async cancelSubscription(sid: string): Promise<boolean> {
     this.debug('Cancelling event subscription')
-    return fetch(new Request(
+    if (this.eventRenewTimeout !== undefined) clearTimeout(this.eventRenewTimeout);
+    this.sid = undefined;
+    const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'UNSUBSCRIBE',
@@ -372,14 +376,9 @@ export abstract class BaseService {
           SID: sid
         }
       }
-    ))
-    .then(resp => resp.ok)
-    .then(success => {
-      this.debug('Cancelled event subscription')
-      if (this.eventRenewTimeout !== undefined) clearTimeout(this.eventRenewTimeout);
-      this.sid = undefined;
-      return success;
-    })
+    ));
+    this.debug('Cancelled event subscription success %o', resp.ok);
+    return resp.ok;
   }
 
   /**

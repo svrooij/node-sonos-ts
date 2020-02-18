@@ -536,9 +536,11 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Time to stop after, as hh:mm:ss"
             }
-          ]
+          ],
+          "description": "Stop playing after set sleep timer"
         },
         {
           "name": "CreateSavedQueue",
@@ -686,7 +688,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get information about the current playing media (queue)"
         },
         {
           "name": "GetPositionInfo",
@@ -702,7 +705,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get information about current position (position in queue and Time in current song)"
         },
         {
           "name": "GetRemainingSleepTimerDuration",
@@ -718,7 +722,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get Time left on sleeptimer"
         },
         {
           "name": "GetRunningAlarmProperties",
@@ -781,7 +786,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Go to next song, not always supported"
         },
         {
           "name": "NotifyDeletedURI",
@@ -818,7 +824,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Pause playback"
         },
         {
           "name": "Play",
@@ -843,7 +850,8 @@
                 "ttype": "string"
               }
             }
-          ]
+          ],
+          "description": "Start playing the set TransportURI"
         },
         {
           "name": "Previous",
@@ -858,7 +866,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Go to previous song, not always supported"
         },
         {
           "name": "RemoveAllTracksFromQueue",
@@ -1182,7 +1191,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "What to seek"
             },
             {
               "name": "Target",
@@ -1190,9 +1200,11 @@
                 "name": "A_ARG_TYPE_SeekTarget",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "number for track in queue, hh:mm:ss for absolute time in track"
             }
-          ]
+          ],
+          "description": "Seek track in queue, time delta or absolute time in song"
         },
         {
           "name": "SetAVTransportURI",
@@ -1212,7 +1224,8 @@
                 "name": "AVTransportURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The track URI"
             },
             {
               "name": "CurrentURIMetaData",
@@ -1222,7 +1235,8 @@
                 "ttype": "string | Track"
               }
             }
-          ]
+          ],
+          "description": "Set the transport URI, to a song, a stream, the queue and a lot more"
         },
         {
           "name": "SetCrossfadeMode",
@@ -1305,9 +1319,11 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "PlayMode"
-              }
+              },
+              "description": "PlayMode"
             }
-          ]
+          ],
+          "description": "Set the PlayMode"
         },
         {
           "name": "SnoozeAlarm",
@@ -1984,7 +2000,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The starttime as hh:mm:ss"
             },
             {
               "name": "Duration",
@@ -1992,7 +2009,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The duration as hh:mm:ss"
             },
             {
               "name": "Recurrence",
@@ -2008,7 +2026,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "Repeat this alarm on"
             },
             {
               "name": "Enabled",
@@ -2016,7 +2035,8 @@
                 "name": "A_ARG_TYPE_AlarmEnabled",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Alarm enabled after creation"
             },
             {
               "name": "RoomUUID",
@@ -2024,7 +2044,8 @@
                 "name": "A_ARG_TYPE_AlarmRoomUUID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The UUID of the speaker you want this alarm for"
             },
             {
               "name": "ProgramURI",
@@ -2032,7 +2053,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The sound uri"
             },
             {
               "name": "ProgramMetaData",
@@ -2040,7 +2062,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "The sound metadata, can be empty string"
             },
             {
               "name": "PlayMode",
@@ -2057,7 +2080,8 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "string"
-              }
+              },
+              "description": "Alarm playmode"
             },
             {
               "name": "Volume",
@@ -2065,7 +2089,8 @@
                 "name": "A_ARG_TYPE_AlarmVolume",
                 "dataType": "ui2",
                 "ttype": "number"
-              }
+              },
+              "description": "Volume between 0 and 100"
             },
             {
               "name": "IncludeLinkedZones",
@@ -2073,9 +2098,11 @@
                 "name": "A_ARG_TYPE_AlarmIncludeLinkedZones",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Should grouped palyers also play the alarm?"
             }
-          ]
+          ],
+          "description": "Create a single alarm, all properties are required"
         },
         {
           "name": "DestroyAlarm",
@@ -2086,9 +2113,11 @@
                 "name": "A_ARG_TYPE_AlarmID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "The Alarm ID, see ListAndParseAlarms"
             }
-          ]
+          ],
+          "description": "Delete an alarm"
         },
         {
           "name": "GetDailyIndexRefreshTime",
@@ -2151,7 +2180,8 @@
         {
           "name": "ListAlarms",
           "responseType": "ListAlarmsResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get the AlarmList as XML, use ListAndParseAlarms for parsed version"
         },
         {
           "name": "SetDailyIndexRefreshTime",
@@ -2251,7 +2281,8 @@
                 "name": "A_ARG_TYPE_AlarmID",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "The ID of the alarm see ListAndParseAlarms"
             },
             {
               "name": "StartLocalTime",
@@ -2259,7 +2290,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The starttime as hh:mm:ss"
             },
             {
               "name": "Duration",
@@ -2267,7 +2299,8 @@
                 "name": "A_ARG_TYPE_ISO8601Time",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The duration as hh:mm:ss"
             },
             {
               "name": "Recurrence",
@@ -2283,7 +2316,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "Repeat this alarm on"
             },
             {
               "name": "Enabled",
@@ -2291,7 +2325,8 @@
                 "name": "A_ARG_TYPE_AlarmEnabled",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Alarm enabled after creation"
             },
             {
               "name": "RoomUUID",
@@ -2299,7 +2334,8 @@
                 "name": "A_ARG_TYPE_AlarmRoomUUID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The UUID of the speaker you want this alarm for"
             },
             {
               "name": "ProgramURI",
@@ -2307,7 +2343,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramURI",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The sound uri"
             },
             {
               "name": "ProgramMetaData",
@@ -2315,7 +2352,8 @@
                 "name": "A_ARG_TYPE_AlarmProgramMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "The sound metadata, can be empty string"
             },
             {
               "name": "PlayMode",
@@ -2332,7 +2370,8 @@
                 },
                 "defaultValue": "NORMAL",
                 "ttype": "string"
-              }
+              },
+              "description": "Alarm playmode"
             },
             {
               "name": "Volume",
@@ -2340,7 +2379,8 @@
                 "name": "A_ARG_TYPE_AlarmVolume",
                 "dataType": "ui2",
                 "ttype": "number"
-              }
+              },
+              "description": "Volume between 0 and 100"
             },
             {
               "name": "IncludeLinkedZones",
@@ -2348,9 +2388,11 @@
                 "name": "A_ARG_TYPE_AlarmIncludeLinkedZones",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "Should grouped palyers also play the alarm?"
             }
-          ]
+          ],
+          "description": "Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter"
         }
       ],
       "responses": [
@@ -3053,7 +3095,8 @@
                 "name": "A_ARG_TYPE_ObjectID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it."
             },
             {
               "name": "BrowseFlag",
@@ -3067,7 +3110,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "How to browse"
             },
             {
               "name": "Filter",
@@ -3075,7 +3119,8 @@
                 "name": "A_ARG_TYPE_Filter",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Which fields should be returned '*' for all."
             },
             {
               "name": "StartingIndex",
@@ -3083,7 +3128,8 @@
                 "name": "A_ARG_TYPE_Index",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "Paging, where to start"
             },
             {
               "name": "RequestedCount",
@@ -3091,7 +3137,8 @@
                 "name": "A_ARG_TYPE_Count",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "Paging, number of items"
             },
             {
               "name": "SortCriteria",
@@ -3099,9 +3146,11 @@
                 "name": "A_ARG_TYPE_SortCriteria",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title."
             }
-          ]
+          ],
+          "description": "Browse for content, see BrowseParsed for a better experience."
         },
         {
           "name": "CreateObject",
@@ -4275,7 +4324,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get if the group is muted"
         },
         {
           "name": "GetGroupVolume",
@@ -4291,7 +4341,8 @@
               "description": "InstanceID meaning unknown, just set to 0"
             }
           ],
-          "defaultInput": " = { InstanceID: 0 }"
+          "defaultInput": " = { InstanceID: 0 }",
+          "description": "Get the average group volume"
         },
         {
           "name": "SetGroupMute",
@@ -4311,9 +4362,11 @@
                 "name": "GroupMute",
                 "dataType": "boolean",
                 "ttype": "boolean"
-              }
+              },
+              "description": "True for mute, false for unmute"
             }
-          ]
+          ],
+          "description": "(Un-/)Mute the entire group"
         },
         {
           "name": "SetGroupVolume",
@@ -4338,9 +4391,11 @@
                   "step": 1
                 },
                 "ttype": "number"
-              }
+              },
+              "description": "New volume"
             }
-          ]
+          ],
+          "description": "Change group volume, players will be changed proportionally"
         },
         {
           "name": "SetRelativeGroupVolume",
@@ -4361,9 +4416,11 @@
                 "name": "A_ARG_TYPE_VolumeAdjustment",
                 "dataType": "i4",
                 "ttype": "number"
-              }
+              },
+              "description": "number between -100 / +100"
             }
-          ]
+          ],
+          "description": "Relativly change group volume"
         },
         {
           "name": "SnapshotGroupVolume",
@@ -7136,12 +7193,14 @@
         {
           "name": "GetZoneGroupAttributes",
           "responseType": "GetZoneGroupAttributesResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get information about the current Zone"
         },
         {
           "name": "GetZoneGroupState",
           "responseType": "GetZoneGroupStateResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get all the Sonos groups, (as XML), see GetParsedZoneGroupState"
         },
         {
           "name": "RegisterMobileDevice",

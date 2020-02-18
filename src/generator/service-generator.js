@@ -196,7 +196,11 @@ const generateServiceFile = function (service) {
   if (service.docs && service.docs.File) {
     service.parsed.responses = service.parsed.responses.filter(resp => resp.name !== 'BrowseResponse')
     const template = getTemplate('service')
-    const generatedService = template(service).replace(/-{-/g, '{').replace(/-}-/g, '}')
+    const extensionFile = path.join(__dirname, 'extensions', service.docs.File)
+    if (fs.existsSync(extensionFile)) {
+      service.extension = fs.readFileSync(extensionFile)
+    }
+    let generatedService = template(service).replace(/-{-/g, '{').replace(/-}-/g, '}')
     fs.writeFileSync(path.join(__dirname, '..', 'services', service.docs.File), generatedService)
 
     console.log('Service %s generated', service.name)

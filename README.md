@@ -6,13 +6,13 @@
 [![github issues][badge_issues]][link_issues]
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-
-
 A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library written in node.
 
 ## Usage
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
+
+[![Documentation](./img/book.png)](https://svrooij.github.io/node-sonos-ts/#sonosmanager-and-logical-devices)
 
 You'll need to get the [**SonosDevice**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_device_.sonosdevice.html) by one of the [methods below](#sonosmanager-and-logical-devices), and start using the extra [functionality](#extra-functionality), the [shortcuts](#shortcuts) or the [exposed services](#exposed-services). There also is an [Eventlistener](#events) that allows you to subscribe to all the events your sonos sends out. This library allows you to do **everything** you can do with the Sonos application (except search external [music services](./src/musicservices) :cry:).
 
@@ -32,8 +32,8 @@ manager.InitializeWithDiscovery(10) // Search for all devices in your network, f
 These methods aren't possible with the generated services. This is added functionality:
 
 - **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed :musical_note:.
-- **.AlarmList()** - List all your alarms :alarm_clock:
-- **.AlarmPatch({ ID: 1, ... })** - Update some properties of one of your alarms :clock330:.
+- **.AlarmClockService.ListAndParseAlarms()** - List all your alarms :alarm_clock:
+- **.AlarmClockService.PatchAlarm({ ID: 1, ... })** - Update some properties of one of your alarms :clock330:.
 - **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator :speaker:.
 - **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream) :bell:. See [play-notification.js](./examples/play-notification.js)
 - **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source :mega:. See [Text-to-Speech](#text-to-speech)
@@ -69,8 +69,6 @@ These operations (marked with `*`) are send to the coordinator if the device is 
 
 You can also browse content, see [content.js](./examples/content.js), these are actually all shortcuts to the browse method.
 
-- **.Browse({...})** - Browse local content.
-- **.BrowseWithDefaults({...})** - Browse local content by only specifying the ObjectID, the rest will be set to default.
 - **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
 - **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
 - **.GetFavorites({...})** - Get your favorite songs
@@ -119,7 +117,7 @@ sonos.ExecuteCommand('SendSomeLove').catch(console.error)
 
 ## SonosManager and logical devices
 
-This library has a [**SonosManager**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_manager_.sonosmanager.html) that resolves all your sonos groups for you. It also manages group updates. Every **SonosDevice** created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
+This library has a [**SonosManager**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_manager_.sonosmanager.html) that resolves all your sonos groups for you. It also manages group updates. Every [**SonosDevice**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_device_.sonosdevice.html) created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
 
 - **.Coordinator** - Point to the devices' group coordinator (or to itself when it's the coordinator).
 - **.GroupName** - The name of the group this device is in. eg 'Kitchen + 2'

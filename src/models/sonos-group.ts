@@ -1,5 +1,5 @@
 import { SonosDevice } from '../sonos-device'
-import { ZoneGroup } from '../helpers/zone-helper'
+import { ZoneGroup } from '../services/zone-group-topology.service'
 
 export class SonosGroup {
   public readonly Coordinator: SonosDevice

@@ -39,16 +39,16 @@ export class SmapiClient {
     this.options = options;
   }
 
-  public GetMediaMetadata(input: { id: string }): Promise<any> {
-    return this.SoapRequestWithBody('getMediaMetadata', input);
+  public async GetMediaMetadata(input: { id: string }): Promise<any> {
+    return await this.SoapRequestWithBody('getMediaMetadata', input);
   }
 
-  public GetMediaUri(input: { id: string }): Promise<any> {
-    return this.SoapRequestWithBody('getMediaURI', input);
+  public async GetMediaUri(input: { id: string }): Promise<any> {
+    return await this.SoapRequestWithBody('getMediaURI', input);
   }
 
-  public Search(input: {id: string; term: string; index: number; count: number}): Promise<SearchResult>{
-    return this.SoapRequestWithBody<any,any>('search', input).then((resp: any) => this.PostProcessSearch(resp.searchResult));
+  public async Search(input: {id: string; term: string; index: number; count: number}): Promise<SearchResult>{
+    return await this.SoapRequestWithBody<any,any>('search', input).then((resp: any) => this.PostProcessSearch(resp.searchResult));
   }
 
   private PostProcessSearch(input: any): SearchResult {
@@ -74,40 +74,34 @@ export class SmapiClient {
   }
 
   //#region Private server stuff
-  SoapRequest<TResponse>(action: string): Promise<TResponse> {
+  async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
-    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
-  SoapRequestWithBody<TBody,TResponse>(action: string, body: TBody): Promise<TResponse> {
+  async SoapRequestWithBody<TBody,TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
-    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
   }
 
-  private handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
-    return fetch(request)
-      .then(response => {
-        if(response.ok) {
-          return response.text();
-        } else {
-          this.debug('handleRequest error %d %s', response.status, response.statusText)
-          throw new Error(`Http status ${response.status} (${response.statusText})`);
-        }
-      })
-      .then(body => parse(body, { ignoreNameSpace: true }))
-      .then(result => {
-        if (!result || !result.Envelope || !result.Envelope.Body) {
-          this.debug('Invalid response for %s %o', action, result)
-          throw new Error(`Invalid response for ${action}: ${result}`)
-        }
-        if (typeof result.Envelope.Body.Fault !== 'undefined') {
-          const fault = result.Envelope.Body.Fault;
-          this.debug('Soap error %s %o', action, fault)
-          throw new Error(`SOAP Fault ${fault}`)
-        }
-        this.debug('handleRequest success')
-        return result.Envelope.Body[`${action}Response`];
-      })
+  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
+    const response = await fetch(request);
+    if(!response.ok) {
+      this.debug('handleRequest error %d %s', response.status, response.statusText)
+      throw new Error(`Http status ${response.status} (${response.statusText})`);
+    }
+    const result = parse(await response.text(), { ignoreNameSpace: true });
+    if (!result || !result.Envelope || !result.Envelope.Body) {
+      this.debug('Invalid response for %s %o', action, result)
+      throw new Error(`Invalid response for ${action}: ${result}`)
+    }
+    if (typeof result.Envelope.Body.Fault !== 'undefined') {
+      const fault = result.Envelope.Body.Fault;
+      this.debug('Soap error %s %o', action, fault)
+      throw new Error(`SOAP Fault ${fault}`)
+    }
+    this.debug('handleRequest success')
+    return result.Envelope.Body[`${action}Response`];
   }
 
   private messageAction(action: string): string {

@@ -9,11 +9,11 @@ import { {{#each parsed.imports}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
  * {{docs.Description}}
  *
  * @export
- * @class {{svcName}}
+ * @class {{svcName}}{{#if extension}}Base{{/if}}
  * @extends {BaseService}
  */
 {{/if}}
-export class {{svcName}} extends BaseService {
+export class {{svcName}}{{#if extension}}Base{{/if}} extends BaseService {
   readonly serviceNane: string = '{{name}}';
   readonly controlUrl: string = '{{controlURL}}';  
   readonly eventSubUrl: string = '{{eventSubURL}}';
@@ -28,7 +28,7 @@ export class {{svcName}} extends BaseService {
    *
   {{/if}}
   {{#each parameters}}
-   * @param -{-{{relatedStateVariable.ttype}}-}- input.{{name}} - {{{description}}}
+   * @param -{-{{relatedStateVariable.ttype}}-}- input.{{name}} - {{{description}}}{{#if relatedStateVariable.allowedValueList}} [ {{{relatedStateVariable.allowedValueList.allowedValue}}} ]{{/if}}
   {{/each}}
    */
   {{/if}}
@@ -63,3 +63,4 @@ export interface {{name}} {
 }{{#unless @last}}
 
 {{/unless}}{{/each}}
+{{{extension}}}

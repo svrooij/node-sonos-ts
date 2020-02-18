@@ -15,18 +15,46 @@ export class GroupRenderingControlService extends BaseService {
   readonly scpUrl: string = '/xml/GroupRenderingControl1.xml';
 
   //#region methods
+  /**
+   * Get if the group is muted
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetGroupMuteResponse>{ return await this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
 
+  /**
+   * Get the average group volume
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   */
   async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<GetGroupVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
 
+  /**
+   * (Un-/)Mute the entire group
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {boolean} input.DesiredMute - True for mute, false for unmute
+   */
   async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
 
+  /**
+   * Change group volume, players will be changed proportionally
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.DesiredVolume - New volume
+   */
   async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
 
+  /**
+   * Relativly change group volume
+   *
+   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.Adjustment - number between -100 / +100
+   */
   async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
     Promise<SetRelativeGroupVolumeResponse>{ return await this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
 
