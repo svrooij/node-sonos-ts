@@ -120,7 +120,20 @@
   },
   "ContentDirectoryService": {
     "Description": "Browse for local content",
-    "File": "content-directory.service.ts"
+    "File": "content-directory.service.ts",
+    "Methods": {
+      "Browse": {
+        "Description": "Browse for content, see BrowseParsed for a better experience.",
+        "Params": {
+          "ObjectID": "The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.",
+          "BrowseFlag": "How to browse",
+          "Filter": "Which fields should be returned '*' for all.",
+          "StartingIndex": "Paging, where to start",
+          "RequestedCount": "Paging, number of items",
+          "SortCriteria": "Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title."
+        }
+      }
+    }
   },
   "DevicePropertiesService": {
     "Description": "Modify device properties, like led status and stereo pairs",

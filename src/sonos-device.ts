@@ -71,7 +71,7 @@ export class SonosDevice extends SonosDeviceBase {
   public async AddUriToQueue(trackUri: string, positionInQueue = 0, enqueueAsNext = true): Promise<AddURIToQueueResponse> {
     const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(trackUri);
 
-    return this.AVTransportService.AddURIToQueue({ 
+    return await this.AVTransportService.AddURIToQueue({ 
       InstanceID: 0,
       EnqueuedURI: guessedMetaData.trackUri,
       EnqueuedURIMetaData: guessedMetaData.metedata,
@@ -108,43 +108,6 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async AlarmPatch(options: PatchAlarm): Promise<boolean> {
     return await this.AlarmClockService.PatchAlarm(options)
-  }
-  /**
-   * Browse or search content directory
-   *
-   * @param {{ ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }} input
-   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
-   * @param {string} BrowseFlag 'BrowseDirectChildren' is default, could also be 'BrowseMetadata'
-   * @param {string} Filter Which fields should be returned '*' for all.
-   * @param {number} StartingIndex Where to start in the results, (could be used for paging)
-   * @param {number} RequestedCount How many items should be returned, 0 for all.
-   * @param {string} SortCriteria Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title.
-   * @returns {Promise<BrowseResponse>}
-   * @memberof SonosDevice
-   * @see http://www.upnp.org/specs/av/UPnP-av-ContentDirectory-v1-Service.pdf
-   */
-  public async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
-    return this.ContentDirectoryService.Browse(input)
-      .then(resp => {
-        if(typeof resp.Result === 'string' && resp.NumberReturned > 0) {
-          const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
-          const itemObject = parsedData.item || parsedData.container;
-          const items = Array.isArray(itemObject) ? itemObject : [itemObject];
-          resp.Result = items.map(i => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
-        }
-        return resp;
-      })
-  }
-
-  /**
-   * Same as browse but with all parameters set to default.
-   *
-   * @param {string} ObjectID The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
-   * @returns {Promise<BrowseResponse>}
-   * @memberof SonosDevice
-   */
-  public async BrowseWithDefaults(ObjectID: string): Promise<BrowseResponse> {
-    return this.Browse({ObjectID: ObjectID, BrowseFlag: 'BrowseDirectChildren', Filter: '*', StartingIndex: 0, RequestedCount: 0,  SortCriteria: '' });
   }
 
   /**
@@ -205,7 +168,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavoriteRadioShows(): Promise<BrowseResponse> {
-    return this.BrowseWithDefaults('R:0/1');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/1');
   }
 
   /**
@@ -215,7 +178,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavoriteRadioStations(): Promise<BrowseResponse> {
-    return this.BrowseWithDefaults('R:0/0');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/0');
   }
 
   /**
@@ -225,7 +188,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavorites(): Promise<BrowseResponse> {
-    return this.BrowseWithDefaults('FV:2');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('FV:2');
   }
   
   /**
@@ -235,7 +198,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetQueue(): Promise<BrowseResponse> {
-    return this.BrowseWithDefaults('Q:0');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('Q:0');
   }
 
   /**
@@ -251,7 +214,7 @@ export class SonosDevice extends SonosDeviceBase {
 
     const groupToJoin = zones.find(z => z.members.some(m => m.name.toLowerCase() === otherDevice.toLowerCase()))
     if(groupToJoin === undefined) throw new Error(`Player '${otherDevice}' isn't found!`)
-    return this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: ''})
+    return await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: ''})
   }
 
   private allMusicServices?: any[];
@@ -286,16 +249,15 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async MusicServicesClient(name: string): Promise<SmapiClient> {
     if(this.deviceId === undefined) this.deviceId = (await this.SystemPropertiesService.GetString({ VariableName: 'R_TrialZPSerial' })).StringValue;
-    return this.MusicServicesList()
-      .then(services => {
-        if(services === undefined) throw new Error('Music list could not be loaded');
-        const service = services.find(s => s.Name === name);
-        if(service === undefined) throw new Error(`MusicService could not be found`);
+    const services = await this.MusicServicesList();
+    if(services === undefined) throw new Error('Music list could not be loaded');
 
-        if(service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)')
+    const service = services.find(s => s.Name === name);
+    if(service === undefined) throw new Error(`MusicService could not be found`);
 
-        return new SmapiClient({ name: name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id })
-      });
+    if(service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)')
+
+    return new SmapiClient({ name: name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id })
   }
 
   /**
@@ -387,7 +349,7 @@ export class SonosDevice extends SonosDeviceBase {
 
     const uri = await TtsHelper.GetTtsUriFromEndpoint(options.endpoint, options.text, options.lang, options.gender);
 
-    return this.PlayNotification({ trackUri: uri, onlyWhenPlaying: options.onlyWhenPlaying, volume: options.volume, timeout: options.timeout || 120});
+    return await this.PlayNotification({ trackUri: uri, onlyWhenPlaying: options.onlyWhenPlaying, volume: options.volume, timeout: options.timeout || 120});
   }
 
   /**
@@ -399,7 +361,7 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async SetAVTransportURI(trackUri: string): Promise<boolean> {
     const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(trackUri)
-    return this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metedata });
+    return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metedata });
   }
 
   /**
@@ -409,7 +371,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToLineIn(): Promise<boolean> {
-    return this.AVTransportService
+    return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}0${this.port}`, CurrentURIMetaData: '' })
   }
 
@@ -420,7 +382,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToQueue(): Promise<boolean> {
-    return this.AVTransportService
+    return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}0${this.port}#0`, CurrentURIMetaData: '' })
   }
 
@@ -431,7 +393,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToTV(): Promise<boolean> {
-    return this.AVTransportService
+    return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}0${this.port}:spdiff`, CurrentURIMetaData: '' })
   }
 
@@ -443,19 +405,10 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async TogglePlayback(): Promise<boolean> {
     // Load the Current state first, if not present (eg. not using events)
-    if(this.Coordinator.CurrentTransportStateSimple === undefined) {
-      return this.Coordinator.AVTransportService.GetTransportInfo()
-        .then(response => response.CurrentTransportState)
-        .then(currentState => {
-          return currentState === TransportState.Playing || currentState === TransportState.Transitioning ?
-            this.AVTransportService.Pause() : 
-            this.Coordinator.Play();
-        })
-    }
-    // Return to correct promise based on current state.
-    return this.Coordinator.CurrentTransportStateSimple === TransportState.Playing ?
-      this.Coordinator.Pause() :
-      this.Coordinator.Play();
+    const currentState = this.Coordinator.CurrentTransportStateSimple || (await this.Coordinator.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
+    return currentState === TransportState.Playing || currentState === TransportState.Transitioning ?
+      await this.Coordinator.Pause() : 
+      await this.Coordinator.Play();
   }
   //#endregion
 
@@ -732,9 +685,8 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public GetNightMode(): Promise<boolean> {
-    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })
-      .then(resp => resp.CurrentValue === 1)
+  public async GetNightMode(): Promise<boolean> {
+    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })).CurrentValue === 1
   }
 
   /**
@@ -743,9 +695,8 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public GetSpeechEnhancement(): Promise<boolean> {
-    return this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })
-      .then(resp => resp.CurrentValue === 1)
+  public async GetSpeechEnhancement(): Promise<boolean> {
+    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })).CurrentValue === 1
   }
   
   /**
@@ -754,12 +705,9 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<GetZoneAttributesResponse>}
    * @memberof SonosDevice
    */
-  public GetZoneAttributes(): Promise<GetZoneAttributesResponse> {
-    return this.DevicePropertiesService.GetZoneAttributes()
-    .then(attr => {
-      this.zoneAttributes = attr
-      return attr;
-    }) 
+  public async GetZoneAttributes(): Promise<GetZoneAttributesResponse> {
+    this.zoneAttributes = await this.DevicePropertiesService.GetZoneAttributes();
+    return this.zoneAttributes;
   }
 
   /**
@@ -768,7 +716,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<GetZoneGroupStateResponse>}
    * @memberof SonosDevice
    */
-  public GetZoneGroupState(): Promise<GetZoneGroupStateResponse> { return this.ZoneGroupTopologyService.GetZoneGroupState() }
+  public async GetZoneGroupState(): Promise<GetZoneGroupStateResponse> { return await this.ZoneGroupTopologyService.GetZoneGroupState() }
 
   /**
    * GetZoneInfo shortcut to .DevicePropertiesService.GetZoneInfo()
@@ -776,7 +724,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<GetZoneInfoResponse>}
    * @memberof SonosDevice
    */
-  public GetZoneInfo(): Promise<GetZoneInfoResponse> { return this.DevicePropertiesService.GetZoneInfo() }
+  public async GetZoneInfo(): Promise<GetZoneInfoResponse> { return await this.DevicePropertiesService.GetZoneInfo() }
   
   /**
    * Play next song, shortcut to .Coordinator.AVTransportService.Next()
@@ -784,7 +732,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Next(): Promise<boolean> { return this.Coordinator.AVTransportService.Next() }
+  public async Next(): Promise<boolean> { return await this.Coordinator.AVTransportService.Next() }
 
  /**
    * Pause playback, shortcut to .Coordinator.AVTransportService.Pause()
@@ -792,7 +740,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Pause(): Promise<boolean> { return this.Coordinator.AVTransportService.Pause() }
+  public async Pause(): Promise<boolean> { return await this.Coordinator.AVTransportService.Pause() }
 
   /**
    * Start playing, shortcut to .Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'})
@@ -800,7 +748,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Play(): Promise<boolean> { return this.Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'}) }
+  public async Play(): Promise<boolean> { return await this.Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'}) }
 
   /**
    * Play previous song, shortcut to .Coordinator.AVTransportService.Previous()
@@ -808,7 +756,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Previous(): Promise<boolean> { return this.Coordinator.AVTransportService.Previous() }
+  public async Previous(): Promise<boolean> { return await this.Coordinator.AVTransportService.Previous() }
 
   /**
    * Seek position in the current track, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})
@@ -817,7 +765,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeekPosition(trackTime: string): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})}
+  public async SeekPosition(trackTime: string): Promise<boolean> { return await this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})}
 
   /**
    * Go to other track in queue, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()})
@@ -826,7 +774,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SeekTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
+  public async SeekTrack(trackNr: number): Promise<boolean> { return await this.Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()}) }
 
   /**
    * Turn on/off night mode, on your playbar.
@@ -835,8 +783,8 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SetNightMode(nightmode: boolean): Promise<boolean> {
-    return this.RenderingControlService
+  public async SetNightMode(nightmode: boolean): Promise<boolean> {
+    return await this.RenderingControlService
       .SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 })
   }
 
@@ -847,9 +795,8 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<number>}
    * @memberof SonosDevice
    */
-  public SetRelativeVolume(volumeAdjustment: number): Promise<number> {
-    return this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
-      .then(resp => resp.NewVolume);
+  public async SetRelativeVolume(volumeAdjustment: number): Promise<number> {
+    return (await this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })).NewVolume;
   }
 
   /**
@@ -860,8 +807,8 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
-    return this.RenderingControlService
+  public async SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return await this.RenderingControlService
       .SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
   }
 
@@ -872,9 +819,9 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public SetVolume(volume: number): Promise<boolean> {
+  public async SetVolume(volume: number): Promise<boolean> {
     if (volume < 0 || volume > 100) throw new Error('Volume should be between 0 and 100');
-    return this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
+    return await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: volume});
   }
   /**
    * Stop playback, shortcut to .Coordinator.AVTransportService.Stop()
@@ -882,6 +829,6 @@ export class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public Stop(): Promise<boolean> { return this.Coordinator.AVTransportService.Stop() }
+  public async Stop(): Promise<boolean> { return await this.Coordinator.AVTransportService.Stop() }
   //#endregion
 }

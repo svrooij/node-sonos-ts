@@ -3095,7 +3095,8 @@
                 "name": "A_ARG_TYPE_ObjectID",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it."
             },
             {
               "name": "BrowseFlag",
@@ -3109,7 +3110,8 @@
                   ]
                 },
                 "ttype": "string"
-              }
+              },
+              "description": "How to browse"
             },
             {
               "name": "Filter",
@@ -3117,7 +3119,8 @@
                 "name": "A_ARG_TYPE_Filter",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Which fields should be returned '*' for all."
             },
             {
               "name": "StartingIndex",
@@ -3125,7 +3128,8 @@
                 "name": "A_ARG_TYPE_Index",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "Paging, where to start"
             },
             {
               "name": "RequestedCount",
@@ -3133,7 +3137,8 @@
                 "name": "A_ARG_TYPE_Count",
                 "dataType": "ui4",
                 "ttype": "number"
-              }
+              },
+              "description": "Paging, number of items"
             },
             {
               "name": "SortCriteria",
@@ -3141,9 +3146,11 @@
                 "name": "A_ARG_TYPE_SortCriteria",
                 "dataType": "string",
                 "ttype": "string"
-              }
+              },
+              "description": "Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title."
             }
-          ]
+          ],
+          "description": "Browse for content, see BrowseParsed for a better experience."
         },
         {
           "name": "CreateObject",
