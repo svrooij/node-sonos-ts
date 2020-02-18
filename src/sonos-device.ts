@@ -53,8 +53,8 @@ export class SonosDevice extends SonosDeviceBase {
   public async LoadDeviceData(): Promise<boolean> {
     this.zoneAttributes = await this.GetZoneAttributes();
     this.name = this.zoneAttributes.CurrentZoneName;
-    this.volume = await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(r => r.CurrentVolume)
-    this.muted = await this.RenderingControlService.GetMute({InstanceID: 0, Channel: 'Master'}).then(m => m.CurrentMute)
+    this.volume = (await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'})).CurrentVolume
+    this.muted = (await this.RenderingControlService.GetMute({InstanceID: 0, Channel: 'Master'})).CurrentMute
     return true
   }
 
@@ -226,15 +226,13 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async MusicServicesList(): Promise<any[] | undefined> {
     if(this.allMusicServices === undefined) {
-      return this.MusicServicesService.ListAvailableServices().then(resp => {
-        const musicServiceList = XmlHelper.DecodeAndParseXml(resp.AvailableServiceDescriptorList, '')
-        if(musicServiceList.Services && Array.isArray(musicServiceList.Services.Service) ){
-          this.allMusicServices = musicServiceList.Services.Service;
-          //this.debug('MusicList loaded %O', this.allMusicServices)
-          return this.allMusicServices;
-        }
-        throw new Error('Music list could not be downloaded')
-      })
+      const resp = await this.MusicServicesService.ListAvailableServices()
+      const musicServiceList = XmlHelper.DecodeAndParseXml(resp.AvailableServiceDescriptorList, '')
+      if(musicServiceList.Services && Array.isArray(musicServiceList.Services.Service) ){
+        this.allMusicServices = musicServiceList.Services.Service;
+        return this.allMusicServices;
+      }
+      throw new Error('Music list could not be downloaded')
     }
     return this.allMusicServices;
   }
@@ -270,7 +268,7 @@ export class SonosDevice extends SonosDeviceBase {
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
     this.debug('PlayNotification(%o)', options);
 
-    const originalState = await this.AVTransportService.GetTransportInfo().then(info => info.CurrentTransportState as TransportState)
+    const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState
     this.debug('Current state is %s', originalState);
     if (options.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Notification cancelled, player not playing')
@@ -285,7 +283,7 @@ export class SonosDevice extends SonosDeviceBase {
     }
 
     // Original data to revert to
-    const originalVolume = options.volume !== undefined ? await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'}).then(resp => resp.CurrentVolume) : undefined;
+    const originalVolume = options.volume !== undefined ? (await this.RenderingControlService.GetVolume({InstanceID: 0, Channel: 'Master'})).CurrentVolume : undefined;
     const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
     const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
 
