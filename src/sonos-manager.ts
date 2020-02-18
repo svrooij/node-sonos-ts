@@ -1,9 +1,8 @@
-import { ZoneGroupTopologyService } from './services'
+import { ZoneGroupTopologyService, ZoneGroup } from './services'
 import { SonosDevice } from './sonos-device'
 import { SonosDeviceDiscovery } from './sonos-device-discovery'
 import { ServiceEvents } from './models'
 import { EventEmitter } from 'events';
-import { ZoneGroup,ZoneHelper } from './helpers/zone-helper';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
@@ -26,11 +25,9 @@ export class SonosManager {
    * @returns {Promise<boolean>}
    * @memberof SonosManager
    */
-  public InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
+  public async InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
     this.zoneService = new ZoneGroupTopologyService(host, port);
-    return this.LoadAllGroups()
-      .then(groups => this.InitializeDevices(groups))
-      .then(success => this.SubscribeForGroupEvents(success));
+    return await this.Initialize();
   }
 
   /**
@@ -40,24 +37,22 @@ export class SonosManager {
    * @returns {Promise<boolean>}
    * @memberof SonosManager
    */
-  public InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
+  public async InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
     const deviceDiscovery = new SonosDeviceDiscovery();
-    return deviceDiscovery
-      .SearchOne(timeoutInSeconds)
-      .then(player => {
-        this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
-        return this.LoadAllGroups()
-        .then(groups => this.InitializeDevices(groups))
-        .then(success => this.SubscribeForGroupEvents(success));
-      })
+    const player = await deviceDiscovery.SearchOne(timeoutInSeconds);
+    this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
+    return await this.Initialize();
   }
 
-  private LoadAllGroups(): Promise<ZoneGroup[]> {
+  private async Initialize(): Promise<boolean> {
+    const groups = await this.LoadAllGroups();
+    const success = this.InitializeDevices(groups);
+    return this.SubscribeForGroupEvents(success);
+  }
+
+  private async LoadAllGroups(): Promise<ZoneGroup[]> {
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized')
-    return this.zoneService.GetZoneGroupState()
-      .then(zoneGroupResponse => {
-        return ZoneHelper.ParseZoneGroupStateResponse(zoneGroupResponse)
-      })
+    return await this.zoneService.GetParsedZoneGroupState();
   }
 
   private InitializeDevices(groups: ZoneGroup[]): boolean {

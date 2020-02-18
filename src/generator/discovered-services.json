@@ -7186,12 +7186,14 @@
         {
           "name": "GetZoneGroupAttributes",
           "responseType": "GetZoneGroupAttributesResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get information about the current Zone"
         },
         {
           "name": "GetZoneGroupState",
           "responseType": "GetZoneGroupStateResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Get all the Sonos groups, (as XML), see GetParsedZoneGroupState"
         },
         {
           "name": "RegisterMobileDevice",

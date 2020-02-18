@@ -2,7 +2,6 @@ import { SonosDeviceBase } from './sonos-device-base'
 import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
 import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse } from './models'
 import { AsyncHelper } from './helpers/async-helper'
-import { ZoneHelper } from './helpers/zone-helper'
 import { EventEmitter } from 'events';
 import { XmlHelper } from './helpers/xml-helper'
 import { MetadataHelper } from './helpers/metadata-helper'
@@ -248,7 +247,7 @@ export class SonosDevice extends SonosDeviceBase {
    */
   public async JoinGroup(otherDevice: string): Promise<boolean> {
     this.debug('JoinGroup(%s)', otherDevice)
-    const zones = await this.ZoneGroupTopologyService.GetZoneGroupState().then(ZoneHelper.ParseZoneGroupStateResponse)
+    const zones = await this.ZoneGroupTopologyService.GetParsedZoneGroupState()
 
     const groupToJoin = zones.find(z => z.members.some(m => m.name.toLowerCase() === otherDevice.toLowerCase()))
     if(groupToJoin === undefined) throw new Error(`Player '${otherDevice}' isn't found!`)

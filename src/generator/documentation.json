@@ -186,6 +186,14 @@
   },
   "ZoneGroupTopologyService": {
     "Description": "Zone config stuff, eg getting all the configured sonos zones.",
-    "File": "zone-group-topology.service.ts"
+    "File": "zone-group-topology.service.ts",
+    "Methods": {
+      "GetZoneGroupAttributes": {
+        "Description": "Get information about the current Zone"
+      },
+      "GetZoneGroupState": {
+        "Description": "Get all the Sonos groups, (as XML), see GetParsedZoneGroupState"
+      }
+    }
   }
 }
