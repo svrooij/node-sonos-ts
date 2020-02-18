@@ -7,7 +7,7 @@ export class TtsHelper {
 
   private static debug = debug('sonos:tts')
   // TODO Automaticly get from pacakge on build
-  private static pack = { version: '0.4.2', homepage: 'https://github.com/svrooij/node-sonos-ts'}
+  private static pack = { version: '1.1.5', homepage: 'https://github.com/svrooij/node-sonos-ts'}
 
 
   static async GetTtsUriFromEndpoint(endpoint: string, text: string, language: string, gender?: string): Promise<string>{
@@ -25,22 +25,12 @@ export class TtsHelper {
       }
     );
 
-    return fetch(request)
-      .then(response => {
-        if(response.ok) {
-          return response.text();
-        } else {
-          this.debug('handleRequest error %d %s', response.status, response.statusText)
-          throw new Error(`Http status ${response.status} (${response.statusText})`);
-        }
-      })
-      .then(JSON.parse)
-      .then(resp => {
-        return resp as TtsResponse;
-      })
-      .then(resp => {
-        return resp.cdnUri || resp.uri;
-      })
-
+    const response = await fetch(request);
+    if(!response.ok) {
+      this.debug('handleRequest error %d %s', response.status, response.statusText)
+      throw new Error(`Http status ${response.status} (${response.statusText})`);
+    }
+    const data = JSON.parse(await response.text()) as TtsResponse;
+    return data.cdnUri || data.uri;
   }
 }
