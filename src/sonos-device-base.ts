@@ -14,7 +14,7 @@ export class SonosDeviceBase {
   protected readonly host: string;
   protected readonly port: number;
   private _debugger?: Debugger;
-  protected get debug(): Debugger { if (this._debugger === undefined) this._debugger = debug('sonos:device'); return this._debugger; }
+  protected get debug(): Debugger { if (this._debugger === undefined) this._debugger = debug(`sonos:device:${this.host}`); return this._debugger; }
   public readonly uuid: string;
   constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
     this.host = host;

@@ -10,16 +10,18 @@ import 'mocha';
     this.timeout(100);
     const manager = new SonosManager();
     await manager.InitializeFromDevice(process.env.SONOS_HOST || 'SHOULD_NEVER_GET_HERE')
+    manager.CancelSubscription()
     expect(manager.Devices).to.be.an('array');
     expect(manager.Devices).to.have.length.greaterThan(1)
-    manager.CancelSubscription()
+    
   })
   it('Initializes from discovery', async function() {
     this.timeout(100);
     const manager = new SonosManager();
     await manager.InitializeWithDiscovery()
+    manager.CancelSubscription()
     expect(manager.Devices).to.be.an('array');
     expect(manager.Devices).to.have.length.greaterThan(1)
-    manager.CancelSubscription()
+    
   })
 })

@@ -13,8 +13,8 @@ import 'mocha';
   it('Joins a device by name', async function() {
     const device = new SonosDevice(process.env.SONOS_HOST || '')
     const result = await device.JoinGroup('Slaapkamer')
-    expect(result).to.be.eq(true);
     await device.AVTransportService.BecomeCoordinatorOfStandaloneGroup();
+    expect(result).to.be.eq(true);
   })
 
 })
