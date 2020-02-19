@@ -262,21 +262,23 @@ export abstract class BaseService {
    * @memberof BaseService
    */
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
-    // Currently only parsed properties that end with 'MetaData'
-    // should maybe extended to all?
-    const metadataKeys = Object.keys(input).filter(k => k.indexOf('MetaData') > -1);
-    metadataKeys.forEach(k => {
-      const originalValue = input[k] as string;
-      if(originalValue.startsWith('&lt;')) {
-        input[k] = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
+    const output: {[key: string]: any } = {};
+    const keys = Object.keys(input);
+    keys.forEach(k => {
+      if (k.indexOf('MetaData') > -1 || k.indexOf('URI') > -1) {
+        const originalValue = input[k] as string;
+        if (k.indexOf('MetaData') > -1) {
+          output[k] = originalValue.startsWith('&lt;')
+            ? MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
+            : originalValue;
+        } else {
+          output[k] = XmlHelper.DecodeTrackUri(originalValue);
+        }
+      } else {
+        output[k] = input[k];
       }
-    });
-    const uriKeys = Object.keys(input).filter(k => k.indexOf('URI') > -1);
-    uriKeys.forEach(k => {
-      const originalValue = input[k] as string;
-      input[k] = XmlHelper.DecodeTrackUri(originalValue);
     })
-    return input;
+    return output as TResponse;
   }
   //#endregion
 
