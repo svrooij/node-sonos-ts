@@ -103,7 +103,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     const groupStateResponse = await this.GetZoneGroupState();
     const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState)
     const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup)
-    return groups.map(this.ParseGroup)
+    return groups.map(g => this.ParseGroup(g))
   }
 
   private ParseMember(member: any): ZoneMember {
@@ -117,7 +117,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
   }
 
   private ParseGroup(group: any): ZoneGroup {
-    const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map(this.ParseMember)
+    const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map(m => this.ParseMember(m))
     const coordinator: ZoneMember | undefined = members.find(m => m.uuid === group._Coordinator)
 
     if (coordinator === undefined) throw new Error('Error parsing ZoneGroup')
