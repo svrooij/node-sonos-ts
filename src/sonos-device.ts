@@ -291,8 +291,8 @@ export class SonosDevice extends SonosDeviceBase {
     // Start the notification
     await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.trackUri, CurrentURIMetaData: options.metadata})
     if (options.volume !== undefined) {
-      await AsyncHelper.Delay(waitAfterCmd);
       await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
+      await AsyncHelper.Delay(waitAfterCmd);
     }
     await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch(err => { this.debug('Play threw error, wrong url? %o', err); });
     await AsyncHelper.Delay(waitAfterCmd);
