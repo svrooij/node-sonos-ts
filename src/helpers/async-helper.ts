@@ -32,4 +32,14 @@ export class AsyncHelper {
       })
     })
   }
+  /**
+    * Makes a delay
+    *
+    * @static
+    * @param {number} ms
+    * @memberof AsyncHelper
+    */
+  static async Delay(ms: number) {
+    await new Promise(resolve => setTimeout(()=>resolve(), ms));
+  }
 }

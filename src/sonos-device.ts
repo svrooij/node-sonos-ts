@@ -266,6 +266,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
+    const waitAfterCmd = 500;
     this.debug('PlayNotification(%o)', options);
 
     const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState
@@ -290,9 +291,11 @@ export class SonosDevice extends SonosDeviceBase {
     // Start the notification
     await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: options.trackUri, CurrentURIMetaData: options.metadata})
     if (options.volume !== undefined) {
+      await AsyncHelper.Delay(waitAfterCmd);
       await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: options.volume})
     }
     await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch(err => { this.debug('Play threw error, wrong url? %o', err); });
+    await AsyncHelper.Delay(waitAfterCmd);
 
     // Wait for event (or timeout)
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, options.timeout).catch(err => this.debug('AsyncEvent timeout fired', err))
@@ -301,6 +304,7 @@ export class SonosDevice extends SonosDeviceBase {
     this.debug('Reverting everything back to normal')
     if (originalVolume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume})
     await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData});
+    await AsyncHelper.Delay(waitAfterCmd);
 
     if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
       this.debug('Selecting track %d', originalPositionInfo.Track)
@@ -308,6 +312,7 @@ export class SonosDevice extends SonosDeviceBase {
         .catch(err => {
           this.debug('Error selecting track, happens with some music services %o', err)
         })
+      await AsyncHelper.Delay(waitAfterCmd);
     }
 
     if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00') {
@@ -315,11 +320,13 @@ export class SonosDevice extends SonosDeviceBase {
       await this.SeekPosition(originalPositionInfo.RelTime).catch(err => {
         this.debug('Reverting back track time failed, happens for some muic services (radio or stream). %o', err)
       })
+      await AsyncHelper.Delay(waitAfterCmd);
     }
 
     if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
       await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
     }
+    await AsyncHelper.Delay(waitAfterCmd); // A delay just for safety, we don't know what's coming afterwards.
 
     return true;
 
