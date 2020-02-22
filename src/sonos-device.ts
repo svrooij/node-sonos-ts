@@ -295,14 +295,16 @@ export class SonosDevice extends SonosDeviceBase {
       await AsyncHelper.Delay(waitAfterCmd);
     }
     await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch(err => { this.debug('Play threw error, wrong url? %o', err); });
-    await AsyncHelper.Delay(waitAfterCmd);
 
     // Wait for event (or timeout)
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, options.timeout).catch(err => this.debug('AsyncEvent timeout fired', err))
 
     // Revert everything back
     this.debug('Reverting everything back to normal')
-    if (originalVolume !== undefined) await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume})
+    if (originalVolume !== undefined) {
+      await this.RenderingControlService.SetVolume({InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume})
+      await AsyncHelper.Delay(waitAfterCmd);
+    }
     await this.AVTransportService.SetAVTransportURI({InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData});
     await AsyncHelper.Delay(waitAfterCmd);
 
@@ -326,7 +328,6 @@ export class SonosDevice extends SonosDeviceBase {
     if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
       await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
     }
-    await AsyncHelper.Delay(waitAfterCmd); // A delay just for safety, we don't know what's coming afterwards.
 
     return true;
 
