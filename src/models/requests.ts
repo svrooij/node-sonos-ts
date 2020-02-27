@@ -1,6 +1,40 @@
-import { Track } from "./index";
+import { Track } from "./track";
 
-export interface PlayNotificationOptions {
+export interface PlayNotificationOptionsBase {
+  /**
+   * Sometimes sonos needs some extra time to play the notification. Set this to a value between 100 and 500 to wait that number of milliseconds to wait before sending the next command.
+   *
+   * @type {number}
+   * @memberof PlayNotificationOptionsBase
+   */
+  delayMs?: number;
+
+  /**
+   * Should the notification only be played when the player is currently playing music
+   *
+   * @type {boolean}
+   * @memberof PlayNotificationOptionsBase
+   */
+  onlyWhenPlaying?: boolean;
+
+  /**
+   * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
+   *
+   * @type {number}
+   * @memberof PlayNotificationOptionsBase
+   */
+  timeout?: number;
+
+  /**
+   * If included the volume will be changed before playing the notification and reverted back afterwards.
+   *
+   * @type {number}
+   * @memberof PlayNotificationOptionsBase
+   */
+  volume?: number;
+}
+
+export interface PlayNotificationOptions extends PlayNotificationOptionsBase {
   /**
    * Uri of the notification you wish to play.
    *
@@ -10,36 +44,15 @@ export interface PlayNotificationOptions {
   trackUri: string;
   /**
    * Specify the metadata, it will be guessed if empty.
-   * To support urls, currently not supported by the MetadataHelper.
+   * So you can play any uri currently unsupported by the metadata helper
    *
    * @type {(string | Track)}
    * @memberof PlayNotificationOptions
    */
   metadata?: string | Track;
-  /**
-   * Should the notification only be played when the player is currently playing music
-   *
-   * @type {boolean}
-   * @memberof PlayNotificationOptions
-   */
-  onlyWhenPlaying?: boolean;
-  /**
-   * If included the volume will be changed before playing the notification and reverted back afterwards.
-   *
-   * @type {number}
-   * @memberof PlayNotificationOptions
-   */
-  volume?: number;
-  /**
-   * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
-   *
-   * @type {number}
-   * @memberof PlayNotificationOptions
-   */
-  timeout?: number;
 }
 
-export interface PlayTtsOptions {
+export interface PlayTtsOptions extends PlayNotificationOptionsBase {
   /**
    *Text to convert to Speech
    *
@@ -68,27 +81,6 @@ export interface PlayTtsOptions {
    * @memberof PlayTtsOptions
    */
   gender?: string;
-    /**
-   * Should the notification only be played when the player is currently playing music
-   *
-   * @type {boolean}
-   * @memberof PlayNotificationOptions
-   */
-  onlyWhenPlaying?: boolean;
-  /**
-   * If included the volume will be changed before playing the notification and reverted back afterwards.
-   *
-   * @type {number}
-   * @memberof PlayNotificationOptions
-   */
-  volume?: number;
-  /**
-   * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
-   *
-   * @type {number}
-   * @memberof PlayNotificationOptions
-   */
-  timeout?: number;
 }
 
 export interface TtsResponse {
