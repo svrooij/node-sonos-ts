@@ -9,7 +9,7 @@ import { BrowseResponse } from '../models';
  * @class ContentDirectoryServiceBase
  * @extends {BaseService}
  */
-export class ContentDirectoryServiceBase extends BaseService {
+export class ContentDirectoryServiceBase extends BaseService<ContentDirectoryServiceEvent> {
   readonly serviceNane: string = 'ContentDirectory';
   readonly controlUrl: string = '/MediaServer/ContentDirectory/Control';  
   readonly eventSubUrl: string = '/MediaServer/ContentDirectory/Event';
@@ -74,6 +74,27 @@ export class ContentDirectoryServiceBase extends BaseService {
   async UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'Browseable': 'boolean',
+      'ContainerUpdateIDs': 'string',
+      'FavoritePresetsUpdateID': 'string',
+      'FavoritesUpdateID': 'string',
+      'RadioFavoritesUpdateID': 'number',
+      'RadioLocationUpdateID': 'number',
+      'RecentlyPlayedUpdateID': 'string',
+      'SavedQueuesUpdateID': 'string',
+      'SearchCapabilities': 'string',
+      'ShareIndexInProgress': 'boolean',
+      'ShareIndexLastError': 'string',
+      'ShareListUpdateID': 'string',
+      'SortCapabilities': 'string',
+      'SystemUpdateID': 'number',
+      'UserRadioUpdateID': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -119,6 +140,25 @@ export interface GetSortCapabilitiesResponse {
 
 export interface GetSystemUpdateIDResponse {
   Id: number;
+}
+
+// Strong type event 
+export interface ContentDirectoryServiceEvent {
+  Browseable?: boolean;
+  ContainerUpdateIDs?: string;
+  FavoritePresetsUpdateID?: string;
+  FavoritesUpdateID?: string;
+  RadioFavoritesUpdateID?: number;
+  RadioLocationUpdateID?: number;
+  RecentlyPlayedUpdateID?: string;
+  SavedQueuesUpdateID?: string;
+  SearchCapabilities?: string;
+  ShareIndexInProgress?: boolean;
+  ShareIndexLastError?: string;
+  ShareListUpdateID?: string;
+  SortCapabilities?: string;
+  SystemUpdateID?: number;
+  UserRadioUpdateID?: string;
 }
 
 import { ArrayHelper } from '../helpers/array-helper'

@@ -8,7 +8,7 @@ import { BaseService } from './base-service';
  * @class GroupRenderingControlService
  * @extends {BaseService}
  */
-export class GroupRenderingControlService extends BaseService {
+export class GroupRenderingControlService extends BaseService<GroupRenderingControlServiceEvent> {
   readonly serviceNane: string = 'GroupRenderingControl';
   readonly controlUrl: string = '/MediaRenderer/GroupRenderingControl/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/GroupRenderingControl/Event';
@@ -61,6 +61,15 @@ export class GroupRenderingControlService extends BaseService {
   async SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'GroupMute': 'boolean',
+      'GroupVolume': 'number',
+      'GroupVolumeChangeable': 'boolean'
+    };
+  }
 }
 
 // Generated responses
@@ -74,4 +83,11 @@ export interface GetGroupVolumeResponse {
 
 export interface SetRelativeGroupVolumeResponse {
   NewVolume: number;
+}
+
+// Strong type event 
+export interface GroupRenderingControlServiceEvent {
+  GroupMute?: boolean;
+  GroupVolume?: number;
+  GroupVolumeChangeable?: boolean;
 }

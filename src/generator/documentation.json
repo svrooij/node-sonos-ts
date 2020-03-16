@@ -187,7 +187,18 @@
   },
   "RenderingControlService": {
     "Description": "Volume related controls",
-    "File": "rendering-control.service.ts"
+    "File": "rendering-control.service.ts",
+    "EventProperties": {
+      "Mute": {
+        "Typescript": "ChannelValue<boolean>",
+        "IsChannelValue": true
+      },
+      "Volume": {
+        "Typescript": "ChannelValue<number>",
+        "IsChannelValue": true
+      }
+    }
+
   },
   "SystemPropertiesService": {
     "Description": "",
@@ -200,6 +211,14 @@
   "ZoneGroupTopologyService": {
     "Description": "Zone config stuff, eg getting all the configured sonos zones.",
     "File": "zone-group-topology.service.ts",
+    "EventProperties": {
+      "AvailableSoftwareUpdate": {
+        "Typescript": "any"
+      },
+      "ZoneGroupState": {
+        "Typescript": "Array<ZoneGroup>"
+      }
+    },
     "Methods": {
       "GetZoneGroupAttributes": {
         "Description": "Get information about the current Zone"

@@ -2,6 +2,7 @@
 // The interfaces in this file are manually removed from the service-generator.
 
 export { BrowseResponse } from './browse-response'
+export { ChannelValue } from './channel-value'
 export * from './sonos-events'
 export { PatchAlarm, Alarm } from './alarm'
 export { PlayMode } from './playmode'

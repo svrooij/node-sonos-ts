@@ -9,7 +9,7 @@ import { BrowseResponse, Track } from '../models';
  * @class QueueService
  * @extends {BaseService}
  */
-export class QueueService extends BaseService {
+export class QueueService extends BaseService<QueueServiceEvent> {
   readonly serviceNane: string = 'Queue';
   readonly controlUrl: string = '/MediaRenderer/Queue/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/Queue/Event';
@@ -49,6 +49,15 @@ export class QueueService extends BaseService {
   async SaveAsSonosPlaylist(input: { QueueID: number; Title: string; ObjectID: string }):
     Promise<SaveAsSonosPlaylistResponse>{ return await this.SoapRequestWithBody<typeof input, SaveAsSonosPlaylistResponse>('SaveAsSonosPlaylist', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'Curated': 'boolean',
+      'LastChange': 'string',
+      'UpdateID': 'number'
+    };
+  }
 }
 
 // Generated responses
@@ -94,4 +103,11 @@ export interface ReplaceAllTracksResponse {
 
 export interface SaveAsSonosPlaylistResponse {
   AssignedObjectID: string;
+}
+
+// Strong type event 
+export interface QueueServiceEvent {
+  Curated?: boolean;
+  LastChange?: string;
+  UpdateID?: number;
 }

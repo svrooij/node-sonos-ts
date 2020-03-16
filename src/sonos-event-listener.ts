@@ -43,7 +43,7 @@ export class SonosEventListener {
   private readonly port: number;
   private readonly debug: Debugger;
   private isListening = false;
-  private subscriptions: {[key: string]: BaseService} = {}
+  private subscriptions: {[key: string]: BaseService<any>} = {}
   private server: Server;
   private constructor() {
     this.debug = debug('sonos:eventlistener');
@@ -81,7 +81,7 @@ export class SonosEventListener {
     return `http://${this.listenerHost}:${this.port}/sonos/${uuid}/${serviceName}`
   }
 
-  public RegisterSubscription(sid: string, service: BaseService): void {
+  public RegisterSubscription(sid: string, service: BaseService<any>): void {
     if(this.isListening !== true) {
       this.debug('Start listening on port %d', this.port);
       this.server.listen(this.port);

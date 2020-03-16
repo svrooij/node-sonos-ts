@@ -97,6 +97,7 @@ const addImportsToService = function (service) {
   if (service.data.actions.findIndex(a => a.name === 'Browse') !== -1) extraImports.push('BrowseResponse')
   if (service.data.variables.findIndex(v => v.name === 'CurrentPlayMode') !== -1) extraImports.push('PlayMode')
   if (service.data.variables.findIndex(v => v.name.indexOf('MetaData') > -1) !== -1) extraImports.push('Track')
+  if (service.name === 'RenderingControl') extraImports.push('ChannelValue')
   if (extraImports.length > 0) service.parsed.imports = extraImports
 
   return service
@@ -167,6 +168,28 @@ const addMethodsToService = function (service) {
   return service
 }
 
+const addEventPropertiesToService = function (service) {
+  if (service.data.variables) {
+    service.parsed.eventProperties = forceArray(service.data.variables)
+      .filter(v => !v.name.startsWith('A_ARG_TYPE'))
+      .sort(dynamicCompare('name'))
+    service.parsed.eventProperties = service.parsed.eventProperties
+      .map(v => {
+        const variable = getRelatedVariable(service, v.name)
+        if (variable.ttype === 'string | Track') variable.ttype = 'Track'
+        const docsOverride = service.docs && service.docs.EventProperties ? service.docs.EventProperties[v.name] : undefined
+        return {
+          name: variable.name,
+          ttype: docsOverride && docsOverride.Typescript ? docsOverride.Typescript : variable.ttype,
+          isChannelValue: docsOverride && docsOverride.IsChannelValue === true
+        }
+      })
+  }
+
+  if (service.docs.EventProperties) delete service.docs.EventProperties
+  return service
+}
+
 const addResponsesToService = function (service) {
   // console.debug('Adding responses for %s', service.data.name)
   const actions = service.data.actions.filter(action => action.argumentList && forceArray(action.argumentList.argument).findIndex(ar => ar.direction === 'out') > -1)
@@ -200,7 +223,9 @@ const generateServiceFile = function (service) {
     if (fs.existsSync(extensionFile)) {
       service.extension = fs.readFileSync(extensionFile)
     }
-    let generatedService = template(service).replace(/-{-/g, '{').replace(/-}-/g, '}')
+    let generatedService = template(service)
+      .replace(/-{-/g, '{').replace(/-}-/g, '}')
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
     fs.writeFileSync(path.join(__dirname, '..', 'services', service.docs.File), generatedService)
 
     console.log('Service %s generated', service.name)
@@ -248,6 +273,7 @@ const run = async function () {
     let service = await loadService(serviceList[i])
     service = addImportsToService(service)
     service = addMethodsToService(service)
+    service = addEventPropertiesToService(service)
     service = addResponsesToService(service)
     allServices.push(service)
   }
