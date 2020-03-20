@@ -39,6 +39,7 @@
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.8.0",
+    "strict-event-emitter-types": "^2.0.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "handlebars": "^4.7.3",
@@ -53,8 +54,7 @@
     "debug": "^4.1.1",
     "fast-xml-parser": "^3.16.0",
     "guid-typescript": "^1.0.9",
-    "node-fetch": "^2.6.0",
-    "strict-event-emitter-types": "^2.0.0"
+    "node-fetch": "^2.6.0"
   },
   "files": [
     "README.md",

@@ -67,7 +67,7 @@
   "exclude": ["node_modules", "**/__tests__/*", "examples", "src/generator"],
   "typedocOptions": { /* For TypeDoc  */
     "mode": "modules",
-    "out": "docs",
+    "out": "docs-automatic",
     "theme": "minimal",
     "exclude": [
       "**/*-helper.ts",
