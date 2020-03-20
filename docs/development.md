@@ -51,6 +51,18 @@ This library has several VSCode tasks defined, be sure to change your sonos host
 
 You can also debug the service generator of the tests.
 
+This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
+If you run the examples with the VSCode debug task, this variable is set to `sonos:*` so you should see all the logs.
+
+|Environment variable|What will log|
+|--------------------|-------------|
+|`DEBUG=sonos:*`|See all debug logs.|
+|`DEBUG=sonos:device`|See all debug logs from the SonosDevice class.|
+|`DEBUG=sonos:service:*`|See all debug logs for all the various services (this is where most of the magic happens).|
+|`DEBUG=sonos:service:[service_name]`|See all debug logs for a specific service.|
+|`DEBUG=sonos:service:*:[ip]`|See all debug logs for all the various services for a single device (this is where most of the magic happens).|
+|`DEBUG=sonos:metadata`|See all debug logs for the metadata helper.|
+
 ## Repository content
 
 - **docs/** These documentations

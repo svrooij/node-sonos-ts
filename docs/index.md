@@ -8,7 +8,7 @@ nav_order: 1
 permalink: /
 ---
 
-# Sonos (the typescript client)
+# Sonos (typescript / node)
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
 [![npm][badge_npm]][link_npm]
@@ -27,7 +27,16 @@ This library is in no way connected to [Sonos](https://en.wikipedia.org/wiki/Son
 - Sonos device class with extra functionality.
 - Strongly typed service events.
 - Strongly typed extra events.
-- Easier implementing  [metadata generation](./src/helpers/metadata-helper.ts).
+- Easier implementing  [metadata generation](//github.com/svrooij/node-sonos-ts/src/helpers/metadata-helper.ts).
+
+## Packages using node-sonos-ts
+
+|Name|Maintainer|Description|
+|----|----------|----------|
+|[sonos2mqtt](https://github.com/svrooij/sonos2mqtt)|[@svrooij](https://github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
+|[sonos-cli](https://github.com/svrooij/sonos-cli)|[@svrooij](https://github.com/svrooij)|An experimental command line interface for your sonos devices.|
+
+Also using this library, but not in the list? Send a PR.
 
 [badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts

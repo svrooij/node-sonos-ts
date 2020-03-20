@@ -23,122 +23,13 @@ A node library to control a sonos device, written in Typescript. See [here](#imp
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
 
-[![Documentation](./img/book.png)](https://svrooij.github.io/node-sonos-ts/#sonosmanager-and-logical-devices)
+[![Documentation](./img/book.png)](https://svrooij.github.io/node-sonos-ts/getting-started.html)
 
-You'll need to get the [**SonosDevice**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_device_.sonosdevice.html) by one of the [methods below](#sonosmanager-and-logical-devices), and start using the extra [functionality](#extra-functionality), the [shortcuts](#shortcuts) or the [exposed services](#exposed-services). There also is an [Eventlistener](#events) that allows you to subscribe to all the events your sonos sends out. This library allows you to do **everything** you can do with the Sonos application (except search external [music services](./src/musicservices) :cry:).
+## Use Sonos manager
 
-```JavaScript
-const SonosManager = require('@svrooij/sonos').SonosManager
-const manager = new SonosManager()
-manager.InitializeWithDiscovery(10) // Search for all devices in your network, for max 10 seconds.
-  .then(console.log)
-  .then(() => {
-    manager.Devices.forEach(d => console.log('Device %s (%s) is joined in %s', d.Name, d.uuid, d.GroupName))
-  })
-  .catch(console.error)
-```
+This library is developed with Sonos groups in mind. We created a **SonosManager** to discover all known groups and keep track of changes to them.
 
-### Extra functionality
-
-These methods aren't possible with the generated services. This is added functionality:
-
-- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed :musical_note:.
-- **.AlarmClockService.ListAndParseAlarms()** - List all your alarms :alarm_clock:
-- **.AlarmClockService.PatchAlarm({ ID: 1, ... })** - Update some properties of one of your alarms :clock330:.
-- **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator :speaker:.
-- **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream) :bell:. See [play-notification.js](./examples/play-notification.js)
-- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source :mega:. See [Text-to-Speech](#text-to-speech)
-- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed :musical_note:. This doens't start playback all the time!
-- **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it :microphone:.
-- **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
-- **.SwitchToTV()** - On your playbar you can use this to switch to TV input :tv:.
-- **.TogglePlayback()** - If playing or transitioning your playback is paused :arrow_forward:. If stopped or paused your playback is resumed.
-
-### Shortcuts
-
-Each **Sonos Device** has the following shortcuts (things you could also do by using one of the exposed services):
-
-- **.GetNightMode()** - Get NightMode status (playbar)
-- **.GetSpeechEnhancement()** - Get Speech enhancement status (playbar)
-- **.GetZoneGroupState()** - Get current group info.
-- **.GetZoneInfo()** - Get info about current player.
-- **.Play()** - Start playing *.
-- **.Pause()** - Pause playing *.
-- **.Next()** - Go to next song (when playing the queue) *.
-- **.Previous()** - Go to previous song (when playing the queue) *.
-- **.SetNightMode(desiredState)** - Turn on/off nightmode on your playbar.
-- **.SetRelativeVolume(adjustment)** - Change the volume relative to current.
-- **.SetSpeechEnhancement(desiredState)** - Turn on/off speech enhancement on your playbar.
-- **.SetVolume(newVolume)** - Change the volume.
-- **.Stop()** - Stop playing (most of the time it's better to pause playback) *.
-- **.SeekPosition('0:03:01')** - Go to other postion in track *.
-- **.SeekTrack(3)** - Go to other track in the queue *.
-
-These operations (marked with `*`) are send to the coordinator if the device is created by the **SonosManager**. So you can send **.Next()** to each device in a group and it will be send to the correct device.
-
-### Content
-
-You can also browse content, see [content.js](./examples/content.js), these are actually all shortcuts to the browse method.
-
-- **.GetFavoriteRadioShows()** - Get your favorite radio shows
-- **.GetFavoriteRadioStations()** - Get your favorite radio stations
-- **.GetFavorites()** - Get your favorite songs
-- **.GetQueue()** - Get the current queue
-
-### Exposed services
-
-Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`).
-This library uses a [generator](./src/generator/) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
-
-|Service name|Description|
-|------------|-----------|
-|`.AVTransportService`|Control the playback (play, pause, next, stop).|
-|`.AlarmClockService`|Control your alarms.|
-|`.AudioInService`|?|
-|`.ConnectionManagerService`|?|
-|`.ContentDirectoryService`|Browse and modify for local content|
-|`.DevicePropertiesService`|Change your device properties (led, StereoPair, AutoPlay).|
-|`.GroupManagementService`|Manage your groups (what's the differance with ZoneGroupTopologyService?).|
-|`.GroupRenderingControlService`|RenderingControlService for groups.|
-|`.MusicServicesService`|All your music services.|
-|`.QPlayService`|To authorize QPlay, needs explaining.|
-|`.QueueService`|Queue management|
-|`.RenderingControlService`|Control rendering (eg. volume)|
-|`.SystemPropertiesService`|Manage connected accounts|
-|`.VirtualLineInService`|?|
-|`.ZoneGroupTopologyService`|Zone management, mostly used under the covers by [SonosManager](./src/sonos-manager.ts)|
-
-### Commands
-
-This library also has a command parser, so every listed command can also be executed if you only know the string name (eg. user input :wink:)
-
-```JavaScript
-const SonosDevice = require('../lib').SonosDevice
-const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
-// Send Play command to AVTransportService (with auto json parsing)
-sonos.ExecuteCommand('AVTransportService.Play', '{"InstanceID": 0, "Speed": "1" }').catch(console.error)
-// Send Play command to AVTransportService
-sonos.ExecuteCommand('AVTransportService.Play', { InstanceID: 0, Speed: '1' }).catch(console.error)
-// Send Pause command to AVTransportService (no parameters)
-sonos.ExecuteCommand('AVTransportService.Pause').catch(console.error)
-// Execute toggle playback
-sonos.ExecuteCommand('TogglePlayback').catch(console.error)
-// Non-existing command
-sonos.ExecuteCommand('SendSomeLove').catch(console.error)
-```
-
-## SonosManager and logical devices
-
-This library has a [**SonosManager**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_manager_.sonosmanager.html) that resolves all your sonos groups for you. It also manages group updates. Every [**SonosDevice**](https://svrooij.github.io/node-sonos-ts/classes/_sonos_device_.sonosdevice.html) created by this manager has some extra properties that can be used by your application. These properties will automatically be updated on changes.
-
-- **.Coordinator** - Point to the devices' group coordinator (or to itself when it's the coordinator).
-- **.GroupName** - The name of the group this device is in. eg 'Kitchen + 2'
-
-### SonosManager - Device discovery
-
-You can discover all the devices in the current network using device discovery
-
-```JavaScript
+```js
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeWithDiscovery(10)
@@ -149,11 +40,9 @@ manager.InitializeWithDiscovery(10)
   .catch(console.error)
 ```
 
-### SonosManager - Single IP
+In some network situations (or Docker usage) SSDP won't work, but you can also start the manager if you know one (static) IP of a single speaker.
 
-In some cases device discovery doesn't work (think docker or complex networks), you can also start the manager by submitting one known sonos IP.
-
-```JavaScript
+```js
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
@@ -164,11 +53,11 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .catch(console.error)
 ```
 
-### Control a single known device
+## or control single device
 
-This library also supports direct using it without the **SonosManager**. The group updates need the manager, so you're missing some features!
+If you just want to control a single device and don't want to use the SonosManager, you can also create a instance of **SonosDevice**, but you'll be missing the group options.
 
-```JavaScript
+```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
@@ -178,6 +67,10 @@ sonos.LoadDeviceData()
   })
   .catch(console.error)
 ```
+
+## Documentation
+
+See what else you can do with this library in the [documentation](https://svrooij.github.io/node-sonos-ts/sonos-device)
 
 ## Text to speech
 
@@ -209,56 +102,6 @@ sonos.PlayTTS({ text: 'Someone at the front-door', lang: 'en-US', gender: 'male'
   })
 ```
 
-## Events
-
-Sonos devices have a way to subscribe to **updates** of most device parameters. It works by sending a subscribe request to the device. The Sonos device will then start sending updates to the specified endpoint(s).
-
-This library includes a **SonosEventListener** which you'll never have to call yourself :wink:. Each **service** has an `.Events` property exposing the EventEmitter for that service. If you subscribe to events of a service, it will automatically ask the sonos device to start sending updates for that service. If you stop listening, it will tell sonos to stop sending events.
-
-If you subscribed to events of one service, or on the sonos device events. A small webservice is created automatically to receive the updates from sonos. This webservices is running on port 6329 by default, but can be changed (see below).
-
-The **SonosDevice** also has an `.Events` property. Here you'll receive some specific events.
-
-```JavaScript
-const SonosDevice = require('@svrooij/sonos').SonosDevice
-const ServiceEvents = require('@svrooij/sonos').ServiceEvents
-const SonosEvents = require('@svrooij/sonos').SonosEvents
-const sonosDevice = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
-
-// SonosEvents
-sonosDevice.Events.on(SonosEvents.CurrentTrack, uri => {
-  console.log('Current track changed %s', uri)
-})
-
-sonosDevice.Events.on(SonosEvents.CurrentTrackMetadata, data => {
-  console.log('Current track metadata %s', JSON.stringify(data))
-})
-
-sonosDevice.Events.on(SonosEvents.Volume, volume => {
-  console.log('New volume %d', volume)
-})
-
-// Events from Services
-sonosDevice.AlarmClockService.Events.on(ServiceEvents.Data, data => {
-  console.log('AlarmClock data %s', JSON.stringify(data))
-})
-
-sonosDevice.AVTransportService.Events.on(ServiceEvents.LastChange, data => {
-  console.log('AVTransport lastchange %s', JSON.stringify(data, null, 2))
-})
-sonosDevice.RenderingControlService.Events.on(ServiceEvents.LastChange, data => {
-  console.log('RenderingControl lastchange %s', JSON.stringify(data, null, 2))
-})
-```
-
-The **SonosEventListener** has some configuration options, which you'll need in specific network environments or docker sitiuations. You can configure the following environment variables.
-
-- `SONOS_LISTENER_HOST` The hostname or ip of the device running the event listener. This is used as the callback host.
-- `SONOS_LISTENER_INTERFACE` If the host isn't set, the first non-internal ip of this interface is used.
-- `SONOS_LISTENER_PORT` The port the event listener should listen on. Also send to the device. `6329 = default`
-
-If none of these environment variables are set it will just use the default port and the first found non-internal ip.
-
 ## Others using node-sonos-ts
 
 |Name|Maintainer|Description|
@@ -267,20 +110,6 @@ If none of these environment variables are set it will just use the default port
 |[sonos-cli](https://github.com/svrooij/sonos-cli)|[@svrooij](https://github.com/svrooij)|An experimental command line interface for your sonos devices.|
 
 Also using this library, but not in the list? Send a PR.
-
-## Debugging
-
-This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
-If you run the examples with the VSCode debug task, this variable is set to `sonos:*` so you should see all the logs.
-
-|Environment variable|What will log|
-|--------------------|-------------|
-|`DEBUG=sonos:*`|See all debug logs.|
-|`DEBUG=sonos:device`|See all debug logs from the SonosDevice class.|
-|`DEBUG=sonos:service:*`|See all debug logs for all the various services (this is where most of the magic happens).|
-|`DEBUG=sonos:service:[service_name]`|See all debug logs for a specific service.|
-|`DEBUG=sonos:service:*:[ip]`|See all debug logs for all the various services for a single device (this is where most of the magic happens).|
-|`DEBUG=sonos:metadata`|See all debug logs for the metadata helper.|
 
 ## Contributing
 
@@ -344,12 +173,6 @@ I've created a one-liner to regenerate all the generated services.
 
 You can also checkout the documentation on the awesome [service generator](./src/generator/).
 This can also be used as a source to generate a client for some other language.
-
-### Compile the library
-
-Because the library is written in typescript, you'll need to compile it before
-using it. Run `npm run build` to have the compiler generate the actual library
-in the `lib` folder.
 
 ## Improvements over [node-sonos](https://github.com/bencevans/node-sonos)
 

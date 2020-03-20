@@ -2,7 +2,7 @@
 layout: default
 title: Events
 parent: Sonos device
-nav_order: 2
+nav_order: 3
 ---
 
 # Events
