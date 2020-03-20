@@ -2,7 +2,7 @@
 import { BaseService } from './base-service';
 import { Track } from '../models';
 
-export class VirtualLineInService extends BaseService {
+export class VirtualLineInService extends BaseService<VirtualLineInServiceEvent> {
   readonly serviceNane: string = 'VirtualLineIn';
   readonly controlUrl: string = '/MediaRenderer/VirtualLineIn/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/VirtualLineIn/Event';
@@ -33,9 +33,29 @@ export class VirtualLineInService extends BaseService {
   async StopTransmission(input: { InstanceID: number; CoordinatorID: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmission', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'AVTransportURIMetaData': 'Track',
+      'CurrentTrackMetaData': 'Track',
+      'CurrentTransportActions': 'string',
+      'EnqueuedTransportURIMetaData': 'Track',
+      'LastChange': 'string'
+    };
+  }
 }
 
 // Generated responses
 export interface StartTransmissionResponse {
   CurrentTransportSettings: string;
+}
+
+// Strong type event 
+export interface VirtualLineInServiceEvent {
+  AVTransportURIMetaData?: Track;
+  CurrentTrackMetaData?: Track;
+  CurrentTransportActions?: string;
+  EnqueuedTransportURIMetaData?: Track;
+  LastChange?: string;
 }

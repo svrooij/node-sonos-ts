@@ -13,7 +13,7 @@ import { {{#each parsed.imports}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}
  * @extends {BaseService}
  */
 {{/if}}
-export class {{svcName}}{{#if extension}}Base{{/if}} extends BaseService {
+export class {{svcName}}{{#if extension}}Base{{/if}} extends BaseService{{#if parsed.eventProperties}}<{{svcName}}Event>{{else}}<undefined>{{/if}} {
   readonly serviceNane: string = '{{name}}';
   readonly controlUrl: string = '{{controlURL}}';  
   readonly eventSubUrl: string = '{{eventSubURL}}';
@@ -52,15 +52,40 @@ export class {{svcName}}{{#if extension}}Base{{/if}} extends BaseService {
   {{/unless}}
   {{/each}}
   //#endregion
+
+  {{#if parsed.eventProperties}}
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+    {{#each parsed.eventProperties}}
+      '{{name}}': '{{ttype}}'{{#unless @last}},{{/unless}}
+    {{/each}}
+    };
+  }
+  {{else}}
+  // No properties in service description, throw error on retrieval.
+  protected eventProperties(): {[key: string]: string} {
+    throw new Error('No event properties in service definition')
+  }
+  {{/if}}
 }
 
 // Generated responses
 {{#each parsed.responses}}
 export interface {{name}} {
   {{#each properties}}
-  {{name}}: {{relatedStateVariable.ttype}};
+  {{name}}: {{{relatedStateVariable.ttype}}};
   {{/each}}
 }{{#unless @last}}
 
 {{/unless}}{{/each}}
+{{#if parsed.eventProperties}}
+
+// Strong type event 
+export interface {{svcName}}Event {
+  {{#each parsed.eventProperties}}
+  {{name}}?: {{ttype}};
+  {{/each}}
+}
+{{/if}}
 {{{extension}}}

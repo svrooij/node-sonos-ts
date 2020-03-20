@@ -1,6 +1,6 @@
 import { SonosDeviceBase } from './sonos-device-base'
-import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse } from './services'
-import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, PlayNotificationOptionsBase } from './models'
+import { GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent } from './services'
+import { PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, PlayNotificationOptionsBase, StrongSonosEvents } from './models'
 import { AsyncHelper } from './helpers/async-helper'
 import { EventEmitter } from 'events';
 import { XmlHelper } from './helpers/xml-helper'
@@ -8,6 +8,8 @@ import { MetadataHelper } from './helpers/metadata-helper'
 import { SmapiClient } from './musicservices/smapi-client'
 import { JsonHelper } from './helpers/json-helper'
 import { TtsHelper } from './helpers/tts-helper'
+
+import StrictEventEmitter from 'strict-event-emitter-types'
 
 /**
  * Main class to control a single sonos device.
@@ -444,7 +446,7 @@ export class SonosDevice extends SonosDeviceBase {
   //#endregion
 
   //#region Events 
-  private events?: EventEmitter;
+  private events?: StrictEventEmitter<EventEmitter, StrongSonosEvents>;
   private isSubscribed = false;
   /**
    * Cancel all subscriptions and unsubscribe for events from this device.
@@ -468,7 +470,7 @@ export class SonosDevice extends SonosDeviceBase {
    * @type {EventEmitter}
    * @memberof SonosDevice
    */
-  public get Events(): EventEmitter {
+  public get Events(): StrictEventEmitter<EventEmitter, StrongSonosEvents> {
     if (this.events === undefined) {
       this.events = new EventEmitter();
       this.events.on('removeListener', () => {
@@ -492,7 +494,7 @@ export class SonosDevice extends SonosDeviceBase {
   }
 
   private _handleAvTransportEvent = this.handleAvTransportEvent.bind(this)
-  private handleAvTransportEvent(data: any): void {
+  private handleAvTransportEvent(data: AVTransportServiceEvent): void {
     this.Events.emit(SonosEvents.AVTransport, data);
     if (data.TransportState !== undefined){
       const newState = data.TransportState as TransportState
@@ -508,41 +510,35 @@ export class SonosDevice extends SonosDeviceBase {
 
     if (data.CurrentTrackURI && this.currentTrackUri !== data.CurrentTrackURI) {
       this.currentTrackUri = data.CurrentTrackURI
-      this.Events.emit(SonosEvents.CurrentTrack, this.currentTrackUri);
+      this.Events.emit(SonosEvents.CurrentTrackUri, this.currentTrackUri ?? '');
     }
     
     if(data.CurrentTrackMetaData) this.Events.emit(SonosEvents.CurrentTrackMetadata, data.CurrentTrackMetaData)
 
     if (data.NextTrackURI && this.nextTrackUri !== data.NextTrackURI) {
       this.nextTrackUri = data.NextTrackURI
-      this.Events.emit(SonosEvents.NextTrack, this.nextTrackUri);
+      this.Events.emit(SonosEvents.NextTrackUri, this.nextTrackUri ??'');
       if(data.NextTrackMetaData) this.Events.emit(SonosEvents.NextTrackMetadata, data.NextTrackMetaData)
     }
 
     if (data.EnqueuedTransportURI && this.enqueuedTransportUri !== data.EnqueuedTransportURI) {
       this.enqueuedTransportUri = data.EnqueuedTransportURI
-      this.Events.emit(SonosEvents.EnqueuedTransport, this.enqueuedTransportUri);
-      if(data.EnqueuedTransportURIMetaData) this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData)
+      this.Events.emit(SonosEvents.EnqueuedTransportUri, this.enqueuedTransportUri ?? '');
+      if(data.EnqueuedTransportURIMetaData !== undefined) this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData)
     }
   }
   private _handleRenderingControlEvent = this.handleRenderingControlEvent.bind(this)
-  private handleRenderingControlEvent(data: any): void {
+  private handleRenderingControlEvent(data: RenderingControlServiceEvent): void {
     this.Events.emit(SonosEvents.RenderingControl, data);
 
-    if (data.Volume && data.Volume[0]._val) {
-      const newValue = parseInt(data.Volume[0]._val)
-      if(this.volume !== newValue) {
-        this.volume = newValue
-        this.Events.emit(SonosEvents.Volume, this.volume)
-      }
+    if (data.Volume && data.Volume['Master'] && this.volume !== data.Volume['Master']) {
+      this.volume = data.Volume['Master']
+      this.Events.emit(SonosEvents.Volume, this.volume ?? 0)
     }
 
-    if (data.Mute && data.Mute[0]._val) {
-      const newValue = parseInt(data.Mute[0]._val) === 1 ? true : false
-      if(this.muted !== newValue) {
-        this.muted = newValue
-        this.Events.emit(SonosEvents.Mute, this.muted)
-      }
+    if (data.Mute && data.Mute['Master'] && this.muted !== data.Mute['Master']) {
+      this.muted = data.Mute['Master']
+      this.Events.emit(SonosEvents.Mute, this.muted)
     }
   }
     //#endregion

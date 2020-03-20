@@ -67,10 +67,10 @@
   "exclude": ["node_modules", "**/__tests__/*", "examples", "src/generator"],
   "typedocOptions": { /* For TypeDoc  */
     "mode": "modules",
-    "out": "docs",
-    "theme": "minimal",
+    "out": "docs-automatic",
     "exclude": [
       "**/*-helper.ts",
+      "musicservices/",
       "**/*+(index|.spec|.e2e|.test).ts"
     ]
 }

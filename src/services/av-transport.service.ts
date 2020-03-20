@@ -9,7 +9,7 @@ import { PlayMode, Track } from '../models';
  * @class AVTransportService
  * @extends {BaseService}
  */
-export class AVTransportService extends BaseService {
+export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   readonly serviceNane: string = 'AVTransport';
   readonly controlUrl: string = '/MediaRenderer/AVTransport/Control';  
   readonly eventSubUrl: string = '/MediaRenderer/AVTransport/Event';
@@ -220,6 +220,61 @@ export class AVTransportService extends BaseService {
   async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'AVTransportURI': 'string',
+      'AVTransportURIMetaData': 'Track',
+      'AbsoluteCounterPosition': 'number',
+      'AbsoluteTimePosition': 'string',
+      'AlarmIDRunning': 'number',
+      'AlarmLoggedStartTime': 'string',
+      'AlarmRunning': 'boolean',
+      'CurrentCrossfadeMode': 'boolean',
+      'CurrentMediaDuration': 'string',
+      'CurrentPlayMode': 'PlayMode',
+      'CurrentRecordQualityMode': 'string',
+      'CurrentSection': 'number',
+      'CurrentTrack': 'number',
+      'CurrentTrackDuration': 'string',
+      'CurrentTrackMetaData': 'Track',
+      'CurrentTrackURI': 'string',
+      'CurrentTransportActions': 'string',
+      'CurrentValidPlayModes': 'string',
+      'DirectControlAccountID': 'string',
+      'DirectControlClientID': 'string',
+      'DirectControlIsSuspended': 'boolean',
+      'EnqueuedTransportURI': 'string',
+      'EnqueuedTransportURIMetaData': 'Track',
+      'LastChange': 'string',
+      'MuseSessions': 'string',
+      'NextAVTransportURI': 'string',
+      'NextAVTransportURIMetaData': 'Track',
+      'NextTrackMetaData': 'Track',
+      'NextTrackURI': 'string',
+      'NumberOfTracks': 'number',
+      'PlaybackStorageMedium': 'string',
+      'PossiblePlaybackStorageMedia': 'string',
+      'PossibleRecordQualityModes': 'string',
+      'PossibleRecordStorageMedia': 'string',
+      'QueueUpdateID': 'number',
+      'RecordMediumWriteStatus': 'string',
+      'RecordStorageMedium': 'string',
+      'RelativeCounterPosition': 'number',
+      'RelativeTimePosition': 'string',
+      'RestartPending': 'boolean',
+      'SleepTimerGeneration': 'number',
+      'SnoozeRunning': 'boolean',
+      'TransportErrorDescription': 'string',
+      'TransportErrorHttpCode': 'string',
+      'TransportErrorHttpHeaders': 'string',
+      'TransportErrorURI': 'string',
+      'TransportPlaySpeed': 'string',
+      'TransportState': 'string',
+      'TransportStatus': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -325,4 +380,57 @@ export interface ReorderTracksInSavedQueueResponse {
 
 export interface SaveQueueResponse {
   AssignedObjectID: string;
+}
+
+// Strong type event 
+export interface AVTransportServiceEvent {
+  AVTransportURI?: string;
+  AVTransportURIMetaData?: Track;
+  AbsoluteCounterPosition?: number;
+  AbsoluteTimePosition?: string;
+  AlarmIDRunning?: number;
+  AlarmLoggedStartTime?: string;
+  AlarmRunning?: boolean;
+  CurrentCrossfadeMode?: boolean;
+  CurrentMediaDuration?: string;
+  CurrentPlayMode?: PlayMode;
+  CurrentRecordQualityMode?: string;
+  CurrentSection?: number;
+  CurrentTrack?: number;
+  CurrentTrackDuration?: string;
+  CurrentTrackMetaData?: Track;
+  CurrentTrackURI?: string;
+  CurrentTransportActions?: string;
+  CurrentValidPlayModes?: string;
+  DirectControlAccountID?: string;
+  DirectControlClientID?: string;
+  DirectControlIsSuspended?: boolean;
+  EnqueuedTransportURI?: string;
+  EnqueuedTransportURIMetaData?: Track;
+  LastChange?: string;
+  MuseSessions?: string;
+  NextAVTransportURI?: string;
+  NextAVTransportURIMetaData?: Track;
+  NextTrackMetaData?: Track;
+  NextTrackURI?: string;
+  NumberOfTracks?: number;
+  PlaybackStorageMedium?: string;
+  PossiblePlaybackStorageMedia?: string;
+  PossibleRecordQualityModes?: string;
+  PossibleRecordStorageMedia?: string;
+  QueueUpdateID?: number;
+  RecordMediumWriteStatus?: string;
+  RecordStorageMedium?: string;
+  RelativeCounterPosition?: number;
+  RelativeTimePosition?: string;
+  RestartPending?: boolean;
+  SleepTimerGeneration?: number;
+  SnoozeRunning?: boolean;
+  TransportErrorDescription?: string;
+  TransportErrorHttpCode?: string;
+  TransportErrorHttpHeaders?: string;
+  TransportErrorURI?: string;
+  TransportPlaySpeed?: string;
+  TransportState?: string;
+  TransportStatus?: string;
 }

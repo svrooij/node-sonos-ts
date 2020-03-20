@@ -11,6 +11,8 @@ import { ServiceEvents } from '../models/sonos-events'
 import { SonosError } from '../models/sonos-error'
 import { Debugger } from 'debug'
 import debug = require('debug')
+import StrictEventEmitter from 'strict-event-emitter-types'
+import { ServiceEvent } from '../models/service-event'
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -20,7 +22,7 @@ import debug = require('debug')
  * @abstract
  * @class BaseService
  */
-export abstract class BaseService {
+export abstract class BaseService <TServiceEvent> {
   protected readonly host: string;
   protected readonly port: number;
   private _debugger?: Debugger;
@@ -28,7 +30,7 @@ export abstract class BaseService {
     if(this._debugger === undefined) this._debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}:${this.host}`)
     return this._debugger;
   }
-  private events: EventEmitter | undefined;
+  private events?: StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>>;
   /**
    * Control URL is the relative endpoint to send command to.
    *
@@ -293,7 +295,7 @@ export abstract class BaseService {
    * @type {EventEmitter}
    * @memberof BaseService
    */
-  public get Events(): EventEmitter {
+  public get Events(): StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>> {
     if (this.events === undefined) {
       this.events = new EventEmitter();
       this.events.on('removeListener', async () => {
@@ -391,61 +393,79 @@ export abstract class BaseService {
    */
   public ParseEvent(xml: string): void {
     this.debug('Got event')
-    const rawBody = parse(xml)['e:propertyset']['e:property']
+    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true })['propertyset']['property']
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if(rawBody.LastChange) {
-      const rawEventWrapper = XmlHelper.DecodeAndParseXml(rawBody.LastChange);
+      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '');
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
-      this.Events.emit(ServiceEvents.LastChange, parsedEvent)
+      this.Events.emit(ServiceEvents.Data, parsedEvent)
+      // this.Events.emit(ServiceEvents.LastChange, parsedEvent)
     } else {
       const properties = Array.isArray(rawBody) ? rawBody : [rawBody]
-      const cleanedBody = this.cleanEventBody(properties)
-      this.Events.emit(ServiceEvents.Data, cleanedBody)
+      try {
+      const parsedEvent = this.cleanEventBody(properties)
+      this.Events.emit(ServiceEvents.Data, parsedEvent)
+      } catch (e) {
+        this.debug('Error %o', e)
+      }
+      
+      // this.Events.emit(ServiceEvents.Data, parsedEvent)
     }
 
   }
 
-  private cleanEventLastChange(input: any): any{
-    const output: {[key: string]: any} = {};
+  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
+    if(name.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;'))
+      return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
+    
+    if (typeof originalValue === 'string' && originalValue.startsWith('&lt;') ) {
+      return XmlHelper.DecodeAndParseXml(originalValue, '')
+    }
+  
+    switch (type) {
+      case 'number':
+        return parseInt(originalValue)
+      case 'boolean':
+        return originalValue === '1'
+      default:
+        return originalValue
+    }
+  }
 
-    const keys = Object.keys(input).filter(k => k !== '_val');
+  protected abstract eventProperties(): {[key: string]: string};
+  
+  private cleanEventLastChange(input: any): TServiceEvent{
+    const output: {[key: string]: any} = {};
+  
+    const inKeys = Object.keys(input).filter(k => k !== 'val');
+    const properties = this.eventProperties();
+    const keys = Object.keys(properties).filter(k => inKeys.indexOf(k) > -1);
+  
     keys.forEach(k => {
-
-      const originalValue = Array.isArray(input[k]) ? input[k] : input[k]._val;
-      if(originalValue === '')
+      const originalValue = input[k].val ?? input[k];
+      if(originalValue === undefined || originalValue === '')
         return;
-      if(k.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;'))
-        output[this.cleanPropertyName(k)] = MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
-      else 
-        output[this.cleanPropertyName(k)] = originalValue
+      output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k])
+    })
+  
+    return output as unknown as TServiceEvent;
+  }
+
+  
+
+  private cleanEventBody(input: any[]): TServiceEvent {
+    // const output: {[key: string]: any} = {};
+    const temp: {[key: string]: string} = {};
+    input.forEach(v => {
+      Object.keys(v)
+        .forEach(k => {
+          temp[k] = v[k]
+        })
     })
 
-    return output;
+    return this.cleanEventLastChange(temp);
   }
-
-  private cleanEventBody(input: any[]): any {
-    const output: {[key: string]: any} = {};
-    input.forEach(i => {
-      const keys = Object.keys(i)
-      if(keys.length > 0) {
-        const originalValue = i[keys[0]]
-        if(originalValue === '') return
-        if(typeof originalValue  === 'string')
-          output[this.cleanPropertyName(keys[0])] = originalValue.startsWith('&lt;') ? XmlHelper.DecodeAndParseXml(originalValue) : originalValue
-        else
-          output[this.cleanPropertyName(keys[0])] = originalValue;
-      }
-        
-    })
-    return output;
-  }
-
-  private cleanPropertyName(name: string): string {
-    const index = name.lastIndexOf(':');
-    return index > -1 ? name.substring(index + 1) : name;
-  }
-
   //#endregion
 }

@@ -9,7 +9,7 @@ import { Track } from '../models';
  * @class AlarmClockServiceBase
  * @extends {BaseService}
  */
-export class AlarmClockServiceBase extends BaseService {
+export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   readonly serviceNane: string = 'AlarmClock';
   readonly controlUrl: string = '/AlarmClock/Control';  
   readonly eventSubUrl: string = '/AlarmClock/Event';
@@ -104,6 +104,19 @@ export class AlarmClockServiceBase extends BaseService {
   async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'AlarmListVersion': 'string',
+      'DailyIndexRefreshTime': 'string',
+      'DateFormat': 'string',
+      'TimeFormat': 'string',
+      'TimeGeneration': 'number',
+      'TimeServer': 'string',
+      'TimeZone': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -153,6 +166,17 @@ export interface GetTimeZoneRuleResponse {
 export interface ListAlarmsResponse {
   CurrentAlarmList: string;
   CurrentAlarmListVersion: string;
+}
+
+// Strong type event 
+export interface AlarmClockServiceEvent {
+  AlarmListVersion?: string;
+  DailyIndexRefreshTime?: string;
+  DateFormat?: string;
+  TimeFormat?: string;
+  TimeGeneration?: number;
+  TimeServer?: string;
+  TimeZone?: string;
 }
 
 import { Alarm, PatchAlarm } from '../models'

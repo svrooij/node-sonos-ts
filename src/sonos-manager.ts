@@ -1,4 +1,4 @@
-import { ZoneGroupTopologyService, ZoneGroup } from './services'
+import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services'
 import { SonosDevice } from './sonos-device'
 import { SonosDeviceDiscovery } from './sonos-device-discovery'
 import { ServiceEvents } from './models'
@@ -78,15 +78,15 @@ export class SonosManager {
   }
 
   private zoneEventSubscription = this.handleZoneEventData.bind(this)
-  private handleZoneEventData(): void { // The data from this event isn't used. It's just a trigger to reload stuff.
-    this.LoadAllGroups().then(groups => {
-      groups.forEach(g => {
+  private handleZoneEventData(data: ZoneGroupTopologyServiceEvent): void {
+    if(data.ZoneGroupState !== undefined) {
+      data.ZoneGroupState.forEach(g => {
         const coordinator = this.devices.find(d => d.uuid === g.coordinator.uuid) || new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name);
         g.members.forEach(m => {
           this.events.emit(m.uuid, {coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name});
         })
       })
-    })
+    }
   }
 
   /**

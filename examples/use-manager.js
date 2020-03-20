@@ -3,16 +3,11 @@ const SonosEvents = require('../lib/models/sonos-events').SonosEvents
 
 const manager = new SonosManager()
 
-// Connect known player
-// manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
-//   .then(console.log)
-//   .then(() => {
-//     manager.Groups.forEach(g => console.log(g.Name))
-//   })
-//   .catch(console.error)
-
+// Switch on one of the following lines
 // Do device discovery
-manager.InitializeWithDiscovery(10)
+// manager.InitializeWithDiscovery(10)
+// Connect known device
+manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .then(console.log)
   .then(() => {
     manager.Devices.forEach(d => {
@@ -52,5 +47,5 @@ process.on('SIGINT', () => {
   manager.CancelSubscription()
   setTimeout(() => {
     process.exit(0)
-  }, 100)
+  }, 200)
 })

@@ -8,6 +8,17 @@
 
 A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library written in node.
 
+## Key features
+
+- [x] Auto [generated](./src/generator), strongly typed Sonos client.
+- [x] Auto discovery or one know device as starting point.
+- [x] Support for logical devices (grouped speakers) from the start.
+- [x] Access to all (generated) services.
+- [x] Sonos device class with extra functionality.
+- [x] Strongly typed service events.
+- [x] Strongly typed extra events.
+- [x] Easier implementing [metadata generation](./src/helpers/metadata-helper.ts).
+
 ## Usage
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
@@ -69,14 +80,15 @@ These operations (marked with `*`) are send to the coordinator if the device is 
 
 You can also browse content, see [content.js](./examples/content.js), these are actually all shortcuts to the browse method.
 
-- **.GetFavoriteRadioShows({...})** - Get your favorite radio shows
-- **.GetFavoriteRadioStations({...})** - Get your favorite radio stations
-- **.GetFavorites({...})** - Get your favorite songs
-- **.GetQueue({...})** - Get the current queue
+- **.GetFavoriteRadioShows()** - Get your favorite radio shows
+- **.GetFavoriteRadioStations()** - Get your favorite radio stations
+- **.GetFavorites()** - Get your favorite songs
+- **.GetQueue()** - Get the current queue
 
 ### Exposed services
 
-Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`). This library uses a [generator](./src/generator/) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
+Your sonos device has several *services* defined in it's *device description* (available at `http://sonos_ip:1400/xml/device_description.xml`).
+This library uses a [generator](./src/generator/) to automatically generate all the services my sonos device has. All these services are exposed in the **SonosDevice**:
 
 |Service name|Description|
 |------------|-----------|
@@ -304,50 +316,63 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- prettier-ignore-end -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors)
+specification. Contributions of any kind welcome!
 
 ## Developer section
 
-This will contain usefull information if you want to fix a bug you've found in this library. You always start with cloning the repo and doing a `npm install` in the folder. I like consistancy so everything is in a specific order :wink:.
+This will contain usefull information if you want to fix a bug you've found in
+this library. You always start with cloning the repo and doing a
+`npm install`
+in the folder. I like consistancy so everything is in a specific order :wink:.
 
 ### Running example code
 
 This library has two VSCode launch configurations.
 
-One for running the current open example, you can set breakpoints in the example file and in the typescript code! Be sure to change the IP to your own in `.vscode/launch.json`, so you don't have to edit all the example files.
+One for running the current open example, you can set breakpoints in the example
+file and in the typescript code! Be sure to change the IP to your own in `.vscode/launch.json`,
+so you don't have to edit all the example files.
 
-And it has a launch configuration to run the current Mocha test file, be sure to have a mocha test (in test folder) open.
+And it has a launch configuration to run the current Mocha test file, be sure to
+have a mocha test (in test folder) open.
 
-### (Re-)generate services
+### Service generator
 
-I've created a one-liner to regenerate all the generated services. `SONOS_HOST=192.168.x.x npm run gen-srv`.
-This will parse the device properties and will (re)create all the services in the `/src/services` folder. New services will have the **new-** filename prefix, and should be added in the **getFilenameForService** method.
+I've created a one-liner to regenerate all the generated services.
+`SONOS_HOST=192.168.x.x npm run gen-srv`.
+
+You can also checkout the documentation on the awesome [service generator](./src/generator/).
+This can also be used as a source to generate a client for some other language.
 
 ### Compile the library
 
-Because the library is written in typescript, you'll need to compile it before using it. Run `npm run build` to have the compiler generate the actual library in the `lib` folder.
+Because the library is written in typescript, you'll need to compile it before
+using it. Run `npm run build` to have the compiler generate the actual library
+in the `lib` folder.
 
 ## Improvements over [node-sonos](https://github.com/bencevans/node-sonos)
 
-The original [node-sonos](https://github.com/bencevans/node-sonos) is started a long time ago, before async programming in node. Which I'm a contributor as well.
-Some design decisions cannot be fixed without breaking compatibility with all the applications using it. For instance the `.play()` function serves multiple purposes, starting playback and switching urls. A lot of applications depend on it, and they would all break if I would remove support for it.
+The original [node-sonos](https://github.com/bencevans/node-sonos) is started a
+long time ago, before async programming in node, which I'm a contributor as well.
+Some design decisions cannot be fixed without breaking compatibility with all
+the applications using it. For instance the `.play()` function serves multiple
+purposes, starting playback and switching urls. A lot of applications depend on it,
+and they would all break if I would remove support for it.
 
-This new library is build from the ground up using `node-fetch` for the requests and `fast-xml-parser` for the xml stuff.
+This new library is build from the ground up using `node-fetch` for the requests
+and `fast-xml-parser` for the xml stuff.
 
-One of the most important parts of this new library is the [**service-generator**](./src/generator/service-generator.js), it parses the `/xml/device_description.xml` file from the sonos device. And generates a strong typed service class for it. This means that this library will support everything the sonos controller can do.
+One of the most important parts of this new library is the [**service-generator**](./src/generator/),
+it parses the `/xml/device_description.xml` file from the sonos device.
+And generates a strong typed service class for it.
+This means that this library will support everything the sonos controller can do.
 And it also means that it will tell your which parameters it expects.
-
-- [x] Strong typed (auto generated) client
-- [x] Starting from auto discovery or one sonos host ip
-- [x] Zone groups as a starting point (logical devices)
-- [x] All events parsed and some custom properties
-- [x] The sonos device will expose all the generated services, or an extended version of them.
-- [x] The sonos device will contain extra features and shortcuts to services.
-- [x] Easier implementing [metadata generation](./src/helpers/metadata-helper.ts) for new services.
 
 ### Big thanks to all the original contributors
 
-Creating a library from scratch is quite hard, and I'm using a lot of stuff from the original library. That wouldn't exists without the [contributors](https://github.com/bencevans/node-sonos/graphs/contributors).
+Creating a library from scratch is quite hard, and I'm using a lot of stuff from
+the original library. That wouldn't exists without the [contributors](https://github.com/bencevans/node-sonos/graphs/contributors).
 
 [badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts

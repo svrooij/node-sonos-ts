@@ -1,0 +1,45 @@
+---
+layout: default
+title: {{svcName}}
+parent: Services
+grand_parent: Sonos device
+---
+# {{svcName}}
+{: .no_toc }
+{{#if docs.Description}}
+
+{{docs.Description}}
+{{/if}}
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.{{svcName}}.OneOfTheMethodsBelow({...})
+```
+
+All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+
+1. TOC
+{:toc}
+
+---
+
+{{#each parsed.methods}}
+### {{name}}
+{{#if description}}
+
+{{description}}
+{{/if}}
+{{#if parameters}}
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+{{#each parameters}}
+| **{{name}}** | `{{relatedStateVariable.ttype}}` | {{{description}}} |
+{{/each}}
+{{else}}
+
+No parameters
+{{/if}}
+
+{{/each}}

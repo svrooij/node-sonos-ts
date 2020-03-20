@@ -1970,6 +1970,204 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "AVTransportURI",
+          "ttype": "string"
+        },
+        {
+          "name": "AVTransportURIMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "AbsoluteCounterPosition",
+          "ttype": "number"
+        },
+        {
+          "name": "AbsoluteTimePosition",
+          "ttype": "string"
+        },
+        {
+          "name": "AlarmIDRunning",
+          "ttype": "number"
+        },
+        {
+          "name": "AlarmLoggedStartTime",
+          "ttype": "string"
+        },
+        {
+          "name": "AlarmRunning",
+          "ttype": "boolean"
+        },
+        {
+          "name": "CurrentCrossfadeMode",
+          "ttype": "boolean"
+        },
+        {
+          "name": "CurrentMediaDuration",
+          "ttype": "string"
+        },
+        {
+          "name": "CurrentPlayMode",
+          "ttype": "PlayMode"
+        },
+        {
+          "name": "CurrentRecordQualityMode",
+          "ttype": "string"
+        },
+        {
+          "name": "CurrentSection",
+          "ttype": "number"
+        },
+        {
+          "name": "CurrentTrack",
+          "ttype": "number"
+        },
+        {
+          "name": "CurrentTrackDuration",
+          "ttype": "string"
+        },
+        {
+          "name": "CurrentTrackMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "CurrentTrackURI",
+          "ttype": "string"
+        },
+        {
+          "name": "CurrentTransportActions",
+          "ttype": "string"
+        },
+        {
+          "name": "CurrentValidPlayModes",
+          "ttype": "string"
+        },
+        {
+          "name": "DirectControlAccountID",
+          "ttype": "string"
+        },
+        {
+          "name": "DirectControlClientID",
+          "ttype": "string"
+        },
+        {
+          "name": "DirectControlIsSuspended",
+          "ttype": "boolean"
+        },
+        {
+          "name": "EnqueuedTransportURI",
+          "ttype": "string"
+        },
+        {
+          "name": "EnqueuedTransportURIMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "LastChange",
+          "ttype": "string"
+        },
+        {
+          "name": "MuseSessions",
+          "ttype": "string"
+        },
+        {
+          "name": "NextAVTransportURI",
+          "ttype": "string"
+        },
+        {
+          "name": "NextAVTransportURIMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "NextTrackMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "NextTrackURI",
+          "ttype": "string"
+        },
+        {
+          "name": "NumberOfTracks",
+          "ttype": "number"
+        },
+        {
+          "name": "PlaybackStorageMedium",
+          "ttype": "string"
+        },
+        {
+          "name": "PossiblePlaybackStorageMedia",
+          "ttype": "string"
+        },
+        {
+          "name": "PossibleRecordQualityModes",
+          "ttype": "string"
+        },
+        {
+          "name": "PossibleRecordStorageMedia",
+          "ttype": "string"
+        },
+        {
+          "name": "QueueUpdateID",
+          "ttype": "number"
+        },
+        {
+          "name": "RecordMediumWriteStatus",
+          "ttype": "string"
+        },
+        {
+          "name": "RecordStorageMedium",
+          "ttype": "string"
+        },
+        {
+          "name": "RelativeCounterPosition",
+          "ttype": "number"
+        },
+        {
+          "name": "RelativeTimePosition",
+          "ttype": "string"
+        },
+        {
+          "name": "RestartPending",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SleepTimerGeneration",
+          "ttype": "number"
+        },
+        {
+          "name": "SnoozeRunning",
+          "ttype": "boolean"
+        },
+        {
+          "name": "TransportErrorDescription",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportErrorHttpCode",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportErrorHttpHeaders",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportErrorURI",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportPlaySpeed",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportState",
+          "ttype": "string"
+        },
+        {
+          "name": "TransportStatus",
+          "ttype": "string"
+        }
       ]
     }
   },
@@ -2590,6 +2788,36 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "AlarmListVersion",
+          "ttype": "string"
+        },
+        {
+          "name": "DailyIndexRefreshTime",
+          "ttype": "string"
+        },
+        {
+          "name": "DateFormat",
+          "ttype": "string"
+        },
+        {
+          "name": "TimeFormat",
+          "ttype": "string"
+        },
+        {
+          "name": "TimeGeneration",
+          "ttype": "number"
+        },
+        {
+          "name": "TimeServer",
+          "ttype": "string"
+        },
+        {
+          "name": "TimeZone",
+          "ttype": "string"
+        }
       ]
     }
   },
@@ -2757,6 +2985,32 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "AudioInputName",
+          "ttype": "string"
+        },
+        {
+          "name": "Icon",
+          "ttype": "string"
+        },
+        {
+          "name": "LeftLineInLevel",
+          "ttype": "number"
+        },
+        {
+          "name": "LineInConnected",
+          "ttype": "boolean"
+        },
+        {
+          "name": "Playing",
+          "ttype": "boolean"
+        },
+        {
+          "name": "RightLineInLevel",
+          "ttype": "number"
+        }
       ]
     }
   },
@@ -2911,6 +3165,20 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "CurrentConnectionIDs",
+          "ttype": "string"
+        },
+        {
+          "name": "SinkProtocolInfo",
+          "ttype": "string"
+        },
+        {
+          "name": "SourceProtocolInfo",
+          "ttype": "string"
+        }
       ]
     }
   },
@@ -3064,6 +3332,20 @@
               }
             }
           ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "CurrentConnectionIDs",
+          "ttype": "string"
+        },
+        {
+          "name": "SinkProtocolInfo",
+          "ttype": "string"
+        },
+        {
+          "name": "SourceProtocolInfo",
+          "ttype": "string"
         }
       ]
     }
@@ -3526,6 +3808,68 @@
               }
             }
           ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "Browseable",
+          "ttype": "boolean"
+        },
+        {
+          "name": "ContainerUpdateIDs",
+          "ttype": "string"
+        },
+        {
+          "name": "FavoritePresetsUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "FavoritesUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "RadioFavoritesUpdateID",
+          "ttype": "number"
+        },
+        {
+          "name": "RadioLocationUpdateID",
+          "ttype": "number"
+        },
+        {
+          "name": "RecentlyPlayedUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "SavedQueuesUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "SearchCapabilities",
+          "ttype": "string"
+        },
+        {
+          "name": "ShareIndexInProgress",
+          "ttype": "boolean"
+        },
+        {
+          "name": "ShareIndexLastError",
+          "ttype": "string"
+        },
+        {
+          "name": "ShareListUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "SortCapabilities",
+          "ttype": "string"
+        },
+        {
+          "name": "SystemUpdateID",
+          "ttype": "number"
+        },
+        {
+          "name": "UserRadioUpdateID",
+          "ttype": "string"
         }
       ]
     }
@@ -4158,6 +4502,212 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "AirPlayEnabled",
+          "ttype": "boolean"
+        },
+        {
+          "name": "AutoplayIncludeLinkedZones",
+          "ttype": "boolean"
+        },
+        {
+          "name": "AutoplayRoomUUID",
+          "ttype": "string"
+        },
+        {
+          "name": "AutoplaySource",
+          "ttype": "string"
+        },
+        {
+          "name": "AutoplayUseVolume",
+          "ttype": "boolean"
+        },
+        {
+          "name": "AutoplayVolume",
+          "ttype": "number"
+        },
+        {
+          "name": "AvailableRoomCalibration",
+          "ttype": "string"
+        },
+        {
+          "name": "BehindWifiExtender",
+          "ttype": "number"
+        },
+        {
+          "name": "ButtonLockState",
+          "ttype": "string"
+        },
+        {
+          "name": "ChannelFreq",
+          "ttype": "number"
+        },
+        {
+          "name": "ChannelMapSet",
+          "ttype": "string"
+        },
+        {
+          "name": "ConfigMode",
+          "ttype": "string"
+        },
+        {
+          "name": "Configuration",
+          "ttype": "string"
+        },
+        {
+          "name": "CopyrightInfo",
+          "ttype": "string"
+        },
+        {
+          "name": "DisplaySoftwareVersion",
+          "ttype": "string"
+        },
+        {
+          "name": "ExtraInfo",
+          "ttype": "string"
+        },
+        {
+          "name": "Flags",
+          "ttype": "number"
+        },
+        {
+          "name": "HTAudioIn",
+          "ttype": "number"
+        },
+        {
+          "name": "HTBondedZoneCommitState",
+          "ttype": "number"
+        },
+        {
+          "name": "HTFreq",
+          "ttype": "number"
+        },
+        {
+          "name": "HTSatChanMapSet",
+          "ttype": "string"
+        },
+        {
+          "name": "HardwareVersion",
+          "ttype": "string"
+        },
+        {
+          "name": "HasConfiguredSSID",
+          "ttype": "boolean"
+        },
+        {
+          "name": "HdmiCecAvailable",
+          "ttype": "boolean"
+        },
+        {
+          "name": "HouseholdID",
+          "ttype": "string"
+        },
+        {
+          "name": "IPAddress",
+          "ttype": "string"
+        },
+        {
+          "name": "Icon",
+          "ttype": "string"
+        },
+        {
+          "name": "Invisible",
+          "ttype": "boolean"
+        },
+        {
+          "name": "IsIdle",
+          "ttype": "boolean"
+        },
+        {
+          "name": "IsZoneBridge",
+          "ttype": "boolean"
+        },
+        {
+          "name": "KeepGrouped",
+          "ttype": "boolean"
+        },
+        {
+          "name": "LEDState",
+          "ttype": "string"
+        },
+        {
+          "name": "LastChangedPlayState",
+          "ttype": "string"
+        },
+        {
+          "name": "MACAddress",
+          "ttype": "string"
+        },
+        {
+          "name": "MicEnabled",
+          "ttype": "number"
+        },
+        {
+          "name": "MoreInfo",
+          "ttype": "string"
+        },
+        {
+          "name": "Orientation",
+          "ttype": "number"
+        },
+        {
+          "name": "RoomCalibrationState",
+          "ttype": "number"
+        },
+        {
+          "name": "SatRoomUUID",
+          "ttype": "string"
+        },
+        {
+          "name": "SecureRegState",
+          "ttype": "number"
+        },
+        {
+          "name": "SerialNumber",
+          "ttype": "string"
+        },
+        {
+          "name": "SettingsReplicationState",
+          "ttype": "string"
+        },
+        {
+          "name": "SoftwareVersion",
+          "ttype": "string"
+        },
+        {
+          "name": "SupportsAudioClip",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SupportsAudioIn",
+          "ttype": "boolean"
+        },
+        {
+          "name": "TVConfigurationError",
+          "ttype": "boolean"
+        },
+        {
+          "name": "VoiceConfigState",
+          "ttype": "number"
+        },
+        {
+          "name": "WifiEnabled",
+          "ttype": "boolean"
+        },
+        {
+          "name": "WirelessLeafOnly",
+          "ttype": "boolean"
+        },
+        {
+          "name": "WirelessMode",
+          "ttype": "number"
+        },
+        {
+          "name": "ZoneName",
+          "ttype": "string"
+        }
       ]
     }
   },
@@ -4291,6 +4841,32 @@
               }
             }
           ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "GroupCoordinatorIsLocal",
+          "ttype": "boolean"
+        },
+        {
+          "name": "LocalGroupUUID",
+          "ttype": "string"
+        },
+        {
+          "name": "ResetVolumeAfter",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SourceAreaIds",
+          "ttype": "string"
+        },
+        {
+          "name": "VirtualLineInGroupID",
+          "ttype": "string"
+        },
+        {
+          "name": "VolumeAVTransportURI",
+          "ttype": "string"
         }
       ]
     }
@@ -4488,6 +5064,20 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "GroupMute",
+          "ttype": "boolean"
+        },
+        {
+          "name": "GroupVolume",
+          "ttype": "number"
+        },
+        {
+          "name": "GroupVolumeChangeable",
+          "ttype": "boolean"
+        }
       ]
     }
   },
@@ -4581,6 +5171,24 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "ServiceId",
+          "ttype": "number"
+        },
+        {
+          "name": "ServiceListVersion",
+          "ttype": "string"
+        },
+        {
+          "name": "SessionId",
+          "ttype": "string"
+        },
+        {
+          "name": "Username",
+          "ttype": "string"
+        }
       ]
     }
   },
@@ -4644,7 +5252,8 @@
             }
           ]
         }
-      ]
+      ],
+      "eventProperties": []
     }
   },
   {
@@ -5293,6 +5902,20 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "Curated",
+          "ttype": "boolean"
+        },
+        {
+          "name": "LastChange",
+          "ttype": "string"
+        },
+        {
+          "name": "UpdateID",
+          "ttype": "number"
+        }
       ]
     }
   },
@@ -5309,7 +5932,9 @@
       "File": "rendering-control.service.ts"
     },
     "parsed": {
-      "imports": [],
+      "imports": [
+        "ChannelValue"
+      ],
       "methods": [
         {
           "name": "GetBass",
@@ -6387,6 +7012,134 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "AudioDelay",
+          "ttype": "string"
+        },
+        {
+          "name": "AudioDelayLeftRear",
+          "ttype": "string"
+        },
+        {
+          "name": "AudioDelayRightRear",
+          "ttype": "string"
+        },
+        {
+          "name": "Bass",
+          "ttype": "number"
+        },
+        {
+          "name": "DialogLevel",
+          "ttype": "string"
+        },
+        {
+          "name": "EQValue",
+          "ttype": "number"
+        },
+        {
+          "name": "HeadphoneConnected",
+          "ttype": "boolean"
+        },
+        {
+          "name": "LastChange",
+          "ttype": "string"
+        },
+        {
+          "name": "Loudness",
+          "ttype": "boolean"
+        },
+        {
+          "name": "MusicSurroundLevel",
+          "ttype": "string"
+        },
+        {
+          "name": "Mute",
+          "ttype": "ChannelValue<boolean>",
+          "isChannelValue": true
+        },
+        {
+          "name": "NightMode",
+          "ttype": "boolean"
+        },
+        {
+          "name": "OutputFixed",
+          "ttype": "boolean"
+        },
+        {
+          "name": "PresetNameList",
+          "ttype": "string"
+        },
+        {
+          "name": "RoomCalibrationAvailable",
+          "ttype": "boolean"
+        },
+        {
+          "name": "RoomCalibrationCalibrationMode",
+          "ttype": "string"
+        },
+        {
+          "name": "RoomCalibrationCoefficients",
+          "ttype": "string"
+        },
+        {
+          "name": "RoomCalibrationEnabled",
+          "ttype": "boolean"
+        },
+        {
+          "name": "RoomCalibrationID",
+          "ttype": "string"
+        },
+        {
+          "name": "SpeakerSize",
+          "ttype": "number"
+        },
+        {
+          "name": "SubCrossover",
+          "ttype": "string"
+        },
+        {
+          "name": "SubEnabled",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SubGain",
+          "ttype": "string"
+        },
+        {
+          "name": "SubPolarity",
+          "ttype": "string"
+        },
+        {
+          "name": "SupportsOutputFixed",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SurroundEnabled",
+          "ttype": "boolean"
+        },
+        {
+          "name": "SurroundLevel",
+          "ttype": "string"
+        },
+        {
+          "name": "SurroundMode",
+          "ttype": "string"
+        },
+        {
+          "name": "Treble",
+          "ttype": "number"
+        },
+        {
+          "name": "Volume",
+          "ttype": "ChannelValue<number>",
+          "isChannelValue": true
+        },
+        {
+          "name": "VolumeDB",
+          "ttype": "number"
+        }
       ]
     }
   },
@@ -6923,6 +7676,28 @@
             }
           ]
         }
+      ],
+      "eventProperties": [
+        {
+          "name": "CustomerID",
+          "ttype": "string"
+        },
+        {
+          "name": "ThirdPartyHash",
+          "ttype": "string"
+        },
+        {
+          "name": "UpdateID",
+          "ttype": "number"
+        },
+        {
+          "name": "UpdateIDX",
+          "ttype": "number"
+        },
+        {
+          "name": "VoiceUpdateID",
+          "ttype": "number"
+        }
       ]
     }
   },
@@ -7106,6 +7881,28 @@
               }
             }
           ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "AVTransportURIMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "CurrentTrackMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "CurrentTransportActions",
+          "ttype": "string"
+        },
+        {
+          "name": "EnqueuedTransportURIMetaData",
+          "ttype": "Track"
+        },
+        {
+          "name": "LastChange",
+          "ttype": "string"
         }
       ]
     }
@@ -7362,6 +8159,58 @@
               }
             }
           ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "AlarmRunSequence",
+          "ttype": "string"
+        },
+        {
+          "name": "AreasUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "AvailableSoftwareUpdate",
+          "ttype": "any",
+          "isChannelValue": false
+        },
+        {
+          "name": "DiagnosticID",
+          "ttype": "number"
+        },
+        {
+          "name": "MuseHouseholdId",
+          "ttype": "string"
+        },
+        {
+          "name": "NetsettingsUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "SourceAreasUpdateID",
+          "ttype": "string"
+        },
+        {
+          "name": "ThirdPartyMediaServersX",
+          "ttype": "string"
+        },
+        {
+          "name": "ZoneGroupID",
+          "ttype": "string"
+        },
+        {
+          "name": "ZoneGroupName",
+          "ttype": "string"
+        },
+        {
+          "name": "ZoneGroupState",
+          "ttype": "Array<ZoneGroup>",
+          "isChannelValue": false
+        },
+        {
+          "name": "ZonePlayerUUIDsInGroup",
+          "ttype": "string"
         }
       ]
     }

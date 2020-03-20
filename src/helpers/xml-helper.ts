@@ -54,6 +54,18 @@ export class XmlHelper {
     return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: attributeNamePrefix });
   }
 
+     /**
+   * DecodeAndParseXml will decode the encoded xml string and then try to parse it
+   *
+   * @static
+   * @param {string} encodedXml Encoded Xml string
+   * @returns {*} a parsed Object of the XML string
+   * @memberof XmlHelper
+   */
+  static DecodeAndParseXmlNoNS(encodedXml: string, attributeNamePrefix = '_'): any {
+    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix: attributeNamePrefix });
+  }
+
   /**
    * EncodeXml will encode a xml string so it is safe to send to sonos.
    *

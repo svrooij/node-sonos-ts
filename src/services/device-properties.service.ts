@@ -8,7 +8,7 @@ import { BaseService } from './base-service';
  * @class DevicePropertiesService
  * @extends {BaseService}
  */
-export class DevicePropertiesService extends BaseService {
+export class DevicePropertiesService extends BaseService<DevicePropertiesServiceEvent> {
   readonly serviceNane: string = 'DeviceProperties';
   readonly controlUrl: string = '/DeviceProperties/Control';  
   readonly eventSubUrl: string = '/DeviceProperties/Event';
@@ -90,6 +90,63 @@ export class DevicePropertiesService extends BaseService {
   async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string }):
     Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'AirPlayEnabled': 'boolean',
+      'AutoplayIncludeLinkedZones': 'boolean',
+      'AutoplayRoomUUID': 'string',
+      'AutoplaySource': 'string',
+      'AutoplayUseVolume': 'boolean',
+      'AutoplayVolume': 'number',
+      'AvailableRoomCalibration': 'string',
+      'BehindWifiExtender': 'number',
+      'ButtonLockState': 'string',
+      'ChannelFreq': 'number',
+      'ChannelMapSet': 'string',
+      'ConfigMode': 'string',
+      'Configuration': 'string',
+      'CopyrightInfo': 'string',
+      'DisplaySoftwareVersion': 'string',
+      'ExtraInfo': 'string',
+      'Flags': 'number',
+      'HTAudioIn': 'number',
+      'HTBondedZoneCommitState': 'number',
+      'HTFreq': 'number',
+      'HTSatChanMapSet': 'string',
+      'HardwareVersion': 'string',
+      'HasConfiguredSSID': 'boolean',
+      'HdmiCecAvailable': 'boolean',
+      'HouseholdID': 'string',
+      'IPAddress': 'string',
+      'Icon': 'string',
+      'Invisible': 'boolean',
+      'IsIdle': 'boolean',
+      'IsZoneBridge': 'boolean',
+      'KeepGrouped': 'boolean',
+      'LEDState': 'string',
+      'LastChangedPlayState': 'string',
+      'MACAddress': 'string',
+      'MicEnabled': 'number',
+      'MoreInfo': 'string',
+      'Orientation': 'number',
+      'RoomCalibrationState': 'number',
+      'SatRoomUUID': 'string',
+      'SecureRegState': 'number',
+      'SerialNumber': 'string',
+      'SettingsReplicationState': 'string',
+      'SoftwareVersion': 'string',
+      'SupportsAudioClip': 'boolean',
+      'SupportsAudioIn': 'boolean',
+      'TVConfigurationError': 'boolean',
+      'VoiceConfigState': 'number',
+      'WifiEnabled': 'boolean',
+      'WirelessLeafOnly': 'boolean',
+      'WirelessMode': 'number',
+      'ZoneName': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -146,4 +203,59 @@ export interface GetZoneInfoResponse {
   ExtraInfo: string;
   HTAudioIn: number;
   Flags: number;
+}
+
+// Strong type event 
+export interface DevicePropertiesServiceEvent {
+  AirPlayEnabled?: boolean;
+  AutoplayIncludeLinkedZones?: boolean;
+  AutoplayRoomUUID?: string;
+  AutoplaySource?: string;
+  AutoplayUseVolume?: boolean;
+  AutoplayVolume?: number;
+  AvailableRoomCalibration?: string;
+  BehindWifiExtender?: number;
+  ButtonLockState?: string;
+  ChannelFreq?: number;
+  ChannelMapSet?: string;
+  ConfigMode?: string;
+  Configuration?: string;
+  CopyrightInfo?: string;
+  DisplaySoftwareVersion?: string;
+  ExtraInfo?: string;
+  Flags?: number;
+  HTAudioIn?: number;
+  HTBondedZoneCommitState?: number;
+  HTFreq?: number;
+  HTSatChanMapSet?: string;
+  HardwareVersion?: string;
+  HasConfiguredSSID?: boolean;
+  HdmiCecAvailable?: boolean;
+  HouseholdID?: string;
+  IPAddress?: string;
+  Icon?: string;
+  Invisible?: boolean;
+  IsIdle?: boolean;
+  IsZoneBridge?: boolean;
+  KeepGrouped?: boolean;
+  LEDState?: string;
+  LastChangedPlayState?: string;
+  MACAddress?: string;
+  MicEnabled?: number;
+  MoreInfo?: string;
+  Orientation?: number;
+  RoomCalibrationState?: number;
+  SatRoomUUID?: string;
+  SecureRegState?: number;
+  SerialNumber?: string;
+  SettingsReplicationState?: string;
+  SoftwareVersion?: string;
+  SupportsAudioClip?: boolean;
+  SupportsAudioIn?: boolean;
+  TVConfigurationError?: boolean;
+  VoiceConfigState?: number;
+  WifiEnabled?: boolean;
+  WirelessLeafOnly?: boolean;
+  WirelessMode?: number;
+  ZoneName?: string;
 }

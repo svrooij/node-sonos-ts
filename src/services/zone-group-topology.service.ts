@@ -8,7 +8,7 @@ import { BaseService } from './base-service';
  * @class ZoneGroupTopologyServiceBase
  * @extends {BaseService}
  */
-export class ZoneGroupTopologyServiceBase extends BaseService {
+export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyServiceEvent> {
   readonly serviceNane: string = 'ZoneGroupTopology';
   readonly controlUrl: string = '/ZoneGroupTopology/Control';  
   readonly eventSubUrl: string = '/ZoneGroupTopology/Event';
@@ -45,6 +45,24 @@ export class ZoneGroupTopologyServiceBase extends BaseService {
   async SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
     Promise<SubmitDiagnosticsResponse>{ return await this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'AlarmRunSequence': 'string',
+      'AreasUpdateID': 'string',
+      'AvailableSoftwareUpdate': 'any',
+      'DiagnosticID': 'number',
+      'MuseHouseholdId': 'string',
+      'NetsettingsUpdateID': 'string',
+      'SourceAreasUpdateID': 'string',
+      'ThirdPartyMediaServersX': 'string',
+      'ZoneGroupID': 'string',
+      'ZoneGroupName': 'string',
+      'ZoneGroupState': 'Array<ZoneGroup>',
+      'ZonePlayerUUIDsInGroup': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -65,6 +83,22 @@ export interface GetZoneGroupStateResponse {
 
 export interface SubmitDiagnosticsResponse {
   DiagnosticID: number;
+}
+
+// Strong type event 
+export interface ZoneGroupTopologyServiceEvent {
+  AlarmRunSequence?: string;
+  AreasUpdateID?: string;
+  AvailableSoftwareUpdate?: any;
+  DiagnosticID?: number;
+  MuseHouseholdId?: string;
+  NetsettingsUpdateID?: string;
+  SourceAreasUpdateID?: string;
+  ThirdPartyMediaServersX?: string;
+  ZoneGroupID?: string;
+  ZoneGroupName?: string;
+  ZoneGroupState?: Array<ZoneGroup>;
+  ZonePlayerUUIDsInGroup?: string;
 }
 
 export interface ZoneGroup {
@@ -101,16 +135,16 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
    */
   async GetParsedZoneGroupState (): Promise<ZoneGroup[]> {
     const groupStateResponse = await this.GetZoneGroupState();
-    const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState)
+    const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '')
     const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup)
     return groups.map(g => this.ParseGroup(g))
   }
 
   private ParseMember(member: any): ZoneMember {
-    const uri = new URL(member._Location)
+    const uri = new URL(member.Location)
     return {
-      name: member._ZoneName,
-      uuid: member._UUID,
+      name: member.ZoneName,
+      uuid: member.UUID,
       host: uri.hostname,
       port: parseInt(uri.port)
     }
@@ -118,7 +152,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
 
   private ParseGroup(group: any): ZoneGroup {
     const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map(m => this.ParseMember(m))
-    const coordinator: ZoneMember | undefined = members.find(m => m.uuid === group._Coordinator)
+    const coordinator: ZoneMember | undefined = members.find(m => m.uuid === group.Coordinator)
 
     if (coordinator === undefined) throw new Error('Error parsing ZoneGroup')
 
@@ -130,5 +164,15 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       coordinator: coordinator,
       members: members
     }
+  }
+
+  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
+    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type)
+    if (name === 'ZoneGroupState') {
+      const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup)
+      return groups.map(g => this.ParseGroup(g))
+    }
+    
+    return parsedValue
   }
 }

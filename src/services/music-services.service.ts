@@ -8,7 +8,7 @@ import { BaseService } from './base-service';
  * @class MusicServicesService
  * @extends {BaseService}
  */
-export class MusicServicesService extends BaseService {
+export class MusicServicesService extends BaseService<MusicServicesServiceEvent> {
   readonly serviceNane: string = 'MusicServices';
   readonly controlUrl: string = '/MusicServices/Control';  
   readonly eventSubUrl: string = '/MusicServices/Event';
@@ -24,6 +24,16 @@ export class MusicServicesService extends BaseService {
   async UpdateAvailableServices():
     Promise<boolean> { return await this.SoapRequestNoResponse('UpdateAvailableServices'); }
   //#endregion
+
+  // Event properties from service description.
+  protected eventProperties(): {[key: string]: string} {
+    return {
+      'ServiceId': 'number',
+      'ServiceListVersion': 'string',
+      'SessionId': 'string',
+      'Username': 'string'
+    };
+  }
 }
 
 // Generated responses
@@ -35,4 +45,12 @@ export interface ListAvailableServicesResponse {
   AvailableServiceDescriptorList: string;
   AvailableServiceTypeList: string;
   AvailableServiceListVersion: string;
+}
+
+// Strong type event 
+export interface MusicServicesServiceEvent {
+  ServiceId?: number;
+  ServiceListVersion?: string;
+  SessionId?: string;
+  Username?: string;
 }

@@ -66,4 +66,6 @@ lib/
 # Skip generated timestamp
 src/services/.generated
 
-docs/
+docs-automatic/
+docs/_site/
+docs/.sass-cache/

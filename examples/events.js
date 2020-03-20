@@ -7,26 +7,28 @@ kantoor.AlarmClockService.Events.on(ServiceEvents.Data, data => {
   console.log('AlarmClock data %s', JSON.stringify(data))
 })
 
-// kantoor.ZoneGroupTopologyService.Events.on('data', data => {
+// kantoor.ZoneGroupTopologyService.Events.on(ServiceEvents.Data, data => {
 //   console.log('ZoneGroupTopology data %s', JSON.stringify(data))
 // })
 
-// kantoor.ZoneGroupTopologyService.Events.on('lastchange', data => {
-//   console.log('ZoneGroupTopology lastchange %s', JSON.stringify(data))
+// kantoor.ZoneGroupTopologyService.Events.on(ServiceEvents.Data, data => {
+//   console.log('ZoneGroupTopology lastchange %s', JSON.stringify(data, null, 2))
 // })
 
-kantoor.AVTransportService.Events.on(ServiceEvents.LastChange, data => {
+kantoor.AVTransportService.Events.on(ServiceEvents.Data, data => {
   console.log('AVTransport lastchange %s', JSON.stringify(data, null, 2))
 })
 
-kantoor.RenderingControlService.Events.on(ServiceEvents.LastChange, data => {
+kantoor.RenderingControlService.Events.on(ServiceEvents.Data, data => {
   console.log('RenderingControl lastchange %s', JSON.stringify(data, null, 2))
 })
 
 process.on('SIGINT', () => {
   console.log('Hold-on cancelling all subscriptions')
-  kantoor.AVTransportService.Events.removeAllListeners(ServiceEvents.LastChange)
-  kantoor.RenderingControlService.Events.removeAllListeners(ServiceEvents.LastChange)
+  // kantoor.AVTransportService.Events.removeAllListeners(ServiceEvents.Data)
+  // kantoor.RenderingControlService.Events.removeAllListeners(ServiceEvents.Data)
+  // kantoor.ZoneGroupTopologyService.Events.removeAllListeners(ServiceEvents.Data)
+
   setTimeout(() => {
     process.exit(0)
   }, 1000)
