@@ -10,11 +10,12 @@
     "specs": "mocha -r ts-node/register tests/**/*.test.ts",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
-    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate",
+    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate --docs",
     "coverage": "nyc -r lcov -e .ts -x \"*.test.ts\" npm run test",
     "semantic-release": "semantic-release",
     "prepack": "npm run build",
-    "docs": "typedoc --tsconfig tsconfig.json --toc SonosDevice,SonosManager --theme minimal"
+    "docs": "typedoc --tsconfig tsconfig.json --toc SonosDevice,SonosManager",
+    "docs-json": "typedoc --tsconfig tsconfig.json --json api.json"
   },
   "repository": {
     "type": "git",
@@ -39,13 +40,13 @@
     "@types/node-fetch": "^2.5.4",
     "@typescript-eslint/eslint-plugin": "^2.8.0",
     "@typescript-eslint/parser": "^2.8.0",
-    "strict-event-emitter-types": "^2.0.0",
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "handlebars": "^4.7.3",
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "semantic-release": "^15.4.0",
+    "strict-event-emitter-types": "^2.0.0",
     "ts-node": "^8.6.2",
     "typedoc": "^0.16.10",
     "typescript": "^3.7.5"

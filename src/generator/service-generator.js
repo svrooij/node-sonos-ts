@@ -262,6 +262,18 @@ const generateBaseFile = function (allServices) {
   console.log('Generated sonos-device-base.ts')
 }
 
+const generateDocumentation = function (allServices) {
+  const services = allServices
+    .filter((v, index, arr) => arr.findIndex(s => s.name === v.name) === index)
+
+  const template = getTemplate('docs')
+  services.forEach(service => {
+    const generatedDocs = template(service)
+    fs.writeFileSync(path.join(__dirname, '..', '..', 'docs', 'sonos-device', 'services', service.svcName.toLowerCase() + '.md'), generatedDocs)
+  })
+  console.log('Service documentation updated')
+}
+
 const run = async function () {
   const args = process.argv.slice(2)
 
@@ -286,6 +298,9 @@ const run = async function () {
       const service = allServices[i]
       generateServiceFile(service)
     }
+  }
+  if (args.indexOf('--docs') > -1) {
+    generateDocumentation(allServices)
   }
 }
 

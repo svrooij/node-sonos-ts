@@ -1,15 +1,31 @@
-# Sonos device
+---
+layout: default
+title: Getting started
+nav_order: 2
+---
 
-You'll need to get an instance of the **SonosDevice** by one of the following methods.
+# Getting started
+{: .no_toc }
 
-## Sonos Manager
+Using this library is really easy.
 
-This library has SonosManager, it does auto discovery and allows you to use all the group features. It uses an event handler to track all the changes in groups.
+1. TOC
+{:toc}
 
-```JavaScript
+---
+
+## Add the library to your project
+
+`npm install --save @svrooij/sonos`
+
+## Use Sonos manager
+
+This library is developed with Sonos groups in mind. We created a **SonosManager** to discover all known groups and keep track of changes to them.
+
+```js
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
-manager.InitializeWithDiscovery(10) // Search for all devices in your network, for max 10 seconds.
+manager.InitializeWithDiscovery(10)
   .then(console.log)
   .then(() => {
     manager.Devices.forEach(d => console.log('Device %s (%s) is joined in %s', d.Name, d.uuid, d.GroupName))
@@ -17,9 +33,9 @@ manager.InitializeWithDiscovery(10) // Search for all devices in your network, f
   .catch(console.error)
 ```
 
-Auto-discovery might not always work. If your sonos speakers are in a differant network or you're using docker for your app. You can still use the manager but you have to set an IP of one of the players.
+In some network situations (or Docker usage) SSDP won't work, but you can also start the manager if you know one (static) IP of a single speaker.
 
-```JavaScript
+```js
 const SonosManager = require('@svrooij/sonos').SonosManager
 const manager = new SonosManager()
 manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
@@ -30,11 +46,11 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .catch(console.error)
 ```
 
-## Single device
+## or control single device
 
-If you don't need the manager you can also initialize a single speaker.
+If you just want to control a single device and don't want to use the SonosManager, you can also create a instance of **SonosDevice**, but you'll be missing the group options.
 
-```JavaScript
+```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')

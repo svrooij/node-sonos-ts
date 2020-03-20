@@ -68,9 +68,9 @@
   "typedocOptions": { /* For TypeDoc  */
     "mode": "modules",
     "out": "docs-automatic",
-    "theme": "minimal",
     "exclude": [
       "**/*-helper.ts",
+      "musicservices/",
       "**/*+(index|.spec|.e2e|.test).ts"
     ]
 }
