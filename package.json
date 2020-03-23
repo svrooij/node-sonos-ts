@@ -46,7 +46,6 @@
     "mocha": "^6.2.2",
     "nyc": "^14.1.1",
     "semantic-release": "^15.4.0",
-    "strict-event-emitter-types": "^2.0.0",
     "ts-node": "^8.6.2",
     "typedoc": "^0.16.10",
     "typescript": "^3.7.5"
@@ -55,7 +54,8 @@
     "debug": "^4.1.1",
     "fast-xml-parser": "^3.16.0",
     "guid-typescript": "^1.0.9",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "strict-event-emitter-types": "^2.0.0"
   },
   "files": [
     "README.md",
