@@ -1,4 +1,4 @@
-import { Track } from "./track";
+import { Track } from './track';
 
 export interface PlayNotificationOptionsBase {
   /**

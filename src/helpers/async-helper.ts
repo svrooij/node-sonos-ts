@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events'
+import { EventEmitter } from 'events';
 
 /**
  * Error that is thrown by AsyncEvent, if event didn't trigger before timeout
@@ -9,8 +9,8 @@ import { EventEmitter } from 'events'
  */
 export class EventTimeoutError extends Error {
   constructor(eventName: string) {
-    super(`Event ${eventName} didn't fire before timeout`)
-    this.name = 'EventTimeoutError'
+    super(`Event ${eventName} didn't fire before timeout`);
+    this.name = 'EventTimeoutError';
   }
 }
 
@@ -35,17 +35,17 @@ export class AsyncHelper {
    */
   static async AsyncEvent<TResult>(eventEmitter: EventEmitter, eventName: string, timeout?: number): Promise<TResult> {
     return await new Promise((resolve, reject) => {
-      let timer: NodeJS.Timeout | undefined ;
+      let timer: NodeJS.Timeout | undefined;
       if (timeout !== undefined && timeout > 0) {
         timer = setTimeout(() => {
-          reject(new EventTimeoutError(eventName))
-        }, timeout * 1000)
+          reject(new EventTimeoutError(eventName));
+        }, timeout * 1000);
       }
       eventEmitter.once(eventName, (data) => {
-        if(timer !== undefined) clearTimeout(timer)
+        if (timer !== undefined) clearTimeout(timer);
         resolve(data);
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -57,6 +57,6 @@ export class AsyncHelper {
    * @memberof AsyncHelper
    */
   static async Delay(ms: number): Promise<void> {
-    await new Promise(resolve => setTimeout(()=>resolve(), ms));
+    await new Promise((resolve) => setTimeout(() => resolve(), ms));
   }
 }

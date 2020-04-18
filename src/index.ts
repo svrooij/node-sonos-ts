@@ -1,5 +1,14 @@
-export { SonosDevice } from './sonos-device'
-export { SonosEvents, ServiceEvents} from './models/'
-export { SonosManager } from './sonos-manager'
-export { SonosDeviceDiscovery } from './sonos-device-discovery'
-export { SmapiClient } from './musicservices/smapi-client'
+import SonosDevice from './sonos-device';
+import { SonosEvents, ServiceEvents } from './models';
+import SonosManager from './sonos-manager';
+import SonosDeviceDiscovery from './sonos-device-discovery';
+import { SmapiClient } from './musicservices/smapi-client';
+
+export {
+  SonosDevice,
+  SonosEvents,
+  ServiceEvents,
+  SonosManager,
+  SonosDeviceDiscovery,
+  SmapiClient,
+};

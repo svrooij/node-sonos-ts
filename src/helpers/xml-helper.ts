@@ -1,4 +1,4 @@
-import { parse } from 'fast-xml-parser'
+import { parse } from 'fast-xml-parser';
 
 const htmlEntities: any = {
   nbsp: ' ',
@@ -12,9 +12,9 @@ const htmlEntities: any = {
   gt: '>',
   quot: '"',
   amp: '&',
-  apos: '\''
+  apos: '\'',
 };
-export class XmlHelper {
+export default class XmlHelper {
   /**
    * Decode an encoded xml string
    *
@@ -24,25 +24,24 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeXml(text: string): string {
-    if(typeof text === 'undefined') return ''
-    return text.replace(/\&([^;]+);/g, function (entity, entityCode) {
+    if (typeof text === 'undefined') return '';
+    return text.replace(/\&([^;]+);/g, (entity, entityCode) => {
       let match;
 
       if (entityCode in htmlEntities) {
-          return htmlEntities[entityCode];
-          /*eslint no-cond-assign: 0*/
-      } else if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
-          return String.fromCharCode(parseInt(match[1], 16));
-          /*eslint no-cond-assign: 0*/
-      } else if (match = entityCode.match(/^#(\d+)$/)) {
-          return String.fromCharCode(~~match[1]);
-      } else {
-          return entity;
+        return htmlEntities[entityCode];
+        /* eslint no-cond-assign: 0 */
+      } if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
+        return String.fromCharCode(parseInt(match[1], 16));
+        /* eslint no-cond-assign: 0 */
+      } if (match = entityCode.match(/^#(\d+)$/)) {
+        return String.fromCharCode(~~match[1]);
       }
+      return entity;
     });
   }
 
-   /**
+  /**
    * DecodeAndParseXml will decode the encoded xml string and then try to parse it
    *
    * @static
@@ -51,10 +50,10 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXml(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix: attributeNamePrefix });
+    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix });
   }
 
-     /**
+  /**
    * DecodeAndParseXml will decode the encoded xml string and then try to parse it
    *
    * @static
@@ -63,7 +62,7 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXmlNoNS(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix: attributeNamePrefix });
+    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix });
   }
 
   /**
@@ -75,16 +74,15 @@ export class XmlHelper {
    * @memberof XmlHelper
    */
   static EncodeXml(xml: string): string {
-    if(typeof xml === 'undefined') return ''
-    return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+    if (typeof xml === 'undefined') return '';
+    return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   static EncodeTrackUri(trackUri: string): string {
-    if(trackUri.startsWith('http'))
-      return encodeURI(trackUri);
-    
+    if (trackUri.startsWith('http')) return encodeURI(trackUri);
+
     // Part below needs some work.
-    const index = trackUri.indexOf(':') + 1
+    const index = trackUri.indexOf(':') + 1;
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
   }
 

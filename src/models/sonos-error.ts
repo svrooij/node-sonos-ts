@@ -7,8 +7,8 @@
  * @extends {Error}
  */
 export class SonosError extends Error {
-    constructor(public readonly Action: string, public readonly FaultCode: string, public readonly Fault: string, public UpnpErrorCode?: number) {
-        super(`Sonos error on ${Action} ${Fault} ${UpnpErrorCode}`)
-        this.name = 'SonosError';
-    }
+  constructor(public readonly Action: string, public readonly FaultCode: string, public readonly Fault: string, public UpnpErrorCode?: number) {
+    super(`Sonos error on ${Action} ${Fault} ${UpnpErrorCode}`);
+    this.name = 'SonosError';
+  }
 }
