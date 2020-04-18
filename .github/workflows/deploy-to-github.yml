@@ -15,8 +15,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
 
-    - name: Build
-      run: |
-        npm install
-        npm run build
-        npm run test
+    - name: Install depencencies
+      run: npm ci
+    - name: Build library
+      run: npm run build
+    - name: Run tests
+      run: npm run test
+    - name: Send data to Coveralls
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
