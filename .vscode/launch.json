@@ -23,13 +23,17 @@
       "request": "launch",
       "name": "Jest All",
       "program": "${workspaceFolder}/node_modules/.bin/jest",
-      "args": ["--runInBand"],
+      "args": ["--runInBand", "--force-exit"],
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      }
+      },
+      "env": {
+        "SONOS_HOST":"192.168.96.56",
+        "SONOS_TTS_ENDPOINT": "false"
+      },
     },
     {
       "type": "node",
@@ -48,7 +52,8 @@
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       },
       "env": {
-        "SONOS_HOST":"192.168.96.56"
+        "SONOS_HOST":"192.168.96.56",
+        "SONOS_TTS_ENDPOINT": "false"
       },
     },
     {

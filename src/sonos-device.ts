@@ -81,7 +81,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return await this.AVTransportService.AddURIToQueue({
       InstanceID: 0,
       EnqueuedURI: guessedMetaData.trackUri,
-      EnqueuedURIMetaData: guessedMetaData.metedata,
+      EnqueuedURIMetaData: guessedMetaData.metadata,
       DesiredFirstTrackNumberEnqueued: positionInQueue,
       EnqueueAsNext: enqueueAsNext,
     });
@@ -299,7 +299,7 @@ export default class SonosDevice extends SonosDeviceBase {
     // Generate metadata if needed
     if (options.metadata === undefined) {
       const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(options.trackUri);
-      metaOptions.metadata = guessedMetaData.metedata;
+      metaOptions.metadata = guessedMetaData.metadata;
       metaOptions.trackUri = guessedMetaData.trackUri;
     }
 
@@ -402,7 +402,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SetAVTransportURI(trackUri: string): Promise<boolean> {
     const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(trackUri);
-    return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metedata });
+    return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metadata });
   }
 
   /**

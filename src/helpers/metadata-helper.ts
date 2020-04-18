@@ -89,12 +89,12 @@ export default class MetadataHelper {
     return metadata;
   }
 
-  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion = '2311'): { trackUri: string; metedata: Track | string } {
+  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion = '2311'): { trackUri: string; metadata: Track | string } {
     const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
 
     return {
       trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri),
-      metedata: metadata || '',
+      metadata: metadata || '',
     };
   }
 
