@@ -94,6 +94,7 @@
         "Description": "Set the transport URI, to a song, a stream, the queue and a lot more",
         "Params": {
           "CurrentURI": "The track URI",
+          "CurrentURIMetaData": "Track Metadata",
           "Target": "The metadata, see MetadataHelper.GuessTrack to guess based on track uri"
         }
       },
@@ -173,6 +174,10 @@
       }
     }
   },
+  "HTControlService" : {
+    "Description":"",
+    "File":"ht-control.service.ts"
+    },
   "MusicServicesService": {
     "Description": "External music services",
     "File": "music-services.service.ts"

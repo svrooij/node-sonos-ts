@@ -339,7 +339,7 @@ Set the transport URI, to a song, a stream, the queue and a lot more
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
 | **CurrentURI** | `string` | The track URI |
-| **CurrentURIMetaData** | `string | Track` |  |
+| **CurrentURIMetaData** | `string | Track` | Track Metadata |
 
 ### SetCrossfadeMode
 

@@ -12,9 +12,9 @@ interface ZoneMember {
   name: string;
 }
 
-import { XmlHelper } from '../helpers/xml-helper';
-import { ArrayHelper } from '../helpers/array-helper';
-import { URL } from 'url'
+import { URL } from 'url';
+import XmlHelper from '../helpers/xml-helper';
+import ArrayHelper from '../helpers/array-helper';
 
 /**
  * Zone config stuff, eg getting all the configured sonos zones.
@@ -24,53 +24,52 @@ import { URL } from 'url'
  * @extends {ZoneGroupTopologyServiceBase}
  */
 export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
-
   /**
    * Get all the sonos groups in your current network. Parsed the GetZoneGroupState output.
    *
    * @returns {Promise<ZoneGroup[]>}
    * @memberof ZoneGroupTopologyService
    */
-  async GetParsedZoneGroupState (): Promise<ZoneGroup[]> {
+  async GetParsedZoneGroupState(): Promise<ZoneGroup[]> {
     const groupStateResponse = await this.GetZoneGroupState();
-    const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '')
-    const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup)
-    return groups.map(g => this.ParseGroup(g))
+    const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '');
+    const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup);
+    return groups.map((g: any) => this.ParseGroup(g));
   }
 
   private ParseMember(member: any): ZoneMember {
-    const uri = new URL(member.Location)
+    const uri = new URL(member.Location);
     return {
       name: member.ZoneName,
       uuid: member.UUID,
       host: uri.hostname,
-      port: parseInt(uri.port)
-    }
+      port: parseInt(uri.port, 10),
+    };
   }
 
   private ParseGroup(group: any): ZoneGroup {
-    const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map(m => this.ParseMember(m))
-    const coordinator: ZoneMember | undefined = members.find(m => m.uuid === group.Coordinator)
+    const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map((m: any) => this.ParseMember(m));
+    const coordinator: ZoneMember | undefined = members.find((m) => m.uuid === group.Coordinator);
 
-    if (coordinator === undefined) throw new Error('Error parsing ZoneGroup')
+    if (coordinator === undefined) throw new Error('Error parsing ZoneGroup');
 
-    let name = coordinator.name
-    if(members.length > 1) name += ` + ${members.length - 1}`
+    let { name } = coordinator;
+    if (members.length > 1) name += ` + ${members.length - 1}`;
 
     return {
-      name: name,
-      coordinator: coordinator,
-      members: members
-    }
+      name,
+      coordinator,
+      members,
+    };
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type)
+    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type);
     if (name === 'ZoneGroupState') {
-      const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup)
-      return groups.map(g => this.ParseGroup(g))
+      const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup);
+      return groups.map((g: any) => this.ParseGroup(g));
     }
-    
-    return parsedValue
+
+    return parsedValue;
   }
 }

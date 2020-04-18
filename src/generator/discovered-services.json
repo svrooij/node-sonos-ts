@@ -1233,7 +1233,8 @@
                 "name": "AVTransportURIMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "Track Metadata"
             }
           ],
           "description": "Set the transport URI, to a song, a stream, the queue and a lot more"

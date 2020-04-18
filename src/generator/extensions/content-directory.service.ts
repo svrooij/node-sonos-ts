@@ -1,7 +1,7 @@
 
-import { ArrayHelper } from '../helpers/array-helper'
-import { XmlHelper } from '../helpers/xml-helper'
-import { MetadataHelper } from '../helpers/metadata-helper'
+import ArrayHelper from '../helpers/array-helper';
+import XmlHelper from '../helpers/xml-helper';
+import MetadataHelper from '../helpers/metadata-helper';
 
 /**
  * Browse for local content
@@ -26,11 +26,11 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
    */
   async BrowseParsed(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
     const resp = await this.Browse(input);
-    if(typeof resp.Result === 'string' && resp.NumberReturned > 0) {
+    if (typeof resp.Result === 'string' && resp.NumberReturned > 0) {
       const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
       const itemObject = parsedData.item || parsedData.container;
-      const items = ArrayHelper.ForceArray(itemObject)
-      resp.Result = items.map(i => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
+      const items = ArrayHelper.ForceArray(itemObject);
+      resp.Result = items.map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
     }
     return resp;
   }
@@ -43,7 +43,8 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
    * @memberof SonosDevice
    */
   public async BrowseParsedWithDefaults(ObjectID: string): Promise<BrowseResponse> {
-    return await this.BrowseParsed({ObjectID: ObjectID, BrowseFlag: 'BrowseDirectChildren', Filter: '*', StartingIndex: 0, RequestedCount: 0,  SortCriteria: '' });
+    return await this.BrowseParsed({
+      ObjectID, BrowseFlag: 'BrowseDirectChildren', Filter: '*', StartingIndex: 0, RequestedCount: 0, SortCriteria: '',
+    });
   }
-
 }
