@@ -10,7 +10,8 @@ import XmlHelper from '../helpers/xml-helper';
 import MetadataHelper from '../helpers/metadata-helper';
 import SonosEventListener from '../sonos-event-listener';
 import { ServiceEvents } from '../models/sonos-events';
-import { SonosError } from '../models/sonos-error';
+import SonosError from '../models/sonos-error';
+import HttpError from '../models/http-error';
 import { ServiceEvent } from '../models/service-event';
 
 /**
@@ -255,7 +256,7 @@ export default abstract class BaseService <TServiceEvent> {
       }
     }
     this.debug('handleRequest error %d %s', response.status, response.statusText);
-    throw new Error(`Http status ${response.status} (${response.statusText})`);
+    throw new HttpError(action, response.status, response.statusText);
   }
 
   /**

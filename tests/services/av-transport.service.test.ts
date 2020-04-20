@@ -32,6 +32,50 @@ describe('AVTransportService', () => {
   })
 
   describe('Play()', () => {
+    it('throws HttpError when faulty but no soap error', async () => {
+      TestHelpers.mockHttpError('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>2</InstanceID><Speed>bla</Speed></u:Play>',
+        400
+      )
+      var service = new AVTransportService(TestHelpers.testHost, 1400)
+      try {
+        var result = await service.Play({ InstanceID: 2, Speed: "bla"});
+      } catch (error) {
+
+        expect(error).to.have.property('Action', 'Play');
+        expect(error).to.have.property('HttpStatusCode', 400);
+        expect(error).to.have.property('name', 'HttpError');
+        return;
+      }
+      
+      // It should not get here
+      expect(false).to.be.true;
+    });
+
+    it('throws SonosError on faulty input', async () => {
+      TestHelpers.mockSoapError('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>2</InstanceID><Speed>bla</Speed></u:Play>',
+        718
+      )
+      var service = new AVTransportService(TestHelpers.testHost, 1400)
+      try {
+        var result = await service.Play({ InstanceID: 2, Speed: "bla"});
+      } catch (error) {
+
+        expect(error).to.have.property('Action', 'Play');
+        expect(error).to.have.property('FaultCode', 's:Client');
+        expect(error).to.have.property('Fault', 'UPnPError');
+        expect(error).to.have.property('name', 'SonosError');
+        expect(error).to.have.property('UpnpErrorCode', 718);
+        return;
+      }
+      
+      // It should not get here
+      expect(false).to.be.true;
+    })
+
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
