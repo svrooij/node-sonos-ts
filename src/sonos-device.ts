@@ -219,7 +219,13 @@ export default class SonosDevice extends SonosDeviceBase {
     const zones = await this.ZoneGroupTopologyService.GetParsedZoneGroupState();
 
     const groupToJoin = zones.find((z) => z.members.some((m) => m.name.toLowerCase() === otherDevice.toLowerCase()));
-    if (groupToJoin === undefined) throw new Error(`Player '${otherDevice}' isn't found!`);
+    if (groupToJoin === undefined) {
+      throw new Error(`Player '${otherDevice}' isn't found!`);
+    }
+
+    if (groupToJoin.members.some((m) => m.uuid === this.Uuid)) {
+      return Promise.resolve(false); // Already in the group.
+    }
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
   }
 

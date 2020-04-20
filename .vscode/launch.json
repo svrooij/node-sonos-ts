@@ -31,7 +31,7 @@
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       },
       "env": {
-        "SONOS_HOST":"192.168.96.56",
+        "SONOS_HOST":"192.168.96.53",
         "SONOS_TTS_ENDPOINT": "false"
       },
     },
