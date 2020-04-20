@@ -384,12 +384,17 @@ export default class SonosDevice extends SonosDeviceBase {
       throw new Error('No TTS Endpoint defined, check the documentation.');
     }
 
+    const lang = options.lang || process.env.SONOS_TTS_LANG;
+    if (lang === undefined || lang === '') {
+      throw new Error('TTS Language is required.');
+    }
+
     if (options.text === '' || options.lang === '') {
       this.debug('Cancelling TTS, not all required parameters are set');
       return false;
     }
 
-    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, options.lang, options.gender);
+    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender);
 
     // Typescript way to convert objects, someone got a better way?
     const notificationOptions: PlayNotificationOptions = options as PlayNotificationOptionsBase as PlayNotificationOptions;
