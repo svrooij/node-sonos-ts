@@ -215,6 +215,15 @@ export default class MetadataHelper {
       }
     }
 
+    if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
+      const [, stationId] = parts;
+      track.UpnpClass = 'object.item.audioItem.audioBroadcast';
+      track.Title = 'Some radio station';
+      track.ItemId = '10092020_xxx_xxxx'; // Add station ID from url (regex?)
+      track.TrackUri = `x-sonosapi-stream:${stationId}?sid=254&flags=8224&sn=0`;
+      return track;
+    }
+
     MetadataHelper.debug('Don\'t support this TrackUri (yet) %s', trackUri);
     return undefined;
   }
