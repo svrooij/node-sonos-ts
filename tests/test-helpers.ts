@@ -43,4 +43,15 @@ export class TestHelpers {
       responseBody
     );
   }
+
+  static mockZoneGroupState() {
+    const responseBody = fs.readFileSync(path.join(__dirname, 'services', 'responses', 'zone-group.GroupState.xml')).toString()
+    TestHelpers.mockRequest('/ZoneGroupTopology/Control',
+      '"urn:schemas-upnp-org:service:ZoneGroupTopology:1#GetZoneGroupState"',
+      '<u:GetZoneGroupState xmlns:u="urn:schemas-upnp-org:service:ZoneGroupTopology:1"></u:GetZoneGroupState>',
+      'GetZoneGroupStateResponse',
+      'ZoneGroupTopology',
+      responseBody
+    );
+  }
 }

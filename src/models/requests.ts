@@ -66,7 +66,7 @@ export interface PlayTtsOptions extends PlayNotificationOptionsBase {
    * @type {string}
    * @memberof PlayTtsOptions
    */
-  lang: string;
+  lang?: string;
   /**
    * The URI to use for TTS, a post is send to this uri with text, lang and gender. It should return json with the uri (or cdnUri) of the speech file.
    *

@@ -1,6 +1,7 @@
 import fetch, { Request } from 'node-fetch';
 
 import { TtsResponse } from '../models';
+import HttpError from '../models/http-error';
 
 import debug = require('debug');
 
@@ -29,7 +30,7 @@ export default class TtsHelper {
     const response = await fetch(request);
     if (!response.ok) {
       this.debug('handleRequest error %d %s', response.status, response.statusText);
-      throw new Error(`Http status ${response.status} (${response.statusText})`);
+      throw new HttpError('GetTtsUriFromEndpoint', response.status, response.statusText);
     }
     const data = JSON.parse(await response.text()) as TtsResponse;
     return data.cdnUri || data.uri;
