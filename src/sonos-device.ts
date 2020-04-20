@@ -125,7 +125,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<any>}
    * @memberof SonosDevice
    */
-  public async ExecuteCommand(command: string, options: string | object | number | undefined): Promise<any> {
+  public async ExecuteCommand(command: string, options?: string | object | number): Promise<any> {
     let service = '';
     let correctCommand = command;
     if (command.indexOf('.') > -1) {

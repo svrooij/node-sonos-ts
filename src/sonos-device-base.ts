@@ -33,7 +33,12 @@ export default class SonosDeviceBase {
 
   private debugger?: Debugger;
 
-  protected get debug(): Debugger { if (this.debugger === undefined) this.debugger = debug(`sonos:device:${this.host}`); return this.debugger; }
+  protected get debug(): Debugger {
+    if (this.debugger === undefined) {
+      this.debugger = debug(`sonos:device:${this.host}`);
+    }
+    return this.debugger;
+  }
 
   public readonly uuid: string;
 
