@@ -119,3 +119,20 @@ No parameters
 | **Title** | `string` |  |
 | **ObjectID** | `string` |  |
 
+## QueueService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.QueueService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **QueueService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **Curated** | `boolean` |
+| **LastChange** | `string` |
+| **UpdateID** | `number` |

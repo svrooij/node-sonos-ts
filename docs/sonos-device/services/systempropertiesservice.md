@@ -142,3 +142,22 @@ No parameters
 | **VariableName** | `string` |  |
 | **StringValue** | `string` |  |
 
+## SystemPropertiesService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.SystemPropertiesService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **SystemPropertiesService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **CustomerID** | `string` |
+| **ThirdPartyHash** | `string` |
+| **UpdateID** | `number` |
+| **UpdateIDX** | `number` |
+| **VoiceUpdateID** | `number` |

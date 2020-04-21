@@ -45,6 +45,16 @@ Before you can use this library is has to be compiled.
 
 `npm run install && npm run build`
 
+## Run the tests
+
+After changing somehting you should run the tests (as they are automatically run before your PR is accepted). Important code should be covered by tests, and is uploaded to [Coveralls.io](https://coveralls.io/github/svrooij/node-sonos-ts)
+
+`npm run test`
+
+or (to test against your actual device)
+
+`SONOS_HOST=192.168.x.x npm run test`
+
 ## Debugging
 
 This library has several VSCode tasks defined, be sure to change your sonos host in the `.vscode/launch.json` file. If you open an example file and press **F5** the example is run and you can set breakpoints in the sample code and in the TypeScript code.
@@ -79,7 +89,8 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **src/sonos-device-discovery.ts** Async device discovery (by using SSDP, multicast)
 - **src/sonos-device.ts** SonosDevice class, this is the main entry point to control devices.
 - **src/sonos-event-listener.ts** Event listener, used for logical devices and for all sonos events.
-- **src/sonos-manager.ts** SonosManager class, logical devices
+- **src/sonos-manager.ts** SonosManager class, logical devices.
+- **tests/..** - All the tests, using the Jest framework.
 
 ## Contributors ✨
 

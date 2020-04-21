@@ -43,3 +43,22 @@ No parameters
 {{/if}}
 
 {{/each}}
+{{#if parsed.eventProperties}}
+## {{svcName}} event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.{{svcName}}.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **{{svcName}}** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+{{#each parsed.eventProperties}}
+| **{{name}}** | `{{ttype}}` |
+{{/each}}
+{{/if}}

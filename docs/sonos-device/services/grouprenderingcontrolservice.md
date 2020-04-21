@@ -71,3 +71,20 @@ Relativly change group volume
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
 
+## GroupRenderingControlService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.GroupRenderingControlService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **GroupRenderingControlService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **GroupMute** | `boolean` |
+| **GroupVolume** | `number` |
+| **GroupVolumeChangeable** | `boolean` |

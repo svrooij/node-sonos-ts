@@ -39,3 +39,21 @@ No parameters
 
 No parameters
 
+## MusicServicesService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.MusicServicesService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **MusicServicesService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **ServiceId** | `number` |
+| **ServiceListVersion** | `string` |
+| **SessionId** | `string` |
+| **Username** | `string` |

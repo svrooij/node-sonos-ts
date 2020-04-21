@@ -76,3 +76,29 @@ No parameters
 | **IncludeControllers** | `boolean` |  |
 | **Type** | `string` |  |
 
+## ZoneGroupTopologyService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.ZoneGroupTopologyService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **ZoneGroupTopologyService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AlarmRunSequence** | `string` |
+| **AreasUpdateID** | `string` |
+| **AvailableSoftwareUpdate** | `any` |
+| **DiagnosticID** | `number` |
+| **MuseHouseholdId** | `string` |
+| **NetsettingsUpdateID** | `string` |
+| **SourceAreasUpdateID** | `string` |
+| **ThirdPartyMediaServersX** | `string` |
+| **ZoneGroupID** | `string` |
+| **ZoneGroupName** | `string` |
+| **ZoneGroupState** | `Array&lt;ZoneGroup&gt;` |
+| **ZonePlayerUUIDsInGroup** | `string` |

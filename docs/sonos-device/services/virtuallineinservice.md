@@ -72,3 +72,22 @@ All methods that require input expect an object with the specified parameters, e
 | **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
 | **CoordinatorID** | `string` |  |
 
+## VirtualLineInService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.VirtualLineInService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **VirtualLineInService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AVTransportURIMetaData** | `Track` |
+| **CurrentTrackMetaData** | `Track` |
+| **CurrentTransportActions** | `string` |
+| **EnqueuedTransportURIMetaData** | `Track` |
+| **LastChange** | `string` |

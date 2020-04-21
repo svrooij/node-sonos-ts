@@ -393,3 +393,66 @@ Stop playback
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
 
+## AVTransportService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.AVTransportService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **AVTransportService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AVTransportURI** | `string` |
+| **AVTransportURIMetaData** | `Track` |
+| **AbsoluteCounterPosition** | `number` |
+| **AbsoluteTimePosition** | `string` |
+| **AlarmIDRunning** | `number` |
+| **AlarmLoggedStartTime** | `string` |
+| **AlarmRunning** | `boolean` |
+| **CurrentCrossfadeMode** | `boolean` |
+| **CurrentMediaDuration** | `string` |
+| **CurrentPlayMode** | `PlayMode` |
+| **CurrentRecordQualityMode** | `string` |
+| **CurrentSection** | `number` |
+| **CurrentTrack** | `number` |
+| **CurrentTrackDuration** | `string` |
+| **CurrentTrackMetaData** | `Track` |
+| **CurrentTrackURI** | `string` |
+| **CurrentTransportActions** | `string` |
+| **CurrentValidPlayModes** | `string` |
+| **DirectControlAccountID** | `string` |
+| **DirectControlClientID** | `string` |
+| **DirectControlIsSuspended** | `boolean` |
+| **EnqueuedTransportURI** | `string` |
+| **EnqueuedTransportURIMetaData** | `Track` |
+| **LastChange** | `string` |
+| **MuseSessions** | `string` |
+| **NextAVTransportURI** | `string` |
+| **NextAVTransportURIMetaData** | `Track` |
+| **NextTrackMetaData** | `Track` |
+| **NextTrackURI** | `string` |
+| **NumberOfTracks** | `number` |
+| **PlaybackStorageMedium** | `string` |
+| **PossiblePlaybackStorageMedia** | `string` |
+| **PossibleRecordQualityModes** | `string` |
+| **PossibleRecordStorageMedia** | `string` |
+| **QueueUpdateID** | `number` |
+| **RecordMediumWriteStatus** | `string` |
+| **RecordStorageMedium** | `string` |
+| **RelativeCounterPosition** | `number` |
+| **RelativeTimePosition** | `string` |
+| **RestartPending** | `boolean` |
+| **SleepTimerGeneration** | `number` |
+| **SnoozeRunning** | `boolean` |
+| **TransportErrorDescription** | `string` |
+| **TransportErrorHttpCode** | `string` |
+| **TransportErrorHttpHeaders** | `string` |
+| **TransportErrorURI** | `string` |
+| **TransportPlaySpeed** | `string` |
+| **TransportState** | `string` |
+| **TransportStatus** | `string` |
