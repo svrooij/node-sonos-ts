@@ -1,4 +1,4 @@
-export class JsonHelper {
+export default class JsonHelper {
   static TryParse(input: string): string | object {
     try {
       return JSON.parse(input) as object;

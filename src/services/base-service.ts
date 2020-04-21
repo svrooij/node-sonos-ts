@@ -1,18 +1,18 @@
-import fetch from 'node-fetch'
-import { Request, Response } from 'node-fetch'
-import { SoapHelper } from '../helpers/soap-helper'
-import { XmlHelper } from '../helpers/xml-helper'
-import { MetadataHelper } from '../helpers/metadata-helper'
-import { parse } from 'fast-xml-parser'
-import { Guid } from 'guid-typescript'
-import { EventEmitter } from 'events'
-import { SonosEventListener } from '../sonos-event-listener'
-import { ServiceEvents } from '../models/sonos-events'
-import { SonosError } from '../models/sonos-error'
-import { Debugger } from 'debug'
-import debug = require('debug')
-import StrictEventEmitter from 'strict-event-emitter-types'
-import { ServiceEvent } from '../models/service-event'
+import fetch, { Request, Response } from 'node-fetch';
+
+import { parse } from 'fast-xml-parser';
+import { Guid } from 'guid-typescript';
+import { EventEmitter } from 'events';
+import debug, { Debugger } from 'debug';
+import StrictEventEmitter from 'strict-event-emitter-types';
+import SoapHelper from '../helpers/soap-helper';
+import XmlHelper from '../helpers/xml-helper';
+import MetadataHelper from '../helpers/metadata-helper';
+import SonosEventListener from '../sonos-event-listener';
+import { ServiceEvents } from '../models/sonos-events';
+import SonosError from '../models/sonos-error';
+import HttpError from '../models/http-error';
+import { ServiceEvent } from '../models/service-event';
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -22,15 +22,20 @@ import { ServiceEvent } from '../models/service-event'
  * @abstract
  * @class BaseService
  */
-export abstract class BaseService <TServiceEvent> {
+export default abstract class BaseService <TServiceEvent> {
   protected readonly host: string;
+
   protected readonly port: number;
-  private _debugger?: Debugger;
+
+  private debugger?: Debugger;
+
   protected get debug(): Debugger {
-    if(this._debugger === undefined) this._debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}:${this.host}`)
-    return this._debugger;
+    if (this.debugger === undefined) this.debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}:${this.host}`);
+    return this.debugger;
   }
+
   private events?: StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>>;
+
   /**
    * Control URL is the relative endpoint to send command to.
    *
@@ -39,6 +44,7 @@ export abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   abstract readonly controlUrl: string;
+
   /**
    * Event Subscription Url is the relative endpoint to enable notifications.
    *
@@ -47,6 +53,7 @@ export abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   abstract readonly eventSubUrl: string;
+
   /**
    * Scp Url is the relative endpoint where this service is described
    *
@@ -55,6 +62,7 @@ export abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   abstract readonly scpUrl: string;
+
   /**
    * Service Name is the name of the service, used in the commands
    *
@@ -76,7 +84,7 @@ export abstract class BaseService <TServiceEvent> {
     this.port = port;
   }
 
-  //#region Protected requests handlers
+  // #region Protected requests handlers
   /**
    * SoapRequest will do a request that expects a Response
    *
@@ -91,7 +99,7 @@ export abstract class BaseService <TServiceEvent> {
     return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
-    /**
+  /**
    * SoapRequestWithBody will do a request that expects a Response
    *
    * @protected
@@ -102,7 +110,7 @@ export abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>}
    * @memberof BaseService
    */
-  protected async SoapRequestWithBody<TBody,TResponse>(action: string, body: TBody): Promise<TResponse> {
+  protected async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
   }
@@ -135,9 +143,9 @@ export abstract class BaseService <TServiceEvent> {
     this.debug('%s(%o)', action, body);
     return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
   }
-  //#endregion
+  // #endregion
 
-  //#region Request builders
+  // #region Request builders
   private getUrl(): string {
     return `http://${this.host}:${this.port}${this.controlUrl}`;
   }
@@ -146,17 +154,17 @@ export abstract class BaseService <TServiceEvent> {
     return `"urn:schemas-upnp-org:service:${this.serviceNane}:1#${action}"`;
   }
 
-  private generateRequest<TBody>(action: string, body: TBody): Request{
+  private generateRequest<TBody>(action: string, body: TBody): Request {
     return new Request(
       this.getUrl(),
-      { 
-        method: "POST", 
+      {
+        method: 'POST',
         headers: {
           SOAPAction: this.messageAction(action),
-          'Content-type': 'text/xml; charset=utf8'
+          'Content-type': 'text/xml; charset=utf8',
         },
-        body: this.generateRequestBody<TBody>(action, body)
-      }
+        body: this.generateRequestBody<TBody>(action, body),
+      },
     );
   }
 
@@ -171,25 +179,23 @@ export abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private generateRequestBody<TBody>(action: string, body: TBody): string {
-    let messageBody = `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${this.serviceNane}:1">`
+    let messageBody = `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${this.serviceNane}:1">`;
     if (body) {
-      for (const [key, value] of Object.entries(body)) {
-        if (typeof value === 'object' && key.indexOf('MetaData') > -1)
-          messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
-        else if(typeof value === 'string' && key.endsWith('URI'))
-          messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
-        else if (typeof value === 'boolean')
-          messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
-        else
-          messageBody += `<${key}>${value}</${key}>`;
-      }
+      Object.entries(body).forEach((v) => {
+        // Deconstruct v into key and value.
+        const [key, value] = v;
+        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
+        else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
+        else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
+        else messageBody += `<${key}>${value}</${key}>`;
+      });
     }
     messageBody += `</u:${action}>`;
     return SoapHelper.PutInEnvelope(messageBody);
   }
-  //#endregion
+  // #endregion
 
-  //#region Request handlers
+  // #region Request handlers
   /**
    * handleRequest send the request to the device.
    *
@@ -200,11 +206,10 @@ export abstract class BaseService <TServiceEvent> {
    */
   private async handleRequest(request: Request, action: string): Promise<boolean> {
     const response = await fetch(request);
-    if(response.ok) {
-      return true
-    } else {
-      return await this.handleErrorResponse<boolean>(action, response);
+    if (response.ok) {
+      return true;
     }
+    return await this.handleErrorResponse<boolean>(action, response);
   }
 
   /**
@@ -219,14 +224,14 @@ export abstract class BaseService <TServiceEvent> {
    */
   private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
     const response = await fetch(request);
-    const responseText = response.ok === true ? 
-      await response.text() : 
-      await this.handleErrorResponse<string>(action, response);
+    const responseText = response.ok === true
+      ? await response.text()
+      : await this.handleErrorResponse<string>(action, response);
 
     const result = parse(responseText);
     if (!result || !result['s:Envelope']) {
-      this.debug('Invalid response for %s %o', action, result)
-      throw new Error(`Invalid response for ${action}: ${result}`)
+      this.debug('Invalid response for %s %o', action, result);
+      throw new Error(`Invalid response for ${action}: ${result}`);
     }
     return this.parseEmbeddedXml<TResponse>(result['s:Envelope']['s:Body'][`u:${action}Response`]);
   }
@@ -240,18 +245,18 @@ export abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>}
    * @memberof BaseService
    */
-  private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse>  {
+  private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse> {
     const responseText = await response.text();
-    if(responseText !== '') {
-      const errorResponse = parse(responseText)
+    if (responseText !== '') {
+      const errorResponse = parse(responseText);
       if (typeof errorResponse['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
-        const error = errorResponse['s:Envelope']['s:Body']['s:Fault']
-        this.debug('Sonos error on %s %o', action, error)
-        throw new SonosError(action, error.faultcode, error.faultstring, error.detail?.UPnPError?.errorCode)
+        const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
+        this.debug('Sonos error on %s %o', action, error);
+        throw new SonosError(action, error.faultcode, error.faultstring, error.detail?.UPnPError?.errorCode);
       }
     }
-    this.debug('handleRequest error %d %s', response.status, response.statusText)
-    throw new Error(`Http status ${response.status} (${response.statusText})`);
+    this.debug('handleRequest error %d %s', response.status, response.statusText);
+    throw new HttpError(action, response.status, response.statusText);
   }
 
   /**
@@ -266,7 +271,7 @@ export abstract class BaseService <TServiceEvent> {
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
     const output: {[key: string]: any } = {};
     const keys = Object.keys(input);
-    keys.forEach(k => {
+    keys.forEach((k) => {
       if (k.indexOf('MetaData') > -1 || k.indexOf('URI') > -1) {
         const originalValue = input[k] as string;
         if (k.indexOf('MetaData') > -1) {
@@ -279,14 +284,16 @@ export abstract class BaseService <TServiceEvent> {
       } else {
         output[k] = input[k];
       }
-    })
+    });
     return output as TResponse;
   }
-  //#endregion
+  // #endregion
 
-  //#region Events
+  // #region Events
   private sid?: string;
-  private eventRenewTimeout?: NodeJS.Timeout
+
+  private eventRenewTimeout?: NodeJS.Timeout;
+
   /**
    * Events allowes you access to the events generated by this service.
    *
@@ -299,25 +306,25 @@ export abstract class BaseService <TServiceEvent> {
     if (this.events === undefined) {
       this.events = new EventEmitter();
       this.events.on('removeListener', async () => {
-        this.debug('Listener removed')
-        if(this.events === undefined) return;
-        const events = this.events.eventNames().filter(e => e !== 'removeListener' && e !== 'newListener')
-        if (this.sid !== undefined && events.length === 0) await this.cancelSubscription(this.sid)
-      })
+        this.debug('Listener removed');
+        if (this.events === undefined) return;
+        const events = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+        if (this.sid !== undefined && events.length === 0) await this.cancelSubscription(this.sid);
+      });
       this.events.on('newListener', async () => {
-        this.debug('Listener added')
+        this.debug('Listener added');
         if (this.sid === undefined) {
-          this.debug('Subscribing to events')
+          this.debug('Subscribing to events');
           const sid = await this.subscribeForEvents();
           SonosEventListener.DefaultInstance.RegisterSubscription(sid, this);
         }
-      })
+      });
     }
     return this.events;
   }
 
   private async subscribeForEvents(): Promise<string> {
-    const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane)
+    const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
     const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
@@ -325,51 +332,52 @@ export abstract class BaseService <TServiceEvent> {
         headers: {
           callback: `<${callback}>`,
           NT: 'upnp:event',
-          Timeout: 'Second-3600'
-        }
-      }
-    ))
+          Timeout: 'Second-3600',
+        },
+      },
+    ));
     const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
-    if(sid === undefined || sid === '') {
-      throw new Error('No subscription id received')
+    if (sid === undefined || sid === '') {
+      throw new Error('No subscription id received');
     }
     this.sid = sid;
     this.eventRenewTimeout = setTimeout(async () => {
-      if (this.sid !== undefined) 
-        return await this.renewEventSubscription(this.sid)
+      if (this.sid !== undefined) {
+        await this.renewEventSubscription(this.sid);
+      }
     }, 3500 * 1000);
 
     return sid;
   }
 
   private async renewEventSubscription(sid: string): Promise<boolean> {
-    this.debug('Renewing event subscription')
+    this.debug('Renewing event subscription');
     const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
         headers: {
           SID: sid,
-          Timeout: 'Second-3600'
-        }
-      }
+          Timeout: 'Second-3600',
+        },
+      },
     ));
-    if(resp.ok) {
-      this.debug('Renewed event subscription')
+    if (resp.ok) {
+      this.debug('Renewed event subscription');
       this.eventRenewTimeout = setTimeout(async () => {
-        if (this.sid !== undefined) await this.renewEventSubscription(this.sid)
-      }, 3500 * 1000)
+        if (this.sid !== undefined) await this.renewEventSubscription(this.sid);
+      }, 3500 * 1000);
       return true;
     }
 
-    this.debug('Renew event subscription failed, trying to resubscribe')
+    this.debug('Renew event subscription failed, trying to resubscribe');
     const newSid = await this.subscribeForEvents();
     SonosEventListener.DefaultInstance.RegisterSubscription(newSid, this);
     return true;
   }
 
   private async cancelSubscription(sid: string): Promise<boolean> {
-    this.debug('Cancelling event subscription')
+    this.debug('Cancelling event subscription');
     if (this.eventRenewTimeout !== undefined) clearTimeout(this.eventRenewTimeout);
     this.sid = undefined;
     const resp = await fetch(new Request(
@@ -377,9 +385,9 @@ export abstract class BaseService <TServiceEvent> {
       {
         method: 'UNSUBSCRIBE',
         headers: {
-          SID: sid
-        }
-      }
+          SID: sid,
+        },
+      },
     ));
     this.debug('Cancelled event subscription success %o', resp.ok);
     return resp.ok;
@@ -392,80 +400,76 @@ export abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   public ParseEvent(xml: string): void {
-    this.debug('Got event')
-    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true })['propertyset']['property']
+    this.debug('Got event');
+    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
-    if(rawBody.LastChange) {
+    if (rawBody.LastChange) {
       const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '');
-      const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event
+      const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
-      this.Events.emit(ServiceEvents.Data, parsedEvent)
+      this.Events.emit(ServiceEvents.Data, parsedEvent);
       // this.Events.emit(ServiceEvents.LastChange, parsedEvent)
     } else {
-      const properties = Array.isArray(rawBody) ? rawBody : [rawBody]
+      const properties = Array.isArray(rawBody) ? rawBody : [rawBody];
       try {
-      const parsedEvent = this.cleanEventBody(properties)
-      this.Events.emit(ServiceEvents.Data, parsedEvent)
+        const parsedEvent = this.cleanEventBody(properties);
+        this.Events.emit(ServiceEvents.Data, parsedEvent);
       } catch (e) {
-        this.debug('Error %o', e)
+        this.debug('Error %o', e);
       }
-      
+
       // this.Events.emit(ServiceEvents.Data, parsedEvent)
     }
-
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    if(name.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;'))
-      return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
-    
-    if (typeof originalValue === 'string' && originalValue.startsWith('&lt;') ) {
-      return XmlHelper.DecodeAndParseXml(originalValue, '')
+    if (name.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;')) return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
+
+    if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
+      return XmlHelper.DecodeAndParseXml(originalValue, '');
     }
-  
+
     switch (type) {
       case 'number':
-        return parseInt(originalValue)
+        return parseInt(originalValue, 10);
       case 'boolean':
-        return originalValue === '1'
+        return originalValue === '1';
       default:
-        return originalValue
+        return originalValue;
     }
   }
 
   protected abstract eventProperties(): {[key: string]: string};
-  
-  private cleanEventLastChange(input: any): TServiceEvent{
+
+  private cleanEventLastChange(input: any): TServiceEvent {
     const output: {[key: string]: any} = {};
-  
-    const inKeys = Object.keys(input).filter(k => k !== 'val');
+
+    const inKeys = Object.keys(input).filter((k) => k !== 'val');
     const properties = this.eventProperties();
-    const keys = Object.keys(properties).filter(k => inKeys.indexOf(k) > -1);
-  
-    keys.forEach(k => {
+    const keys = Object.keys(properties).filter((k) => inKeys.indexOf(k) > -1);
+
+    keys.forEach((k) => {
       const originalValue = input[k].val ?? input[k];
-      if(originalValue === undefined || originalValue === '')
-        return;
-      output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k])
-    })
-  
+      if (originalValue === undefined || originalValue === '') return;
+      output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
+    });
+
     return output as unknown as TServiceEvent;
   }
 
-  
 
   private cleanEventBody(input: any[]): TServiceEvent {
     // const output: {[key: string]: any} = {};
     const temp: {[key: string]: string} = {};
-    input.forEach(v => {
+    input.forEach((v) => {
       Object.keys(v)
-        .forEach(k => {
-          temp[k] = v[k]
-        })
-    })
+        .forEach((k) => {
+          temp[k] = v[k];
+        });
+    });
 
     return this.cleanEventLastChange(temp);
   }
-  //#endregion
+  // #endregion
 }

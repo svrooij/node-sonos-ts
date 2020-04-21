@@ -1,3 +1,4 @@
 examples/*
 src/generator/*
-tests/legacy-helpers.js
+src/musicservices/*
+tests/helpers/legacy-helpers.js

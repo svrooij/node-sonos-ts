@@ -31,6 +31,8 @@ All methods that require input expect an object with the specified parameters, e
 
 ### ListAvailableServices
 
+Load music service list (xml), see ListAndParseAvailableServices() for parsed version.
+
 No parameters
 
 ### UpdateAvailableServices

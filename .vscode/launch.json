@@ -21,20 +21,39 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Mocha Current File",
-      "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
+      "name": "Jest All",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": ["--runInBand", "--force-exit"],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      },
+      "env": {
+        "SONOS_HOST":"192.168.96.53",
+        "SONOS_TTS_ENDPOINT": "false"
+      },
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Jest Current File",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
       "args": [
-        "--no-timeouts",
-        "--colors",
-        "${file}",
-        "--require",
-        "ts-node/register"
+        "${fileBasenameNoExtension}",
+        "--config",
+        "jest.config.js"
       ],
       "console": "integratedTerminal",
-      "sourceMaps": true,
       "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest",
+      },
       "env": {
-        "SONOS_HOST":"192.168.96.56"
+        "SONOS_HOST":"192.168.96.56",
+        "SONOS_TTS_ENDPOINT": "false"
       },
     },
     {

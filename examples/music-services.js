@@ -1,6 +1,4 @@
 const SonosDevice = require('../lib').SonosDevice
-const XmlHelper = require('../lib').XmlHelper
-
 const SmapiClient = require('../lib').SmapiClient
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')

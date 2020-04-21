@@ -1233,7 +1233,8 @@
                 "name": "AVTransportURIMetaData",
                 "dataType": "string",
                 "ttype": "string | Track"
-              }
+              },
+              "description": "Track Metadata"
             }
           ],
           "description": "Set the transport URI, to a song, a stream, the queue and a lot more"
@@ -5121,7 +5122,8 @@
         {
           "name": "ListAvailableServices",
           "responseType": "ListAvailableServicesResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Load music service list (xml), see ListAndParseAvailableServices() for parsed version."
         },
         {
           "name": "UpdateAvailableServices",

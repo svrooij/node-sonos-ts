@@ -1,18 +1,21 @@
-import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services'
-import { SonosDevice } from './sonos-device'
-import { SonosDeviceDiscovery } from './sonos-device-discovery'
-import { ServiceEvents } from './models'
 import { EventEmitter } from 'events';
+import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services';
+import SonosDevice from './sonos-device';
+import SonosDeviceDiscovery from './sonos-device-discovery';
+import { ServiceEvents } from './models';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
  * @export
  * @class SonosManager
  */
-export class SonosManager {
+export default class SonosManager {
   private readonly events: EventEmitter;
+
   private devices: SonosDevice[] = [];
-  private zoneService: ZoneGroupTopologyService | undefined
+
+  private zoneService: ZoneGroupTopologyService | undefined;
+
   constructor() {
     this.events = new EventEmitter();
   }
@@ -51,41 +54,41 @@ export class SonosManager {
   }
 
   private async LoadAllGroups(): Promise<ZoneGroup[]> {
-    if (this.zoneService === undefined) throw new Error('Manager is\'t initialized')
+    if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
     return await this.zoneService.GetParsedZoneGroupState();
   }
 
   private InitializeDevices(groups: ZoneGroup[]): boolean {
-    groups.forEach(g => {
+    groups.forEach((g) => {
       const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events });
-      if(this.devices.findIndex(v => v.uuid === coordinator.uuid) === -1)
-        this.devices.push(coordinator);
-      g.members.forEach(m => {
+      if (this.devices.findIndex((v) => v.uuid === coordinator.uuid) === -1) this.devices.push(coordinator);
+      g.members.forEach((m) => {
         // Check if device exists
-        if(this.devices.findIndex(v => v.uuid === m.uuid) === -1){
+        if (this.devices.findIndex((v) => v.uuid === m.uuid) === -1) {
           this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events }));
         }
-      })
-    })
+      });
+    });
     return true;
   }
 
   private SubscribeForGroupEvents(success: boolean): boolean {
-    if(success && this.zoneService) {
-      this.zoneService.Events.on(ServiceEvents.Data, this.zoneEventSubscription)
+    if (success && this.zoneService) {
+      this.zoneService.Events.on(ServiceEvents.Data, this.zoneEventSubscription);
     }
     return success;
   }
 
-  private zoneEventSubscription = this.handleZoneEventData.bind(this)
+  private zoneEventSubscription = this.handleZoneEventData.bind(this);
+
   private handleZoneEventData(data: ZoneGroupTopologyServiceEvent): void {
-    if(data.ZoneGroupState !== undefined) {
-      data.ZoneGroupState.forEach(g => {
-        const coordinator = this.devices.find(d => d.uuid === g.coordinator.uuid) || new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name);
-        g.members.forEach(m => {
-          this.events.emit(m.uuid, {coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name});
-        })
-      })
+    if (data.ZoneGroupState !== undefined) {
+      data.ZoneGroupState.forEach((g) => {
+        const coordinator = this.devices.find((d) => d.uuid === g.coordinator.uuid) || new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name);
+        g.members.forEach((m) => {
+          this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name });
+        });
+      });
     }
   }
 
@@ -95,8 +98,7 @@ export class SonosManager {
    * @memberof SonosManager
    */
   public CancelSubscription(): void {
-    if(this.zoneService !== undefined)
-      this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
+    if (this.zoneService !== undefined) this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
   }
 
   /**
@@ -107,7 +109,7 @@ export class SonosManager {
    * @memberof SonosManager
    */
   public get Devices(): SonosDevice[] {
-    if (this.devices.length === 0) throw new Error('No Devices available!')
+    if (this.devices.length === 0) throw new Error('No Devices available!');
     return this.devices;
   }
 }
