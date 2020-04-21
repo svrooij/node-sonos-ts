@@ -180,7 +180,12 @@
     },
   "MusicServicesService": {
     "Description": "External music services",
-    "File": "music-services.service.ts"
+    "File": "music-services.service.ts",
+    "Methods": {
+      "ListAvailableServices": {
+        "Description": "Load music service list (xml), see ListAndParseAvailableServices() for parsed version."
+      }
+    }
   },
   "QPlayService": {
     "Description": "",

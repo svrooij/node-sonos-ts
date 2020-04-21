@@ -2,13 +2,12 @@ import { EventEmitter } from 'events';
 import StrictEventEmitter from 'strict-event-emitter-types';
 import SonosDeviceBase from './sonos-device-base';
 import {
-  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent,
+  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService,
 } from './services';
 import {
   PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, PlayNotificationOptionsBase, StrongSonosEvents,
 } from './models';
 import { AsyncHelper } from './helpers/async-helper';
-import XmlHelper from './helpers/xml-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
@@ -229,25 +228,14 @@ export default class SonosDevice extends SonosDeviceBase {
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
   }
 
-  private allMusicServices?: any[];
-
   /**
    * Load all available music services
    *
-   * @returns {(Promise<any[] | undefined>)}
+   * @returns {(Promise<MusicService>)}
    * @memberof SonosDevice
    */
-  public async MusicServicesList(): Promise<any[] | undefined> {
-    if (this.allMusicServices === undefined) {
-      const resp = await this.MusicServicesService.ListAvailableServices();
-      const musicServiceList = XmlHelper.DecodeAndParseXml(resp.AvailableServiceDescriptorList, '');
-      if (musicServiceList.Services && Array.isArray(musicServiceList.Services.Service)) {
-        this.allMusicServices = musicServiceList.Services.Service;
-        return this.allMusicServices;
-      }
-      throw new Error('Music list could not be downloaded');
-    }
-    return this.allMusicServices;
+  public async MusicServicesList(): Promise<Array<MusicService>> {
+    return this.MusicServicesService.ListAndParseAvailableServices(true);
   }
 
   private deviceId?: string;
@@ -270,7 +258,7 @@ export default class SonosDevice extends SonosDeviceBase {
     if (service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)');
 
     return new SmapiClient({
-      name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id,
+      name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id.toString(),
     });
   }
 

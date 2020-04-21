@@ -5122,7 +5122,8 @@
         {
           "name": "ListAvailableServices",
           "responseType": "ListAvailableServicesResponse",
-          "parameters": []
+          "parameters": [],
+          "description": "Load music service list (xml), see ListAndParseAvailableServices() for parsed version."
         },
         {
           "name": "UpdateAvailableServices",

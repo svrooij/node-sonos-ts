@@ -1,6 +1,6 @@
 import nock from 'nock';
 import TtsHelper from '../../src/helpers/tts-helper';
-import { expect, assert}  from 'chai';
+import { expect }  from 'chai';
 
 describe('TtsHelper', () => {
   describe('GetTtsUriFromEndpoint()', () => {

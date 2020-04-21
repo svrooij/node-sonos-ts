@@ -34,23 +34,32 @@ export class TestHelpers {
   }
 
   static mockAlarmListResponse() {
-    const responseBody = fs.readFileSync(path.join(__dirname, 'services', 'responses', 'alarm-service.ListAlarms.xml')).toString()
-    TestHelpers.mockRequest('/AlarmClock/Control',
+    TestHelpers.mockSoapRequestWithFile('/AlarmClock/Control',
       '"urn:schemas-upnp-org:service:AlarmClock:1#ListAlarms"',
       '<u:ListAlarms xmlns:u="urn:schemas-upnp-org:service:AlarmClock:1"></u:ListAlarms>',
       'ListAlarmsResponse',
       'AlarmClock',
-      responseBody
+      ['services', 'responses', 'alarm-service.ListAlarms.xml']
     );
   }
 
   static mockZoneGroupState() {
-    const responseBody = fs.readFileSync(path.join(__dirname, 'services', 'responses', 'zone-group.GroupState.xml')).toString()
-    TestHelpers.mockRequest('/ZoneGroupTopology/Control',
+    TestHelpers.mockSoapRequestWithFile('/ZoneGroupTopology/Control',
       '"urn:schemas-upnp-org:service:ZoneGroupTopology:1#GetZoneGroupState"',
       '<u:GetZoneGroupState xmlns:u="urn:schemas-upnp-org:service:ZoneGroupTopology:1"></u:GetZoneGroupState>',
       'GetZoneGroupStateResponse',
       'ZoneGroupTopology',
+      ['services', 'responses', 'zone-group.GroupState.xml']
+    );
+  }
+
+  static mockSoapRequestWithFile(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, bodyFileParts: string[]) {
+    const responseBody = fs.readFileSync(path.join(__dirname, ...bodyFileParts)).toString()
+    TestHelpers.mockRequest(endpoint,
+      action,
+      requestBody,
+      responseTag,
+      responseService,
       responseBody
     );
   }
