@@ -105,4 +105,8 @@ export default class SonosEventListener {
     }
     this.subscriptions[sid] = service;
   }
+
+  public StopListener(): void {
+    this.server?.close();
+  }
 }

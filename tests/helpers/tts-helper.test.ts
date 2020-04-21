@@ -1,6 +1,6 @@
 import nock from 'nock';
+import { expect } from 'chai';
 import TtsHelper from '../../src/helpers/tts-helper';
-import { expect }  from 'chai';
 
 describe('TtsHelper', () => {
   describe('GetTtsUriFromEndpoint()', () => {
@@ -13,7 +13,7 @@ describe('TtsHelper', () => {
     });
 
     it('requests uri', async () => {
-      const endpoint = 'http://localhost/tts-endpoint'
+      const endpoint = 'http://localhost/tts-endpoint';
       const text = 'Er staat iemand aan de voordeur';
       const lang = 'nl-nl';
       const gender = 'male';
@@ -24,13 +24,13 @@ describe('TtsHelper', () => {
       nock('http://localhost', { reqheaders: { 'Content-type': 'application/json' } })
         .post('/tts-endpoint', reqBody)
         .reply(200, respBody);
-      
+
       const result = await TtsHelper.GetTtsUriFromEndpoint(endpoint, text, lang, gender);
       expect(result).to.be.eq(resultUri);
     });
 
     it('preferes cdn uri', async () => {
-      const endpoint = 'http://localhost/tts-endpoint'
+      const endpoint = 'http://localhost/tts-endpoint';
       const text = 'Someone at the frontdoor';
       const lang = 'en-us';
       const gender = 'female';
@@ -42,13 +42,13 @@ describe('TtsHelper', () => {
       nock('http://localhost', { reqheaders: { 'Content-type': 'application/json' } })
         .post('/tts-endpoint', reqBody)
         .reply(200, respBody);
-      
+
       const result = await TtsHelper.GetTtsUriFromEndpoint(endpoint, text, lang, gender);
       expect(result).to.be.eq(cdnUri);
-    })
+    });
 
     it('throws http error', async () => {
-      const endpoint = 'http://localhost/tts-endpoint'
+      const endpoint = 'http://localhost/tts-endpoint';
       const text = 'Someone at the frontdoor';
       const lang = 'en-us';
       const gender = 'female';
@@ -57,9 +57,9 @@ describe('TtsHelper', () => {
       nock('http://localhost', { reqheaders: { 'Content-type': 'application/json' } })
         .post('/tts-endpoint', reqBody)
         .reply(400, '');
-      
+
       try {
-        const result = await TtsHelper.GetTtsUriFromEndpoint(endpoint, text, lang, gender);
+        await TtsHelper.GetTtsUriFromEndpoint(endpoint, text, lang, gender);
       } catch (error) {
         expect(error).to.not.be.null;
         expect(error).have.property('Action', 'GetTtsUriFromEndpoint');
@@ -67,6 +67,6 @@ describe('TtsHelper', () => {
         return;
       }
       expect(false).to.be.true; // This should not be reached.
-    })
-  })
-})
+    });
+  });
+});

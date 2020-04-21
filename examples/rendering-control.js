@@ -9,7 +9,11 @@ const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 // sonos.RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: 1 }).catch(console.error)
 
 // Night mode status
-sonos.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' }).then(resp => console.log(resp.CurrentValue))
+// sonos.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' }).then(resp => console.log(resp.CurrentValue))
 
-// Speech enhancement status
-sonos.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' }).then(resp => console.log(resp.CurrentValue))
+// // Speech enhancement status
+// sonos.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' }).then(resp => console.log(resp.CurrentValue))
+
+// sonos.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' }).then(console.log)
+
+sonos.AVTransportService.GetPositionInfo().then(console.log)

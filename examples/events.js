@@ -1,4 +1,4 @@
-const SonosDevice = require('../lib/sonos-device').SonosDevice
+const SonosDevice = require('../lib/').SonosDevice
 const ServiceEvents = require('../lib/models/sonos-events').ServiceEvents
 
 const kantoor = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56', 1400, 'RINCON_000Esecret1400')

@@ -1,10 +1,26 @@
-import { expect }  from 'chai'
-import nock from 'nock'
+import { expect } from 'chai';
 
-import { TestHelpers } from '../test-helpers'
-import { MusicServicesService } from '../../src/services/music-services.service'
+import { TestHelpers } from '../test-helpers';
+import { MusicServicesService } from '../../src/services/music-services.service';
 
 describe('MusicServicesService', () => {
+  describe('GetSessionId', () => {
+    it('sends correct request', async () => {
+      TestHelpers.mockRequest('/MusicServices/Control',
+        '"urn:schemas-upnp-org:service:MusicServices:1#GetSessionId"',
+        '<u:GetSessionId xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"><ServiceId>10</ServiceId><Username>testuser</Username></u:GetSessionId>',
+        'GetSessionIdResponse',
+        'MusicServices',
+        '<SessionId>38</SessionsId>');
+
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
+
+      const result = await service.GetSessionId({ ServiceId: 10, Username: 'testuser' });
+      expect(result).to.be.an('object');
+      expect(result).to.have.property('SessionId', 38);
+    });
+  });
+
   describe('ListAndParseAvailableServices', () => {
     it('parses correctly and caching works', async () => {
       TestHelpers.mockSoapRequestWithFile('/MusicServices/Control',
@@ -12,10 +28,9 @@ describe('MusicServicesService', () => {
         '<u:ListAvailableServices xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"></u:ListAvailableServices>',
         'ListAvailableServicesResponse',
         'MusicServices',
-        ['services', 'responses', 'music-services.ListAvailableServices.xml']
-      );
+        ['services', 'responses', 'music-services.ListAvailableServices.xml']);
 
-      const service = new MusicServicesService(TestHelpers.testHost, 1400)
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
 
       const result = await service.ListAndParseAvailableServices(true);
       expect(result).to.be.an('array');
@@ -30,7 +45,21 @@ describe('MusicServicesService', () => {
       const cachedResult = await service.ListAndParseAvailableServices(true);
       expect(cachedResult).to.be.an('array');
       expect(cachedResult).to.have.lengthOf(70);
-    })
-  })
-})
+    });
+  });
 
+  describe('UpdateAvailableServices', () => {
+    it('sends correct request', async () => {
+      TestHelpers.mockRequest('/MusicServices/Control',
+        '"urn:schemas-upnp-org:service:MusicServices:1#UpdateAvailableServices"',
+        '<u:UpdateAvailableServices xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"></u:UpdateAvailableServices>',
+        'UpdateAvailableServicesResponse',
+        'MusicServices');
+
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
+
+      const result = await service.UpdateAvailableServices();
+      expect(result).to.be.true;
+    });
+  });
+});

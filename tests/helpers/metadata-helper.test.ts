@@ -1,7 +1,7 @@
+import { expect, assert } from 'chai';
 import MetadataHelper from '../../src/helpers/metadata-helper';
-import { expect, assert}  from 'chai';
 
-const GenerateMetadata = require('./legacy-helpers').GenerateMetadata;
+const { GenerateMetadata } = require('./legacy-helpers');
 
 const spotifyTrack = 'spotify:track:6sYJuVcEu4gFHmeTLdHzRz';
 const completeTrackUri = 'x-sonos-spotify:spotify:track:6sYJuVcEu4gFHmeTLdHzRz?sid=9&flags=8224&sn=7';
