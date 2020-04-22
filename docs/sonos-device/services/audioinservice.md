@@ -60,3 +60,23 @@ No parameters
 |:----------|:-----|:------------|
 | **CoordinatorID** | `string` |  |
 
+## AudioInService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.AudioInService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **AudioInService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AudioInputName** | `string` |
+| **Icon** | `string` |
+| **LeftLineInLevel** | `number` |
+| **LineInConnected** | `boolean` |
+| **Playing** | `boolean` |
+| **RightLineInLevel** | `number` |

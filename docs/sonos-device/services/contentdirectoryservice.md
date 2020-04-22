@@ -115,3 +115,32 @@ No parameters
 | **CurrentTagValue** | `string` |  |
 | **NewTagValue** | `string` |  |
 
+## ContentDirectoryService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.ContentDirectoryService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **ContentDirectoryService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **Browseable** | `boolean` |
+| **ContainerUpdateIDs** | `string` |
+| **FavoritePresetsUpdateID** | `string` |
+| **FavoritesUpdateID** | `string` |
+| **RadioFavoritesUpdateID** | `number` |
+| **RadioLocationUpdateID** | `number` |
+| **RecentlyPlayedUpdateID** | `string` |
+| **SavedQueuesUpdateID** | `string` |
+| **SearchCapabilities** | `string` |
+| **ShareIndexInProgress** | `boolean` |
+| **ShareIndexLastError** | `string` |
+| **ShareListUpdateID** | `string` |
+| **SortCapabilities** | `string` |
+| **SystemUpdateID** | `number` |
+| **UserRadioUpdateID** | `string` |

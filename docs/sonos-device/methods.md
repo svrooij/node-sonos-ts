@@ -13,8 +13,8 @@ These methods aren't possible with the generated services.
 - **.AlarmClockService.ListAndParseAlarms()** - List all your alarms
 - **.AlarmClockService.PatchAlarm({ ID: 1, ... })** - Update some properties of one of your alarms.
 - **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator.
-- **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream). See [play-notification.js](./examples/play-notification.js)
-- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source. See [Text-to-Speech](#text-to-speech)
+- **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream). See [notifications](https://svrooij.github.io/node-sonos-ts/sonos-device/notifications-and-tts.html#notifications)
+- **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source. See [Text-to-Speech](https://svrooij.github.io/node-sonos-ts/sonos-device/notifications-and-tts.html#text-to-speech)
 - **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed. This doens't start playback all the time!
 - **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it.
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
@@ -49,7 +49,7 @@ These operations (marked with `*`) are send to the coordinator if the device is 
 
 ## Content
 
-You can also browse content, see [content.js](./examples/content.js), these are actually all shortcuts to the browse method.
+You can also browse content, see [content.js](https://github.com/svrooij/node-sonos-ts/blob/master/examples/content.js), these are actually all shortcuts to the browse method.
 
 - **.GetFavoriteRadioShows()** - Get your favorite radio shows
 - **.GetFavoriteRadioStations()** - Get your favorite radio stations

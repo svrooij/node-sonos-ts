@@ -223,3 +223,48 @@ All methods that require input expect an object with the specified parameters, e
 | **Channel** | `string` |  |
 | **DesiredVolume** | `number` |  |
 
+## RenderingControlService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.RenderingControlService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **RenderingControlService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AudioDelay** | `string` |
+| **AudioDelayLeftRear** | `string` |
+| **AudioDelayRightRear** | `string` |
+| **Bass** | `number` |
+| **DialogLevel** | `string` |
+| **EQValue** | `number` |
+| **HeadphoneConnected** | `boolean` |
+| **LastChange** | `string` |
+| **Loudness** | `boolean` |
+| **MusicSurroundLevel** | `string` |
+| **Mute** | `ChannelValue&lt;boolean&gt;` |
+| **NightMode** | `boolean` |
+| **OutputFixed** | `boolean` |
+| **PresetNameList** | `string` |
+| **RoomCalibrationAvailable** | `boolean` |
+| **RoomCalibrationCalibrationMode** | `string` |
+| **RoomCalibrationCoefficients** | `string` |
+| **RoomCalibrationEnabled** | `boolean` |
+| **RoomCalibrationID** | `string` |
+| **SpeakerSize** | `number` |
+| **SubCrossover** | `string` |
+| **SubEnabled** | `boolean` |
+| **SubGain** | `string` |
+| **SubPolarity** | `string` |
+| **SupportsOutputFixed** | `boolean` |
+| **SurroundEnabled** | `boolean` |
+| **SurroundLevel** | `string` |
+| **SurroundMode** | `string` |
+| **Treble** | `number` |
+| **Volume** | `ChannelValue&lt;number&gt;` |
+| **VolumeDB** | `number` |

@@ -140,3 +140,24 @@ Update an alarm, all parameters are required. Use PatchAlarm where you can updat
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped palyers also play the alarm? |
 
+## AlarmClockService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.AlarmClockService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **AlarmClockService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **AlarmListVersion** | `string` |
+| **DailyIndexRefreshTime** | `string` |
+| **DateFormat** | `string` |
+| **TimeFormat** | `string` |
+| **TimeGeneration** | `number` |
+| **TimeServer** | `string` |
+| **TimeZone** | `string` |

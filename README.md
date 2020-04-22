@@ -4,6 +4,7 @@
 [![npm][badge_npm]][link_npm]
 [![travis][badge_travis]][link_travis]
 [![github issues][badge_issues]][link_issues]
+[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
 A node library to control a sonos device, written in Typescript. See [here](#improvements-over-node-sonos) why I've build it while there already is a sonos library written in node.
@@ -85,7 +86,7 @@ The text-to-speech works as following:
 3. The TTS endpoint returns the url of the mp3.
 4. We call the regular `.PlayNotification({})` command, with the tts url.
 
-You can also set the endpoint with the `SONOS_TTS_ENDPOINT` environment variable, so you don't have to supply it every time.
+You can also set the endpoint with the `SONOS_TTS_ENDPOINT` environment variable, so you don't have to supply it every time. The default language can be set with the environment variable `SONOS_TTS_LANG`.
 
 The server I've build is based on Amazon Polly, but I invite eveybody to build their own if you want to support an other tts service.
 
