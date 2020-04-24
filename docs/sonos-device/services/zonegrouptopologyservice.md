@@ -100,5 +100,5 @@ The **ZoneGroupTopologyService** emits events with these properties. Not all pro
 | **ThirdPartyMediaServersX** | `string` |
 | **ZoneGroupID** | `string` |
 | **ZoneGroupName** | `string` |
-| **ZoneGroupState** | `Array&lt;ZoneGroup&gt;` |
+| **ZoneGroupState** | `Array<ZoneGroup>` |
 | **ZonePlayerUUIDsInGroup** | `string` |

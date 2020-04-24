@@ -247,7 +247,7 @@ The **RenderingControlService** emits events with these properties. Not all prop
 | **LastChange** | `string` |
 | **Loudness** | `boolean` |
 | **MusicSurroundLevel** | `string` |
-| **Mute** | `ChannelValue&lt;boolean&gt;` |
+| **Mute** | `ChannelValue<boolean>` |
 | **NightMode** | `boolean` |
 | **OutputFixed** | `boolean` |
 | **PresetNameList** | `string` |
@@ -266,5 +266,5 @@ The **RenderingControlService** emits events with these properties. Not all prop
 | **SurroundLevel** | `string` |
 | **SurroundMode** | `string` |
 | **Treble** | `number` |
-| **Volume** | `ChannelValue&lt;number&gt;` |
+| **Volume** | `ChannelValue<number>` |
 | **VolumeDB** | `number` |
