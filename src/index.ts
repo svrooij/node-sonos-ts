@@ -1,14 +1,17 @@
+import MetaDataHelper from './helpers/metadata-helper';
 import SonosDevice from './sonos-device';
+import SonosDeviceDiscovery from './sonos-device-discovery';
 import { SonosEvents, ServiceEvents } from './models';
 import SonosManager from './sonos-manager';
-import SonosDeviceDiscovery from './sonos-device-discovery';
+
 import { SmapiClient } from './musicservices/smapi-client';
 
 export {
-  SonosDevice,
-  SonosEvents,
+  MetaDataHelper,
   ServiceEvents,
-  SonosManager,
-  SonosDeviceDiscovery,
   SmapiClient,
+  SonosDevice,
+  SonosDeviceDiscovery,
+  SonosEvents,
+  SonosManager,
 };

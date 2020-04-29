@@ -13,14 +13,14 @@ module.exports =  {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "no-return-await": "off",
-    "import/no-cycle": "off",
     "class-methods-use-this":"off",
+    "import/first": "warn",
+    "import/no-cycle": "off",
+    "import/no-duplicates": "warn",
+    "max-classes-per-file":"off",
     "max-len":"off",
     "no-console": "off",
-    "max-classes-per-file":"off",
-    "import/first": "warn",
-    "import/no-duplicates": "warn",
+    "no-return-await": "off",
   },
   overrides: [
     {

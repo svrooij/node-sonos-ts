@@ -1,15 +1,14 @@
-name: Deploy to github packages
+name: Build and test
 
 on:
   push:
     branches:
       - master
       - development
-    tags:
-    - '*'
+  pull_request:
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
