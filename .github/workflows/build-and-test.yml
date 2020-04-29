@@ -5,8 +5,7 @@ on:
     branches:
       - master
       - development
-    tags:
-    - '*'
+  pull_request:
 
 jobs:
   build-and-test:
