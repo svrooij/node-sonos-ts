@@ -1,4 +1,4 @@
-name: Deploy to github packages
+name: Build and test
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
     - '*'
 
 jobs:
-  build-and-deploy:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
