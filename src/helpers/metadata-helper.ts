@@ -185,32 +185,44 @@ export default class MetadataHelper {
         return track;
       }
       if (parts[1] === 'album') {
-        track.TrackUri = `x-rincon-cpcontainer:0004206c${spotifyUri}`;
+        track.TrackUri = `x-rincon-cpcontainer:1004206c${spotifyUri}?sid=9&flags=8300&sn=7`;
         track.ItemId = `0004206c${spotifyUri}`;
         track.UpnpClass = 'object.container.album.musicAlbum';
         return track;
       }
+
+      if (parts[1] === 'artistRadio') {
+        track.TrackUri = `x-sonosapi-radio:${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `100c206c${spotifyUri}`;
+        track.Title = 'Artist radio';
+        track.UpnpClass = 'object.item.audioItem.audioBroadcast.#artistRadio';
+        track.ParentId = `10052064${spotifyUri.replace('artistRadio', 'artist')}`;
+        return track;
+      }
+
       if (parts[1] === 'artistTopTracks') {
-        track.TrackUri = `x-rincon-cpcontainer:000e206c${spotifyUri}`;
-        track.ItemId = `000e206c${spotifyUri}`;
+        track.TrackUri = `x-rincon-cpcontainer:100e206c${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `100e206c${spotifyUri}`;
+        track.ParentId = `10052064${spotifyUri.replace('artistTopTracks', 'artist')}`;
         track.UpnpClass = 'object.container.playlistContainer';
         return track;
       }
+
+      if (parts[1] === 'playlist') {
+        track.TrackUri = `x-rincon-cpcontainer:1006206${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `10062a6c${spotifyUri}`;
+        track.Title = 'Spotify playlist';
+        track.UpnpClass = 'object.container.playlistContainer';
+        track.ParentId = '10fe2664playlists';
+        return track;
+      }
+
       if (parts[1] === 'user') {
         track.TrackUri = `x-rincon-cpcontainer:10062a6c${spotifyUri}?sid=9&flags=10860&sn=7`;
         track.ItemId = `10062a6c${spotifyUri}`;
         track.Title = 'User\'s playlist';
         track.UpnpClass = 'object.container.playlistContainer';
         track.ParentId = '10082664playlists';
-        return track;
-      }
-
-      if (parts[1] === 'artistRadio') {
-        track.TrackUri = `x-sonosapi-radio:${spotifyUri}?sid=12&flags=8300&sn=5`;
-        track.ItemId = `10062a6c${spotifyUri}`;
-        track.Title = 'Artist radio';
-        track.UpnpClass = 'object.item.audioItem.audioBroadcast.#artistRadio';
-        track.ParentId = `10052064${spotifyUri.replace('artistRadio', 'artist')}`;
         return track;
       }
     }

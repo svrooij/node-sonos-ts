@@ -9,13 +9,13 @@ nav_order: 1
 
 These methods aren't possible with the generated services.
 
-- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, metadata is guessed.
+- **.AddUriToQueue('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Add a track to be next track in the queue, [metadata](#metadata) is guessed.
 - **.AlarmClockService.ListAndParseAlarms()** - List all your alarms
 - **.AlarmClockService.PatchAlarm({ ID: 1, ... })** - Update some properties of one of your alarms.
 - **.JoinGroup('Office')** - Join an other device by it's name. Will lookup the correct coordinator.
 - **.PlayNotification({})** - Play a single url and revert back to previous music source (playlist/radiostream). See [notifications](https://svrooij.github.io/node-sonos-ts/sonos-device/notifications-and-tts.html#notifications)
 - **.PlayTTS({})** - Generate mp3 based on text, play and revert back to previous music source. See [Text-to-Speech](https://svrooij.github.io/node-sonos-ts/sonos-device/notifications-and-tts.html#text-to-speech)
-- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, metadata is guessed. This doens't start playback all the time!
+- **.SetAVTransportURI('spotify:track:0GiWi4EkPduFWHQyhiKpRB')** - Set playback to this url, [metadata](#metadata) is guessed. This doens't start playback all the time!
 - **.SwitchToLineIn()** - Some devices have a line-in. Use this command to switch to it.
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
 - **.SwitchToTV()** - On your playbar you can use this to switch to TV input.
@@ -55,3 +55,22 @@ You can also browse content, see [content.js](https://github.com/svrooij/node-so
 - **.GetFavoriteRadioStations()** - Get your favorite radio stations
 - **.GetFavorites()** - Get your favorite songs
 - **.GetQueue()** - Get the current queue.
+
+## Metadata
+
+This library can guess the required metadata for certain track uri's. This is done by the [MetadataHelper](https://github.com/svrooij/node-sonos-ts/blob/master/src/helpers/metadata-helper.ts). The "guessed" metadata is tested [here](https://github.com/svrooij/node-sonos-ts/blob/master/tests/helpers/metadata-helper.test.ts). If you want to extend this you'll need Wireshark. Set it up to monitor `port 1400`, execute the required action in the sonos app (on the same pc as wireshark) and look for `POST /MediaRenderer/AVTransport/Control`.
+
+Currently supported url's for metadata guessing:
+
+- `spotify:track:0GiWi4EkPduFWHQyhiKpRB` - Regular spotify track.
+- `spotify:artistRadio:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist radio (has to be added to queue).
+- `spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist top tracks (has to be added to queue).
+- `spotify:album:5c4y5oD0jCAVHJNusKpy4d` - Spotify album (has to be added to queue).
+- `spotify:playlist:37i9dQZF1DXcx1szy2g67M` - Spotify playlist (has to be added to queue).
+- `radio:s113577` - Tunein radio station.
+
+This library will guess the metadata automatically for the following methods, but you can also use the **MetadataHelper**, yourself.
+
+- `sonosDevice.AddUriToQueue(...)` - Adding track to queue.
+- `sonosDevice.SetAVTransportURI(...)` - Switch transport (cannot be used to play 'containers' like playlists, albums, ...)
+- `sonosDevice.PlayNotification({...})` - Play a songs as notification (no containers).
