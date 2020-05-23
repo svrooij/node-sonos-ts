@@ -449,23 +449,29 @@ describe('SonosDevice', () => {
 
   describe('SwitchTo..', () => {
     it('SwitchToLineIn sends correct command', async () => {
-      const deviceID = 'RINCON_not_a_real_ID';
+      TestHelpers.mockRequest('/DeviceProperties/Control',
+        '"urn:schemas-upnp-org:service:DeviceProperties:1#GetZoneInfo"',
+        '<u:GetZoneInfo xmlns:u="urn:schemas-upnp-org:service:DeviceProperties:1"></u:GetZoneInfo>',
+        'GetZoneInfoResponse',
+        'DeviceProperties',
+        '<SerialNumber>00-FF-FF-FF-FF-BC:A</SerialNumber><SoftwareVersion>56.0-76060</SoftwareVersion><DisplaySoftwareVersion>11.1</DisplaySoftwareVersion><HardwareVersion>1.16.4.1-2</HardwareVersion><IPAddress>192.168.2.30</IPAddress><MACAddress>00:FF:FF:FF:FF:BC</MACAddress><CopyrightInfo>© 2003-2019, Sonos, Inc. All rights reserved.</CopyrightInfo><ExtraInfo>OTP: 1.1.1(1-16-4-zp5s-0.5)</ExtraInfo><HTAudioIn>0</HTAudioIn><Flags>1</Flags>'
+      );
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-stream:RINCON_not_a_real_ID01400</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-stream:RINCON_00FFFFFFFFBC01400</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
-      const device = new SonosDevice(TestHelpers.testHost, 1400, deviceID);
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
 
       const result = await device.SwitchToLineIn();
       expect(result).to.be.eq(true);
     });
     it('SwitchToQueue sends correct command', async () => {
-      const deviceID = 'RINCON_not_a_real_ID';
+      const deviceID = 'RINCON_00FFFFFFFFBC01400';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-queue:RINCON_not_a_real_ID01400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-queue:RINCON_00FFFFFFFFBC01400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
@@ -475,10 +481,10 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
     it('SwitchToTV sends correct command', async () => {
-      const deviceID = 'RINCON_not_a_real_ID';
+      const deviceID = 'RINCON_00FFFFFFFFBC01400';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:RINCON_not_a_real_ID01400%3aspdiff</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:RINCON_00FFFFFFFFBC01400%3aspdiff</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
