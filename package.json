@@ -34,8 +34,8 @@
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/debug": "^4.1.5",
-    "@types/jest": "^25.2.1",
-    "@types/node-fetch": "^2.5.6",
+    "@types/jest": "^25.2.3",
+    "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^2.28.0",
     "@typescript-eslint/parser": "^2.28.0",
     "chai": "^4.2.0",
@@ -43,17 +43,17 @@
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-plugin-import": "^2.20.2",
     "handlebars": "^4.7.6",
-    "jest": "^25.3.0",
+    "jest": "^26.0.1",
     "nock": "^12.0.3",
     "semantic-release": "^15.4.0",
-    "ts-jest": "^25.4.0",
-    "ts-node": "^8.8.2",
-    "typedoc": "^0.16.10",
+    "ts-jest": "^26.0.0",
+    "ts-node": "^8.10.1",
+    "typedoc": "^0.17.7",
     "typescript": "^3.8.3"
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "fast-xml-parser": "^3.16.0",
+    "fast-xml-parser": "^3.17.2",
     "guid-typescript": "^1.0.9",
     "node-fetch": "^2.6.0",
     "strict-event-emitter-types": "^2.0.0"
