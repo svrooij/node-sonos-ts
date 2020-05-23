@@ -11,7 +11,7 @@ export class SonosGroup {
 
   constructor(zoneGroup: ZoneGroup) {
     this.Members = zoneGroup.members.map((m) => new SonosDevice(m.host, m.port, m.uuid));
-    this.Coordinator = this.Members.find((m) => m.uuid === zoneGroup.coordinator.uuid) as SonosDevice;
+    this.Coordinator = this.Members.find((m) => m.Uuid === zoneGroup.coordinator.uuid) as SonosDevice;
     this.Name = zoneGroup.name;
   }
 }
