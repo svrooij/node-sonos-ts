@@ -81,5 +81,20 @@ describe('RenderingControlService', () => {
     })
   })
 
+  describe('Event parsing', () => {
+    it('works', (done) => {
+      process.env.SONOS_DISABLE_EVENTS = 'true'
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      service.Events.once('serviceEvent', (data) => {
+        expect(data.Volume?.Master).to.be.eq(15)
+        expect(data.Mute?.Master).to.be.false
+        expect(data.PresetNameList).to.be.eq('FactoryDefaults')
+        done()
+      })
 
+      
+      service.ParseEvent('<e:propertyset xmlns:e="urn:schemas-upnp-org:event-1-0"><e:property><LastChange>&lt;Event xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/RCS/&quot;&gt;&lt;InstanceID val=&quot;0&quot;&gt;&lt;Volume channel=&quot;Master&quot; val=&quot;15&quot;/&gt;&lt;Volume channel=&quot;LF&quot; val=&quot;100&quot;/&gt;&lt;Volume channel=&quot;RF&quot; val=&quot;100&quot;/&gt;&lt;Mute channel=&quot;Master&quot; val=&quot;0&quot;/&gt;&lt;Mute channel=&quot;LF&quot; val=&quot;0&quot;/&gt;&lt;Mute channel=&quot;RF&quot; val=&quot;0&quot;/&gt;&lt;Bass val=&quot;0&quot;/&gt;&lt;Treble val=&quot;0&quot;/&gt;&lt;Loudness channel=&quot;Master&quot; val=&quot;1&quot;/&gt;&lt;OutputFixed val=&quot;0&quot;/&gt;&lt;HeadphoneConnected val=&quot;0&quot;/&gt;&lt;SpeakerSize val=&quot;3&quot;/&gt;&lt;SubGain val=&quot;0&quot;/&gt;&lt;SubCrossover val=&quot;0&quot;/&gt;&lt;SubPolarity val=&quot;0&quot;/&gt;&lt;SubEnabled val=&quot;1&quot;/&gt;&lt;SonarEnabled val=&quot;1&quot;/&gt;&lt;SonarCalibrationAvailable val=&quot;1&quot;/&gt;&lt;PresetNameList val=&quot;FactoryDefaults&quot;/&gt;&lt;/InstanceID&gt;&lt;/Event&gt;</LastChange></e:property></e:propertyset>');
+      delete process.env.SONOS_DISABLE_EVENTS
+    }, 1)
+  })
 })
