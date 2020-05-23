@@ -40,7 +40,7 @@ export default class SonosDeviceBase {
     return this.debugger;
   }
 
-  public readonly uuid: string;
+  protected uuid: string;
 
   constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
     this.host = host;

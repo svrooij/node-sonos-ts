@@ -228,6 +228,12 @@ export default class SonosDevice extends SonosDeviceBase {
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
   }
 
+  public async LoadUuid(): Promise<string> {
+    const attrinutes = await this.DevicePropertiesService.GetZoneInfo();
+    this.uuid = `RINCON_${attrinutes.MACAddress.replace(/:/g, '')}`;
+    return this.uuid;
+  }
+
   /**
    * Load all available music services
    *
@@ -411,6 +417,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToLineIn(): Promise<boolean> {
+    if (!this.uuid.startsWith('RINCON')) {
+      await this.LoadUuid();
+    }
     return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}0${this.port}`, CurrentURIMetaData: '' });
   }
@@ -422,6 +431,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToQueue(): Promise<boolean> {
+    if (!this.uuid.startsWith('RINCON')) {
+      await this.LoadUuid();
+    }
     return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}0${this.port}#0`, CurrentURIMetaData: '' });
   }
@@ -433,6 +445,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToTV(): Promise<boolean> {
+    if (!this.uuid.startsWith('RINCON')) {
+      await this.LoadUuid();
+    }
     return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}0${this.port}:spdiff`, CurrentURIMetaData: '' });
   }

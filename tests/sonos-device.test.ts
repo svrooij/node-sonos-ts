@@ -449,10 +449,10 @@ describe('SonosDevice', () => {
 
   describe('SwitchTo..', () => {
     it('SwitchToLineIn sends correct command', async () => {
-      const deviceID = 'not_a_real_ID';
+      const deviceID = 'RINCON_not_a_real_ID';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-stream:not_a_real_ID01400</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-stream:RINCON_not_a_real_ID01400</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
@@ -462,10 +462,10 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
     it('SwitchToQueue sends correct command', async () => {
-      const deviceID = 'not_a_real_ID';
+      const deviceID = 'RINCON_not_a_real_ID';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-queue:not_a_real_ID01400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-rincon-queue:RINCON_not_a_real_ID01400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
@@ -475,10 +475,10 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
     it('SwitchToTV sends correct command', async () => {
-      const deviceID = 'not_a_real_ID';
+      const deviceID = 'RINCON_not_a_real_ID';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:not_a_real_ID01400%3aspdiff</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:RINCON_not_a_real_ID01400%3aspdiff</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );

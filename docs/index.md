@@ -12,11 +12,12 @@ permalink: /
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
 [![npm][badge_npm]][link_npm]
+[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
 [![travis][badge_travis]][link_travis]
 [![github issues][badge_issues]][link_issues]
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](//github.com/semantic-release/semantic-release)
 
-This library is in no way connected to [Sonos](https://en.wikipedia.org/wiki/Sonos). It's just a library to control their speakers from TypeScript (or Node).
+This library is in no way connected to [Sonos](//en.wikipedia.org/wiki/Sonos). It's just a library to control their speakers from TypeScript (or Node).
 
 ## Key features
 
@@ -33,8 +34,8 @@ This library is in no way connected to [Sonos](https://en.wikipedia.org/wiki/Son
 
 |Name|Maintainer|Description|
 |----|----------|----------|
-|[sonos2mqtt](https://github.com/svrooij/sonos2mqtt)|[@svrooij](https://github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
-|[sonos-cli](https://github.com/svrooij/sonos-cli)|[@svrooij](https://github.com/svrooij)|An experimental command line interface for your sonos devices.|
+|[sonos2mqtt](//github.com/svrooij/sonos2mqtt)|[@svrooij](//github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
+|[sonos-cli](//github.com/svrooij/sonos-cli)|[@svrooij](//github.com/svrooij)|An experimental command line interface for your sonos devices.|
 
 Also using this library, but not in the list? Send a PR.
 
