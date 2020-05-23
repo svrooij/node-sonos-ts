@@ -31,7 +31,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * Creates an instance of SonosDevice.
    * @param {string} host the ip or host of the speaker you want to add
    * @param {number} [port=1400] the port (is always 1400)
-   * @param {(string | undefined)} [uuid=undefined] the uuid of the speaker, is set by the SonosManager by default
+   * @param {(string | undefined)} [uuid=undefined] the uuid of the speaker, is set by the SonosManager. like RINCON_macaddres01400, used in some commands
    * @param {(string | undefined)} [name=undefined] the name of the speaker, is set by the SonosManager by default
    * @param {({coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined)} [groupConfig=undefined] groupConfig is used by the SonosManager to setup group change events.
    * @memberof SonosDevice
@@ -228,9 +228,11 @@ export default class SonosDevice extends SonosDeviceBase {
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
   }
 
-  public async LoadUuid(): Promise<string> {
-    const attrinutes = await this.DevicePropertiesService.GetZoneInfo();
-    this.uuid = `RINCON_${attrinutes.MACAddress.replace(/:/g, '')}`;
+  public async LoadUuid(force = false): Promise<string> {
+    if (!this.uuid.startsWith('RINCON') || force) {
+      const attrinutes = await this.DevicePropertiesService.GetZoneInfo();
+      this.uuid = `RINCON_${attrinutes.MACAddress.replace(/:/g, '')}0${this.port}`;
+    }
     return this.uuid;
   }
 
@@ -417,11 +419,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToLineIn(): Promise<boolean> {
-    if (!this.uuid.startsWith('RINCON')) {
-      await this.LoadUuid();
-    }
+    await this.LoadUuid();
     return await this.AVTransportService
-      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}0${this.port}`, CurrentURIMetaData: '' });
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}`, CurrentURIMetaData: '' });
   }
 
   /**
@@ -431,11 +431,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToQueue(): Promise<boolean> {
-    if (!this.uuid.startsWith('RINCON')) {
-      await this.LoadUuid();
-    }
+    await this.LoadUuid();
     return await this.AVTransportService
-      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}0${this.port}#0`, CurrentURIMetaData: '' });
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}#0`, CurrentURIMetaData: '' });
   }
 
   /**
@@ -445,11 +443,9 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SwitchToTV(): Promise<boolean> {
-    if (!this.uuid.startsWith('RINCON')) {
-      await this.LoadUuid();
-    }
+    await this.LoadUuid();
     return await this.AVTransportService
-      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}0${this.port}:spdiff`, CurrentURIMetaData: '' });
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}:spdiff`, CurrentURIMetaData: '' });
   }
 
   /**

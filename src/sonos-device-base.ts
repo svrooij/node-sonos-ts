@@ -42,6 +42,13 @@ export default class SonosDeviceBase {
 
   protected uuid: string;
 
+  /**
+   *Creates an instance of SonosDeviceBase.
+   * @param {string} host The IP of the speaker
+   * @param {number} [port=1400] The port, always 1400
+   * @param {string} [uuid=Guid.create().toString()] The UUID of the speaker like RINCON_macaddres01400, used in some commands.
+   * @memberof SonosDeviceBase
+   */
   constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
     this.host = host;
     this.port = port;

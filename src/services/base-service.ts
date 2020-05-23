@@ -313,7 +313,7 @@ export default abstract class BaseService <TServiceEvent> {
       });
       this.events.on('newListener', async () => {
         this.debug('Listener added');
-        if (this.sid === undefined) {
+        if (this.sid === undefined && process.env.SONOS_DISABLE_EVENTS === undefined) {
           this.debug('Subscribing to events');
           const sid = await this.subscribeForEvents();
           SonosEventListener.DefaultInstance.RegisterSubscription(sid, this);
