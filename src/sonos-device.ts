@@ -45,7 +45,7 @@ export default class SonosDevice extends SonosDeviceBase {
         this.coordinator = groupConfig.coordinator;
       }
       if (uuid) {
-        groupConfig.managerEvents.on(uuid, this.handleGroupUpdate);
+        groupConfig.managerEvents.on(uuid, this.boundHandleGroupUpdate);
       }
     }
   }
@@ -566,7 +566,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Group stuff
-  private _handleGroupUpdate = this.handleGroupUpdate.bind(this);
+  private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
   private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string}): void {
     if (data.coordinator && data.coordinator.uuid !== this.uuid && (!this.coordinator || this.coordinator.uuid !== data.coordinator.uuid)) {
