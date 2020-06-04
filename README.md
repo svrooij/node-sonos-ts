@@ -2,7 +2,7 @@
 
 [![Support me on Github][badge_sponsor]][link_sponsor]
 [![npm][badge_npm]][link_npm]
-[![travis][badge_travis]][link_travis]
+[![Run tests and publish][badge_build]][link_build]
 [![github issues][badge_issues]][link_issues]
 [![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
@@ -201,9 +201,9 @@ the original library. That wouldn't exists without the [contributors](https://gi
 [badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts
 [badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos
-[badge_travis]: https://img.shields.io/travis/svrooij/node-sonos-ts
+[badge_build]: https://github.com/svrooij/node-sonos-ts/workflows/Run%20tests%20and%20publish/badge.svg
 
 [link_sponsor]: https://github.com/sponsors/svrooij
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
 [link_npm]: https://www.npmjs.com/package/@svrooij/sonos
-[link_travis]: https://travis-ci.org/svrooij/node-sonos-ts
+[link_build]: https://github.com/svrooij/node-sonos-ts/actions
