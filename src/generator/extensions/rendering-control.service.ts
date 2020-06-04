@@ -4,7 +4,7 @@ export class RenderingControlService extends RenderingControlServiceBase {
     if (name === 'Mute') {
       const output = {} as ChannelValue<boolean>;
       (originalValue as Array<any>).forEach((v) => {
-        output[v.channel] = v.val === 1;
+        output[v.channel] = v.val === '1';
       });
       return output;
     }
