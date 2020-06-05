@@ -462,6 +462,11 @@ describe('SonosDevice', () => {
         'SetAVTransportURIResponse',
         'AVTransport'
       );
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
+        'PlayResponse',
+        'AVTransport');
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
       const result = await device.SwitchToLineIn();
@@ -484,10 +489,15 @@ describe('SonosDevice', () => {
       const deviceID = 'RINCON_00FFFFFFFFBC01400';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:RINCON_00FFFFFFFFBC01400%3aspdiff</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonos-htastream:RINCON_00FFFFFFFFBC01400:spdif</CurrentURI><CurrentURIMetaData></CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport'
       );
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
+        'PlayResponse',
+        'AVTransport');
       const device = new SonosDevice(TestHelpers.testHost, 1400, deviceID);
 
       var result = await device.SwitchToTV();

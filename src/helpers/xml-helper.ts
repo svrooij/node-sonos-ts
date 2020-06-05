@@ -80,6 +80,7 @@ export default class XmlHelper {
 
   static EncodeTrackUri(trackUri: string): string {
     if (trackUri.startsWith('http')) return encodeURI(trackUri);
+    if (trackUri.startsWith('x-sonos-hta')) return trackUri;
 
     // Part below needs some work.
     const index = trackUri.indexOf(':') + 1;
