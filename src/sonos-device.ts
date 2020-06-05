@@ -420,8 +420,9 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SwitchToLineIn(): Promise<boolean> {
     await this.LoadUuid();
-    return await this.AVTransportService
+    await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}`, CurrentURIMetaData: '' });
+    return await this.Play();
   }
 
   /**
@@ -444,8 +445,9 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SwitchToTV(): Promise<boolean> {
     await this.LoadUuid();
-    return await this.AVTransportService
-      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}:spdiff`, CurrentURIMetaData: '' });
+    await this.AVTransportService
+      .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}:spdif`, CurrentURIMetaData: '' });
+    return await this.Play();
   }
 
   /**
