@@ -287,7 +287,7 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('PlayNotification(%o)', options);
 
     if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
-      throw new Error('Delay (if specified) should be between 1 and 3000');
+      throw new Error('Delay (if specified) should be between 1 and 4000');
     }
 
     const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;

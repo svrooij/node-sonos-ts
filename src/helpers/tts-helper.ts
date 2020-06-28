@@ -43,17 +43,16 @@ export default class TtsHelper {
   static async TtsOptionsToNotification(options: PlayTtsOptions): Promise<PlayNotificationOptions | undefined> {
     const endpoint = options.endpoint ?? process.env.SONOS_TTS_ENDPOINT;
     if (endpoint === undefined) {
-      throw new Error('No TTS Endpoint defined, check the documentation.');
+      throw new Error('TTS endpoint is required, check the documentation.');
     }
 
     const lang = options.lang || process.env.SONOS_TTS_LANG;
     if (lang === undefined || lang === '') {
-      throw new Error('TTS Language is required.');
+      throw new Error('TTS lang is required.');
     }
 
-    if (options.text === '' || options.lang === '') {
-      this.debug('Cancelling TTS, not all required parameters are set');
-      return undefined;
+    if (options.text === '' || options.text === undefined || options.text.length < 2) {
+      throw new Error('TTS text is required, duh!');
     }
 
     const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender, options.name);
