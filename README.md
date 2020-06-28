@@ -24,6 +24,8 @@ A node library to control a sonos device, written in Typescript. See [here](#imp
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
 
+See **[Documentation](https://svrooij.github.io/node-sonos-ts/getting-started.html)**
+
 [![Documentation](./img/book.png)](https://svrooij.github.io/node-sonos-ts/getting-started.html)
 
 ## Use Sonos manager

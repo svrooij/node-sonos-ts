@@ -5,7 +5,13 @@ on:
     branches:
       - master
       - beta
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
   pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
 
 jobs:
   build-and-test:
