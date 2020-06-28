@@ -5,7 +5,7 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, PlayNotificationOptionsBase, StrongSonosEvents,
+  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, StrongSonosEvents,
 } from './models';
 import { AsyncHelper } from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
@@ -365,6 +365,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {string} options.lang Language to request tts file for.
    * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
    * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
@@ -375,27 +376,10 @@ export default class SonosDevice extends SonosDeviceBase {
   public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
     this.debug('PlayTTS(%o)', options);
 
-    const endpoint = options.endpoint ?? process.env.SONOS_TTS_ENDPOINT;
-    if (endpoint === undefined) {
-      throw new Error('No TTS Endpoint defined, check the documentation.');
-    }
-
-    const lang = options.lang || process.env.SONOS_TTS_LANG;
-    if (lang === undefined || lang === '') {
-      throw new Error('TTS Language is required.');
-    }
-
-    if (options.text === '' || options.lang === '') {
-      this.debug('Cancelling TTS, not all required parameters are set');
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+    if (typeof (notificationOptions) === 'undefined') {
       return false;
     }
-
-    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender);
-
-    // Typescript way to convert objects, someone got a better way?
-    const notificationOptions: PlayNotificationOptions = options as PlayNotificationOptionsBase as PlayNotificationOptions;
-    notificationOptions.trackUri = uri;
-    notificationOptions.timeout = notificationOptions.timeout ?? 120;
 
     return await this.PlayNotification(notificationOptions);
   }

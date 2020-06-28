@@ -73,4 +73,31 @@ sonos.PlayTTS({
   })
 ```
 
+## Notifications on all speakers
+
+If you use the **SonosManager** (the recommended way to use this library), you can also play a notification on all groups by sending the same command to the SonosManager instead of the individual speaker.
+You can also use the manager for text-to-speech, `manager.PlayTTS(..)`
+
+```js
+const SonosManager = require('../lib').SonosManager
+const manager = new SonosManager()
+
+// Do device discovery
+// manager.InitializeWithDiscovery(10)
+// Connect known device
+manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
+  .then(console.log)
+  .then(() => {
+    return manager.PlayNotification({
+      trackUri: 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', // Can be any uri sonos understands
+      // trackUri: 'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', // Cached text-to-speech file.
+      onlyWhenPlaying: true, // make sure that it only plays when you're listening to music. So it won't play when you're sleeping.
+      timeout: 10, // If the events don't work (to see when it stops playing) or if you turned on a stream, it will revert back after this amount of seconds.
+      volume: 15, // Set the volume for the notification (and revert back afterwards)
+      delayMs: 700 // Pause between commands in ms, (when sonos fails to play notification often).
+    })
+  })
+  .catch(console.error)
+```
+
 [link_sponsor]: https://github.com/sponsors/svrooij
