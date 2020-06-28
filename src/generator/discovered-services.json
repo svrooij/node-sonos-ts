@@ -3018,8 +3018,8 @@
   {
     "serviceType": "urn:schemas-upnp-org:service:ConnectionManager:1",
     "serviceId": "urn:upnp-org:serviceId:ConnectionManager",
-    "controlURL": "/MediaServer/ConnectionManager/Control",
-    "eventSubURL": "/MediaServer/ConnectionManager/Event",
+    "controlURL": "/MediaRenderer/ConnectionManager/Control",
+    "eventSubURL": "/MediaRenderer/ConnectionManager/Event",
     "SCPDURL": "/xml/ConnectionManager1.xml",
     "name": "ConnectionManager",
     "svcName": "ConnectionManagerService",
@@ -5077,6 +5077,205 @@
         },
         {
           "name": "GroupVolumeChangeable",
+          "ttype": "boolean"
+        }
+      ]
+    }
+  },
+  {
+    "serviceType": "urn:schemas-upnp-org:service:HTControl:1",
+    "serviceId": "urn:upnp-org:serviceId:HTControl",
+    "controlURL": "/HTControl/Control",
+    "eventSubURL": "/HTControl/Event",
+    "SCPDURL": "/xml/HTControl1.xml",
+    "name": "HTControl",
+    "svcName": "HTControlService",
+    "docs": {
+      "Description": "",
+      "File": "ht-control.service.ts"
+    },
+    "parsed": {
+      "imports": [],
+      "methods": [
+        {
+          "name": "CommitLearnedIRCodes",
+          "parameters": [
+            {
+              "name": "Name",
+              "relatedStateVariable": {
+                "name": "A_ARG_TYPE_IRRemoteName",
+                "dataType": "string",
+                "ttype": "string"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetIRRepeaterState",
+          "responseType": "GetIRRepeaterStateResponse",
+          "parameters": []
+        },
+        {
+          "name": "GetLEDFeedbackState",
+          "responseType": "GetLEDFeedbackStateResponse",
+          "parameters": []
+        },
+        {
+          "name": "IdentifyIRRemote",
+          "parameters": [
+            {
+              "name": "Timeout",
+              "relatedStateVariable": {
+                "name": "A_ARG_TYPE_Timeout",
+                "dataType": "ui4",
+                "allowedValueRange": {
+                  "minimum": 0,
+                  "maximum": 60000
+                },
+                "ttype": "number"
+              }
+            }
+          ]
+        },
+        {
+          "name": "IsRemoteConfigured",
+          "responseType": "IsRemoteConfiguredResponse",
+          "parameters": []
+        },
+        {
+          "name": "LearnIRCode",
+          "parameters": [
+            {
+              "name": "IRCode",
+              "relatedStateVariable": {
+                "name": "A_ARG_TYPE_IRCode",
+                "dataType": "string",
+                "ttype": "string"
+              }
+            },
+            {
+              "name": "Timeout",
+              "relatedStateVariable": {
+                "name": "A_ARG_TYPE_Timeout",
+                "dataType": "ui4",
+                "allowedValueRange": {
+                  "minimum": 0,
+                  "maximum": 60000
+                },
+                "ttype": "number"
+              }
+            }
+          ]
+        },
+        {
+          "name": "SetIRRepeaterState",
+          "parameters": [
+            {
+              "name": "DesiredIRRepeaterState",
+              "relatedStateVariable": {
+                "name": "IRRepeaterState",
+                "dataType": "string",
+                "allowedValueList": {
+                  "allowedValue": [
+                    "On",
+                    "Off",
+                    "Disabled"
+                  ]
+                },
+                "ttype": "string"
+              }
+            }
+          ]
+        },
+        {
+          "name": "SetLEDFeedbackState",
+          "parameters": [
+            {
+              "name": "LEDFeedbackState",
+              "relatedStateVariable": {
+                "name": "LEDFeedbackState",
+                "dataType": "string",
+                "allowedValueList": {
+                  "allowedValue": [
+                    "On",
+                    "Off"
+                  ]
+                },
+                "ttype": "string"
+              }
+            }
+          ]
+        }
+      ],
+      "responses": [
+        {
+          "name": "GetIRRepeaterStateResponse",
+          "properties": [
+            {
+              "name": "CurrentIRRepeaterState",
+              "relatedStateVariable": {
+                "name": "IRRepeaterState",
+                "dataType": "string",
+                "allowedValueList": {
+                  "allowedValue": [
+                    "On",
+                    "Off",
+                    "Disabled"
+                  ]
+                },
+                "ttype": "string"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GetLEDFeedbackStateResponse",
+          "properties": [
+            {
+              "name": "LEDFeedbackState",
+              "relatedStateVariable": {
+                "name": "LEDFeedbackState",
+                "dataType": "string",
+                "allowedValueList": {
+                  "allowedValue": [
+                    "On",
+                    "Off"
+                  ]
+                },
+                "ttype": "string"
+              }
+            }
+          ]
+        },
+        {
+          "name": "IsRemoteConfiguredResponse",
+          "properties": [
+            {
+              "name": "RemoteConfigured",
+              "relatedStateVariable": {
+                "name": "RemoteConfigured",
+                "dataType": "boolean",
+                "ttype": "boolean"
+              }
+            }
+          ]
+        }
+      ],
+      "eventProperties": [
+        {
+          "name": "IRRepeaterState",
+          "ttype": "string"
+        },
+        {
+          "name": "LEDFeedbackState",
+          "ttype": "string"
+        },
+        {
+          "name": "RemoteConfigured",
+          "ttype": "boolean"
+        },
+        {
+          "name": "TOSLinkConnected",
           "ttype": "boolean"
         }
       ]

@@ -11,6 +11,7 @@ import {
   DevicePropertiesService,
   GroupManagementService,
   GroupRenderingControlService,
+  HTControlService,
   MusicServicesService,
   QPlayService,
   QueueService,
@@ -149,6 +150,13 @@ export default class SonosDeviceBase {
   public get GroupRenderingControlService(): GroupRenderingControlService {
     if (this.grouprenderingcontrolservice === undefined) this.grouprenderingcontrolservice = new GroupRenderingControlService(this.host, this.port, this.uuid);
     return this.grouprenderingcontrolservice;
+  }
+
+  private htcontrolservice: HTControlService | undefined;
+
+  public get HTControlService(): HTControlService {
+    if (this.htcontrolservice === undefined) this.htcontrolservice = new HTControlService(this.host, this.port, this.uuid);
+    return this.htcontrolservice;
   }
 
   private musicservicesservice: MusicServicesService | undefined;

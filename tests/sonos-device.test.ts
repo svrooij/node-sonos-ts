@@ -415,6 +415,12 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('can initialize HTControlService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.HTControlService;
+      expect(service).to.be.an('object');
+    });
+
     it('can initialize MusicServicesService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.MusicServicesService;

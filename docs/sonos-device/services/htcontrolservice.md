@@ -63,3 +63,21 @@ No parameters
 |:----------|:-----|:------------|
 | **LEDFeedbackState** | `string` |  |
 
+## HTControlService event
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice('192.168.x.x')
+sonos.HTControlService.Events('serviceEvent', (data) => {
+  console.log(data);
+});
+```
+
+The **HTControlService** emits events with these properties. Not all properties are emitted everytime.
+
+| parameter | type |
+|:----------|:-----|
+| **IRRepeaterState** | `string` |
+| **LEDFeedbackState** | `string` |
+| **RemoteConfigured** | `boolean` |
+| **TOSLinkConnected** | `boolean` |

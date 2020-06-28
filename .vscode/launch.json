@@ -60,9 +60,10 @@
       "name": "Debug generator",
       "program": "${workspaceFolder}/src/generator/service-generator.js",
       "args": [
-        "--generate",
         "--save-description",
-        "--docs"
+        "--docs",
+        "--load-files",
+        "--generate"
       ],
       "console": "integratedTerminal",
       "sourceMaps": true,
