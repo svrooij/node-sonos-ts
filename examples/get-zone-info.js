@@ -18,3 +18,9 @@ sonos.DevicePropertiesService.GetZoneAttributes()
 //     console.log(description)
 //   })
 //   .catch(console.error)
+
+sonos.GetDeviceDescription()
+  .then(properties => {
+    console.log(properties)
+  })
+  .catch(console.error)

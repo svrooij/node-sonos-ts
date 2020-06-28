@@ -1,5 +1,7 @@
 import { EventEmitter } from 'events';
 import StrictEventEmitter from 'strict-event-emitter-types';
+import fetch from 'node-fetch';
+import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService,
@@ -12,6 +14,7 @@ import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
+import DeviceDescription from './models/device-description';
 
 /**
  * Main class to control a single sonos device.
@@ -164,6 +167,48 @@ export default class SonosDevice extends SonosDeviceBase {
     const checkedName = Object.keys(serviceDictionary).find((k) => k.toLowerCase() === serviceName.toLowerCase());
     if (checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
     return undefined;
+  }
+
+  /**
+   * Get the device description
+   *
+   * @returns {Promise<DeviceDescription>}
+   * @memberof SonosDevice
+   */
+  public async GetDeviceDescription(): Promise<DeviceDescription> {
+    const resp = await fetch(`http://${this.Host}:${this.port}/xml/device_description.xml`)
+      .then((response) => {
+        if (response.ok) {
+          return response.text();
+        }
+        throw new Error(`Loading device description failed ${response.status} ${response.statusText}`);
+      });
+    const { root: { device } } = parse(resp);
+    return {
+      manufacturer: device.manufacturer,
+      modelNumber: device.modelNumber,
+      modelDescription: device.modelDescription,
+      modelName: device.modelName,
+      softwareVersion: device.softwareVersion,
+      swGen: device.swGen,
+      hardwareVersion: device.hardwareVersion,
+      serialNumber: device.serialNum,
+      udn: device.UDN,
+      minCompatibleVersion: device.minCompatibleVersion,
+      legacyCompatibleVersion: device.legacyCompatibleVersion,
+      apiVersion: device.apiVersion,
+      minApiVersion: device.minApiVersion,
+      displayVersion: device.displayVersion,
+      extraVersion: device.extraVersion,
+      roomName: device.roomName,
+      displayName: device.displayName,
+      zoneType: device.zoneType,
+      internalSpeakerSize: device.internalSpeakerSize,
+      iconUrl: `http://${this.Host}:${this.port}${device.iconList.icon.url}`,
+      feature1: device.feature1,
+      feature2: device.feature2,
+      feature3: device.feature3,
+    } as DeviceDescription;
   }
 
   /**
