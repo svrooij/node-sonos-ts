@@ -7,6 +7,7 @@ export * from './content-directory.service';
 export * from './device-properties.service';
 export * from './group-management.service';
 export * from './group-rendering-control.service';
+export * from './ht-control.service';
 export * from './music-services.service';
 export * from './q-play.service';
 export * from './queue.service';

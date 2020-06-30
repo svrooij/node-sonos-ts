@@ -9,11 +9,9 @@
     "test": "npm run lint && jest",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
-    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate --docs",
+    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate --docs --load-files",
     "semantic-release": "semantic-release",
-    "prepack": "npm run build",
-    "docs": "typedoc --tsconfig tsconfig.json --toc SonosDevice,SonosManager",
-    "docs-json": "typedoc --tsconfig tsconfig.json --json api.json"
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -42,17 +40,17 @@
     "eslint": "^6.8.0",
     "eslint-config-airbnb-typescript": "^7.2.1",
     "eslint-plugin-import": "^2.20.2",
+    "glob": "^7.1.6",
     "handlebars": "^4.7.6",
-    "jest": "^26.0.1",
+    "jest": "^26.1.0",
     "nock": "^12.0.3",
-    "ts-jest": "^26.0.0",
-    "ts-node": "^8.10.1",
-    "typedoc": "^0.17.7",
+    "ts-jest": "^26.1.1",
+    "ts-node": "^8.10.2",
     "typescript": "^3.8.3"
   },
   "dependencies": {
-    "debug": "^4.1.1",
-    "fast-xml-parser": "^3.17.2",
+    "debug": "4.1.1",
+    "fast-xml-parser": "^3.17.4",
     "guid-typescript": "^1.0.9",
     "node-fetch": "^2.6.0",
     "strict-event-emitter-types": "^2.0.0"

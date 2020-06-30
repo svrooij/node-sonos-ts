@@ -1,8 +1,10 @@
+import debug, { Debugger } from 'debug';
 import { EventEmitter } from 'events';
 import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services';
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
-import { ServiceEvents } from './models';
+import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
+import TtsHelper from './helpers/tts-helper';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
@@ -12,12 +14,15 @@ import { ServiceEvents } from './models';
 export default class SonosManager {
   private readonly events: EventEmitter;
 
+  private readonly debug: Debugger;
+
   private devices: SonosDevice[] = [];
 
   private zoneService: ZoneGroupTopologyService | undefined;
 
   constructor() {
     this.events = new EventEmitter();
+    this.debug = debug('sonos:sonosmanager');
   }
 
   /**
@@ -29,6 +34,7 @@ export default class SonosManager {
    * @memberof SonosManager
    */
   public async InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
+    this.debug('InitializeFromDevice %s', host);
     this.zoneService = new ZoneGroupTopologyService(host, port);
     return await this.Initialize();
   }
@@ -41,15 +47,18 @@ export default class SonosManager {
    * @memberof SonosManager
    */
   public async InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
+    this.debug('InitializeWithDiscovery timeout: %d', timeoutInSeconds);
     const deviceDiscovery = new SonosDeviceDiscovery();
     const player = await deviceDiscovery.SearchOne(timeoutInSeconds);
+    this.debug('Discovery found player with ip: %s', player.host);
     this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
     return await this.Initialize();
   }
 
   private async Initialize(): Promise<boolean> {
+    this.debug('Initialize()');
     const groups = await this.LoadAllGroups();
-    const success = this.InitializeDevices(groups);
+    const success = this.InitializeWithGroups(groups);
     return this.SubscribeForGroupEvents(success);
   }
 
@@ -58,7 +67,7 @@ export default class SonosManager {
     return await this.zoneService.GetParsedZoneGroupState();
   }
 
-  private InitializeDevices(groups: ZoneGroup[]): boolean {
+  private InitializeWithGroups(groups: ZoneGroup[]): boolean {
     groups.forEach((g) => {
       const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events });
       if (this.devices.findIndex((v) => v.Uuid === coordinator.Uuid) === -1) this.devices.push(coordinator);
@@ -111,5 +120,55 @@ export default class SonosManager {
   public get Devices(): SonosDevice[] {
     if (this.devices.length === 0) throw new Error('No Devices available!');
     return this.devices;
+  }
+
+  /**
+   * Play a notification on all groups, without changing the current groups (for now).
+   *
+   * @param {PlayNotificationOptions} options The options
+   * @param {string} options.trackUri The uri of the sound to play as notification, can be every supported sonos uri.
+   * @param {string|Track} [options.metadata] The metadata of the track to play, will be guesses if undefined.
+   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
+   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @returns {Promise<boolean>} Returns true is notification was played (and the state is set back to original)
+   * @memberof SonosManager
+   */
+  public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
+    this.debug('PlayNotification(%o)', options);
+
+    const commands = this.Devices
+      .filter((d) => d.Coordinator.Uuid === d.Uuid)
+      .map((d) => d.PlayNotification(options));
+    return Promise
+      .all(commands)
+      .then((values) => values.some((v) => v));
+  }
+
+  /**
+   * Play text to speech message on all groups, without changing the current groups (for now).
+   *
+   * @param {PlayTtsOptions} options
+   * @param {string} options.text Text to request a TTS file for.
+   * @param {string} options.lang Language to request tts file for.
+   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
+   * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
+   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
+   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @returns {Promise<boolean>} returns true if notification actually played
+   * @memberof SonosDevice
+   */
+  public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTS(%o)', options);
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+    if (typeof (notificationOptions) === 'undefined') {
+      return false;
+    }
+
+    return await this.PlayNotification(notificationOptions);
   }
 }

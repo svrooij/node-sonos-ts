@@ -2,6 +2,7 @@ const fetch = require('node-fetch')
 const parse = require('fast-xml-parser').parse
 const fs = require('fs')
 const path = require('path')
+const glob = require('glob')
 const Handlebars = require('handlebars')
 
 const deviceUrl = `http://${process.env.SONOS_HOST || '192.168.96.56'}:1400`
@@ -44,17 +45,17 @@ const fixDocumentation = function () {
 const deviceDescriptionToServices = function (description) {
   const services = []
   // Device services
-  description.root.device.serviceList.service.forEach(s => services.push(s))
+  description.serviceList.service.forEach(s => services.push(s))
   // Device list services
-  description.root.device.deviceList.device.forEach(d => {
+  description.deviceList.device.forEach(d => {
     d.serviceList.service.forEach(s => services.push(s))
   })
   return services
 }
 
-const getServicesFromDeviceDescription = async function (url) {
+const getDeviceDescription = async function (url) {
   return fetchAndParse(url)
-    .then(deviceDescriptionToServices)
+    .then(resp => resp.root.device)
 }
 
 const serviceIdToName = function (serviceId) {
@@ -279,7 +280,10 @@ const run = async function () {
 
   if (args.indexOf('--sort-docs') > -1) fixDocumentation()
 
-  const serviceList = await getServicesFromDeviceDescription(deviceDescriptionUrl)
+  const description = await getDeviceDescription(deviceDescriptionUrl);
+  console.log('Loading services from %s gen %d', description.modelName, description.swGen);
+
+  const serviceList = await deviceDescriptionToServices(description)
   let allServices = []
   for (let i = 0; i < serviceList.length; i++) {
     let service = await loadService(serviceList[i])
@@ -290,7 +294,46 @@ const run = async function () {
     allServices.push(service)
   }
   allServices = allServices.sort(dynamicCompare('svcName'))
-  if (args.indexOf('--save-description') > -1) fs.writeFileSync(discoveryJsonFile, JSON.stringify(allServices, null, 2))
+  if (args.indexOf('--save-description') > -1) {
+    fs.writeFileSync(discoveryJsonFile, JSON.stringify(allServices, null, 2))
+    // Service file per model.
+    const deviceDescription = {
+      modelNumber: description.modelNumber,
+      modelName: description.modelName,
+      swGen: description.swGen,
+      softwareVersion: description.softwareVersion,
+      services: allServices
+    }
+
+    fs.writeFileSync(
+      path.join(__dirname, `discovered-services.gen${description.swGen}_${description.modelNumber}.json`),
+      JSON.stringify(deviceDescription, null, 2)
+    )
+  }
+
+  if (args.includes('--load-files')) {
+    const files = glob.sync('discovered-services.*_*.json', { cwd: __dirname });
+    files.forEach(file => {
+      const content = JSON.parse(fs.readFileSync(path.join(__dirname, file)))
+      console.log('Adding cached services from %s', content.modelName);
+      content.services.forEach(service => {
+        const index = allServices.findIndex(s => s.svcName === service.svcName);
+        if(index === -1) {
+          allServices.push(service);
+        } else {
+          allServices[index] = service;
+        }
+        
+      })
+    });
+    allServices = allServices.sort(dynamicCompare('svcName'))
+    console.log(files);
+
+    if (args.indexOf('--save-description') > -1) {
+      fs.writeFileSync(discoveryJsonFile, JSON.stringify(allServices, null, 2))
+    }
+  }
+
   if (args.indexOf('--generate') > -1) {
     generateIndexFile(allServices)
     generateBaseFile(allServices)

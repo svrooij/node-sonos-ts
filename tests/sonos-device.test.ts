@@ -240,12 +240,11 @@ describe('SonosDevice', () => {
       );
 
       // // Restart playing
-      // TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
-      //   '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
-      //   '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
-      //   'PlayResponse',
-      //   'AVTransport'
-      // )
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
+        'PlayResponse',
+        'AVTransport');
 
       // Emit the event that normally would be triggered by the sonos event subscription.
       const device = new SonosDevice(TestHelpers.testHost, 1400);
@@ -284,6 +283,19 @@ describe('SonosDevice', () => {
       expect(result).to.be.false;
       SonosEventListener.DefaultInstance.StopListener();
     });
+
+    it('throws error when incorrect delay is specified', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.PlayNotification({
+          trackUri: 'fake',
+          delayMs: 5000
+        })
+      } catch(error) {
+        expect(error).to.not.be.null;
+        expect(error).have.property('message', 'Delay (if specified) should be between 1 and 4000');
+      }
+    })
   });
 
   describe('PlayTTS(...)', () => {
@@ -400,6 +412,12 @@ describe('SonosDevice', () => {
     it('can initialize GroupRenderingControlService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.GroupRenderingControlService;
+      expect(service).to.be.an('object');
+    });
+
+    it('can initialize HTControlService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.HTControlService;
       expect(service).to.be.an('object');
     });
 

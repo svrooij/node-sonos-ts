@@ -31,8 +31,7 @@
         "program": "${workspaceFolder}/node_modules/jest/bin/jest",
       },
       "env": {
-        "SONOS_HOST":"192.168.96.53",
-        "SONOS_TTS_ENDPOINT": "false"
+        "SONOS_HOST":"192.168.96.56"
       },
     },
     {
@@ -53,7 +52,6 @@
       },
       "env": {
         "SONOS_HOST":"192.168.96.56",
-        "SONOS_TTS_ENDPOINT": "false"
       },
     },
     {
@@ -62,9 +60,10 @@
       "name": "Debug generator",
       "program": "${workspaceFolder}/src/generator/service-generator.js",
       "args": [
-        "--generate",
         "--save-description",
-        "--docs"
+        "--docs",
+        "--load-files",
+        "--generate"
       ],
       "console": "integratedTerminal",
       "sourceMaps": true,

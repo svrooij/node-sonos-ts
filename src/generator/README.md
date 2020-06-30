@@ -2,7 +2,7 @@
 
 This folder has all the ingredients to generate the TypeScript classes as used in [@svrooij/sonos](https://www.npmjs.com/package/@svrooij/sonos). It can also be used to generate strong typed sonos libraries for other languages.
 
-This generator uses loads the device description, then uses some user-defined knowlage about the methods and the classes to generate the [discovered-services.json](discovered-services.json) file. So every body can debug the generator (or use the discovery logic for some other platform/output).
+This generator uses loads the device description, then uses some user-defined knowlage about the methods and the classes to generate the [discovered-services.json](discovered-services.json) file. So everybody can debug the generator (or use the discovery logic for some other platform/output).
 With the **discovered-services** loaded, it will generate the [service index](../services/index.ts), all individual [services](../services/) and the [SonosDeviceBase](../sonos-device-base.ts). You shouldn't change these files manually, please change the generator (input) to generate the required result.
 
 Folder content:
@@ -12,6 +12,7 @@ Folder content:
 - `templates/service.template.hbs` - Handlebar template to generate the individual [services](../services/).
 - `templates/sonos-base.template.hbs` - Handlebar template to generate [sonos-device-base.ts](../sonos-device-base.ts).
 - `discovered-services.json` - Intermediate output from the service generator. (should not be manually changed)
+- `discovered-services.genX_XX.json` - Cached services from several models. (should not be manually changed)
 - `documentation.json` - User-generated documentation about the available services.
 
 ## Documentation file
@@ -59,7 +60,7 @@ The **user-generated** [documentation file](documentation.json) has the followin
 ## Running the generator
 
 - `SONOS_HOST=192.168.x.x npm run gen-srv` in root of repository.
-- `SONOS_HOST=192.168.x.x node service-generator.js --save-description --generate` in generator folder.
+- `SONOS_HOST=192.168.x.x node service-generator.js --save-description --load-files --generate` in generator folder.
 - **Debug generator** task in Visual Studio Code (be sure to change the sonos host in the [launch file](../../.vscode/launch.json)).
 
 ## Use generator in other project

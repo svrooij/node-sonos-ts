@@ -1,17 +1,20 @@
 import { EventEmitter } from 'events';
 import StrictEventEmitter from 'strict-event-emitter-types';
+import fetch from 'node-fetch';
+import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, PlayNotificationOptionsBase, StrongSonosEvents,
+  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, StrongSonosEvents,
 } from './models';
 import { AsyncHelper } from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
+import DeviceDescription from './models/device-description';
 
 /**
  * Main class to control a single sonos device.
@@ -167,6 +170,48 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * Get the device description
+   *
+   * @returns {Promise<DeviceDescription>}
+   * @memberof SonosDevice
+   */
+  public async GetDeviceDescription(): Promise<DeviceDescription> {
+    const resp = await fetch(`http://${this.Host}:${this.port}/xml/device_description.xml`)
+      .then((response) => {
+        if (response.ok) {
+          return response.text();
+        }
+        throw new Error(`Loading device description failed ${response.status} ${response.statusText}`);
+      });
+    const { root: { device } } = parse(resp);
+    return {
+      manufacturer: device.manufacturer,
+      modelNumber: device.modelNumber,
+      modelDescription: device.modelDescription,
+      modelName: device.modelName,
+      softwareVersion: device.softwareVersion,
+      swGen: device.swGen,
+      hardwareVersion: device.hardwareVersion,
+      serialNumber: device.serialNum,
+      udn: device.UDN,
+      minCompatibleVersion: device.minCompatibleVersion,
+      legacyCompatibleVersion: device.legacyCompatibleVersion,
+      apiVersion: device.apiVersion,
+      minApiVersion: device.minApiVersion,
+      displayVersion: device.displayVersion,
+      extraVersion: device.extraVersion,
+      roomName: device.roomName,
+      displayName: device.displayName,
+      zoneType: device.zoneType,
+      internalSpeakerSize: device.internalSpeakerSize,
+      iconUrl: `http://${this.Host}:${this.port}${device.iconList.icon.url}`,
+      feature1: device.feature1,
+      feature2: device.feature2,
+      feature3: device.feature3,
+    } as DeviceDescription;
+  }
+
+  /**
    * Get your favorite radio shows, just a browse shortcut.
    *
    * @returns {Promise<BrowseResponse>}
@@ -287,7 +332,7 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('PlayNotification(%o)', options);
 
     if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
-      throw new Error('Delay (if specified) should be between 1 and 3000');
+      throw new Error('Delay (if specified) should be between 1 and 4000');
     }
 
     const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
@@ -365,6 +410,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {string} options.lang Language to request tts file for.
    * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
    * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
@@ -375,27 +421,10 @@ export default class SonosDevice extends SonosDeviceBase {
   public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
     this.debug('PlayTTS(%o)', options);
 
-    const endpoint = options.endpoint ?? process.env.SONOS_TTS_ENDPOINT;
-    if (endpoint === undefined) {
-      throw new Error('No TTS Endpoint defined, check the documentation.');
-    }
-
-    const lang = options.lang || process.env.SONOS_TTS_LANG;
-    if (lang === undefined || lang === '') {
-      throw new Error('TTS Language is required.');
-    }
-
-    if (options.text === '' || options.lang === '') {
-      this.debug('Cancelling TTS, not all required parameters are set');
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+    if (typeof (notificationOptions) === 'undefined') {
       return false;
     }
-
-    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender);
-
-    // Typescript way to convert objects, someone got a better way?
-    const notificationOptions: PlayNotificationOptions = options as PlayNotificationOptionsBase as PlayNotificationOptions;
-    notificationOptions.trackUri = uri;
-    notificationOptions.timeout = notificationOptions.timeout ?? 120;
 
     return await this.PlayNotification(notificationOptions);
   }

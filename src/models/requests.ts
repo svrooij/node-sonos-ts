@@ -81,6 +81,13 @@ export interface PlayTtsOptions extends PlayNotificationOptionsBase {
    * @memberof PlayTtsOptions
    */
   gender?: string;
+  /**
+   * Name of the voice, used in some implementations.
+   *
+   * @type {string}
+   * @memberof PlayTtsOptions
+   */
+  name?: string;
 }
 
 export interface TtsResponse {
