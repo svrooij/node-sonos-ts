@@ -22,54 +22,76 @@ All methods that require input expect an object with the specified parameters, e
 
 ### Next
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### Pause
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### Play
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Speed** | `string` |  |
 
 ### Previous
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### SetVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredVolume** | `number` |  |
 
 ### StartTransmission
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CoordinatorID** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTransportSettings** | `string` |  |
 
 ### Stop
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### StopTransmission
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CoordinatorID** | `string` |  |
 
 ## VirtualLineInService event

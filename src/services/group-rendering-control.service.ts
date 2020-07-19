@@ -21,7 +21,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   /**
    * Get if the group is muted
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupMuteResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
@@ -29,7 +29,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   /**
    * Get the average group volume
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
@@ -37,7 +37,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   /**
    * (Un-/)Mute the entire group
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {boolean} input.DesiredMute - True for mute, false for unmute
    */
   async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
@@ -46,7 +46,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   /**
    * Change group volume, players will be changed proportionally
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {number} input.DesiredVolume - New volume
    */
   async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
@@ -55,7 +55,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   /**
    * Relativly change group volume
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {number} input.Adjustment - number between -100 / +100
    */
   async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):

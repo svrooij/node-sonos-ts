@@ -135,7 +135,8 @@ const getRelatedVariable = function (service, name) {
 const addMethodsToService = function (service) {
   service.data.actions.forEach(action => {
     const args = action.argumentList && action.argumentList.argument ? forceArray(action.argumentList.argument) : []
-    const hasOutput = args.findIndex(a => a.direction === 'out') > -1
+    const outArgs = args.filter(a => a.direction === 'out')
+    const hasOutput = outArgs.length > 0
     const inArgs = args.filter(a => a.direction === 'in')
     let docs = (service.docs.Methods && service.docs.Methods[action.name])
       ? service.docs.Methods[action.name]
@@ -152,11 +153,27 @@ const addMethodsToService = function (service) {
         if (docs.Params && docs.Params[a.name]) {
           a.description = docs.Params[a.name]
         } else if (a.name === 'InstanceID') {
-          a.description = 'InstanceID meaning unknown, just set to 0'
+          a.description = 'Sonos only serves one Instance always set to 0';
         }
         return a
       }),
+
       defaultInput: inArgs.length === 1 && inArgs[0].name === 'InstanceID' ? ' = { InstanceID: 0 }' : undefined
+    }
+
+    if (outArgs.length > 0) {
+      actionObject.outParameters = outArgs.map(a => {
+        let par = {
+          name: a.name
+        };
+        if (a.relatedStateVariable) {
+          par.relatedStateVariable = getRelatedVariable(service, a.relatedStateVariable)
+        }
+        if (docs.Params && docs.Params[a.name]) {
+          par.description = docs.Params[a.name]
+        }
+        return par
+      })
     }
 
     if (docs.Description) {

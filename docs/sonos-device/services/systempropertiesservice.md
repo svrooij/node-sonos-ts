@@ -22,13 +22,23 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddAccountX
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 | **AccountPassword** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AccountUDN** | `string` |  |
+
 ### AddOAuthAccountX
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -41,11 +51,20 @@ All methods that require input expect an object with the specified parameters, e
 | **UserIdHashCode** | `string` |  |
 | **AccountTier** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AccountUDN** | `string` |  |
+| **AccountNickname** | `string` |  |
+
 ### DoPostUpdateTasks
 
-No parameters
+No input parameters
 
 ### EditAccountMd
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -55,6 +74,8 @@ No parameters
 
 ### EditAccountPasswordX
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
@@ -63,27 +84,53 @@ No parameters
 
 ### EnableRDM
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **RDMValue** | `boolean` |  |
 
 ### GetRDM
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RDMValue** | `boolean` |  |
 
 ### GetString
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **VariableName** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **StringValue** | `string` |  |
+
 ### GetWebCode
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **WebCode** | `string` |  |
+
 ### ProvisionCredentialedTrialAccountX
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -91,7 +138,16 @@ No parameters
 | **AccountID** | `string` |  |
 | **AccountPassword** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **IsExpired** | `boolean` |  |
+| **AccountUDN** | `string` |  |
+
 ### RefreshAccountCredentialsX
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -102,11 +158,15 @@ No parameters
 
 ### Remove
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **VariableName** | `string` |  |
 
 ### RemoveAccount
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -114,6 +174,8 @@ No parameters
 | **AccountID** | `string` |  |
 
 ### ReplaceAccountX
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -124,11 +186,19 @@ No parameters
 | **AccountKey** | `string` |  |
 | **OAuthDeviceID** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewAccountUDN** | `string` |  |
+
 ### ResetThirdPartyCredentials
 
-No parameters
+No input parameters
 
 ### SetAccountNicknameX
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -136,6 +206,8 @@ No parameters
 | **AccountNickname** | `string` |  |
 
 ### SetString
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

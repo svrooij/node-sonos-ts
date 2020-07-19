@@ -22,17 +22,44 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetCurrentConnectionIDs
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **ConnectionIDs** | `string` |  |
 
 ### GetCurrentConnectionInfo
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ConnectionID** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RcsID** | `number` |  |
+| **AVTransportID** | `number` |  |
+| **ProtocolInfo** | `string` |  |
+| **PeerConnectionManager** | `string` |  |
+| **PeerConnectionID** | `number` |  |
+| **Direction** | `string` |  |
+| **Status** | `string` |  |
+
 ### GetProtocolInfo
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Source** | `string` |  |
+| **Sink** | `string` |  |
 
 ## ConnectionManagerService event
 

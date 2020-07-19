@@ -14,15 +14,16 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 title: Sonos
-email: github@svrooij.nl
+email: 1292510+svrooij@users.noreply.github.com
 # description: >- # this means to ignore newlines until "baseurl:"
 #   Write an awesome description for your new site here. You can edit this
 #   line in _config.yml. It will appear in your document head meta (for
 #   Google search results) and in your feed.xml site description.
 baseurl: "/node-sonos-ts" # the subpath of your site, e.g. /blog
-url: "https://svrooij.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://svrooij.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: svrooij
 github_username:  svrooij
+repository: svrooij/node-sonos-ts
 
 # Build settings
 markdown: kramdown
@@ -55,3 +56,13 @@ footer_content: "Copyright &copy; 2020 Stephan van Rooij. Distributed by an <a h
 
 toc:
   max_levels: 2
+
+# Footer "Edit this page on GitHub" link text
+gh_edit_link: true # show or hide edit this page link
+gh_edit_link_text: "Source on Github"
+gh_edit_repository: "https://github.com/svrooij/node-sonos-ts" # the github URL for your repo
+gh_edit_branch: "master/docs" # the branch that your docs is served from
+gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
+
+ga_tracking: UA-172036806-1
+ga_tracking_anonymize_ip: true

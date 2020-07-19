@@ -26,50 +26,80 @@ All methods that require input expect an object with the specified parameters, e
 
 Get if the group is muted
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentMute** | `boolean` |  |
 
 ### GetGroupVolume
 
 Get the average group volume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentVolume** | `number` |  |
 
 ### SetGroupMute
 
 (Un-/)Mute the entire group
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredMute** | `boolean` | True for mute, false for unmute |
 
 ### SetGroupVolume
 
 Change group volume, players will be changed proportionally
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredVolume** | `number` | New volume |
 
 ### SetRelativeGroupVolume
 
 Relativly change group volume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Adjustment** | `number` | number between -100 / +100 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewVolume** | `number` |  |
 
 ### SnapshotGroupVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ## GroupRenderingControlService event
 

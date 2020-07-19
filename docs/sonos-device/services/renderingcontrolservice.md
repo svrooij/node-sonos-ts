@@ -24,202 +24,354 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetBass
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentBass** | `number` |  |
 
 ### GetEQ
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **EQType** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentValue** | `number` |  |
 
 ### GetHeadphoneConnected
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentHeadphoneConnected** | `boolean` |  |
 
 ### GetLoudness
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentLoudness** | `boolean` |  |
 
 ### GetMute
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentMute** | `boolean` |  |
 
 ### GetOutputFixed
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentFixed** | `boolean` |  |
 
 ### GetRoomCalibrationStatus
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RoomCalibrationEnabled** | `boolean` |  |
+| **RoomCalibrationAvailable** | `boolean` |  |
 
 ### GetSupportsOutputFixed
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentSupportsFixed** | `boolean` |  |
 
 ### GetTreble
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTreble** | `number` |  |
 
 ### GetVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentVolume** | `number` |  |
 
 ### GetVolumeDB
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentVolume** | `number` |  |
 
 ### GetVolumeDBRange
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **MinValue** | `number` |  |
+| **MaxValue** | `number` |  |
 
 ### RampToVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **RampType** | `string` |  |
 | **DesiredVolume** | `number` |  |
 | **ResetVolumeAfter** | `boolean` |  |
 | **ProgramURI** | `string` |  |
 
-### ResetBasicEQ
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **RampTime** | `number` |  |
+
+### ResetBasicEQ
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Bass** | `number` |  |
+| **Treble** | `number` |  |
+| **Loudness** | `boolean` |  |
+| **LeftVolume** | `number` |  |
+| **RightVolume** | `number` |  |
 
 ### ResetExtEQ
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **EQType** | `string` |  |
 
 ### RestoreVolumePriorToRamp
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 
 ### SetBass
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredBass** | `number` |  |
 
 ### SetChannelMap
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **ChannelMap** | `string` |  |
 
 ### SetEQ
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **EQType** | `string` |  |
 | **DesiredValue** | `number` |  |
 
 ### SetLoudness
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **DesiredLoudness** | `boolean` |  |
 
 ### SetMute
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **DesiredMute** | `boolean` |  |
 
 ### SetOutputFixed
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredFixed** | `boolean` |  |
 
 ### SetRelativeVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **Adjustment** | `number` |  |
 
-### SetRoomCalibrationStatus
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **NewVolume** | `number` |  |
+
+### SetRoomCalibrationStatus
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **RoomCalibrationEnabled** | `boolean` |  |
 
 ### SetRoomCalibrationX
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CalibrationID** | `string` |  |
 | **Coefficients** | `string` |  |
 | **CalibrationMode** | `string` |  |
 
 ### SetTreble
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DesiredTreble** | `number` |  |
 
 ### SetVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **DesiredVolume** | `number` |  |
 
 ### SetVolumeDB
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
 | **DesiredVolume** | `number` |  |
 

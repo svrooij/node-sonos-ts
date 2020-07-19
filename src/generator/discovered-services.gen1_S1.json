@@ -33,7 +33,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "UpdateID",
@@ -99,6 +99,40 @@
                   "ttype": "boolean"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "FirstTrackNumberEnqueued",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TrackNumber",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "QueueUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -112,7 +146,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "EnqueuedURI",
@@ -146,6 +180,32 @@
                   "ttype": "boolean"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "FirstTrackNumberEnqueued",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TrackNumber",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -159,7 +219,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "ObjectID",
@@ -201,6 +261,32 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "QueueUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -213,7 +299,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -229,10 +315,28 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "DelegatedGroupCoordinatorID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_PlayerID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "NewGroupID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_GroupID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Leave the current group and revert to a single player."
           },
           {
@@ -245,7 +349,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CurrentCoordinator",
@@ -347,7 +451,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CurrentCoordinator",
@@ -457,7 +561,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CurrentCoordinator",
@@ -503,7 +607,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "NewTransportSettings",
@@ -533,7 +637,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "NewSleepTimerDuration",
@@ -558,7 +662,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Title",
@@ -584,6 +688,40 @@
                   "ttype": "string | Track"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AssignedObjectID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ObjectID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "QueueUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -596,7 +734,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "NewCoordinator",
@@ -626,7 +764,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -642,10 +780,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CrossfadeMode",
+                "relatedStateVariable": {
+                  "name": "CurrentCrossfadeMode",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetCurrentTransportActions",
@@ -658,10 +806,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "Actions",
+                "relatedStateVariable": {
+                  "name": "CurrentTransportActions",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetDeviceCapabilities",
@@ -674,10 +832,36 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "PlayMedia",
+                "relatedStateVariable": {
+                  "name": "PossiblePlaybackStorageMedia",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "RecMedia",
+                "relatedStateVariable": {
+                  "name": "PossibleRecordStorageMedia",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "RecQualityModes",
+                "relatedStateVariable": {
+                  "name": "PossibleRecordQualityModes",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetMediaInfo",
@@ -690,10 +874,97 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "NrTracks",
+                "relatedStateVariable": {
+                  "name": "NumberOfTracks",
+                  "dataType": "ui4",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 65535
+                  },
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "MediaDuration",
+                "relatedStateVariable": {
+                  "name": "CurrentMediaDuration",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentURI",
+                "relatedStateVariable": {
+                  "name": "AVTransportURI",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentURIMetaData",
+                "relatedStateVariable": {
+                  "name": "AVTransportURIMetaData",
+                  "dataType": "string",
+                  "ttype": "string | Track"
+                }
+              },
+              {
+                "name": "NextURI",
+                "relatedStateVariable": {
+                  "name": "NextAVTransportURI",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "NextURIMetaData",
+                "relatedStateVariable": {
+                  "name": "NextAVTransportURIMetaData",
+                  "dataType": "string",
+                  "ttype": "string | Track"
+                }
+              },
+              {
+                "name": "PlayMedium",
+                "relatedStateVariable": {
+                  "name": "PlaybackStorageMedium",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "NONE",
+                      "NETWORK"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "RecordMedium",
+                "relatedStateVariable": {
+                  "name": "RecordStorageMedium",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": "NONE"
+                  },
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "WriteStatus",
+                "relatedStateVariable": {
+                  "name": "RecordMediumWriteStatus",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Get information about the current playing media (queue)"
           },
           {
@@ -707,10 +978,81 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "Track",
+                "relatedStateVariable": {
+                  "name": "CurrentTrack",
+                  "dataType": "ui4",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 65535,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "TrackDuration",
+                "relatedStateVariable": {
+                  "name": "CurrentTrackDuration",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "TrackMetaData",
+                "relatedStateVariable": {
+                  "name": "CurrentTrackMetaData",
+                  "dataType": "string",
+                  "ttype": "string | Track"
+                }
+              },
+              {
+                "name": "TrackURI",
+                "relatedStateVariable": {
+                  "name": "CurrentTrackURI",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "RelTime",
+                "relatedStateVariable": {
+                  "name": "RelativeTimePosition",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "AbsTime",
+                "relatedStateVariable": {
+                  "name": "AbsoluteTimePosition",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "RelCount",
+                "relatedStateVariable": {
+                  "name": "RelativeCounterPosition",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AbsCount",
+                "relatedStateVariable": {
+                  "name": "AbsoluteCounterPosition",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              }
+            ],
             "description": "Get information about current position (position in queue and Time in current song)"
           },
           {
@@ -724,10 +1066,28 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "RemainingSleepTimerDuration",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ISO8601Time",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentSleepTimerGeneration",
+                "relatedStateVariable": {
+                  "name": "SleepTimerGeneration",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
             "description": "Get Time left on sleeptimer"
           },
           {
@@ -741,10 +1101,36 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "AlarmID",
+                "relatedStateVariable": {
+                  "name": "AlarmIDRunning",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "GroupID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_GroupID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "LoggedStartTime",
+                "relatedStateVariable": {
+                  "name": "AlarmLoggedStartTime",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetTransportInfo",
@@ -757,10 +1143,47 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentTransportState",
+                "relatedStateVariable": {
+                  "name": "TransportState",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "STOPPED",
+                      "PLAYING",
+                      "PAUSED_PLAYBACK",
+                      "TRANSITIONING"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentTransportStatus",
+                "relatedStateVariable": {
+                  "name": "TransportStatus",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentSpeed",
+                "relatedStateVariable": {
+                  "name": "TransportPlaySpeed",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": 1
+                  },
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetTransportSettings",
@@ -773,10 +1196,39 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "PlayMode",
+                "relatedStateVariable": {
+                  "name": "CurrentPlayMode",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "NORMAL",
+                      "REPEAT_ALL",
+                      "REPEAT_ONE",
+                      "SHUFFLE_NOREPEAT",
+                      "SHUFFLE",
+                      "SHUFFLE_REPEAT_ONE"
+                    ]
+                  },
+                  "defaultValue": "NORMAL",
+                  "ttype": "PlayMode"
+                }
+              },
+              {
+                "name": "RecQualityMode",
+                "relatedStateVariable": {
+                  "name": "CurrentRecordQualityMode",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "Next",
@@ -788,7 +1240,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
@@ -804,7 +1256,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DeletedURI",
@@ -826,7 +1278,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
@@ -842,7 +1294,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Speed",
@@ -868,7 +1320,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
@@ -884,7 +1336,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -899,7 +1351,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "ObjectID",
@@ -930,7 +1382,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "UpdateID",
@@ -956,6 +1408,16 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "QueueUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -968,7 +1430,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "StartingIndex",
@@ -1015,7 +1477,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "ObjectID",
@@ -1049,6 +1511,32 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "QueueLengthChange",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracksChange",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "QueueUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -1061,7 +1549,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "AlarmID",
@@ -1151,7 +1639,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Title",
@@ -1163,6 +1651,16 @@
               },
               {
                 "name": "ObjectID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ObjectID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "AssignedObjectID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_ObjectID",
                   "dataType": "string",
@@ -1181,7 +1679,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Unit",
@@ -1221,7 +1719,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CurrentURI",
@@ -1254,7 +1752,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CrossfadeMode",
@@ -1276,7 +1774,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "NextURI",
@@ -1306,7 +1804,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "NewPlayMode",
@@ -1341,7 +1839,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Duration",
@@ -1365,7 +1863,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "ProgramURI",
@@ -1419,7 +1917,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
@@ -2306,6 +2804,16 @@
                 "description": "Should grouped palyers also play the alarm?"
               }
             ],
+            "outParameters": [
+              {
+                "name": "AssignedID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AlarmID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
             "description": "Create a single alarm, all properties are required"
           },
           {
@@ -2326,12 +2834,40 @@
           {
             "name": "GetDailyIndexRefreshTime",
             "responseType": "GetDailyIndexRefreshTimeResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentDailyIndexRefreshTime",
+                "relatedStateVariable": {
+                  "name": "DailyIndexRefreshTime",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetFormat",
             "responseType": "GetFormatResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentTimeFormat",
+                "relatedStateVariable": {
+                  "name": "TimeFormat",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentDateFormat",
+                "relatedStateVariable": {
+                  "name": "DateFormat",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetHouseholdTimeAtStamp",
@@ -2345,27 +2881,125 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "HouseholdUTCTime",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ISO8601Time",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "GetTimeNow",
             "responseType": "GetTimeNowResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentUTCTime",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ISO8601Time",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentLocalTime",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ISO8601Time",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentTimeZone",
+                "relatedStateVariable": {
+                  "name": "TimeZone",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentTimeGeneration",
+                "relatedStateVariable": {
+                  "name": "TimeGeneration",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "GetTimeServer",
             "responseType": "GetTimeServerResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentTimeServer",
+                "relatedStateVariable": {
+                  "name": "TimeServer",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetTimeZone",
             "responseType": "GetTimeZoneResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "Index",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TimeZoneIndex",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AutoAdjustDst",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TimeZoneAutoAdjustDst",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetTimeZoneAndRule",
             "responseType": "GetTimeZoneAndRuleResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "Index",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TimeZoneIndex",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AutoAdjustDst",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TimeZoneAutoAdjustDst",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              },
+              {
+                "name": "CurrentTimeZone",
+                "relatedStateVariable": {
+                  "name": "TimeZone",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetTimeZoneRule",
@@ -2379,12 +3013,40 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "TimeZone",
+                "relatedStateVariable": {
+                  "name": "TimeZone",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "ListAlarms",
             "responseType": "ListAlarmsResponse",
             "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentAlarmList",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AlarmList",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentAlarmListVersion",
+                "relatedStateVariable": {
+                  "name": "AlarmListVersion",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Get the AlarmList as XML, use ListAndParseAlarms for parsed version"
           },
           {
@@ -2845,7 +3507,17 @@
           {
             "name": "GetCurrentConnectionIDs",
             "responseType": "GetCurrentConnectionIDsResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "ConnectionIDs",
+                "relatedStateVariable": {
+                  "name": "CurrentConnectionIDs",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetCurrentConnectionInfo",
@@ -2859,12 +3531,103 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "RcsID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_RcsID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AVTransportID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AVTransportID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "ProtocolInfo",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "PeerConnectionManager",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionManager",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "PeerConnectionID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "Direction",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Direction",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "Input",
+                      "Output"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "Status",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionStatus",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "OK",
+                      "ContentFormatMismatch",
+                      "InsufficientBandwidth",
+                      "UnreliableChannel",
+                      "Unknown"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "GetProtocolInfo",
             "responseType": "GetProtocolInfoResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "Source",
+                "relatedStateVariable": {
+                  "name": "SourceProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "Sink",
+                "relatedStateVariable": {
+                  "name": "SinkProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           }
         ],
         "responses": [
@@ -3013,7 +3776,17 @@
           {
             "name": "GetCurrentConnectionIDs",
             "responseType": "GetCurrentConnectionIDsResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "ConnectionIDs",
+                "relatedStateVariable": {
+                  "name": "CurrentConnectionIDs",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetCurrentConnectionInfo",
@@ -3027,12 +3800,103 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "RcsID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_RcsID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "AVTransportID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AVTransportID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "ProtocolInfo",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "PeerConnectionManager",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionManager",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "PeerConnectionID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionID",
+                  "dataType": "i4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "Direction",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Direction",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "Input",
+                      "Output"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "Status",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConnectionStatus",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "OK",
+                      "ContentFormatMismatch",
+                      "InsufficientBandwidth",
+                      "UnreliableChannel",
+                      "Unknown"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "GetProtocolInfo",
             "responseType": "GetProtocolInfoResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "Source",
+                "relatedStateVariable": {
+                  "name": "SourceProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "Sink",
+                "relatedStateVariable": {
+                  "name": "SinkProtocolInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           }
         ],
         "responses": [
@@ -3245,6 +4109,40 @@
                 "description": "Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title."
               }
             ],
+            "outParameters": [
+              {
+                "name": "Result",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Result",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "NumberReturned",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Count",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "TotalMatches",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Count",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "UpdateID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
             "description": "Browse for content, see BrowseParsed for a better experience."
           },
           {
@@ -3261,6 +4159,24 @@
               },
               {
                 "name": "Elements",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Result",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "ObjectID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ObjectID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "Result",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_Result",
                   "dataType": "string",
@@ -3302,12 +4218,40 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "StartingIndex",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Index",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "UpdateID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
             "name": "GetAlbumArtistDisplayOption",
             "responseType": "GetAlbumArtistDisplayOptionResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "AlbumArtistDisplayOption",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AlbumArtistDisplayOption",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetAllPrefixLocations",
@@ -3321,37 +4265,123 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "TotalPrefixes",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Count",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "PrefixAndIndexCSV",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Result",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "UpdateID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
             "name": "GetBrowseable",
             "responseType": "GetBrowseableResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "IsBrowseable",
+                "relatedStateVariable": {
+                  "name": "Browseable",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetLastIndexChange",
             "responseType": "GetLastIndexChangeResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "LastIndexChange",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_LastIndexChange",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetSearchCapabilities",
             "responseType": "GetSearchCapabilitiesResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "SearchCaps",
+                "relatedStateVariable": {
+                  "name": "SearchCapabilities",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetShareIndexInProgress",
             "responseType": "GetShareIndexInProgressResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "IsIndexing",
+                "relatedStateVariable": {
+                  "name": "ShareIndexInProgress",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetSortCapabilities",
             "responseType": "GetSortCapabilitiesResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "SortCaps",
+                "relatedStateVariable": {
+                  "name": "SortCapabilities",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetSystemUpdateID",
             "responseType": "GetSystemUpdateIDResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "Id",
+                "relatedStateVariable": {
+                  "name": "SystemUpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "RefreshShareIndex",
@@ -3761,6 +4791,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "State",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ConfigModeState",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
@@ -3788,6 +4828,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "IncludeLinkedZones",
+                "relatedStateVariable": {
+                  "name": "AutoplayIncludeLinkedZones",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
             ]
           },
           {
@@ -3798,6 +4848,16 @@
                 "name": "Source",
                 "relatedStateVariable": {
                   "name": "AutoplaySource",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "RoomUUID",
+                "relatedStateVariable": {
+                  "name": "AutoplayRoomUUID",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -3816,27 +4876,94 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentVolume",
+                "relatedStateVariable": {
+                  "name": "AutoplayVolume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
             "name": "GetButtonLockState",
             "responseType": "GetButtonLockStateResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentButtonLockState",
+                "relatedStateVariable": {
+                  "name": "ButtonLockState",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "On",
+                      "Off"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetButtonState",
             "responseType": "GetButtonStateResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "State",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ButtonState",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetHouseholdID",
             "responseType": "GetHouseholdIDResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentHouseholdID",
+                "relatedStateVariable": {
+                  "name": "HouseholdID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetLEDState",
             "responseType": "GetLEDStateResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentLEDState",
+                "relatedStateVariable": {
+                  "name": "LEDState",
+                  "dataType": "string",
+                  "allowedValueList": {
+                    "allowedValue": [
+                      "On",
+                      "Off"
+                    ]
+                  },
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetUseAutoplayVolume",
@@ -3850,17 +4977,135 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "UseVolume",
+                "relatedStateVariable": {
+                  "name": "AutoplayUseVolume",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
             ]
           },
           {
             "name": "GetZoneAttributes",
             "responseType": "GetZoneAttributesResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentZoneName",
+                "relatedStateVariable": {
+                  "name": "ZoneName",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentIcon",
+                "relatedStateVariable": {
+                  "name": "Icon",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentConfiguration",
+                "relatedStateVariable": {
+                  "name": "Configuration",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ]
           },
           {
             "name": "GetZoneInfo",
             "responseType": "GetZoneInfoResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "SerialNumber",
+                "relatedStateVariable": {
+                  "name": "SerialNumber",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "SoftwareVersion",
+                "relatedStateVariable": {
+                  "name": "SoftwareVersion",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "DisplaySoftwareVersion",
+                "relatedStateVariable": {
+                  "name": "DisplaySoftwareVersion",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "HardwareVersion",
+                "relatedStateVariable": {
+                  "name": "HardwareVersion",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "IPAddress",
+                "relatedStateVariable": {
+                  "name": "IPAddress",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "MACAddress",
+                "relatedStateVariable": {
+                  "name": "MACAddress",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CopyrightInfo",
+                "relatedStateVariable": {
+                  "name": "CopyrightInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "ExtraInfo",
+                "relatedStateVariable": {
+                  "name": "ExtraInfo",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "HTAudioIn",
+                "relatedStateVariable": {
+                  "name": "HTAudioIn",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "Flags",
+                "relatedStateVariable": {
+                  "name": "Flags",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "RemoveBondedZones",
@@ -4559,6 +5804,48 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentTransportSettings",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TransportSettings",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentURI",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AVTransportURI",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "GroupUUIDJoined",
+                "relatedStateVariable": {
+                  "name": "LocalGroupUUID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "ResetVolumeAfter",
+                "relatedStateVariable": {
+                  "name": "ResetVolumeAfter",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              },
+              {
+                "name": "VolumeAVTransportURI",
+                "relatedStateVariable": {
+                  "name": "VolumeAVTransportURI",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
@@ -4710,10 +5997,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentMute",
+                "relatedStateVariable": {
+                  "name": "GroupMute",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ],
             "description": "Get if the group is muted"
           },
           {
@@ -4727,10 +6024,25 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentVolume",
+                "relatedStateVariable": {
+                  "name": "GroupVolume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
+            ],
             "description": "Get the average group volume"
           },
           {
@@ -4743,7 +6055,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredMute",
@@ -4767,7 +6079,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredVolume",
@@ -4797,7 +6109,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Adjustment",
@@ -4807,6 +6119,21 @@
                   "ttype": "number"
                 },
                 "description": "number between -100 / +100"
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "NewVolume",
+                "relatedStateVariable": {
+                  "name": "GroupVolume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
               }
             ],
             "description": "Relativly change group volume"
@@ -4821,7 +6148,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -4929,12 +6256,48 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "SessionId",
+                "relatedStateVariable": {
+                  "name": "SessionId",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "ListAvailableServices",
             "responseType": "ListAvailableServicesResponse",
             "parameters": [],
+            "outParameters": [
+              {
+                "name": "AvailableServiceDescriptorList",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ServiceDescriptorList",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "AvailableServiceTypeList",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ServiceTypeList",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "AvailableServiceListVersion",
+                "relatedStateVariable": {
+                  "name": "ServiceListVersion",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Load music service list (xml), see ListAndParseAvailableServices() for parsed version."
           },
           {
@@ -5029,6 +6392,32 @@
                 "name": "Seed",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_Seed",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "Code",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Code",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "MID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_MID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "DID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_DID",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -5156,6 +6545,40 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "FirstTrackNumberEnqueued",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TrackNumber",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -5210,6 +6633,40 @@
                   "ttype": "boolean"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "FirstTrackNumberEnqueued",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_TrackNumber",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NumTracksAdded",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -5220,6 +6677,24 @@
                 "name": "QueueOwnerID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_QueueOwnerID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "QueueID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_QueueID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "QueueOwnerContext",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_QueueOwnerContext",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -5258,6 +6733,40 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "Result",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Result",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "NumberReturned",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Count",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "TotalMatches",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_Count",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "UpdateID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -5288,6 +6797,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "QueueID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_QueueID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -5306,6 +6825,16 @@
                 "name": "UpdateID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
                   "dataType": "ui4",
                   "ttype": "number"
                 }
@@ -5344,6 +6873,16 @@
                 "name": "NumberOfTracks",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
                   "dataType": "ui4",
                   "ttype": "number"
                 }
@@ -5390,6 +6929,16 @@
                 "name": "UpdateID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
                   "dataType": "ui4",
                   "ttype": "number"
                 }
@@ -5464,6 +7013,24 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "NewQueueLength",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_NumTracks",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "NewUpdateID",
+                "relatedStateVariable": {
+                  "name": "UpdateID",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -5488,6 +7055,16 @@
               },
               {
                 "name": "ObjectID",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_ObjectID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "AssignedObjectID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_ObjectID",
                   "dataType": "string",
@@ -5761,10 +7338,25 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentBass",
+                "relatedStateVariable": {
+                  "name": "Bass",
+                  "dataType": "i2",
+                  "allowedValueRange": {
+                    "minimum": -10,
+                    "maximum": 10,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "GetEQ",
@@ -5777,7 +7369,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "EQType",
@@ -5785,6 +7377,16 @@
                   "name": "A_ARG_TYPE_EQType",
                   "dataType": "string",
                   "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentValue",
+                "relatedStateVariable": {
+                  "name": "EQValue",
+                  "dataType": "i2",
+                  "ttype": "number"
                 }
               }
             ]
@@ -5800,10 +7402,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentHeadphoneConnected",
+                "relatedStateVariable": {
+                  "name": "HeadphoneConnected",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetLoudness",
@@ -5816,7 +7428,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -5833,6 +7445,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentLoudness",
+                "relatedStateVariable": {
+                  "name": "Loudness",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
             ]
           },
           {
@@ -5846,7 +7468,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -5864,6 +7486,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentMute",
+                "relatedStateVariable": {
+                  "name": "Mute",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
             ]
           },
           {
@@ -5877,10 +7509,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentFixed",
+                "relatedStateVariable": {
+                  "name": "OutputFixed",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetRoomCalibrationStatus",
@@ -5893,10 +7535,28 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "RoomCalibrationEnabled",
+                "relatedStateVariable": {
+                  "name": "RoomCalibrationEnabled",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              },
+              {
+                "name": "RoomCalibrationAvailable",
+                "relatedStateVariable": {
+                  "name": "RoomCalibrationAvailable",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetSupportsOutputFixed",
@@ -5909,10 +7569,20 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentSupportsFixed",
+                "relatedStateVariable": {
+                  "name": "SupportsOutputFixed",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetTreble",
@@ -5925,10 +7595,25 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "CurrentTreble",
+                "relatedStateVariable": {
+                  "name": "Treble",
+                  "dataType": "i2",
+                  "allowedValueRange": {
+                    "minimum": -10,
+                    "maximum": 10,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "GetVolume",
@@ -5941,7 +7626,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -5956,6 +7641,21 @@
                     ]
                   },
                   "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentVolume",
+                "relatedStateVariable": {
+                  "name": "Volume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
                 }
               }
             ]
@@ -5971,7 +7671,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -5986,6 +7686,16 @@
                     ]
                   },
                   "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentVolume",
+                "relatedStateVariable": {
+                  "name": "VolumeDB",
+                  "dataType": "i2",
+                  "ttype": "number"
                 }
               }
             ]
@@ -6001,7 +7711,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6018,6 +7728,24 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "MinValue",
+                "relatedStateVariable": {
+                  "name": "VolumeDB",
+                  "dataType": "i2",
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "MaxValue",
+                "relatedStateVariable": {
+                  "name": "VolumeDB",
+                  "dataType": "i2",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -6031,7 +7759,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6092,6 +7820,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "RampTime",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_RampTimeSeconds",
+                  "dataType": "ui4",
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -6105,10 +7843,72 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "outParameters": [
+              {
+                "name": "Bass",
+                "relatedStateVariable": {
+                  "name": "Bass",
+                  "dataType": "i2",
+                  "allowedValueRange": {
+                    "minimum": -10,
+                    "maximum": 10,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "Treble",
+                "relatedStateVariable": {
+                  "name": "Treble",
+                  "dataType": "i2",
+                  "allowedValueRange": {
+                    "minimum": -10,
+                    "maximum": 10,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "Loudness",
+                "relatedStateVariable": {
+                  "name": "Loudness",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              },
+              {
+                "name": "LeftVolume",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_LeftVolume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              },
+              {
+                "name": "RightVolume",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_RightVolume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
+            ]
           },
           {
             "name": "ResetExtEQ",
@@ -6120,7 +7920,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "EQType",
@@ -6142,7 +7942,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6171,7 +7971,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredBass",
@@ -6198,7 +7998,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "ChannelMap",
@@ -6220,7 +8020,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "EQType",
@@ -6250,7 +8050,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6287,7 +8087,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6325,7 +8125,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredFixed",
@@ -6348,7 +8148,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6373,6 +8173,21 @@
                   "ttype": "number"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "NewVolume",
+                "relatedStateVariable": {
+                  "name": "Volume",
+                  "dataType": "ui2",
+                  "allowedValueRange": {
+                    "minimum": 0,
+                    "maximum": 100,
+                    "step": 1
+                  },
+                  "ttype": "number"
+                }
+              }
             ]
           },
           {
@@ -6385,7 +8200,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "RoomCalibrationEnabled",
@@ -6407,7 +8222,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CalibrationID",
@@ -6445,7 +8260,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredTreble",
@@ -6472,7 +8287,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -6514,7 +8329,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Channel",
@@ -7000,6 +8815,16 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "AccountUDN",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AccountUDN",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
@@ -7068,6 +8893,24 @@
                   "name": "A_ARG_TYPE_AccountTier",
                   "dataType": "ui4",
                   "ttype": "number"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "AccountUDN",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AccountUDN",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "AccountNickname",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AccountNickname",
+                  "dataType": "string",
+                  "ttype": "string"
                 }
               }
             ]
@@ -7150,7 +8993,17 @@
           {
             "name": "GetRDM",
             "responseType": "GetRDMResponse",
-            "parameters": []
+            "parameters": [],
+            "outParameters": [
+              {
+                "name": "RDMValue",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_RDMEnabled",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              }
+            ]
           },
           {
             "name": "GetString",
@@ -7160,6 +9013,16 @@
                 "name": "VariableName",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_VariableName",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "StringValue",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_VariableStringValue",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -7176,6 +9039,16 @@
                   "name": "A_ARG_TYPE_AccountType",
                   "dataType": "ui4",
                   "ttype": "number"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "WebCode",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_VariableStringValue",
+                  "dataType": "string",
+                  "ttype": "string"
                 }
               }
             ]
@@ -7204,6 +9077,24 @@
                 "name": "AccountPassword",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_AccountPassword",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "IsExpired",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_IsExpired",
+                  "dataType": "boolean",
+                  "ttype": "boolean"
+                }
+              },
+              {
+                "name": "AccountUDN",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AccountUDN",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -7329,6 +9220,16 @@
                 "name": "OAuthDeviceID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_OAuthDeviceID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "NewAccountUDN",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_AccountUDN",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -7542,7 +9443,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -7557,7 +9458,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -7572,7 +9473,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "Speed",
@@ -7594,7 +9495,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -7609,7 +9510,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "DesiredVolume",
@@ -7632,12 +9533,22 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CoordinatorID",
                 "relatedStateVariable": {
                   "name": "A_ARG_TYPE_PlayerID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "CurrentTransportSettings",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_CurrentTransportSettings",
                   "dataType": "string",
                   "ttype": "string"
                 }
@@ -7654,7 +9565,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               }
             ],
             "defaultInput": " = { InstanceID: 0 }"
@@ -7669,7 +9580,7 @@
                   "dataType": "ui4",
                   "ttype": "number"
                 },
-                "description": "InstanceID meaning unknown, just set to 0"
+                "description": "Sonos only serves one Instance always set to 0"
               },
               {
                 "name": "CoordinatorID",
@@ -7799,18 +9710,72 @@
                   "ttype": "string"
                 }
               }
+            ],
+            "outParameters": [
+              {
+                "name": "UpdateItem",
+                "relatedStateVariable": {
+                  "name": "A_ARG_TYPE_UpdateItem",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
             ]
           },
           {
             "name": "GetZoneGroupAttributes",
             "responseType": "GetZoneGroupAttributesResponse",
             "parameters": [],
+            "outParameters": [
+              {
+                "name": "CurrentZoneGroupName",
+                "relatedStateVariable": {
+                  "name": "ZoneGroupName",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentZoneGroupID",
+                "relatedStateVariable": {
+                  "name": "ZoneGroupID",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentZonePlayerUUIDsInGroup",
+                "relatedStateVariable": {
+                  "name": "ZonePlayerUUIDsInGroup",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              },
+              {
+                "name": "CurrentMuseHouseholdId",
+                "relatedStateVariable": {
+                  "name": "MuseHouseholdId",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Get information about the current Zone"
           },
           {
             "name": "GetZoneGroupState",
             "responseType": "GetZoneGroupStateResponse",
             "parameters": [],
+            "outParameters": [
+              {
+                "name": "ZoneGroupState",
+                "relatedStateVariable": {
+                  "name": "ZoneGroupState",
+                  "dataType": "string",
+                  "ttype": "string"
+                }
+              }
+            ],
             "description": "Get all the Sonos groups, (as XML), see GetParsedZoneGroupState"
           },
           {
@@ -7892,6 +9857,16 @@
                   "name": "A_ARG_TYPE_Origin",
                   "dataType": "string",
                   "ttype": "string"
+                }
+              }
+            ],
+            "outParameters": [
+              {
+                "name": "DiagnosticID",
+                "relatedStateVariable": {
+                  "name": "DiagnosticID",
+                  "dataType": "ui4",
+                  "ttype": "number"
                 }
               }
             ]

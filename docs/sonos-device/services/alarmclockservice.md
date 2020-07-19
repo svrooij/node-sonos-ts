@@ -26,6 +26,8 @@ All methods that require input expect an object with the specified parameters, e
 
 Create a single alarm, all properties are required
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **StartLocalTime** | `string` | The starttime as hh:mm:ss |
@@ -39,9 +41,17 @@ Create a single alarm, all properties are required
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped palyers also play the alarm? |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AssignedID** | `number` |  |
+
 ### DestroyAlarm
 
 Delete an alarm
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -49,53 +59,123 @@ Delete an alarm
 
 ### GetDailyIndexRefreshTime
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentDailyIndexRefreshTime** | `string` |  |
 
 ### GetFormat
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTimeFormat** | `string` |  |
+| **CurrentDateFormat** | `string` |  |
 
 ### GetHouseholdTimeAtStamp
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **TimeStamp** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **HouseholdUTCTime** | `string` |  |
+
 ### GetTimeNow
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentUTCTime** | `string` |  |
+| **CurrentLocalTime** | `string` |  |
+| **CurrentTimeZone** | `string` |  |
+| **CurrentTimeGeneration** | `number` |  |
 
 ### GetTimeServer
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTimeServer** | `string` |  |
 
 ### GetTimeZone
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Index** | `number` |  |
+| **AutoAdjustDst** | `boolean` |  |
 
 ### GetTimeZoneAndRule
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Index** | `number` |  |
+| **AutoAdjustDst** | `boolean` |  |
+| **CurrentTimeZone** | `string` |  |
 
 ### GetTimeZoneRule
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Index** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **TimeZone** | `string` |  |
+
 ### ListAlarms
 
 Get the AlarmList as XML, use ListAndParseAlarms for parsed version
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentAlarmList** | `string` |  |
+| **CurrentAlarmListVersion** | `string` |  |
 
 ### SetDailyIndexRefreshTime
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredDailyIndexRefreshTime** | `string` |  |
 
 ### SetFormat
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -104,6 +184,8 @@ No parameters
 
 ### SetTimeNow
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredTime** | `string` |  |
@@ -111,11 +193,15 @@ No parameters
 
 ### SetTimeServer
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredTimeServer** | `string` |  |
 
 ### SetTimeZone
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -125,6 +211,8 @@ No parameters
 ### UpdateAlarm
 
 Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

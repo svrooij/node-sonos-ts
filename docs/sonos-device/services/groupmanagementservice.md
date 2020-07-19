@@ -22,12 +22,26 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMember
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **MemberID** | `string` |  |
 | **BootSeq** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTransportSettings** | `string` |  |
+| **CurrentURI** | `string` |  |
+| **GroupUUIDJoined** | `string` |  |
+| **ResetVolumeAfter** | `boolean` |  |
+| **VolumeAVTransportURI** | `string` |  |
+
 ### RemoveMember
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -35,12 +49,16 @@ All methods that require input expect an object with the specified parameters, e
 
 ### ReportTrackBufferingResult
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **MemberID** | `string` |  |
 | **ResultCode** | `number` |  |
 
 ### SetSourceAreaIds
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

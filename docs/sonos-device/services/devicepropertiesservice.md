@@ -24,11 +24,15 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddBondedZones
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` |  |
 
 ### AddHTSatellite
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -36,18 +40,30 @@ All methods that require input expect an object with the specified parameters, e
 
 ### CreateStereoPair
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` |  |
 
 ### EnterConfigMode
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Mode** | `string` |  |
 | **Options** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **State** | `string` |  |
+
 ### ExitConfigMode
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -55,53 +71,134 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetAutoplayLinkedZones
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **IncludeLinkedZones** | `boolean` |  |
 
 ### GetAutoplayRoomUUID
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RoomUUID** | `string` |  |
 
 ### GetAutoplayVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentVolume** | `number` |  |
 
 ### GetButtonLockState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentButtonLockState** | `string` |  |
 
 ### GetButtonState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **State** | `string` |  |
 
 ### GetHouseholdID
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentHouseholdID** | `string` |  |
 
 ### GetLEDState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentLEDState** | `string` |  |
 
 ### GetUseAutoplayVolume
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **UseVolume** | `boolean` |  |
+
 ### GetZoneAttributes
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentZoneName** | `string` |  |
+| **CurrentIcon** | `string` |  |
+| **CurrentConfiguration** | `string` |  |
 
 ### GetZoneInfo
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **SerialNumber** | `string` |  |
+| **SoftwareVersion** | `string` |  |
+| **DisplaySoftwareVersion** | `string` |  |
+| **HardwareVersion** | `string` |  |
+| **IPAddress** | `string` |  |
+| **MACAddress** | `string` |  |
+| **CopyrightInfo** | `string` |  |
+| **ExtraInfo** | `string` |  |
+| **HTAudioIn** | `number` |  |
+| **Flags** | `number` |  |
 
 ### RemoveBondedZones
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -110,17 +207,23 @@ No parameters
 
 ### RemoveHTSatellite
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **SatRoomUUID** | `string` |  |
 
 ### SeparateStereoPair
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` |  |
 
 ### SetAutoplayLinkedZones
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -129,12 +232,16 @@ No parameters
 
 ### SetAutoplayRoomUUID
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **RoomUUID** | `string` |  |
 | **Source** | `string` |  |
 
 ### SetAutoplayVolume
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -143,11 +250,15 @@ No parameters
 
 ### SetButtonLockState
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredButtonLockState** | `string` |  |
 
 ### SetLEDState
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -155,12 +266,16 @@ No parameters
 
 ### SetUseAutoplayVolume
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **UseVolume** | `boolean` |  |
 | **Source** | `string` |  |
 
 ### SetZoneAttributes
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

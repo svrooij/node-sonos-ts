@@ -22,19 +22,35 @@ All methods that require input expect an object with the specified parameters, e
 
 ### CommitLearnedIRCodes
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Name** | `string` |  |
 
 ### GetIRRepeaterState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentIRRepeaterState** | `string` |  |
 
 ### GetLEDFeedbackState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **LEDFeedbackState** | `string` |  |
 
 ### IdentifyIRRemote
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -42,9 +58,17 @@ No parameters
 
 ### IsRemoteConfigured
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RemoteConfigured** | `boolean` |  |
 
 ### LearnIRCode
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -53,11 +77,15 @@ No parameters
 
 ### SetIRRepeaterState
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredIRRepeaterState** | `string` |  |
 
 ### SetLEDFeedbackState
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

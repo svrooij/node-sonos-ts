@@ -32,6 +32,8 @@ All methods that require input expect an object with the specified parameters, e
 {{/if}}
 {{#if parameters}}
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 {{#each parameters}}
@@ -39,7 +41,17 @@ All methods that require input expect an object with the specified parameters, e
 {{/each}}
 {{else}}
 
-No parameters
+No input parameters
+{{/if}}
+{{#if outParameters}}
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+{{#each outParameters}}
+| **{{name}}** | `{{relatedStateVariable.ttype}}` | {{{description}}} |
+{{/each}}
 {{/if}}
 
 {{/each}}
