@@ -22,19 +22,37 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetAudioInputAttributes
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentName** | `string` |  |
+| **CurrentIcon** | `string` |  |
 
 ### GetLineInLevel
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentLeftLineInLevel** | `number` |  |
+| **CurrentRightLineInLevel** | `number` |  |
 
 ### SelectAudio
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 
 ### SetAudioInputAttributes
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -43,6 +61,8 @@ No parameters
 
 ### SetLineInLevel
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **DesiredLeftLineInLevel** | `number` |  |
@@ -50,11 +70,21 @@ No parameters
 
 ### StartTransmissionToGroup
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **CoordinatorID** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTransportSettings** | `string` |  |
+
 ### StopTransmissionToGroup
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

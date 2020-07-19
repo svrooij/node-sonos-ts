@@ -24,20 +24,36 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetSessionId
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ServiceId** | `number` |  |
 | **Username** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **SessionId** | `string` |  |
+
 ### ListAvailableServices
 
 Load music service list (xml), see ListAndParseAvailableServices() for parsed version.
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AvailableServiceDescriptorList** | `string` |  |
+| **AvailableServiceTypeList** | `string` |  |
+| **AvailableServiceListVersion** | `string` |  |
 
 ### UpdateAvailableServices
 
-No parameters
+No input parameters
 
 ## MusicServicesService event
 

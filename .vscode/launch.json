@@ -69,7 +69,7 @@
       "sourceMaps": true,
       "internalConsoleOptions": "neverOpen",
       "env": {
-        "SONOS_HOST":"192.168.96.56"
+        "SONOS_HOST":"192.168.96.51"
       },
     },
   ]

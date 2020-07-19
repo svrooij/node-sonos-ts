@@ -69,3 +69,4 @@ src/services/.generated
 docs-automatic/
 docs/_site/
 docs/.sass-cache/
+docs/vendor/

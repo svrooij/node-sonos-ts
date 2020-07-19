@@ -24,6 +24,8 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMultipleURIs
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
@@ -35,7 +37,18 @@ All methods that require input expect an object with the specified parameters, e
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIsAndMetaData** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **FirstTrackNumberEnqueued** | `number` |  |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
 ### AddURI
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -46,17 +59,37 @@ All methods that require input expect an object with the specified parameters, e
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **FirstTrackNumberEnqueued** | `number` |  |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
 ### AttachQueue
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **QueueOwnerID** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **QueueID** | `number` |  |
+| **QueueOwnerContext** | `string` |  |
+
 ### Backup
 
-No parameters
+No input parameters
 
 ### Browse
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -64,7 +97,18 @@ No parameters
 | **StartingIndex** | `number` |  |
 | **RequestedCount** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Result** | `string` |  |
+| **NumberReturned** | `number` |  |
+| **TotalMatches** | `number` |  |
+| **UpdateID** | `number` |  |
+
 ### CreateQueue
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -72,14 +116,30 @@ No parameters
 | **QueueOwnerContext** | `string` |  |
 | **QueuePolicy** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **QueueID** | `number` |  |
+
 ### RemoveAllTracks
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewUpdateID** | `number` |  |
+
 ### RemoveTrackRange
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -88,7 +148,15 @@ No parameters
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewUpdateID** | `number` |  |
+
 ### ReorderTracks
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -98,7 +166,15 @@ No parameters
 | **InsertBefore** | `number` |  |
 | **UpdateID** | `number` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewUpdateID** | `number` |  |
+
 ### ReplaceAllTracks
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -111,13 +187,28 @@ No parameters
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIsAndMetaData** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
 ### SaveAsSonosPlaylist
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **Title** | `string` |  |
 | **ObjectID** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AssignedObjectID** | `string` |  |
 
 ## QueueService event
 

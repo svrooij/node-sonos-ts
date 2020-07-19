@@ -24,6 +24,8 @@ All methods that require input expect an object with the specified parameters, e
 
 ### BeginSoftwareUpdate
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **UpdateURL** | `string` |  |
@@ -32,25 +34,50 @@ All methods that require input expect an object with the specified parameters, e
 
 ### CheckForUpdate
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **UpdateType** | `string` |  |
 | **CachedOnly** | `boolean` |  |
 | **Version** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **UpdateItem** | `string` |  |
+
 ### GetZoneGroupAttributes
 
 Get information about the current Zone
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentZoneGroupName** | `string` |  |
+| **CurrentZoneGroupID** | `string` |  |
+| **CurrentZonePlayerUUIDsInGroup** | `string` |  |
+| **CurrentMuseHouseholdId** | `string` |  |
 
 ### GetZoneGroupState
 
 Get all the Sonos groups, (as XML), see GetParsedZoneGroupState
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **ZoneGroupState** | `string` |  |
 
 ### RegisterMobileDevice
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -60,9 +87,11 @@ No parameters
 
 ### ReportAlarmStartedRunning
 
-No parameters
+No input parameters
 
 ### ReportUnresponsiveDevice
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -71,10 +100,18 @@ No parameters
 
 ### SubmitDiagnostics
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **IncludeControllers** | `boolean` |  |
 | **Type** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **DiagnosticID** | `number` |  |
 
 ## ZoneGroupTopologyService event
 

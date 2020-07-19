@@ -34,7 +34,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Leave the current group and revert to a single player.
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async BecomeCoordinatorOfStandaloneGroup(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<BecomeCoordinatorOfStandaloneGroupResponse> { return await this.SoapRequestWithBody<typeof input, BecomeCoordinatorOfStandaloneGroupResponse>('BecomeCoordinatorOfStandaloneGroup', input); }
@@ -54,7 +54,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Stop playing after set sleep timer
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.NewSleepTimerDuration - Time to stop after, as hh:mm:ss
    */
   async ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
@@ -81,7 +81,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get information about the current playing media (queue)
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async GetMediaInfo(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetMediaInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
@@ -89,7 +89,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get information about current position (position in queue and Time in current song)
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async GetPositionInfo(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetPositionInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
@@ -97,7 +97,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get Time left on sleeptimer
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetRemainingSleepTimerDurationResponse> { return await this.SoapRequestWithBody<typeof input, GetRemainingSleepTimerDurationResponse>('GetRemainingSleepTimerDuration', input); }
@@ -114,7 +114,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Go to next song, not always supported
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async Next(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
@@ -125,7 +125,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Pause playback
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
@@ -133,7 +133,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Start playing the set TransportURI
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.Speed -  [ 1 ]
    */
   async Play(input: { InstanceID: number; Speed: string }):
@@ -142,7 +142,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Go to previous song, not always supported
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
@@ -171,7 +171,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Seek track in queue, time delta or absolute time in song
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.Unit - What to seek [ TRACK_NR,REL_TIME,TIME_DELTA ]
    * @param {string} input.Target - number for track in queue, hh:mm:ss for absolute time in track
    */
@@ -181,7 +181,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Set the transport URI, to a song, a stream, the queue and a lot more
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.CurrentURI - The track URI
    * @param {string | Track} input.CurrentURIMetaData - Track Metadata
    */
@@ -197,7 +197,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Set the PlayMode
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {PlayMode} input.NewPlayMode - PlayMode [ NORMAL,REPEAT_ALL,REPEAT_ONE,SHUFFLE_NOREPEAT,SHUFFLE,SHUFFLE_REPEAT_ONE ]
    */
   async SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
@@ -206,7 +206,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Snooze the current alarm for some time.
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.Duration - Snooze time as hh:mm:ss, 10 minutes = 00:10:00
    */
   async SnoozeAlarm(input: { InstanceID: number; Duration: string }):
@@ -218,7 +218,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Stop playback
    *
-   * @param {number} input.InstanceID - InstanceID meaning unknown, just set to 0
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }

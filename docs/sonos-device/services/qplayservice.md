@@ -22,7 +22,17 @@ All methods that require input expect an object with the specified parameters, e
 
 ### QPlayAuth
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Seed** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Code** | `string` |  |
+| **MID** | `string` |  |
+| **DID** | `string` |  |
 

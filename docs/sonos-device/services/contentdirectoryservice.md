@@ -26,6 +26,8 @@ All methods that require input expect an object with the specified parameters, e
 
 Browse for content, see BrowseParsed for a better experience.
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` | The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it. |
@@ -35,14 +37,34 @@ Browse for content, see BrowseParsed for a better experience.
 | **RequestedCount** | `number` | Paging, number of items |
 | **SortCriteria** | `string` | Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title. |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Result** | `string` |  |
+| **NumberReturned** | `number` |  |
+| **TotalMatches** | `number` |  |
+| **UpdateID** | `number` |  |
+
 ### CreateObject
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ContainerID** | `string` |  |
 | **Elements** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **ObjectID** | `string` |  |
+| **Result** | `string` |  |
+
 ### DestroyObject
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -50,46 +72,109 @@ Browse for content, see BrowseParsed for a better experience.
 
 ### FindPrefix
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 | **Prefix** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **StartingIndex** | `number` |  |
+| **UpdateID** | `number` |  |
+
 ### GetAlbumArtistDisplayOption
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AlbumArtistDisplayOption** | `string` |  |
 
 ### GetAllPrefixLocations
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **TotalPrefixes** | `number` |  |
+| **PrefixAndIndexCSV** | `string` |  |
+| **UpdateID** | `number` |  |
+
 ### GetBrowseable
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **IsBrowseable** | `boolean` |  |
 
 ### GetLastIndexChange
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **LastIndexChange** | `string` |  |
 
 ### GetSearchCapabilities
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **SearchCaps** | `string` |  |
 
 ### GetShareIndexInProgress
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **IsIndexing** | `boolean` |  |
 
 ### GetSortCapabilities
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **SortCaps** | `string` |  |
 
 ### GetSystemUpdateID
 
-No parameters
+No input parameters
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Id** | `number` |  |
 
 ### RefreshShareIndex
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
@@ -97,17 +182,23 @@ No parameters
 
 ### RequestResort
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **SortOrder** | `string` |  |
 
 ### SetBrowseable
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **Browseable** | `boolean` |  |
 
 ### UpdateObject
+
+Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|

@@ -24,9 +24,11 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMultipleURIsToQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **UpdateID** | `number` |  |
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIs** | `string` |  |
@@ -36,46 +38,88 @@ All methods that require input expect an object with the specified parameters, e
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
-### AddURIToQueue
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **FirstTrackNumberEnqueued** | `number` |  |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
+### AddURIToQueue
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `string | Track` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
-### AddURIToSavedQueue
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **FirstTrackNumberEnqueued** | `number` |  |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+
+### AddURIToSavedQueue
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `string | Track` |  |
 | **AddAtIndex** | `number` |  |
 
-### BackupQueue
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
+### BackupQueue
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### BecomeCoordinatorOfStandaloneGroup
 
 Leave the current group and revert to a single player.
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **DelegatedGroupCoordinatorID** | `string` |  |
+| **NewGroupID** | `string` |  |
 
 ### BecomeGroupCoordinator
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -90,9 +134,11 @@ Leave the current group and revert to a single player.
 
 ### BecomeGroupCoordinatorAndSource
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -108,9 +154,11 @@ Leave the current group and revert to a single player.
 
 ### ChangeCoordinator
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CurrentCoordinator** | `string` |  |
 | **NewCoordinator** | `string` |  |
 | **NewTransportSettings** | `string` |  |
@@ -118,9 +166,11 @@ Leave the current group and revert to a single player.
 
 ### ChangeTransportSettings
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **NewTransportSettings** | `string` |  |
 | **CurrentAVTransportURI** | `string` |  |
 
@@ -128,162 +178,298 @@ Leave the current group and revert to a single player.
 
 Stop playing after set sleep timer
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **NewSleepTimerDuration** | `string` | Time to stop after, as hh:mm:ss |
 
 ### CreateSavedQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Title** | `string` |  |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `string | Track` |  |
 
-### DelegateGroupCoordinationTo
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **NumTracksAdded** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **AssignedObjectID** | `string` |  |
+| **NewUpdateID** | `number` |  |
+
+### DelegateGroupCoordinationTo
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **NewCoordinator** | `string` |  |
 | **RejoinGroup** | `boolean` |  |
 
 ### EndDirectControlSession
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### GetCrossfadeMode
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CrossfadeMode** | `boolean` |  |
 
 ### GetCurrentTransportActions
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Actions** | `string` |  |
 
 ### GetDeviceCapabilities
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **PlayMedia** | `string` |  |
+| **RecMedia** | `string` |  |
+| **RecQualityModes** | `string` |  |
 
 ### GetMediaInfo
 
 Get information about the current playing media (queue)
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **NrTracks** | `number` |  |
+| **MediaDuration** | `string` |  |
+| **CurrentURI** | `string` |  |
+| **CurrentURIMetaData** | `string | Track` |  |
+| **NextURI** | `string` |  |
+| **NextURIMetaData** | `string | Track` |  |
+| **PlayMedium** | `string` |  |
+| **RecordMedium** | `string` |  |
+| **WriteStatus** | `string` |  |
 
 ### GetPositionInfo
 
 Get information about current position (position in queue and Time in current song)
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **Track** | `number` |  |
+| **TrackDuration** | `string` |  |
+| **TrackMetaData** | `string | Track` |  |
+| **TrackURI** | `string` |  |
+| **RelTime** | `string` |  |
+| **AbsTime** | `string` |  |
+| **RelCount** | `number` |  |
+| **AbsCount** | `number` |  |
 
 ### GetRemainingSleepTimerDuration
 
 Get Time left on sleeptimer
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **RemainingSleepTimerDuration** | `string` |  |
+| **CurrentSleepTimerGeneration** | `number` |  |
 
 ### GetRunningAlarmProperties
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AlarmID** | `number` |  |
+| **GroupID** | `string` |  |
+| **LoggedStartTime** | `string` |  |
 
 ### GetTransportInfo
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **CurrentTransportState** | `string` |  |
+| **CurrentTransportStatus** | `string` |  |
+| **CurrentSpeed** | `string` |  |
 
 ### GetTransportSettings
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **PlayMode** | `PlayMode` |  |
+| **RecQualityMode** | `string` |  |
 
 ### Next
 
 Go to next song, not always supported
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### NotifyDeletedURI
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **DeletedURI** | `string` |  |
 
 ### Pause
 
 Pause playback
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### Play
 
 Start playing the set TransportURI
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Speed** | `string` |  |
 
 ### Previous
 
 Go to previous song, not always supported
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### RemoveAllTracksFromQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ### RemoveTrackFromQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 
 ### RemoveTrackRangeFromQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **UpdateID** | `number` |  |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 
-### ReorderTracksInQueue
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **NewUpdateID** | `number` |  |
+
+### ReorderTracksInQueue
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 | **InsertBefore** | `number` |  |
@@ -291,19 +477,31 @@ Go to previous song, not always supported
 
 ### ReorderTracksInSavedQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **TrackList** | `string` |  |
 | **NewPositionList** | `string` |  |
 
-### RunAlarm
+Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **QueueLengthChange** | `number` |  |
+| **NewQueueLength** | `number` |  |
+| **NewUpdateID** | `number` |  |
+
+### RunAlarm
+
+Input:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **AlarmID** | `number` |  |
 | **LoggedStartTime** | `string` |  |
 | **Duration** | `string` |  |
@@ -315,19 +513,29 @@ Go to previous song, not always supported
 
 ### SaveQueue
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Title** | `string` |  |
 | **ObjectID** | `string` |  |
+
+Output:
+
+| parameter | type | description |
+|:----------|:-----|:------------|
+| **AssignedObjectID** | `string` |  |
 
 ### Seek
 
 Seek track in queue, time delta or absolute time in song
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Unit** | `string` | What to seek |
 | **Target** | `string` | number for track in queue, hh:mm:ss for absolute time in track |
 
@@ -335,24 +543,30 @@ Seek track in queue, time delta or absolute time in song
 
 Set the transport URI, to a song, a stream, the queue and a lot more
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CurrentURI** | `string` | The track URI |
 | **CurrentURIMetaData** | `string | Track` | Track Metadata |
 
 ### SetCrossfadeMode
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **CrossfadeMode** | `boolean` |  |
 
 ### SetNextAVTransportURI
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `string | Track` |  |
 
@@ -360,25 +574,31 @@ Set the transport URI, to a song, a stream, the queue and a lot more
 
 Set the PlayMode
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **NewPlayMode** | `PlayMode` | PlayMode |
 
 ### SnoozeAlarm
 
 Snooze the current alarm for some time.
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Duration** | `string` | Snooze time as hh:mm:ss, 10 minutes = 00:10:00 |
 
 ### StartAutoplay
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **ProgramURI** | `string` |  |
 | **ProgramMetaData** | `string | Track` |  |
 | **Volume** | `number` |  |
@@ -389,9 +609,11 @@ Snooze the current alarm for some time.
 
 Stop playback
 
+Input:
+
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID meaning unknown, just set to 0 |
+| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 
 ## AVTransportService event
 
