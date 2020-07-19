@@ -1,41 +1,58 @@
+const readline = require('readline');
 const SonosDevice = require('../lib').SonosDevice
 const SmapiClient = require('../lib').SmapiClient
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 
-// sonos.SystemPropertiesService.GetRDM().then(resp => {
-//   console.log('RDM %j', resp.RDMValue)
-// }).catch(console.error)
+// Question code from https://stackoverflow.com/a/50890409/639153
+function askQuestion(query) {
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  return new Promise(resolve => rl.question(query, ans => {
+    rl.close();
+    resolve(ans);
+  }))
+}
 
-// Get the Device ID
-// sonos.SystemPropertiesService.GetString({ VariableName: 'R_TrialZPSerial' }).then(resp => {
-//   console.log('GetString R_TrialZPSerial %s', resp.StringValue)
-// }).catch(console.error)
+sonos.MusicServicesList()
+  .then(async services => {
+    console.log('Available music services\r\n  ID  Name                       Auth')
+    services.forEach(s => {
+      console.log('%s  %s\t%s', s.Id.toString().padStart(3, ' '), s.Name.padEnd(20, ' '), s.Policy.Auth.padEnd(9, ' '))
+    })
+    const serviceAnswer = await askQuestion('Which service do you want to connect?\r\nName or ID: ');
+    const service = services.find(s => s.Id == serviceAnswer || s.Name === serviceAnswer);
+    if (service === undefined) {
+      console.log('Service with %s not found', serviceAnswer);
+    }
+    console.log('Opening music service client, you can exit by pressing ctrl + C, or by submitting exit')
+    console.log('Service details:\r\n', JSON.stringify(service));
+    const client = await sonos.MusicServicesClient(service.Name);
+    let keepRunning = true;
+    do {
+      const id = await askQuestion('Fetch Metadata for (\'root\' to get main list)\r\nId: ');
+      // Do search
+      // const term = await askQuestion('Term: ');
+      // const results = await client.Search({ id: id, term: term, index: 0, count: 10 });
 
-// sonos.SystemPropertiesService.GetString({ VariableName: 'HiddenPreloadSvcs' }).then(resp => {
-//   console.log('GetString HiddenPreloadSvcs %s', resp.StringValue)
-// }).catch(console.error)
+      // Browse Metadata
+      const results = await client.GetMetadata({ id: id, index: 0, count: 10 });
 
-// sonos.SystemPropertiesService.GetString({ VariableName: 'UMTracking' }).then(resp => {
-//   console.log('GetString UMTracking %s', resp.StringValue)
-// }).catch(console.error)
+      // Get item metadata
+      // const results = await client.GetExtendedMetadata({ id: id });
 
-// sonos.SystemPropertiesService.GetString({ VariableName: 'R_CustomerID' }).then(resp => {
-//   console.log('GetString R_CustomerID %s', resp.StringValue)
-// }).catch(console.error)
-
-// sonos.MusicServicesService.GetSessionId({ ServiceId: 254, Username: '' }).then(resp => {
-//   console.log(resp.SessionId)
-// }).catch(console.error)
-
-sonos.MusicServicesList().then(services => {
-  // var annonymous = services.filter(s => s.Policy.Auth === 'Anonymous')
-  // console.log(JSON.stringify(annonymous, null, 2))
-  services.forEach(s => {
-    var cap = parseInt(s.Capabilities)
-    console.log('%s%s\t%s\t%s\t%s', s.Id.padEnd(5, ' '), s.Name.padEnd(20, ' '), s.Policy.Auth.padEnd(9, ' '), s.Capabilities.toString().padStart(9, ' '), cap.toString(2).padStart(25, ' '))
+      console.log('GetMetadata results:\r\n%s', JSON.stringify(results, null, 2));
+    } while(keepRunning)
   })
-}).catch(console.error)
+
+
+// sonos.MusicServicesClient('Spotify')
+//   .then(async client => {
+//     const result = await client.Search({ id: 'artist', term: 'Guus', index: 0, count: 10});
+//     console.log(JSON.stringify(result, null, 2))
+//   }).catch(err => {
+//     console.warn(err);
+//   });
+
 
 // sonos.MusicServicesClient('NRK Radio')
 //   .then(musicClient => {

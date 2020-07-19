@@ -1,37 +1,112 @@
 import fetch, { Request } from 'node-fetch';
-
 import { parse } from 'fast-xml-parser';
-import { Debugger } from 'debug';
+import debug, { Debugger } from 'debug';
 
-import debug = require('debug');
+import SmapiError from './smapi-error';
+import ArrayHelper from '../helpers/array-helper';
 
+/**
+ * Options to create a sonos music api client.
+ *
+ * @param {string} name Name of music service, display only
+ * @param {string} url SOAP endpoint of music service
+ * @param {string} serviceId The ID of the service, take from the sonos internal list.
+ * @param {string} auth Authentication requirements, take from the sonos internal list. Authentication logic depends on it.
+ * @param {string} deviceId DeviceID is used from authentication, take from SystemPropertiesService.GetString 'R_TrialZPSerial'
+ * @param {string} timezone Timezone is send to remote service, used for contextual things? Defaults to '+01:00'
+ * @param {string} householdId HouseholdId is used from authentication, take from DevicePropertiesService.GetHouseholdID().CurrentHouseholdID
+ * @param {string} key private key is used for authentication (not sure how to fetch this from sonos)
+ * @param {string} authToken authToken is used for authentication (not sure how to fetch from sonos)
+ * 
+ * @export
+ * @interface SmapiClientOptions
+ */
 export interface SmapiClientOptions {
   name: string;
   url: string;
   serviceId: string;
+  auth: 'Anonymous' | 'AppLink' | 'DeviceLink' | 'UserId';
   deviceId?: string;
   timezone?: string;
+  householdId?: string;
+  key?: string;
+  authToken?: string;
+  saveNewAccount?: saveNemAccountHandler;
 }
 
-export interface SearchResult {
+declare type saveNemAccountHandler = (serviceName: string, key: string, token: string) => void;
+
+export interface MediaList {
   index: number;
   count: number;
   total: number;
   mediaMetadata?: MediaMetadata[];
+  mediaCollection?: MediaItem[];
 }
 
-export interface MediaMetadata {
+export interface Media {
   id: string;
   itemType: string;
   title: string;
+}
+
+export interface MediaMetadata extends Media {
   summary?: string;
   trackUri?: string;
 }
 
+export interface MediaItem extends Media {
+  albumArtURI: string;
+  canEnumerate: boolean;
+  canPlay: boolean;
+  displayType: string;
+}
+
+export interface DeviceLink {
+  regUrl: string;
+  linkCode: string;
+  showLinkCode: boolean;
+}
+
+export interface AppLinkResponse {
+  authorizeAccount?: {
+    appUrlStringId: string;
+    deviceLink: DeviceLink
+  };
+  createAccount?: {
+    appUrlStringId: string;
+  }
+}
+
+export interface DeviceAuthResponse {
+  authToken: string;
+  privateKey: string;
+  userInfo?: {
+    accountTier?: 'paidPremium' | string;
+    nickname?: string;
+    userIdHashCode?: string;
+  }
+}
+
+export enum SmapiClientErrors {
+  TokenRefreshRequiredError = 'tokenRefreshRequired'
+}
+
+/**
+ * Sonos mucis service client, use GetMetadata as a starting point.
+ *
+ * @export
+ * @remarks You shouldn't initialize yourself, take the one from sonos.MusicServicesClient('serviceName') because you'll need a lot of data know by sonos only.
+ * @class SmapiClient
+ */
 export class SmapiClient {
+
   private readonly options: SmapiClientOptions;
 
   private debugger?: Debugger;
+
+  private key?: string;
+  private authToken?: string;
 
   protected get debug(): Debugger {
     if (this.debugger === undefined) this.debugger = debug(`sonos:smapi:${this.options.name}`);
@@ -40,6 +115,70 @@ export class SmapiClient {
 
   constructor(options: SmapiClientOptions) {
     this.options = options;
+    this.key = options.key;
+    this.authToken = options.authToken;
+  }
+
+  /**
+   * Get the AppLink for this music service, to connect it to your sonos system.
+   * Only for services with Auth == 'AppLink'
+   *
+   * @returns {Promise<AppLinkResponse>}
+   * @memberof SmapiClient
+   */
+  public async GetAppLink(): Promise<AppLinkResponse> {
+    return await this.SoapRequestWithBody<any, AppLinkResponse>('getAppLink',
+    {
+      householdId: this.getHouseholdIdOrThrow()
+    });
+  }
+
+  /**
+   * Get credentials for the remote service, you'll need the linkcode from GetAppLink
+   *
+   * @param {string} linkCode
+   * @returns
+   * @memberof SmapiClient
+   */
+  public async GetDeviceAuthToken(linkCode: string): Promise<DeviceAuthResponse> {
+    return await this.SoapRequestWithBody<any, DeviceAuthResponse>('getDeviceAuthToken',
+    {
+      householdId: this.getHouseholdIdOrThrow(),
+      linkCode: linkCode,
+      linkDeviceId: this.options.deviceId
+    })
+      .then(async data => {
+        if (this.options.saveNewAccount !== undefined) { // Save the account by the library provided way.
+          await this.options.saveNewAccount(this.options.name, data.privateKey, data.authToken);
+        }
+        return data;
+      });
+  }
+
+  public async GetDeviceLinkCode(): Promise<DeviceLink> {
+    return await this.SoapRequestWithBody<any, DeviceLink>('getDeviceLinkCode',
+    {
+      householdId: this.getHouseholdIdOrThrow()
+    });
+  }
+
+  /**
+   * This is the main entrypoint for the external Music service.
+   * You can browse lists, sometimes referring to other lists.
+   *
+   * @param {string} input.id The ID where you want the media info for. 'root' for the initial list.
+   * @param {number} input.index Where you want to start in the list, 0 is a good start.
+   * @param {number} input.count How many items you want, use something sensible like 10.
+   * @param {boolean?} input.recursive optional, If true, the music service should return a flat collection of track metadata.
+   * @returns {Promise<any>}
+   * @memberof SmapiClient
+   */
+  public async GetMetadata(input: { id: string; index: number; count: number; recursive: boolean; }) : Promise<MediaList> {
+    return await this.SoapRequestWithBody('getMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
+  }
+
+  public async GetExtendedMetadata(input: { id: string }): Promise<MediaList> {
+    return await this.SoapRequestWithBody('getExtendedMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
   public async GetMediaMetadata(input: { id: string }): Promise<any> {
@@ -50,48 +189,68 @@ export class SmapiClient {
     return await this.SoapRequestWithBody('getMediaURI', input);
   }
 
-  public async Search(input: {id: string; term: string; index: number; count: number}): Promise<SearchResult> {
-    return await this.SoapRequestWithBody<any, any>('search', input).then((resp: any) => this.PostProcessSearch(resp.searchResult));
+  public async Search(input: {id: string; term: string; index: number; count: number}): Promise<MediaList> {
+    return await this.SoapRequestWithBody<any, any>('search', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
-  private PostProcessSearch(input: any): SearchResult {
-    const result: SearchResult = {
+  private PostProcessMediaResult(input: any): MediaList {
+    const result: MediaList = {
       index: input.index,
       count: input.count,
       total: input.total,
       mediaMetadata: undefined,
+      mediaCollection: undefined,
     };
 
     if (input.mediaMetadata !== undefined) {
-      if (Array.isArray(input.mediaMetadata)) {
-        result.mediaMetadata = input.mediaMetadata as Array<MediaMetadata>;
-      } else {
-        result.mediaMetadata = [input.mediaMetadata];
-      }
+      result.mediaMetadata = ArrayHelper.ForceArray<MediaMetadata>(input.mediaMetadata);
       result.mediaMetadata.forEach((m) => {
         if (m.itemType === 'stream') m.trackUri = `x-sonosapi-stream:${m.id}?sid=${this.options.serviceId}`;
       });
     }
+    
+    if (input.mediaCollection !== undefined) {
+      result.mediaCollection = ArrayHelper.ForceArray<MediaItem>(input.mediaCollection);
+    }
+
     return result;
   }
 
   // #region Private server stuff
-  async SoapRequest<TResponse>(action: string): Promise<TResponse> {
+  private async SoapRequest<TResponse>(action: string, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
     this.debug('%s()', action);
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
-  }
-
-  async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
-    this.debug('%s(%o)', action, body);
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
-  }
-
-  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
-    const response = await fetch(request);
-    if (!response.ok) {
-      this.debug('handleRequest error %d %s', response.status, response.statusText);
-      throw new Error(`Http status ${response.status} (${response.statusText})`);
+    try {
+      return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
     }
+    catch(err) {
+      if(err instanceof SmapiError && err.Fault.faultstring == SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+        return await this.SoapRequest<TResponse>(action, true);
+      }
+      throw err;
+    }
+  }
+
+  private async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
+    this.debug('%s(%o)', action, body);
+    try {
+      return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    }
+    catch(err) {
+      if(err instanceof SmapiError && err.Fault.faultstring == SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+        return await this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
+      }
+      throw err;
+    }
+    
+  }
+
+  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
+    const response = await fetch(request);
+    // if (!response.ok) {
+    //   this.debug('handleRequest error %d %s', response.status, response.statusText);
+    //   throw new Error(`Http status ${response.status} (${response.statusText})`);
+    // }
+
     const result = parse(await response.text(), { ignoreNameSpace: true });
     if (!result || !result.Envelope || !result.Envelope.Body) {
       this.debug('Invalid response for %s %o', action, result);
@@ -99,11 +258,24 @@ export class SmapiClient {
     }
     if (typeof result.Envelope.Body.Fault !== 'undefined') {
       const fault = result.Envelope.Body.Fault;
+      if(!isRetryWithNewCredentials && fault.faultstring === 'tokenRefreshRequired') {
+        this.debug('Saving new tokens');
+        // Set new tokens, maybe result in event?
+        this.authToken = fault.detail?.refreshAuthTokenResult?.authToken;
+        this.key = fault.detail?.refreshAuthTokenResult?.privateKey;
+
+        // this.debug('New authToken: %s', this.authToken);
+        // this.debug('New private key: %s', this.key);
+        if (this.options.saveNewAccount !== undefined && this.key && this.authToken) {
+          this.options.saveNewAccount(this.options.name, this.key, this.authToken);
+        }
+      } 
       this.debug('Soap error %s %o', action, fault);
-      throw new Error(`SOAP Fault ${fault}`);
+      throw new SmapiError(this.options.name, action, fault);
     }
     this.debug('handleRequest success');
-    return result.Envelope.Body[`${action}Response`];
+    const body = result.Envelope.Body[`${action}Response`]
+    return body[`${action}Result`] ?? body;
   }
 
   private messageAction(action: string): string {
@@ -137,10 +309,6 @@ export class SmapiClient {
     let messageBody = `<soap:Body>\r\n<s:${action}>`;
     if (body) {
       for (const [key, value] of Object.entries(body)) {
-        // if (typeof value === 'object' && key.indexOf('MetaData') > -1)
-        //   messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
-        // else if(typeof value === 'string' && key.endsWith('URI'))
-        //   messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         if (typeof value === 'boolean') messageBody += `<s:${key}>${value === true ? '1' : '0'}</s:${key}>`;
         else messageBody += `<s:${key}>${value}</s:${key}>`;
       }
@@ -149,8 +317,17 @@ export class SmapiClient {
     return messageBody;
   }
 
-  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string; loginToken?: {authToken: string; refreshToken: string; householdId: string}} = {}): string {
-    let header = `<s:credentials>\r\n    <s:deviceId>${options.deviceId}</s:deviceId>\r\n`;
+  private getHouseholdIdOrThrow(): string {
+    if(this.options.householdId === undefined){
+      throw new Error("options.householdId is undefined, fetch from DevicePropertiesService.GetHouseholdID");
+    }
+    return this.options.householdId;
+  }
+
+  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string;} = {}): string {
+    let header = '  <s:credentials>\r\n'
+    
+    if (options.deviceId !== undefined) header += `    <s:deviceId>${options.deviceId}</s:deviceId>\r\n`;
 
     if (options.deviceCert !== undefined) header += `    <s:deviceCert>${options.deviceCert}</s:deviceCert>\r\n`;
 
@@ -158,11 +335,12 @@ export class SmapiClient {
 
     header += '    <s:deviceProvider>Sonos</s:deviceProvider>\r\n';
 
-    if (options.loginToken !== undefined) {
+    // if (options.loginToken !== undefined) {
+    if (this.options.auth === 'DeviceLink' || this.options.auth === 'AppLink') {
       header += `    <s:loginToken>
-      <s:token>${options.loginToken.authToken}</s:token>
-      <s:key>${options.loginToken.refreshToken}</s:key>
-      <s:householdId>${options.loginToken.householdId}</s:householdId>
+      <s:token>${this.authToken ?? ''}</s:token>
+      <s:key>${this.key ?? ''}</s:key>
+      <s:householdId>${this.getHouseholdIdOrThrow()}</s:householdId>
     </s:loginToken>\r\n`;
     }
 
@@ -171,7 +349,7 @@ export class SmapiClient {
   }
 
   private generateContextHeader(timezone: string): string { //  filterExplicit = false
-    return `<s:context>
+    return `  <s:context>
       <s:timeZone>${timezone}</s:timeZone>
     </s:context>`;
   //       <contentFiltering><explicit>${filterExplicit}</explicit></contentFiltering>
@@ -191,7 +369,7 @@ export class SmapiClient {
       body += `${c}\r\n`;
     });
     body += '</soap:Envelope>';
-    this.debug('Soap envelop\r\n%s', body);
+    // this.debug('Soap envelop\r\n%s', body);
     return body;
   }
   // #endregion
