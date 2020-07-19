@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
-  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService,
+  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
   PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, StrongSonosEvents,
@@ -297,10 +297,12 @@ export default class SonosDevice extends SonosDeviceBase {
    * Create a client for a specific music serivce
    *
    * @param {string} name The name of the music service, see MusicServicesList
+   * @param {string} options.key Cached authentication key
+   * @param {string} options.authToken Cached authentication token
    * @returns {Promise<SmapiClient>}
    * @memberof SonosDevice
    */
-  public async MusicServicesClient(name: string): Promise<SmapiClient> {
+  public async MusicServicesClient(name: string, options: { key?: string; authToken?: string } = {}): Promise<SmapiClient> {
     if (this.deviceId === undefined) this.deviceId = (await this.SystemPropertiesService.GetString({ VariableName: 'R_TrialZPSerial' })).StringValue;
     const services = await this.MusicServicesList();
     if (services === undefined) throw new Error('Music list could not be loaded');
@@ -308,10 +310,23 @@ export default class SonosDevice extends SonosDeviceBase {
     const service = services.find((s) => s.Name === name);
     if (service === undefined) throw new Error('MusicService could not be found');
 
-    if (service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)');
+    // if (service.Policy.Auth !== 'Anonymous') throw new Error('Music service requires authentication, which isn\'t supported (yet)');
+    let accountData: AccountData | undefined;
+    if (service.Policy.Auth === 'AppLink' || service.Policy.Auth === 'DeviceLink') {
+      accountData = await this.SystemPropertiesService.GetAccountData(name);
+    }
 
     return new SmapiClient({
-      name, url: service.SecureUri || service.Uri, deviceId: this.deviceId, serviceId: service.Id.toString(),
+      name,
+      auth: service.Policy.Auth,
+      url: service.SecureUri || service.Uri,
+      deviceId: this.deviceId,
+      serviceId: service.Id.toString(),
+      householdId: service.Policy.Auth === 'AppLink' || service.Policy.Auth === 'DeviceLink' ? (await this.DevicePropertiesService.GetHouseholdID()).CurrentHouseholdID : undefined,
+      authToken: accountData?.AuthToken ?? options.authToken,
+      key: accountData?.Key ?? options.key,
+      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+      saveNewAccount: async (serviceName, key, token) => this.SystemPropertiesService.SaveAccount(serviceName, key, token),
     });
   }
 

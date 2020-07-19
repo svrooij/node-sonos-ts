@@ -8,7 +8,7 @@ export interface MusicService {
   Id: number;
   Manifest: { Uri: string; Version: string };
   Name: string;
-  Policy: { Auth: string; PollInterval?: number };
+  Policy: { Auth: 'Anonymous' | 'AppLink' | 'DeviceLink' | 'UserId'; PollInterval?: number };
   Presentation?: { Strings?: { Uri: string; Version: string }; PresentationMap?: { Uri: string; Version: string }};
   SecureUri: string;
   Uri: string;
