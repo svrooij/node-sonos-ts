@@ -48,6 +48,10 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   })
   .catch(console.error)
 
+manager.onNewDevice((device) => {
+  console.log('New device found %s %s', device.Name, device.Uuid);
+})
+
 process.on('SIGINT', () => {
   manager.Devices.forEach(d => {
     d.CancelEvents()

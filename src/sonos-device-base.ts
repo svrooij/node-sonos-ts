@@ -239,4 +239,25 @@ export default class SonosDeviceBase {
     if (this.zonegrouptopologyservice === undefined) this.zonegrouptopologyservice = new ZoneGroupTopologyService(this.host, this.port, this.uuid);
     return this.zonegrouptopologyservice;
   }
+
+  public async RefreshEventSubscriptions(): Promise<boolean> {
+    let result = false;
+    if (this.avtransportservice !== undefined) result = await this.avtransportservice.CheckEventListener() || result;
+    if (this.alarmclockservice !== undefined) result = await this.alarmclockservice.CheckEventListener() || result;
+    if (this.audioinservice !== undefined) result = await this.audioinservice.CheckEventListener() || result;
+    if (this.connectionmanagerservice !== undefined) result = await this.connectionmanagerservice.CheckEventListener() || result;
+    if (this.contentdirectoryservice !== undefined) result = await this.contentdirectoryservice.CheckEventListener() || result;
+    if (this.devicepropertiesservice !== undefined) result = await this.devicepropertiesservice.CheckEventListener() || result;
+    if (this.groupmanagementservice !== undefined) result = await this.groupmanagementservice.CheckEventListener() || result;
+    if (this.grouprenderingcontrolservice !== undefined) result = await this.grouprenderingcontrolservice.CheckEventListener() || result;
+    if (this.htcontrolservice !== undefined) result = await this.htcontrolservice.CheckEventListener() || result;
+    if (this.musicservicesservice !== undefined) result = await this.musicservicesservice.CheckEventListener() || result;
+    if (this.qplayservice !== undefined) result = await this.qplayservice.CheckEventListener() || result;
+    if (this.queueservice !== undefined) result = await this.queueservice.CheckEventListener() || result;
+    if (this.renderingcontrolservice !== undefined) result = await this.renderingcontrolservice.CheckEventListener() || result;
+    if (this.systempropertiesservice !== undefined) result = await this.systempropertiesservice.CheckEventListener() || result;
+    if (this.virtuallineinservice !== undefined) result = await this.virtuallineinservice.CheckEventListener() || result;
+    if (this.zonegrouptopologyservice !== undefined) result = await this.zonegrouptopologyservice.CheckEventListener() || result;
+    return result;
+  }
 }
