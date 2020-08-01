@@ -240,6 +240,12 @@ export default class SonosDeviceBase {
     return this.zonegrouptopologyservice;
   }
 
+  /**
+   * Refresh all service event subscriptions, if you were already subscribed.
+   *
+   * @returns {Promise<boolean>} returns true if at least one service subscription is refreshed.
+   * @memberof SonosDeviceBase
+   */
   public async RefreshEventSubscriptions(): Promise<boolean> {
     let result = false;
     if (this.avtransportservice !== undefined) result = await this.avtransportservice.CheckEventListener() || result;

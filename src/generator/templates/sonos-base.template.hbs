@@ -64,6 +64,12 @@ export default class SonosDeviceBase {
   {{/unless}}
   {{/each}}
 
+  /**
+   * Refresh all service event subscriptions, if you were already subscribed.
+   *
+   * @returns {Promise<boolean>} returns true if at least one service subscription is refreshed.
+   * @memberof SonosDeviceBase
+   */
   public async RefreshEventSubscriptions(): Promise<boolean> {
     let result = false;
     {{#each services}}
