@@ -63,4 +63,12 @@ export default class SonosDeviceBase {
 
   {{/unless}}
   {{/each}}
+
+  public async RefreshEventSubscriptions(): Promise<boolean> {
+    let result = false;
+    {{#each services}}
+    if (this.{{pName}} !== undefined) result = await this.{{pName}}.CheckEventListener() || result;
+    {{/each}}
+    return result;
+  }
 }
