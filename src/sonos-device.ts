@@ -123,11 +123,11 @@ export default class SonosDevice extends SonosDeviceBase {
    * Execute any sonos command by name, see examples/commands.js
    *
    * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
-   * @param {(string | object | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
+   * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
    * @returns {Promise<any>}
    * @memberof SonosDevice
    */
-  public async ExecuteCommand(command: string, options?: string | object | number): Promise<any> {
+  public async ExecuteCommand(command: string, options?: string | unknown | number): Promise<any> {
     let service = '';
     let correctCommand = command;
     if (command.indexOf('.') > -1) {
