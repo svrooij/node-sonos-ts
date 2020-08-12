@@ -19,10 +19,10 @@ kantoor.RenderingControlService.Events.on(ServiceEvents.Data, data => {
   console.log('RenderingControl lastchange %s', JSON.stringify(data, null, 2))
 })
 
-setTimeout(async () => {
+setInterval(async () => {
   const result = await kantoor.RefreshEventSubscriptions();
   console.log('Succesfully refreshed the events %s', result)
-}, 60 * 1000)
+}, 300 * 1000)
 
 process.on('SIGINT', () => {
   console.log('Hold-on cancelling all subscriptions')

@@ -196,4 +196,15 @@ export default class SonosManager {
 
     return await this.PlayNotification(notificationOptions);
   }
+
+  /**
+   * Check the event subscriptions for all known devices.
+   *
+   * @returns {Promise<void>}
+   * @memberof SonosManager
+   */
+  public async CheckAllEventSubscriptions(): Promise<void> {
+    await this.zoneService?.CheckEventListener();
+    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions()));
+  }
 }
