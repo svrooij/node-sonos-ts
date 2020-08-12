@@ -522,4 +522,13 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
   });
+
+  describe('RefreshEventSubscriptions', () => {
+    it('does nothing without subscriptions', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.RefreshEventSubscriptions();
+      expect(result).to.be.false;
+    })
+  })
 });
