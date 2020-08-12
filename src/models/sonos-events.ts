@@ -44,7 +44,6 @@ export enum SonosEvents {
   GroupName = 'groupname'
 }
 
-
 export interface StrongSonosEvents {
   avtransport: (data: AVTransportServiceEvent) => void;
   currentTrack: (track: Track) => void;

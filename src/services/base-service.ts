@@ -128,7 +128,6 @@ export default abstract class BaseService <TServiceEvent> {
     return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
   }
 
-
   /**
    * SoapRequestWithBodyNoResponse will do a request where it doesn't expect a Response
    *
@@ -476,7 +475,6 @@ export default abstract class BaseService <TServiceEvent> {
 
     return output as unknown as TServiceEvent;
   }
-
 
   private cleanEventBody(input: any[]): TServiceEvent {
     // const output: {[key: string]: any} = {};
