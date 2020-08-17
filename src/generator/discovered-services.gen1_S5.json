@@ -2,7 +2,7 @@
   "modelNumber": "S5",
   "modelName": "Sonos Play:5",
   "swGen": 1,
-  "softwareVersion": "57.3-77280",
+  "softwareVersion": "57.3-79200",
   "services": [
     {
       "serviceType": "urn:schemas-upnp-org:service:AVTransport:1",

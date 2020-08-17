@@ -93,7 +93,22 @@ export default class SonosManager {
   private handleZoneEventData(data: ZoneGroupTopologyServiceEvent): void {
     if (data.ZoneGroupState !== undefined) {
       data.ZoneGroupState.forEach((g) => {
-        const coordinator = this.devices.find((d) => d.Uuid === g.coordinator.uuid) || new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name);
+        let coordinator = this.devices.find((d) => d.Uuid === g.coordinator.uuid);
+        if (coordinator === undefined) {
+          coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { coordinator: undefined, name: g.name, managerEvents: this.events });
+          this.devices.push(coordinator);
+          this.events.emit('NewDevice', coordinator);
+        }
+
+        // New members
+        g.members
+          .filter((m) => !this.devices.some((d) => d.Uuid === m.uuid))
+          .forEach((m) => {
+            const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events });
+            this.devices.push(newDevice);
+            this.events.emit('NewDevice', coordinator);
+          });
+
         g.members.forEach((m) => {
           this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name });
         });
@@ -120,6 +135,16 @@ export default class SonosManager {
   public get Devices(): SonosDevice[] {
     if (this.devices.length === 0) throw new Error('No Devices available!');
     return this.devices;
+  }
+
+  /**
+   * Subscribe to receive new devices.
+   *
+   * @param {(device: SonosDevice) => void} listener
+   * @memberof SonosManager
+   */
+  public OnNewDevice(listener: (device: SonosDevice) => void): void {
+    this.events.on('NewDevice', listener);
   }
 
   /**
@@ -170,5 +195,16 @@ export default class SonosManager {
     }
 
     return await this.PlayNotification(notificationOptions);
+  }
+
+  /**
+   * Check the event subscriptions for all known devices.
+   *
+   * @returns {Promise<void>}
+   * @memberof SonosManager
+   */
+  public async CheckAllEventSubscriptions(): Promise<void> {
+    await this.zoneService?.CheckEventListener();
+    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions()));
   }
 }

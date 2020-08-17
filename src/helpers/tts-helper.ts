@@ -1,18 +1,15 @@
 import fetch, { Request } from 'node-fetch';
-
+import debug from 'debug';
 import {
   TtsResponse, PlayTtsOptions, PlayNotificationOptions, PlayNotificationOptionsBase,
 } from '../models';
 import HttpError from '../models/http-error';
-
-import debug = require('debug');
 
 export default class TtsHelper {
   private static debug = debug('sonos:tts');
 
   // TODO Automaticly get from pacakge on build
   private static pack = { version: '1.1.5', homepage: 'https://github.com/svrooij/node-sonos-ts' };
-
 
   static async GetTtsUriFromEndpoint(endpoint: string, text: string, language: string, gender?: string, name?: string): Promise<string> {
     TtsHelper.debug('Getting tts uri from server %s', endpoint);

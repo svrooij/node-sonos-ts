@@ -50,5 +50,11 @@ module.exports =  {
         'import/order': 'warn'
       }
     },
+    {
+      files: ['src/sonos-device.ts'],
+      rules: {
+        '@typescript-eslint/ban-types': 'warn'
+      }
+    }
   ]
 };

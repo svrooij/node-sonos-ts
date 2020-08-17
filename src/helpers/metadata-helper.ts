@@ -1,7 +1,6 @@
+import debug = require('debug');
 import { Track } from '../models';
 import XmlHelper from './xml-helper';
-
-import debug = require('debug');
 
 export default class MetadataHelper {
   private static debug = debug('sonos:metadata');
