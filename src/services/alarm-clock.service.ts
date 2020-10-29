@@ -22,16 +22,16 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   /**
    * Create a single alarm, all properties are required
    *
-   * @param {string} input.StartLocalTime - The starttime as hh:mm:ss
+   * @param {string} input.StartLocalTime - The start time as hh:mm:ss
    * @param {string} input.Duration - The duration as hh:mm:ss
    * @param {string} input.Recurrence - Repeat this alarm on [ ONCE,WEEKDAYS,WEEKENDS,DAILY ]
    * @param {boolean} input.Enabled - Alarm enabled after creation
    * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for
    * @param {string} input.ProgramURI - The sound uri
    * @param {string | Track} input.ProgramMetaData - The sound metadata, can be empty string
-   * @param {string} input.PlayMode - Alarm playmode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
+   * @param {string} input.PlayMode - Alarm play mode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
    * @param {number} input.Volume - Volume between 0 and 100
-   * @param {boolean} input.IncludeLinkedZones - Should grouped palyers also play the alarm?
+   * @param {boolean} input.IncludeLinkedZones - Should grouped players also play the alarm?
    */
   async CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
   Promise<CreateAlarmResponse> { return await this.SoapRequestWithBody<typeof input, CreateAlarmResponse>('CreateAlarm', input); }
@@ -93,16 +93,16 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
    * Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter
    *
    * @param {number} input.ID - The ID of the alarm see ListAndParseAlarms
-   * @param {string} input.StartLocalTime - The starttime as hh:mm:ss
+   * @param {string} input.StartLocalTime - The start time as hh:mm:ss
    * @param {string} input.Duration - The duration as hh:mm:ss
    * @param {string} input.Recurrence - Repeat this alarm on [ ONCE,WEEKDAYS,WEEKENDS,DAILY ]
    * @param {boolean} input.Enabled - Alarm enabled after creation
    * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for
    * @param {string} input.ProgramURI - The sound uri
    * @param {string | Track} input.ProgramMetaData - The sound metadata, can be empty string
-   * @param {string} input.PlayMode - Alarm playmode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
+   * @param {string} input.PlayMode - Alarm play mode [ NORMAL,REPEAT_ALL,SHUFFLE_NOREPEAT,SHUFFLE ]
    * @param {number} input.Volume - Volume between 0 and 100
-   * @param {boolean} input.IncludeLinkedZones - Should grouped palyers also play the alarm?
+   * @param {boolean} input.IncludeLinkedZones - Should grouped players also play the alarm?
    */
   async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: string; Volume: number; IncludeLinkedZones: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }

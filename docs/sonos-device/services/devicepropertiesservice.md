@@ -7,7 +7,7 @@ grand_parent: Sonos device
 # DevicePropertiesService
 {: .no_toc }
 
-Modify device properties, like led status and stereo pairs
+Modify device properties, like led status and stereo pairs -
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -40,11 +40,13 @@ Input:
 
 ### CreateStereoPair
 
+Create a stereo pair (left, right speakers), right one becomes hidden - only supported by some players
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **ChannelMapSet** | `string` |  |
+| **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
 
 ### EnterConfigMode
 
@@ -215,11 +217,13 @@ Input:
 
 ### SeparateStereoPair
 
+Separate a stereo pair - only supported by some players
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **ChannelMapSet** | `string` |  |
+| **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
 
 ### SetAutoplayLinkedZones
 

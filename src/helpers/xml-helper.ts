@@ -25,7 +25,7 @@ export default class XmlHelper {
    */
   static DecodeXml(text: string): string {
     if (typeof text === 'undefined') return '';
-    return text.replace(/\&([^;]+);/g, (entity, entityCode) => {
+    return text.replace(/&([^;]+);/g, (entity, entityCode) => {
       let match;
 
       if (entityCode in htmlEntities) {
@@ -35,7 +35,7 @@ export default class XmlHelper {
         return String.fromCharCode(parseInt(match[1], 16));
         /* eslint no-cond-assign: 0 */
       } if (match = entityCode.match(/^#(\d+)$/)) {
-        return String.fromCharCode(~~match[1]);
+        return String.fromCharCode(match[1]);
       }
       return entity;
     });
@@ -80,7 +80,10 @@ export default class XmlHelper {
 
   static EncodeTrackUri(trackUri: string): string {
     if (trackUri.startsWith('http')) return encodeURI(trackUri);
-    if (trackUri.startsWith('x-sonos-hta')) return trackUri;
+    if (
+      trackUri.startsWith('x-sonos-hta')
+      || trackUri.startsWith('x-rincon-mp3radio')
+    ) return trackUri;
 
     // Part below needs some work.
     const index = trackUri.indexOf(':') + 1;

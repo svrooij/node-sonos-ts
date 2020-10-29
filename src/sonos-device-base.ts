@@ -118,7 +118,7 @@ export default class SonosDeviceBase {
   private devicepropertiesservice: DevicePropertiesService | undefined;
 
   /**
-    * Modify device properties, like led status and stereo pairs
+    * Modify device properties, like led status and stereo pairs -
     * will be initialized on first use.
     *
     * @readonly
@@ -140,7 +140,7 @@ export default class SonosDeviceBase {
   private grouprenderingcontrolservice: GroupRenderingControlService | undefined;
 
   /**
-    * Volume related controls for groups
+    * Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players.
     * will be initialized on first use.
     *
     * @readonly

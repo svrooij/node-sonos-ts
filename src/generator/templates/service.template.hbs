@@ -31,8 +31,11 @@ export class {{svcName}}{{#if extension}}Base{{/if}} extends BaseService{{#if pa
    *
   {{/if}}
   {{#each parameters}}
-   * @param -{-{{relatedStateVariable.ttype}}-}- input.{{name}} - {{{description}}}{{#if relatedStateVariable.allowedValueList}} [ {{{relatedStateVariable.allowedValueList.allowedValue}}} ]{{/if}}
+   * @param -{-{{relatedStateVariable.ttype}}-}- input.{{name}}{{#if description}} - {{{description}}}{{/if}}{{#if relatedStateVariable.allowedValueList}} [ {{{relatedStateVariable.allowedValueList.allowedValue}}} ]{{/if}}
   {{/each}}
+  {{#if remarks}}
+   * @remarks {{remarks}}
+  {{/if}}
    */
   {{/if}}
   {{#if parameters}}

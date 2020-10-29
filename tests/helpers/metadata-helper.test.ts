@@ -27,6 +27,12 @@ describe('MetadataHelper', () => {
       expect(track).to.be.an('object');
     });
 
+    it('Guess metadata for Spotify user playlist', () => {
+      const uri = 'spotify:user:37i9dQZF1DX4WYpdgoIcn6'
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).to.be.an('object');
+    });
+
     it('Produces same metadata as legacy for Spotify track', () => {
       const track = MetadataHelper.GuessTrack(spotifyTrack);
       expect(track).to.be.an('object');
@@ -34,6 +40,12 @@ describe('MetadataHelper', () => {
 
       const metadata = MetadataHelper.TrackToMetaData(track);
       assert.equal(metadata, legacyMetadataObject.metadata);
+    });
+
+    it('Returns undefined for unsupported uri', () => {
+      const uri = 'fake:music:service'
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).to.be.undefined;
     });
   });
 
@@ -66,6 +78,39 @@ describe('MetadataHelper', () => {
       expect(data).to.have.property('trackUri', 'x-rincon-cpcontainer:1006206spotify:playlist:37i9dQZEVXbLoATJ81JYX?sid=9&flags=8300&sn=7');
       expect(data).to.have.nested.property('metadata.ItemId', '10062a6cspotify%3aplaylist%3a37i9dQZEVXbLoATJ81JYX');
     });
+  })
+
+  describe('ParseDIDLTrack', () => {
+    it('parsed r:streamContent correctly 2', () => {
+      const artist = 'Guus Meeuwis';
+      const title = 'Brabant'
+      const id = 'FAKE_ITEM_ID'
+      const didl = {
+        _id: id,
+        'r:streamContent': `${artist} - ${title}`
+      }
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host')
+      expect(result).to.be.an('object');
+      expect(result).to.have.nested.property('Artist', artist);
+      expect(result).to.have.nested.property('Title', title);
+      expect(result).to.have.nested.property('ItemId', id);
+    })
+
+    it('parsed r:streamContent and r:radioShowMd correctly', () => {
+      const artist = 'Guus Meeuwis';
+      const title = 'Brabant'
+      const id = 'FAKE_ITEM_ID'
+      const didl = {
+        _id: id,
+        'r:streamContent': artist,
+        'r:radioShowMd': title
+      }
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host')
+      expect(result).to.be.an('object');
+      expect(result).to.have.nested.property('Artist', artist);
+      expect(result).to.have.nested.property('Title', title);
+      expect(result).to.have.nested.property('ItemId', id);
+    })
   })
 
   describe('TrackToMetaData', () => {

@@ -56,6 +56,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    * @param {string} input.NewSleepTimerDuration - Time to stop after, as hh:mm:ss
+   * @remarks Send to non-coordinator returns error code 800
    */
   async ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ConfigureSleepTimer', input); }
@@ -63,15 +64,35 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   async CreateSavedQueue(input: { InstanceID: number; Title: string; EnqueuedURI: string; EnqueuedURIMetaData: string | Track }):
   Promise<CreateSavedQueueResponse> { return await this.SoapRequestWithBody<typeof input, CreateSavedQueueResponse>('CreateSavedQueue', input); }
 
+  /**
+   * Delegates the coordinator role to another player in the same group
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.NewCoordinator - uuid of the new coordinator - must be in same group
+   * @param {boolean} input.RejoinGroup - Should former coordinator rejoin the group?
+   * @remarks Send to non-coordinator has no results - should be avoided.
+   */
   async DelegateGroupCoordinationTo(input: { InstanceID: number; NewCoordinator: string; RejoinGroup: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DelegateGroupCoordinationTo', input); }
 
   async EndDirectControlSession(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EndDirectControlSession', input); }
 
+  /**
+   * Get crossfade mode, 1 for on, 0 for off
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator may return wrong value as only the coordinator value in a group
+   */
   async GetCrossfadeMode(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetCrossfadeModeResponse> { return await this.SoapRequestWithBody<typeof input, GetCrossfadeModeResponse>('GetCrossfadeMode', input); }
 
+  /**
+   * Get current transport actions such as Set, Stop, Pause, Play, X_DLNA_SeekTime, Next, X_DLNA_SeekTrackNr
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator always returns Stop, Play
+   */
   async GetCurrentTransportActions(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetCurrentTransportActionsResponse> { return await this.SoapRequestWithBody<typeof input, GetCurrentTransportActionsResponse>('GetCurrentTransportActions', input); }
 
@@ -87,7 +108,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<GetMediaInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
 
   /**
-   * Get information about current position (position in queue and Time in current song)
+   * Get information about current position (position in queue and time in current song)
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
@@ -95,9 +116,10 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<GetPositionInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
 
   /**
-   * Get Time left on sleeptimer
+   * Get time left on sleeptimer or empty string
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator returns error code 800
    */
   async GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetRemainingSleepTimerDurationResponse> { return await this.SoapRequestWithBody<typeof input, GetRemainingSleepTimerDurationResponse>('GetRemainingSleepTimerDuration', input); }
@@ -105,14 +127,26 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   async GetRunningAlarmProperties(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetRunningAlarmPropertiesResponse> { return await this.SoapRequestWithBody<typeof input, GetRunningAlarmPropertiesResponse>('GetRunningAlarmProperties', input); }
 
+  /**
+   * Get current transport status, speed and state such as PLAYING, STOPPED, PLAYING, PAUSED_PLAYBACK, TRANSITIONING, NO_MEDIA_PRESENT
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator always returns PLAYING
+   */
   async GetTransportInfo(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTransportInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetTransportInfoResponse>('GetTransportInfo', input); }
 
+  /**
+   * Get transport settings such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator returns the settings of it&#x27;s queue
+   */
   async GetTransportSettings(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTransportSettingsResponse> { return await this.SoapRequestWithBody<typeof input, GetTransportSettingsResponse>('GetTransportSettings', input); }
 
   /**
-   * Go to next song, not always supported
+   * Go to next song, not always supported - see GetCurrentTransportActions
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
@@ -134,19 +168,25 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
    * Start playing the set TransportURI
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
-   * @param {string} input.Speed -  [ 1 ]
+   * @param {string} input.Speed - Play speed usually 1, can be a fraction of 1 [ 1 ]
    */
   async Play(input: { InstanceID: number; Speed: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
   /**
-   * Go to previous song, not always supported
+   * Go to previous song, not always supported - GetCurrentTransportActions
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
    */
   async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
+  /**
+   * Flushes the SONOS queue. If queue is already empty it throw error 804
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @remarks Send to non-coordinator returns error code 800.
+   */
   async RemoveAllTracksFromQueue(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAllTracksFromQueue', input); }
 
@@ -165,29 +205,46 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   async RunAlarm(input: { InstanceID: number; AlarmID: number; LoggedStartTime: string; Duration: string; ProgramURI: string; ProgramMetaData: string | Track; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RunAlarm', input); }
 
+  /**
+   * Saves the current SONOS queue as a SONOS playlist and outputs objectID
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.Title - SONOS playlist title
+   * @param {string} input.ObjectID
+   * @remarks Send to non-coordinator returns error code 800
+   */
   async SaveQueue(input: { InstanceID: number; Title: string; ObjectID: string }):
   Promise<SaveQueueResponse> { return await this.SoapRequestWithBody<typeof input, SaveQueueResponse>('SaveQueue', input); }
 
   /**
-   * Seek track in queue, time delta or absolute time in song
+   * Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
-   * @param {string} input.Unit - What to seek [ TRACK_NR,REL_TIME,TIME_DELTA ]
-   * @param {string} input.Target - number for track in queue, hh:mm:ss for absolute time in track
+   * @param {string} input.Unit - What to seek - either TRACK_NR, REL_TIME, TIME_DELTA, [ TRACK_NR,REL_TIME,TIME_DELTA ]
+   * @param {string} input.Target - Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA
+   * @remarks Returns error code 701 in case that content does not support Seek or send to non-coordinator
    */
   async Seek(input: { InstanceID: number; Unit: string; Target: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Seek', input); }
 
   /**
-   * Set the transport URI, to a song, a stream, the queue and a lot more
+   * Set the transport URI to a song, a stream, the queue, another player-rincon and a lot more
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
-   * @param {string} input.CurrentURI - The track URI
-   * @param {string | Track} input.CurrentURIMetaData - Track Metadata
+   * @param {string} input.CurrentURI - The new TransportURI - its a special SONOS format
+   * @param {string | Track} input.CurrentURIMetaData - Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri
+   * @remarks If set to another player RINCON, the player is grouped with that one.
    */
   async SetAVTransportURI(input: { InstanceID: number; CurrentURI: string; CurrentURIMetaData: string | Track }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAVTransportURI', input); }
 
+  /**
+   * Set crossfade mode off
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {boolean} input.CrossfadeMode - true for on, false for off
+   * @remarks Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.
+   */
   async SetCrossfadeMode(input: { InstanceID: number; CrossfadeMode: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetCrossfadeMode', input); }
 
@@ -198,7 +255,8 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
    * Set the PlayMode
    *
    * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
-   * @param {PlayMode} input.NewPlayMode - PlayMode [ NORMAL,REPEAT_ALL,REPEAT_ONE,SHUFFLE_NOREPEAT,SHUFFLE,SHUFFLE_REPEAT_ONE ]
+   * @param {PlayMode} input.NewPlayMode - PlayMode such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE [ NORMAL,REPEAT_ALL,REPEAT_ONE,SHUFFLE_NOREPEAT,SHUFFLE,SHUFFLE_REPEAT_ONE ]
+   * @remarks Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.
    */
   async SetPlayMode(input: { InstanceID: number; NewPlayMode: PlayMode }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetPlayMode', input); }

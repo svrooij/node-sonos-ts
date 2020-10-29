@@ -37,7 +37,7 @@ export default class TtsHelper {
     return data.cdnUri || data.uri;
   }
 
-  static async TtsOptionsToNotification(options: PlayTtsOptions): Promise<PlayNotificationOptions | undefined> {
+  static async TtsOptionsToNotification(options: PlayTtsOptions): Promise<PlayNotificationOptions> {
     const endpoint = options.endpoint ?? process.env.SONOS_TTS_ENDPOINT;
     if (endpoint === undefined) {
       throw new Error('TTS endpoint is required, check the documentation.');

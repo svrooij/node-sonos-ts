@@ -31,6 +31,21 @@ describe('AlarmClockService', () => {
     });
   });
 
+  describe('DestroyAlarm', () => {
+    it('sends the correct request', async () => {
+      TestHelpers.mockRequest('/AlarmClock/Control',
+        '"urn:schemas-upnp-org:service:AlarmClock:1#DestroyAlarm"',
+        '<u:DestroyAlarm xmlns:u="urn:schemas-upnp-org:service:AlarmClock:1"><ID>1</ID></u:DestroyAlarm>',
+        'DestroyAlarmResponse',
+        'AlarmClock');
+
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      const result = await service.DestroyAlarm({ ID: 1 });
+      expect(result).to.be.true;
+
+    })
+  })
+
   describe('GetTimeZone', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',

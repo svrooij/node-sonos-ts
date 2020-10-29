@@ -422,9 +422,6 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('PlayTTS(%o)', options);
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
-    if (typeof (notificationOptions) === 'undefined') {
-      return false;
-    }
 
     return await this.PlayNotification(notificationOptions);
   }
