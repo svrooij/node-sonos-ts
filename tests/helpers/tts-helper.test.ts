@@ -76,7 +76,7 @@ describe('TtsHelper', () => {
       expect(result).have.property('trackUri', resultUri);
     });
 
-    (process.env.SONOS_TTS_ENDPOINT ? it : it.skip)('throws error when endpoint not set', async () => {
+    (!process.env.SONOS_TTS_ENDPOINT ? it : it.skip)('throws error when endpoint not set', async () => {
       try {
         await TtsHelper.TtsOptionsToNotification({
           text: 'test text'
