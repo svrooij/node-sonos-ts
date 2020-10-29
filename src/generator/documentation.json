@@ -58,14 +58,14 @@
       },
       "ConfigureSleepTimer": {
         "Description": "Stop playing after set sleep timer",
-        "Special behavior":"Send to non-coordinator returns error code 800",
+        "Remarks":"Send to non-coordinator returns error code 800",
         "Params": {
           "NewSleepTimerDuration": "Time to stop after, as hh:mm:ss"
         }
       },
       "DelegateGroupCoordinationTo": {
-        "Description": "Delegates the coordinator role to another player in the same group ",
-        "Special behavior":"Send to non-coordinator has no results - should be avoided.",
+        "Description": "Delegates the coordinator role to another player in the same group",
+        "Remarks":"Send to non-coordinator has no results - should be avoided.",
         "Params": {
           "NewCoordinator": "uuid of the new coordinator - must be in same group",
           "RejoinGroup": "Should former coordinator rejoin the group?"
@@ -73,11 +73,11 @@
       },
       "GetCrossfadeMode": {
         "Description": "Get crossfade mode, 1 for on, 0 for off",
-        "Special behavior":"Send to non-coordinator may return wrong value as only the coordinator value in a group"
+        "Remarks":"Send to non-coordinator may return wrong value as only the coordinator value in a group"
       },
       "GetCurrentTransportActions": {
         "Description": "Get current transport actions such as Set, Stop, Pause, Play, X_DLNA_SeekTime, Next, X_DLNA_SeekTrackNr",
-        "Special behavior":"Send to non-coordinator always returns Stop, Play"
+        "Remarks":"Send to non-coordinator always returns Stop, Play"
       },
       "GetMediaInfo": {
         "Description": "Get information about the current playing media (queue)"
@@ -87,15 +87,15 @@
       },
       "GetRemainingSleepTimerDuration": {
         "Description": "Get time left on sleeptimer or empty string",
-        "Special behavior":"Send to non-coordinator returns error code 800"
+        "Remarks":"Send to non-coordinator returns error code 800"
       },
       "GetTransportInfo": {
         "Description": "Get current transport status, speed and state such as PLAYING, STOPPED, PLAYING, PAUSED_PLAYBACK, TRANSITIONING, NO_MEDIA_PRESENT",
-        "Special behavior":"Send to non-coordinator always returns PLAYING"
+        "Remarks":"Send to non-coordinator always returns PLAYING"
       },
       "GetTransportSettings": {
         "Description": "Get transport settings such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE",
-        "Special behavior":"Send to non-coordinator returns the settings of it's queue"
+        "Remarks":"Send to non-coordinator returns the settings of it's queue"
       },
       "Next": {
         "Description": "Go to next song, not always supported - see GetCurrentTransportActions"
@@ -113,27 +113,27 @@
         "Description": "Go to previous song, not always supported - GetCurrentTransportActions"
       },
       "RemoveAllTracksFromQueue": {
-        "Description": "Flashes the SONOS queue. If queue is already empty it throw error 804",
-        "Special behavior":"Send to non-coordinator returns error code 800."
+        "Description": "Flushes the SONOS queue. If queue is already empty it throw error 804",
+        "Remarks":"Send to non-coordinator returns error code 800."
       },
       "SaveQueue": {
         "Description": "Saves the current SONOS queue as a SONOS playlist and outputs objectID",
-        "Special behavior":"Send to non-coordinator returns error code 800",
+        "Remarks":"Send to non-coordinator returns error code 800",
         "Params": {
           "Title": "SONOS playlist title"
         }
       },
       "Seek": {
         "Description": "Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions",
-        "Special behavior":"Returns error code 701 in case that content does not support Seek or send to non-coordinator",
+        "Remarks":"Returns error code 701 in case that content does not support Seek or send to non-coordinator",
         "Params": {
-          "Unit": "What to seek - either TRACK_NR, REL_TIME, TIME_DELTA, ",
+          "Unit": "What to seek - either TRACK_NR, REL_TIME, TIME_DELTA,",
           "Target": "Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA"
         }
       },
       "SetAVTransportURI": {
         "Description": "Set the transport URI to a song, a stream, the queue, another player-rincon and a lot more",
-        "Special behavior":"If set to another player RINCON, the player is grouped with that one.",
+        "Remarks":"If set to another player RINCON, the player is grouped with that one.",
         "Params": {
           "CurrentURI": "The new TransportURI - its a special SONOS format",
           "CurrentURIMetaData": "Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri"
@@ -141,14 +141,14 @@
       },
       "SetCrossfadeMode": {
         "Description": "Set crossfade mode off",
-        "Special behavior":"Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.",
+        "Remarks":"Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.",
         "Params": {
           "CrossfadeMode": "true for on, false for off"
         }
       },
       "SetPlayMode": {
         "Description": "Set the PlayMode",
-        "Special behavior":"Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.",
+        "Remarks":"Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.",
         "Params": {
           "NewPlayMode": "PlayMode such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE"
         }
@@ -186,7 +186,7 @@
     }
   },
   "DevicePropertiesService": {
-    "Description": "Modify device properties, like led status and stereo pairs - ",
+    "Description": "Modify device properties, like led status and stereo pairs -",
     "File": "device-properties.service.ts",
     "Methods": {
       "CreateStereoPair": {
@@ -213,36 +213,36 @@
     "Methods": {
       "GetGroupMute": {
         "Description": "Get 1 for muted, 0 for un-muted",
-        "Special behavior":"Send to non-coordinator returns error code 701"
+        "Remarks":"Send to non-coordinator returns error code 701"
       },
       "GetGroupVolume": {
         "Description": "Get the group volume.",
-        "Special behavior":"Send to non-coordinator returns error code 701"
+        "Remarks":"Send to non-coordinator returns error code 701"
       },
       "SetGroupMute": {
         "Description": "(Un-/)Mute the entire group",
-        "Special behavior":"Send to non-coordinator returns error code 701",
+        "Remarks":"Send to non-coordinator returns error code 701",
         "Params": {
           "DesiredMute": "True for mute, false for un-mute"
         }
       },
       "SetGroupVolume": {
         "Description": "Change group volume. Players volume will be changed proportionally based on last snapshot",
-        "Special behavior":"Send to non-coordinator returns error code 701",
+        "Remarks":"Send to non-coordinator returns error code 701",
         "Params": {
           "DesiredVolume": "New volume between 0 and 100"
         }
       },
       "SetRelativeGroupVolume": {
         "Description": "Relatively change group volume - returns final group volume. Players volume will be changed proportionally based on last snapshot",
-        "Special behavior":"Send to non-coordinator returns error code 701",
+        "Remarks":"Send to non-coordinator returns error code 701",
         "Params": {
           "Adjustment": "Number between -100 and +100"
         }
       }, 
       "SnapshotGroupVolume": {
         "Description": "Creates a new group volume snapshot,  the volume ratio between all players. It is used by SetGroupVolume and SetRelativeGroupVolume",
-        "Special behavior":"Send to non-coordinator returns error code 701"
+        "Remarks":"Send to non-coordinator returns error code 701"
       }
     }
   },

@@ -19,15 +19,32 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   readonly scpUrl: string = '/xml/RenderingControl1.xml';
 
   // #region methods
+  /**
+   * Get bass level between -10 and 10
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   */
   async GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetBassResponse> { return await this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
 
+  /**
+   * Get EQ value (see SetEQ) for different EQTypes - not supported by all devices (is TV related)
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.EQType - EQ type such as DialogLevel, NightMode, SubGain
+   */
   async GetEQ(input: { InstanceID: number; EQType: string }):
   Promise<GetEQResponse> { return await this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
 
   async GetHeadphoneConnected(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetHeadphoneConnectedResponse> { return await this.SoapRequestWithBody<typeof input, GetHeadphoneConnectedResponse>('GetHeadphoneConnected', input); }
 
+  /**
+   * Get loudness 1 for on, 0 for off
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.Channel - Master [ Master,LF,RF ]
+   */
   async GetLoudness(input: { InstanceID: number; Channel: string }):
   Promise<GetLoudnessResponse> { return await this.SoapRequestWithBody<typeof input, GetLoudnessResponse>('GetLoudness', input); }
 
@@ -43,9 +60,20 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   async GetSupportsOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetSupportsOutputFixedResponse> { return await this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
 
+  /**
+   * Get treble between -10 and 10
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   */
   async GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTrebleResponse> { return await this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
 
+  /**
+   * Get volume between 0 and 100
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.Channel - Master [ Master,LF,RF ]
+   */
   async GetVolume(input: { InstanceID: number; Channel: string }):
   Promise<GetVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetVolumeResponse>('GetVolume', input); }
 
@@ -67,15 +95,35 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   async RestoreVolumePriorToRamp(input: { InstanceID: number; Channel: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RestoreVolumePriorToRamp', input); }
 
+  /**
+   * Set bass level
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {number} input.DesiredBass - between -10 and 10
+   */
   async SetBass(input: { InstanceID: number; DesiredBass: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBass', input); }
 
   async SetChannelMap(input: { InstanceID: number; ChannelMap: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
 
+  /**
+   * Set EQ value for different types - not supported by all devices (is TV related)
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.EQType - DialogLevel, NightMode, SubGain
+   * @param {number} input.DesiredValue - DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10
+   */
   async SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetEQ', input); }
 
+  /**
+   * Set loudness on / off
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {string} input.Channel [ Master,LF,RF ]
+   * @param {boolean} input.DesiredLoudness - true for on
+   */
   async SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLoudness', input); }
 
@@ -94,6 +142,12 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   async SetRoomCalibrationX(input: { InstanceID: number; CalibrationID: string; Coefficients: string; CalibrationMode: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationX', input); }
 
+  /**
+   * Set treble level
+   *
+   * @param {number} input.InstanceID - Sonos only serves one Instance always set to 0
+   * @param {number} input.DesiredTreble - between -10 and 10
+   */
   async SetTreble(input: { InstanceID: number; DesiredTreble: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTreble', input); }
 

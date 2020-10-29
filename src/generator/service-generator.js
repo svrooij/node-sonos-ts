@@ -180,6 +180,10 @@ const addMethodsToService = function (service) {
       actionObject.description = docs.Description
     }
 
+    if (docs.Remarks) {
+      actionObject.remarks = docs.Remarks
+    }
+
     service.parsed.methods.push(actionObject)
   })
   delete service.docs.Methods

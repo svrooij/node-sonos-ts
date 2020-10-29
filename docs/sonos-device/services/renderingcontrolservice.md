@@ -24,6 +24,8 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetBass
 
+Get bass level between -10 and 10
+
 Input:
 
 | parameter | type | description |
@@ -38,12 +40,14 @@ Output:
 
 ### GetEQ
 
+Get EQ value (see SetEQ) for different EQTypes - not supported by all devices (is TV related)
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **EQType** | `string` |  |
+| **EQType** | `string` | EQ type such as DialogLevel, NightMode, SubGain |
 
 Output:
 
@@ -67,12 +71,14 @@ Output:
 
 ### GetLoudness
 
+Get loudness 1 for on, 0 for off
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **Channel** | `string` | Master |
 
 Output:
 
@@ -140,6 +146,8 @@ Output:
 
 ### GetTreble
 
+Get treble between -10 and 10
+
 Input:
 
 | parameter | type | description |
@@ -154,12 +162,14 @@ Output:
 
 ### GetVolume
 
+Get volume between 0 and 100
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **Channel** | `string` | Master |
 
 Output:
 
@@ -255,12 +265,14 @@ Input:
 
 ### SetBass
 
+Set bass level
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **DesiredBass** | `number` |  |
+| **DesiredBass** | `number` | between -10 and 10 |
 
 ### SetChannelMap
 
@@ -273,15 +285,19 @@ Input:
 
 ### SetEQ
 
+Set EQ value for different types - not supported by all devices (is TV related)
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **EQType** | `string` |  |
-| **DesiredValue** | `number` |  |
+| **EQType** | `string` | DialogLevel, NightMode, SubGain |
+| **DesiredValue** | `number` | DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10 |
 
 ### SetLoudness
+
+Set loudness on / off
 
 Input:
 
@@ -289,7 +305,7 @@ Input:
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
 | **Channel** | `string` |  |
-| **DesiredLoudness** | `boolean` |  |
+| **DesiredLoudness** | `boolean` | true for on |
 
 ### SetMute
 
@@ -348,12 +364,14 @@ Input:
 
 ### SetTreble
 
+Set treble level
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **DesiredTreble** | `number` |  |
+| **DesiredTreble** | `number` | between -10 and 10 |
 
 ### SetVolume
 

@@ -2,7 +2,7 @@
   "modelNumber": "S9",
   "modelName": "Sonos Playbar",
   "swGen": 1,
-  "softwareVersion": "57.3-79200",
+  "softwareVersion": "57.3-81090",
   "services": [
     {
       "serviceType": "urn:schemas-upnp-org:service:AVTransport:1",
@@ -649,7 +649,8 @@
                 "description": "Time to stop after, as hh:mm:ss"
               }
             ],
-            "description": "Stop playing after set sleep timer"
+            "description": "Stop playing after set sleep timer",
+            "remarks": "Send to non-coordinator returns error code 800"
           },
           {
             "name": "CreateSavedQueue",
@@ -742,7 +743,8 @@
                   "name": "A_ARG_TYPE_MemberID",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "uuid of the new coordinator - must be in same group"
               },
               {
                 "name": "RejoinGroup",
@@ -750,9 +752,12 @@
                   "name": "A_ARG_TYPE_RejoinGroup",
                   "dataType": "boolean",
                   "ttype": "boolean"
-                }
+                },
+                "description": "Should former coordinator rejoin the group?"
               }
-            ]
+            ],
+            "description": "Delegates the coordinator role to another player in the same group",
+            "remarks": "Send to non-coordinator has no results - should be avoided."
           },
           {
             "name": "EndDirectControlSession",
@@ -793,7 +798,9 @@
                   "ttype": "boolean"
                 }
               }
-            ]
+            ],
+            "description": "Get crossfade mode, 1 for on, 0 for off",
+            "remarks": "Send to non-coordinator may return wrong value as only the coordinator value in a group"
           },
           {
             "name": "GetCurrentTransportActions",
@@ -819,7 +826,9 @@
                   "ttype": "string"
                 }
               }
-            ]
+            ],
+            "description": "Get current transport actions such as Set, Stop, Pause, Play, X_DLNA_SeekTime, Next, X_DLNA_SeekTrackNr",
+            "remarks": "Send to non-coordinator always returns Stop, Play"
           },
           {
             "name": "GetDeviceCapabilities",
@@ -1053,7 +1062,7 @@
                 }
               }
             ],
-            "description": "Get information about current position (position in queue and Time in current song)"
+            "description": "Get information about current position (position in queue and time in current song)"
           },
           {
             "name": "GetRemainingSleepTimerDuration",
@@ -1088,7 +1097,8 @@
                 }
               }
             ],
-            "description": "Get Time left on sleeptimer"
+            "description": "Get time left on sleeptimer or empty string",
+            "remarks": "Send to non-coordinator returns error code 800"
           },
           {
             "name": "GetRunningAlarmProperties",
@@ -1183,7 +1193,9 @@
                   "ttype": "string"
                 }
               }
-            ]
+            ],
+            "description": "Get current transport status, speed and state such as PLAYING, STOPPED, PLAYING, PAUSED_PLAYBACK, TRANSITIONING, NO_MEDIA_PRESENT",
+            "remarks": "Send to non-coordinator always returns PLAYING"
           },
           {
             "name": "GetTransportSettings",
@@ -1228,7 +1240,9 @@
                   "ttype": "string"
                 }
               }
-            ]
+            ],
+            "description": "Get transport settings such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE",
+            "remarks": "Send to non-coordinator returns the settings of it's queue"
           },
           {
             "name": "Next",
@@ -1244,7 +1258,7 @@
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
-            "description": "Go to next song, not always supported"
+            "description": "Go to next song, not always supported - see GetCurrentTransportActions"
           },
           {
             "name": "NotifyDeletedURI",
@@ -1305,7 +1319,8 @@
                     "allowedValue": 1
                   },
                   "ttype": "string"
-                }
+                },
+                "description": "Play speed usually 1, can be a fraction of 1"
               }
             ],
             "description": "Start playing the set TransportURI"
@@ -1324,7 +1339,7 @@
               }
             ],
             "defaultInput": " = { InstanceID: 0 }",
-            "description": "Go to previous song, not always supported"
+            "description": "Go to previous song, not always supported - GetCurrentTransportActions"
           },
           {
             "name": "RemoveAllTracksFromQueue",
@@ -1339,7 +1354,9 @@
                 "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "description": "Flushes the SONOS queue. If queue is already empty it throw error 804",
+            "remarks": "Send to non-coordinator returns error code 800."
           },
           {
             "name": "RemoveTrackFromQueue",
@@ -1647,7 +1664,8 @@
                   "name": "A_ARG_TYPE_SavedQueueTitle",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "SONOS playlist title"
               },
               {
                 "name": "ObjectID",
@@ -1667,7 +1685,9 @@
                   "ttype": "string"
                 }
               }
-            ]
+            ],
+            "description": "Saves the current SONOS queue as a SONOS playlist and outputs objectID",
+            "remarks": "Send to non-coordinator returns error code 800"
           },
           {
             "name": "Seek",
@@ -1695,7 +1715,7 @@
                   },
                   "ttype": "string"
                 },
-                "description": "What to seek"
+                "description": "What to seek - either TRACK_NR, REL_TIME, TIME_DELTA,"
               },
               {
                 "name": "Target",
@@ -1704,10 +1724,11 @@
                   "dataType": "string",
                   "ttype": "string"
                 },
-                "description": "number for track in queue, hh:mm:ss for absolute time in track"
+                "description": "Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA"
               }
             ],
-            "description": "Seek track in queue, time delta or absolute time in song"
+            "description": "Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions",
+            "remarks": "Returns error code 701 in case that content does not support Seek or send to non-coordinator"
           },
           {
             "name": "SetAVTransportURI",
@@ -1728,7 +1749,7 @@
                   "dataType": "string",
                   "ttype": "string"
                 },
-                "description": "The track URI"
+                "description": "The new TransportURI - its a special SONOS format"
               },
               {
                 "name": "CurrentURIMetaData",
@@ -1737,10 +1758,11 @@
                   "dataType": "string",
                   "ttype": "string | Track"
                 },
-                "description": "Track Metadata"
+                "description": "Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri"
               }
             ],
-            "description": "Set the transport URI, to a song, a stream, the queue and a lot more"
+            "description": "Set the transport URI to a song, a stream, the queue, another player-rincon and a lot more",
+            "remarks": "If set to another player RINCON, the player is grouped with that one."
           },
           {
             "name": "SetCrossfadeMode",
@@ -1760,9 +1782,12 @@
                   "name": "CurrentCrossfadeMode",
                   "dataType": "boolean",
                   "ttype": "boolean"
-                }
+                },
+                "description": "true for on, false for off"
               }
-            ]
+            ],
+            "description": "Set crossfade mode off",
+            "remarks": "Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode."
           },
           {
             "name": "SetNextAVTransportURI",
@@ -1824,10 +1849,11 @@
                   "defaultValue": "NORMAL",
                   "ttype": "PlayMode"
                 },
-                "description": "PlayMode"
+                "description": "PlayMode such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE"
               }
             ],
-            "description": "Set the PlayMode"
+            "description": "Set the PlayMode",
+            "remarks": "Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712."
           },
           {
             "name": "SnoozeAlarm",
@@ -2703,7 +2729,7 @@
                   "dataType": "string",
                   "ttype": "string"
                 },
-                "description": "The starttime as hh:mm:ss"
+                "description": "The start time as hh:mm:ss"
               },
               {
                 "name": "Duration",
@@ -2783,7 +2809,7 @@
                   "defaultValue": "NORMAL",
                   "ttype": "string"
                 },
-                "description": "Alarm playmode"
+                "description": "Alarm play mode"
               },
               {
                 "name": "Volume",
@@ -2801,7 +2827,7 @@
                   "dataType": "boolean",
                   "ttype": "boolean"
                 },
-                "description": "Should grouped palyers also play the alarm?"
+                "description": "Should grouped players also play the alarm?"
               }
             ],
             "outParameters": [
@@ -3157,7 +3183,7 @@
                   "dataType": "string",
                   "ttype": "string"
                 },
-                "description": "The starttime as hh:mm:ss"
+                "description": "The start time as hh:mm:ss"
               },
               {
                 "name": "Duration",
@@ -3237,7 +3263,7 @@
                   "defaultValue": "NORMAL",
                   "ttype": "string"
                 },
-                "description": "Alarm playmode"
+                "description": "Alarm play mode"
               },
               {
                 "name": "Volume",
@@ -3255,7 +3281,7 @@
                   "dataType": "boolean",
                   "ttype": "boolean"
                 },
-                "description": "Should grouped palyers also play the alarm?"
+                "description": "Should grouped players also play the alarm?"
               }
             ],
             "description": "Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter"
@@ -4726,7 +4752,7 @@
       "name": "DeviceProperties",
       "svcName": "DevicePropertiesService",
       "docs": {
-        "Description": "Modify device properties, like led status and stereo pairs",
+        "Description": "Modify device properties, like led status and stereo pairs -",
         "File": "device-properties.service.ts"
       },
       "parsed": {
@@ -4767,9 +4793,11 @@
                   "name": "ChannelMapSet",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF"
               }
-            ]
+            ],
+            "description": "Create a stereo pair (left, right speakers), right one becomes hidden - only supported by some players"
           },
           {
             "name": "EnterConfigMode",
@@ -5150,9 +5178,11 @@
                   "name": "ChannelMapSet",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF"
               }
-            ]
+            ],
+            "description": "Separate a stereo pair - only supported by some players"
           },
           {
             "name": "SetAutoplayLinkedZones",
@@ -5980,7 +6010,7 @@
       "name": "GroupRenderingControl",
       "svcName": "GroupRenderingControlService",
       "docs": {
-        "Description": "Volume related controls for groups",
+        "Description": "Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players.",
         "File": "group-rendering-control.service.ts"
       },
       "parsed": {
@@ -6011,7 +6041,8 @@
                 }
               }
             ],
-            "description": "Get if the group is muted"
+            "description": "Get 1 for muted, 0 for un-muted",
+            "remarks": "Send to non-coordinator returns error code 701"
           },
           {
             "name": "GetGroupVolume",
@@ -6043,7 +6074,8 @@
                 }
               }
             ],
-            "description": "Get the average group volume"
+            "description": "Get the group volume.",
+            "remarks": "Send to non-coordinator returns error code 701"
           },
           {
             "name": "SetGroupMute",
@@ -6064,10 +6096,11 @@
                   "dataType": "boolean",
                   "ttype": "boolean"
                 },
-                "description": "True for mute, false for unmute"
+                "description": "True for mute, false for un-mute"
               }
             ],
-            "description": "(Un-/)Mute the entire group"
+            "description": "(Un-/)Mute the entire group",
+            "remarks": "Send to non-coordinator returns error code 701"
           },
           {
             "name": "SetGroupVolume",
@@ -6093,10 +6126,11 @@
                   },
                   "ttype": "number"
                 },
-                "description": "New volume"
+                "description": "New volume between 0 and 100"
               }
             ],
-            "description": "Change group volume, players will be changed proportionally"
+            "description": "Change group volume. Players volume will be changed proportionally based on last snapshot",
+            "remarks": "Send to non-coordinator returns error code 701"
           },
           {
             "name": "SetRelativeGroupVolume",
@@ -6118,7 +6152,7 @@
                   "dataType": "i4",
                   "ttype": "number"
                 },
-                "description": "number between -100 / +100"
+                "description": "Number between -100 and +100"
               }
             ],
             "outParameters": [
@@ -6136,7 +6170,8 @@
                 }
               }
             ],
-            "description": "Relativly change group volume"
+            "description": "Relatively change group volume - returns final group volume. Players volume will be changed proportionally based on last snapshot",
+            "remarks": "Send to non-coordinator returns error code 701"
           },
           {
             "name": "SnapshotGroupVolume",
@@ -6151,7 +6186,9 @@
                 "description": "Sonos only serves one Instance always set to 0"
               }
             ],
-            "defaultInput": " = { InstanceID: 0 }"
+            "defaultInput": " = { InstanceID: 0 }",
+            "description": "Creates a new group volume snapshot,  the volume ratio between all players. It is used by SetGroupVolume and SetRelativeGroupVolume",
+            "remarks": "Send to non-coordinator returns error code 701"
           }
         ],
         "responses": [
@@ -7598,7 +7635,8 @@
                   "ttype": "number"
                 }
               }
-            ]
+            ],
+            "description": "Get bass level between -10 and 10"
           },
           {
             "name": "GetEQ",
@@ -7619,7 +7657,8 @@
                   "name": "A_ARG_TYPE_EQType",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "EQ type such as DialogLevel, NightMode, SubGain"
               }
             ],
             "outParameters": [
@@ -7631,7 +7670,8 @@
                   "ttype": "number"
                 }
               }
-            ]
+            ],
+            "description": "Get EQ value (see SetEQ) for different EQTypes - not supported by all devices (is TV related)"
           },
           {
             "name": "GetHeadphoneConnected",
@@ -7685,7 +7725,8 @@
                     ]
                   },
                   "ttype": "string"
-                }
+                },
+                "description": "Master"
               }
             ],
             "outParameters": [
@@ -7697,7 +7738,8 @@
                   "ttype": "boolean"
                 }
               }
-            ]
+            ],
+            "description": "Get loudness 1 for on, 0 for off"
           },
           {
             "name": "GetMute",
@@ -7855,7 +7897,8 @@
                   "ttype": "number"
                 }
               }
-            ]
+            ],
+            "description": "Get treble between -10 and 10"
           },
           {
             "name": "GetVolume",
@@ -7883,7 +7926,8 @@
                     ]
                   },
                   "ttype": "string"
-                }
+                },
+                "description": "Master"
               }
             ],
             "outParameters": [
@@ -7900,7 +7944,8 @@
                   "ttype": "number"
                 }
               }
-            ]
+            ],
+            "description": "Get volume between 0 and 100"
           },
           {
             "name": "GetVolumeDB",
@@ -8226,9 +8271,11 @@
                     "step": 1
                   },
                   "ttype": "number"
-                }
+                },
+                "description": "between -10 and 10"
               }
-            ]
+            ],
+            "description": "Set bass level"
           },
           {
             "name": "SetChannelMap",
@@ -8270,7 +8317,8 @@
                   "name": "A_ARG_TYPE_EQType",
                   "dataType": "string",
                   "ttype": "string"
-                }
+                },
+                "description": "DialogLevel, NightMode, SubGain"
               },
               {
                 "name": "DesiredValue",
@@ -8278,9 +8326,11 @@
                   "name": "EQValue",
                   "dataType": "i2",
                   "ttype": "number"
-                }
+                },
+                "description": "DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10"
               }
-            ]
+            ],
+            "description": "Set EQ value for different types - not supported by all devices (is TV related)"
           },
           {
             "name": "SetLoudness",
@@ -8315,9 +8365,11 @@
                   "name": "Loudness",
                   "dataType": "boolean",
                   "ttype": "boolean"
-                }
+                },
+                "description": "true for on"
               }
-            ]
+            ],
+            "description": "Set loudness on / off"
           },
           {
             "name": "SetMute",
@@ -8515,9 +8567,11 @@
                     "step": 1
                   },
                   "ttype": "number"
-                }
+                },
+                "description": "between -10 and 10"
               }
-            ]
+            ],
+            "description": "Set treble level"
           },
           {
             "name": "SetVolume",

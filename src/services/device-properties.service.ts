@@ -2,7 +2,7 @@
 import BaseService from './base-service';
 
 /**
- * Modify device properties, like led status and stereo pairs
+ * Modify device properties, like led status and stereo pairs -
  *
  * @export
  * @class DevicePropertiesService
@@ -24,6 +24,11 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async AddHTSatellite(input: { HTSatChanMapSet: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('AddHTSatellite', input); }
 
+  /**
+   * Create a stereo pair (left, right speakers), right one becomes hidden - only supported by some players
+   *
+   * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   */
   async CreateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('CreateStereoPair', input); }
 
@@ -69,6 +74,11 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async RemoveHTSatellite(input: { SatRoomUUID: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
+  /**
+   * Separate a stereo pair - only supported by some players
+   *
+   * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   */
   async SeparateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SeparateStereoPair', input); }
 

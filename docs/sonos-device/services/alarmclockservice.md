@@ -30,16 +30,16 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **StartLocalTime** | `string` | The starttime as hh:mm:ss |
+| **StartLocalTime** | `string` | The start time as hh:mm:ss |
 | **Duration** | `string` | The duration as hh:mm:ss |
 | **Recurrence** | `string` | Repeat this alarm on |
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |
 | **ProgramURI** | `string` | The sound uri |
 | **ProgramMetaData** | `string | Track` | The sound metadata, can be empty string |
-| **PlayMode** | `string` | Alarm playmode |
+| **PlayMode** | `string` | Alarm play mode |
 | **Volume** | `number` | Volume between 0 and 100 |
-| **IncludeLinkedZones** | `boolean` | Should grouped palyers also play the alarm? |
+| **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
 
 Output:
 
@@ -217,16 +217,16 @@ Input:
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **ID** | `number` | The ID of the alarm see ListAndParseAlarms |
-| **StartLocalTime** | `string` | The starttime as hh:mm:ss |
+| **StartLocalTime** | `string` | The start time as hh:mm:ss |
 | **Duration** | `string` | The duration as hh:mm:ss |
 | **Recurrence** | `string` | Repeat this alarm on |
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |
 | **ProgramURI** | `string` | The sound uri |
 | **ProgramMetaData** | `string | Track` | The sound metadata, can be empty string |
-| **PlayMode** | `string` | Alarm playmode |
+| **PlayMode** | `string` | Alarm play mode |
 | **Volume** | `number` | Volume between 0 and 100 |
-| **IncludeLinkedZones** | `boolean` | Should grouped palyers also play the alarm? |
+| **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
 
 ## AlarmClockService event
 
