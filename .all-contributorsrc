@@ -32,7 +32,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "hklages",
+      "name": "H. Klages",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/17273119?v=4",
+      "profile": "https://github.com/hklages",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "skipCi": true
 }

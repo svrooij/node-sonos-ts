@@ -9,6 +9,8 @@ grand_parent: Sonos device
 
 Modify device properties, like led status and stereo pairs -
 
+The DevicePropertiesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 const sonos = new SonosDevice('192.168.x.x')
@@ -121,7 +123,7 @@ Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **CurrentButtonLockState** | `string` |  |
+| **CurrentButtonLockState** | `string` |  Possible values: `On` / `Off` |
 
 ### GetButtonState
 
@@ -151,7 +153,7 @@ Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **CurrentLEDState** | `string` |  |
+| **CurrentLEDState** | `string` |  Possible values: `On` / `Off` |
 
 ### GetUseAutoplayVolume
 
@@ -258,7 +260,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **DesiredButtonLockState** | `string` |  |
+| **DesiredButtonLockState** | `string` |  Allowed values: `On` / `Off` |
 
 ### SetLEDState
 
@@ -266,7 +268,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **DesiredLEDState** | `string` |  |
+| **DesiredLEDState** | `string` |  Allowed values: `On` / `Off` |
 
 ### SetUseAutoplayVolume
 
@@ -297,58 +299,60 @@ sonos.DevicePropertiesService.Events('serviceEvent', (data) => {
 });
 ```
 
-The **DevicePropertiesService** emits events with these properties. Not all properties are emitted everytime.
+The **DevicePropertiesService** emits events with these properties. Not all properties are emitted every time.
 
-| parameter | type |
-|:----------|:-----|
-| **AirPlayEnabled** | `boolean` |
-| **AutoplayIncludeLinkedZones** | `boolean` |
-| **AutoplayRoomUUID** | `string` |
-| **AutoplaySource** | `string` |
-| **AutoplayUseVolume** | `boolean` |
-| **AutoplayVolume** | `number` |
-| **AvailableRoomCalibration** | `string` |
-| **BehindWifiExtender** | `number` |
-| **ButtonLockState** | `string` |
-| **ChannelFreq** | `number` |
-| **ChannelMapSet** | `string` |
-| **ConfigMode** | `string` |
-| **Configuration** | `string` |
-| **CopyrightInfo** | `string` |
-| **DisplaySoftwareVersion** | `string` |
-| **ExtraInfo** | `string` |
-| **Flags** | `number` |
-| **HTAudioIn** | `number` |
-| **HTBondedZoneCommitState** | `number` |
-| **HTFreq** | `number` |
-| **HTSatChanMapSet** | `string` |
-| **HardwareVersion** | `string` |
-| **HasConfiguredSSID** | `boolean` |
-| **HdmiCecAvailable** | `boolean` |
-| **HouseholdID** | `string` |
-| **IPAddress** | `string` |
-| **Icon** | `string` |
-| **Invisible** | `boolean` |
-| **IsIdle** | `boolean` |
-| **IsZoneBridge** | `boolean` |
-| **KeepGrouped** | `boolean` |
-| **LEDState** | `string` |
-| **LastChangedPlayState** | `string` |
-| **MACAddress** | `string` |
-| **MicEnabled** | `number` |
-| **MoreInfo** | `string` |
-| **Orientation** | `number` |
-| **RoomCalibrationState** | `number` |
-| **SatRoomUUID** | `string` |
-| **SecureRegState** | `number` |
-| **SerialNumber** | `string` |
-| **SettingsReplicationState** | `string` |
-| **SoftwareVersion** | `string` |
-| **SupportsAudioClip** | `boolean` |
-| **SupportsAudioIn** | `boolean` |
-| **TVConfigurationError** | `boolean` |
-| **VoiceConfigState** | `number` |
-| **WifiEnabled** | `boolean` |
-| **WirelessLeafOnly** | `boolean` |
-| **WirelessMode** | `number` |
-| **ZoneName** | `string` |
+| parameter | type | possible values |
+|:----------|:-----|:----------------|
+| **AirPlayEnabled** | `boolean` |  | 
+| **AutoplayIncludeLinkedZones** | `boolean` |  | 
+| **AutoplayRoomUUID** | `string` |  | 
+| **AutoplaySource** | `string` |  | 
+| **AutoplayUseVolume** | `boolean` |  | 
+| **AutoplayVolume** | `number` |  | 
+| **AvailableRoomCalibration** | `string` |  | 
+| **BehindWifiExtender** | `number` |  | 
+| **ButtonLockState** | `string` | `On` / `Off` | 
+| **ChannelFreq** | `number` |  | 
+| **ChannelMapSet** | `string` |  | 
+| **ConfigMode** | `string` |  | 
+| **Configuration** | `string` |  | 
+| **CopyrightInfo** | `string` |  | 
+| **DisplaySoftwareVersion** | `string` |  | 
+| **ExtraInfo** | `string` |  | 
+| **Flags** | `number` |  | 
+| **HardwareVersion** | `string` |  | 
+| **HasConfiguredSSID** | `boolean` |  | 
+| **HdmiCecAvailable** | `boolean` |  | 
+| **HouseholdID** | `string` |  | 
+| **HTAudioIn** | `number` |  | 
+| **HTBondedZoneCommitState** | `number` |  | 
+| **HTFreq** | `number` |  | 
+| **HTSatChanMapSet** | `string` |  | 
+| **Icon** | `string` |  | 
+| **Invisible** | `boolean` |  | 
+| **IPAddress** | `string` |  | 
+| **IsIdle** | `boolean` |  | 
+| **IsZoneBridge** | `boolean` |  | 
+| **KeepGrouped** | `boolean` |  | 
+| **LastChangedPlayState** | `string` |  | 
+| **LEDState** | `string` | `On` / `Off` | 
+| **MACAddress** | `string` |  | 
+| **MicEnabled** | `number` |  | 
+| **MoreInfo** | `string` |  | 
+| **Orientation** | `number` |  | 
+| **RoomCalibrationState** | `number` |  | 
+| **SatRoomUUID** | `string` |  | 
+| **SecureRegState** | `number` |  | 
+| **SerialNumber** | `string` |  | 
+| **SettingsReplicationState** | `string` |  | 
+| **SoftwareVersion** | `string` |  | 
+| **SupportsAudioClip** | `boolean` |  | 
+| **SupportsAudioIn** | `boolean` |  | 
+| **TVConfigurationError** | `boolean` |  | 
+| **VoiceConfigState** | `number` |  | 
+| **WifiEnabled** | `boolean` |  | 
+| **WirelessLeafOnly** | `boolean` |  | 
+| **WirelessMode** | `number` |  | 
+| **ZoneName** | `string` |  | 
+
+This file is automatically generated with [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs), do not edit manually.
