@@ -220,6 +220,14 @@ export default class SonosDeviceBase {
 
   private systempropertiesservice: SystemPropertiesService | undefined;
 
+  /**
+    * Manage system-wide settings, mainly account stuff.
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {SystemPropertiesService}
+    * @memberof SonosDeviceBase
+    */
   public get SystemPropertiesService(): SystemPropertiesService {
     if (this.systempropertiesservice === undefined) this.systempropertiesservice = new SystemPropertiesService(this.host, this.port, this.uuid);
     return this.systempropertiesservice;

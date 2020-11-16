@@ -2,9 +2,9 @@
  * Sonos AVTransportService
  * 
  * Stephan van Rooij
- * https://svrooij.io/sonos-api-docs
+ * https://svrooij.io
  *
- * This file is generated, do not edit manually.
+ * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
 import { PlayMode, Track } from '../models';

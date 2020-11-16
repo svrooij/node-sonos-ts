@@ -7,6 +7,8 @@ grand_parent: Sonos device
 # SystemPropertiesService
 {: .no_toc }
 
+Manage system-wide settings, mainly account stuff.
+
 The SystemPropertiesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
 
 ```js
@@ -104,17 +106,21 @@ Output:
 
 ### GetString
 
+Get a saved string.
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **VariableName** | `string` |  |
+| **VariableName** | `string` | The key for this variable |
 
 Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **StringValue** | `string` |  |
+
+**Remarks** Strings are saved in the system with SetString, every speaker should send the same data. Will error when not existing
 
 ### GetWebCode
 
@@ -160,11 +166,15 @@ Input:
 
 ### Remove
 
+Remove a saved string
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **VariableName** | `string` |  |
+| **VariableName** | `string` | The key for this variable |
+
+**Remarks** Not sure what happens if you call this with a VariableName that doesn&#x27;t exists.
 
 ### RemoveAccount
 
@@ -209,12 +219,16 @@ Input:
 
 ### SetString
 
+Save a string in the system
+
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **VariableName** | `string` |  |
+| **VariableName** | `string` | The key for this variable, use something unique |
 | **StringValue** | `string` |  |
+
+**Remarks** Strings are saved in the system, retrieve values with GetString.
 
 ## SystemPropertiesService event
 
