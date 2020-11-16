@@ -33,7 +33,7 @@ Input:
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 | **ContainerURI** | `string` |  |
-| **ContainerMetaData** | `string | Track` |  |
+| **ContainerMetaData** | `Track | string` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 | **NumberOfURIs** | `number` |  |
@@ -57,7 +57,7 @@ Input:
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 | **EnqueuedURI** | `string` |  |
-| **EnqueuedURIMetaData** | `string | Track` |  |
+| **EnqueuedURIMetaData** | `Track | string` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
@@ -183,7 +183,7 @@ Input:
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 | **ContainerURI** | `string` |  |
-| **ContainerMetaData** | `string | Track` |  |
+| **ContainerMetaData** | `Track | string` |  |
 | **CurrentTrackIndex** | `number` |  |
 | **NewCurrentTrackIndices** | `string` |  |
 | **NumberOfURIs** | `number` |  |

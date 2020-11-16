@@ -561,18 +561,18 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.CurrentTrackUri, this.currentTrackUri ?? '');
     }
 
-    if (data.CurrentTrackMetaData) this.Events.emit(SonosEvents.CurrentTrackMetadata, data.CurrentTrackMetaData);
+    if (data.CurrentTrackMetaData && typeof data.CurrentTrackMetaData !== 'string') this.Events.emit(SonosEvents.CurrentTrackMetadata, data.CurrentTrackMetaData);
 
     if (data.NextTrackURI && this.nextTrackUri !== data.NextTrackURI) {
       this.nextTrackUri = data.NextTrackURI;
       this.Events.emit(SonosEvents.NextTrackUri, this.nextTrackUri ?? '');
-      if (data.NextTrackMetaData) this.Events.emit(SonosEvents.NextTrackMetadata, data.NextTrackMetaData);
+      if (data.NextTrackMetaData && typeof data.NextTrackMetaData !== 'string') this.Events.emit(SonosEvents.NextTrackMetadata, data.NextTrackMetaData);
     }
 
     if (data.EnqueuedTransportURI && this.enqueuedTransportUri !== data.EnqueuedTransportURI) {
       this.enqueuedTransportUri = data.EnqueuedTransportURI;
       this.Events.emit(SonosEvents.EnqueuedTransportUri, this.enqueuedTransportUri ?? '');
-      if (data.EnqueuedTransportURIMetaData !== undefined) this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData);
+      if (data.EnqueuedTransportURIMetaData !== undefined && typeof data.EnqueuedTransportURIMetaData !== 'string') this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData);
     }
   }
 

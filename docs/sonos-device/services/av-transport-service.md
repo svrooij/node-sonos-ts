@@ -34,9 +34,9 @@ Input:
 | **UpdateID** | `number` |  |
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIs** | `string` |  |
-| **EnqueuedURIsMetaData** | `string | Track` |  |
+| **EnqueuedURIsMetaData** | `Track | string` |  |
 | **ContainerURI** | `string` |  |
-| **ContainerMetaData** | `string | Track` |  |
+| **ContainerMetaData** | `Track | string` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
@@ -57,7 +57,7 @@ Input:
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **EnqueuedURI** | `string` |  |
-| **EnqueuedURIMetaData** | `string | Track` |  |
+| **EnqueuedURIMetaData** | `Track | string` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
@@ -79,7 +79,7 @@ Input:
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **EnqueuedURI** | `string` |  |
-| **EnqueuedURIMetaData** | `string | Track` |  |
+| **EnqueuedURIMetaData** | `Track | string` |  |
 | **AddAtIndex** | `number` |  |
 
 Output:
@@ -127,7 +127,7 @@ Input:
 | **OtherMembers** | `string` |  |
 | **TransportSettings** | `string` |  |
 | **CurrentURI** | `string` |  |
-| **CurrentURIMetaData** | `string | Track` |  |
+| **CurrentURIMetaData** | `Track | string` |  |
 | **SleepTimerState** | `string` |  |
 | **AlarmState** | `string` |  |
 | **StreamRestartState** | `string` |  |
@@ -145,7 +145,7 @@ Input:
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
 | **CurrentURI** | `string` |  |
-| **CurrentURIMetaData** | `string | Track` |  |
+| **CurrentURIMetaData** | `Track | string` |  |
 | **SleepTimerState** | `string` |  |
 | **AlarmState** | `string` |  |
 | **StreamRestartState** | `string` |  |
@@ -198,7 +198,7 @@ Input:
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Title** | `string` |  |
 | **EnqueuedURI** | `string` |  |
-| **EnqueuedURIMetaData** | `string | Track` |  |
+| **EnqueuedURIMetaData** | `Track | string` |  |
 
 Output:
 
@@ -300,9 +300,9 @@ Output:
 | **NrTracks** | `number` |  |
 | **MediaDuration** | `string` |  |
 | **CurrentURI** | `string` |  |
-| **CurrentURIMetaData** | `string | Track` |  |
+| **CurrentURIMetaData** | `Track | string` |  |
 | **NextURI** | `string` |  |
-| **NextURIMetaData** | `string | Track` |  |
+| **NextURIMetaData** | `Track | string` |  |
 | **PlayMedium** | `string` |  Possible values: `NONE` / `NETWORK` |
 | **RecordMedium** | `string` |  Possible values:  |
 | **WriteStatus** | `string` |  |
@@ -323,7 +323,7 @@ Output:
 |:----------|:-----|:------------|
 | **Track** | `number` |  |
 | **TrackDuration** | `string` |  |
-| **TrackMetaData** | `string | Track` |  |
+| **TrackMetaData** | `Track | string` |  |
 | **TrackURI** | `string` |  |
 | **RelTime** | `string` |  |
 | **AbsTime** | `string` |  |
@@ -399,7 +399,7 @@ Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **PlayMode** | `string` |  Possible values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
+| **PlayMode** | `PlayMode` |  Possible values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **RecQualityMode** | `string` |  |
 
 **Remarks** Send to non-coordinator returns the settings of it&#x27;s queue
@@ -536,8 +536,8 @@ Input:
 | **LoggedStartTime** | `string` |  |
 | **Duration** | `string` |  |
 | **ProgramURI** | `string` |  |
-| **ProgramMetaData** | `string | Track` |  |
-| **PlayMode** | `string` |  Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
+| **ProgramMetaData** | `Track | string` |  |
+| **PlayMode** | `PlayMode` |  Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **Volume** | `number` |  |
 | **IncludeLinkedZones** | `boolean` |  |
 
@@ -585,7 +585,7 @@ Input:
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentURI** | `string` | The new TransportURI - its a special SONOS format |
-| **CurrentURIMetaData** | `string | Track` | Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri |
+| **CurrentURIMetaData** | `Track | string` | Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri |
 
 **Remarks** If set to another player RINCON, the player is grouped with that one.
 
@@ -610,7 +610,7 @@ Input:
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NextURI** | `string` |  |
-| **NextURIMetaData** | `string | Track` |  |
+| **NextURIMetaData** | `Track | string` |  |
 
 ### SetPlayMode
 
@@ -621,7 +621,7 @@ Input:
 | parameter | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
-| **NewPlayMode** | `string` | New playmode Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
+| **NewPlayMode** | `PlayMode` | New playmode Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 
 **Remarks** Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.
 
@@ -644,7 +644,7 @@ Input:
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ProgramURI** | `string` |  |
-| **ProgramMetaData** | `string | Track` |  |
+| **ProgramMetaData** | `Track | string` |  |
 | **Volume** | `number` |  |
 | **IncludeLinkedZones** | `boolean` |  |
 | **ResetVolumeAfter** | `boolean` |  |
@@ -679,15 +679,15 @@ The **AVTransportService** emits events with these properties. Not all propertie
 | **AlarmLoggedStartTime** | `string` |  | 
 | **AlarmRunning** | `boolean` |  | 
 | **AVTransportURI** | `string` |  | 
-| **AVTransportURIMetaData** | `string | Track` |  | 
+| **AVTransportURIMetaData** | `Track | string` |  | 
 | **CurrentCrossfadeMode** | `boolean` |  | 
 | **CurrentMediaDuration** | `string` |  | 
-| **CurrentPlayMode** | `string` | `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` | 
+| **CurrentPlayMode** | `PlayMode` | `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` | 
 | **CurrentRecordQualityMode** | `string` |  | 
 | **CurrentSection** | `number` |  | 
 | **CurrentTrack** | `number` |  | 
 | **CurrentTrackDuration** | `string` |  | 
-| **CurrentTrackMetaData** | `string | Track` |  | 
+| **CurrentTrackMetaData** | `Track | string` |  | 
 | **CurrentTrackURI** | `string` |  | 
 | **CurrentTransportActions** | `string` |  | 
 | **CurrentValidPlayModes** | `string` |  | 
@@ -695,12 +695,12 @@ The **AVTransportService** emits events with these properties. Not all propertie
 | **DirectControlClientID** | `string` |  | 
 | **DirectControlIsSuspended** | `boolean` |  | 
 | **EnqueuedTransportURI** | `string` |  | 
-| **EnqueuedTransportURIMetaData** | `string | Track` |  | 
+| **EnqueuedTransportURIMetaData** | `Track | string` |  | 
 | **LastChange** | `string` |  | 
 | **MuseSessions** | `string` |  | 
 | **NextAVTransportURI** | `string` |  | 
-| **NextAVTransportURIMetaData** | `string | Track` |  | 
-| **NextTrackMetaData** | `string | Track` |  | 
+| **NextAVTransportURIMetaData** | `Track | string` |  | 
+| **NextTrackMetaData** | `Track | string` |  | 
 | **NextTrackURI** | `string` |  | 
 | **NumberOfTracks** | `number` |  | 
 | **PlaybackStorageMedium** | `string` | `NONE` / `NETWORK` | 

@@ -38,8 +38,8 @@ Input:
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |
 | **ProgramURI** | `string` | The sound uri |
-| **ProgramMetaData** | `string | Track` | The sound metadata, can be empty string |
-| **PlayMode** | `string` | Alarm play mode Allowed values: `NORMAL` / `REPEAT_ALL` / `SHUFFLE_NOREPEAT` / `SHUFFLE` |
+| **ProgramMetaData** | `Track | string` | The sound metadata, can be empty string |
+| **PlayMode** | `PlayMode` | Alarm play mode Allowed values: `NORMAL` / `REPEAT_ALL` / `SHUFFLE_NOREPEAT` / `SHUFFLE` |
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
 
@@ -225,8 +225,8 @@ Input:
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |
 | **ProgramURI** | `string` | The sound uri |
-| **ProgramMetaData** | `string | Track` | The sound metadata, can be empty string |
-| **PlayMode** | `string` | Alarm play mode Allowed values: `NORMAL` / `REPEAT_ALL` / `SHUFFLE_NOREPEAT` / `SHUFFLE` |
+| **ProgramMetaData** | `Track | string` | The sound metadata, can be empty string |
+| **PlayMode** | `PlayMode` | Alarm play mode Allowed values: `NORMAL` / `REPEAT_ALL` / `SHUFFLE_NOREPEAT` / `SHUFFLE` |
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
 
