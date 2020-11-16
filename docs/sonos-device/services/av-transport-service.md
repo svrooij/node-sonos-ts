@@ -9,6 +9,8 @@ grand_parent: Sonos device
 
 Service that controls stuff related to transport (play/pause/next/special urls)
 
+The AVTransportService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 const sonos = new SonosDevice('192.168.x.x')
@@ -28,7 +30,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **UpdateID** | `number` |  |
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIs** | `string` |  |
@@ -53,7 +55,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `string | Track` |  |
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
@@ -73,7 +75,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **EnqueuedURI** | `string` |  |
@@ -94,7 +96,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ### BecomeCoordinatorOfStandaloneGroup
 
@@ -104,7 +106,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -119,7 +121,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -138,7 +140,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -158,7 +160,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
 | **NewCoordinator** | `string` |  |
 | **NewTransportSettings** | `string` |  |
@@ -170,7 +172,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewTransportSettings** | `string` |  |
 | **CurrentAVTransportURI** | `string` |  |
 
@@ -182,7 +184,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewSleepTimerDuration** | `string` | Time to stop after, as hh:mm:ss |
 
 **Remarks** Send to non-coordinator returns error code 800
@@ -193,7 +195,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **Title** | `string` |  |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `string | Track` |  |
@@ -215,7 +217,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewCoordinator** | `string` | uuid of the new coordinator - must be in same group |
 | **RejoinGroup** | `boolean` | Should former coordinator rejoin the group? |
 
@@ -227,7 +229,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ### GetCrossfadeMode
 
@@ -237,7 +239,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -255,7 +257,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -271,7 +273,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -289,7 +291,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -301,8 +303,8 @@ Output:
 | **CurrentURIMetaData** | `string | Track` |  |
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `string | Track` |  |
-| **PlayMedium** | `string` |  |
-| **RecordMedium** | `string` |  |
+| **PlayMedium** | `string` |  Possible values: `NONE` / `NETWORK` |
+| **RecordMedium** | `string` |  Possible values:  |
 | **WriteStatus** | `string` |  |
 
 ### GetPositionInfo
@@ -313,7 +315,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -336,7 +338,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -353,7 +355,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -371,33 +373,33 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **CurrentTransportState** | `string` |  |
+| **CurrentTransportState** | `string` |  Possible values: `STOPPED` / `PLAYING` / `PAUSED_PLAYBACK` / `TRANSITIONING` |
 | **CurrentTransportStatus** | `string` |  |
-| **CurrentSpeed** | `string` |  |
+| **CurrentSpeed** | `string` |  Possible values:  |
 
 **Remarks** Send to non-coordinator always returns PLAYING
 
 ### GetTransportSettings
 
-Get transport settings such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE
+Get transport settings
 
 Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **PlayMode** | `PlayMode` |  |
+| **PlayMode** | `string` |  Possible values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **RecQualityMode** | `string` |  |
 
 **Remarks** Send to non-coordinator returns the settings of it&#x27;s queue
@@ -410,7 +412,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ### NotifyDeletedURI
 
@@ -418,7 +420,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **DeletedURI** | `string` |  |
 
 ### Pause
@@ -429,7 +431,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ### Play
 
@@ -439,8 +441,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Speed** | `string` | Play speed usually 1, can be a fraction of 1 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Speed** | `string` | Play speed usually 1, can be a fraction of 1 Allowed values:  |
 
 ### Previous
 
@@ -450,7 +452,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ### RemoveAllTracksFromQueue
 
@@ -460,7 +462,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 **Remarks** Send to non-coordinator returns error code 800.
 
@@ -470,7 +472,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 
@@ -480,7 +482,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **UpdateID** | `number` |  |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
@@ -497,7 +499,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 | **InsertBefore** | `number` |  |
@@ -509,7 +511,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **TrackList** | `string` |  |
@@ -529,13 +531,13 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **AlarmID** | `number` |  |
 | **LoggedStartTime** | `string` |  |
 | **Duration** | `string` |  |
 | **ProgramURI** | `string` |  |
 | **ProgramMetaData** | `string | Track` |  |
-| **PlayMode** | `PlayMode` |  |
+| **PlayMode** | `string` |  Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **Volume** | `number` |  |
 | **IncludeLinkedZones** | `boolean` |  |
 
@@ -547,7 +549,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **Title** | `string` | SONOS playlist title |
 | **ObjectID** | `string` |  |
 
@@ -567,8 +569,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Unit** | `string` | What to seek - either TRACK_NR, REL_TIME, TIME_DELTA, |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Unit** | `string` | What to seek Allowed values: `TRACK_NR` / `REL_TIME` / `TIME_DELTA` |
 | **Target** | `string` | Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA |
 
 **Remarks** Returns error code 701 in case that content does not support Seek or send to non-coordinator
@@ -581,7 +583,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentURI** | `string` | The new TransportURI - its a special SONOS format |
 | **CurrentURIMetaData** | `string | Track` | Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri |
 
@@ -595,7 +597,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CrossfadeMode** | `boolean` | true for on, false for off |
 
 **Remarks** Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.
@@ -606,7 +608,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `string | Track` |  |
 
@@ -618,8 +620,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **NewPlayMode** | `PlayMode` | PlayMode such as NORMAL, REPEAT_ONE, REPEAT_ALL, SHUFFLE, SHUFFLE_NOREPEAT, SHUFFLE_REPEAT_ONE |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **NewPlayMode** | `string` | New playmode Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 
 **Remarks** Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.
 
@@ -631,7 +633,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **Duration** | `string` | Snooze time as hh:mm:ss, 10 minutes = 00:10:00 |
 
 ### StartAutoplay
@@ -640,7 +642,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **ProgramURI** | `string` |  |
 | **ProgramMetaData** | `string | Track` |  |
 | **Volume** | `number` |  |
@@ -655,7 +657,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 ## AVTransportService event
 
@@ -667,56 +669,58 @@ sonos.AVTransportService.Events('serviceEvent', (data) => {
 });
 ```
 
-The **AVTransportService** emits events with these properties. Not all properties are emitted everytime.
+The **AVTransportService** emits events with these properties. Not all properties are emitted every time.
 
-| parameter | type |
-|:----------|:-----|
-| **AVTransportURI** | `string` |
-| **AVTransportURIMetaData** | `Track` |
-| **AbsoluteCounterPosition** | `number` |
-| **AbsoluteTimePosition** | `string` |
-| **AlarmIDRunning** | `number` |
-| **AlarmLoggedStartTime** | `string` |
-| **AlarmRunning** | `boolean` |
-| **CurrentCrossfadeMode** | `boolean` |
-| **CurrentMediaDuration** | `string` |
-| **CurrentPlayMode** | `PlayMode` |
-| **CurrentRecordQualityMode** | `string` |
-| **CurrentSection** | `number` |
-| **CurrentTrack** | `number` |
-| **CurrentTrackDuration** | `string` |
-| **CurrentTrackMetaData** | `Track` |
-| **CurrentTrackURI** | `string` |
-| **CurrentTransportActions** | `string` |
-| **CurrentValidPlayModes** | `string` |
-| **DirectControlAccountID** | `string` |
-| **DirectControlClientID** | `string` |
-| **DirectControlIsSuspended** | `boolean` |
-| **EnqueuedTransportURI** | `string` |
-| **EnqueuedTransportURIMetaData** | `Track` |
-| **LastChange** | `string` |
-| **MuseSessions** | `string` |
-| **NextAVTransportURI** | `string` |
-| **NextAVTransportURIMetaData** | `Track` |
-| **NextTrackMetaData** | `Track` |
-| **NextTrackURI** | `string` |
-| **NumberOfTracks** | `number` |
-| **PlaybackStorageMedium** | `string` |
-| **PossiblePlaybackStorageMedia** | `string` |
-| **PossibleRecordQualityModes** | `string` |
-| **PossibleRecordStorageMedia** | `string` |
-| **QueueUpdateID** | `number` |
-| **RecordMediumWriteStatus** | `string` |
-| **RecordStorageMedium** | `string` |
-| **RelativeCounterPosition** | `number` |
-| **RelativeTimePosition** | `string` |
-| **RestartPending** | `boolean` |
-| **SleepTimerGeneration** | `number` |
-| **SnoozeRunning** | `boolean` |
-| **TransportErrorDescription** | `string` |
-| **TransportErrorHttpCode** | `string` |
-| **TransportErrorHttpHeaders** | `string` |
-| **TransportErrorURI** | `string` |
-| **TransportPlaySpeed** | `string` |
-| **TransportState** | `string` |
-| **TransportStatus** | `string` |
+| parameter | type | possible values |
+|:----------|:-----|:----------------|
+| **AbsoluteCounterPosition** | `number` |  | 
+| **AbsoluteTimePosition** | `string` |  | 
+| **AlarmIDRunning** | `number` |  | 
+| **AlarmLoggedStartTime** | `string` |  | 
+| **AlarmRunning** | `boolean` |  | 
+| **AVTransportURI** | `string` |  | 
+| **AVTransportURIMetaData** | `string | Track` |  | 
+| **CurrentCrossfadeMode** | `boolean` |  | 
+| **CurrentMediaDuration** | `string` |  | 
+| **CurrentPlayMode** | `string` | `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` | 
+| **CurrentRecordQualityMode** | `string` |  | 
+| **CurrentSection** | `number` |  | 
+| **CurrentTrack** | `number` |  | 
+| **CurrentTrackDuration** | `string` |  | 
+| **CurrentTrackMetaData** | `string | Track` |  | 
+| **CurrentTrackURI** | `string` |  | 
+| **CurrentTransportActions** | `string` |  | 
+| **CurrentValidPlayModes** | `string` |  | 
+| **DirectControlAccountID** | `string` |  | 
+| **DirectControlClientID** | `string` |  | 
+| **DirectControlIsSuspended** | `boolean` |  | 
+| **EnqueuedTransportURI** | `string` |  | 
+| **EnqueuedTransportURIMetaData** | `string | Track` |  | 
+| **LastChange** | `string` |  | 
+| **MuseSessions** | `string` |  | 
+| **NextAVTransportURI** | `string` |  | 
+| **NextAVTransportURIMetaData** | `string | Track` |  | 
+| **NextTrackMetaData** | `string | Track` |  | 
+| **NextTrackURI** | `string` |  | 
+| **NumberOfTracks** | `number` |  | 
+| **PlaybackStorageMedium** | `string` | `NONE` / `NETWORK` | 
+| **PossiblePlaybackStorageMedia** | `string` |  | 
+| **PossibleRecordQualityModes** | `string` |  | 
+| **PossibleRecordStorageMedia** | `string` |  | 
+| **QueueUpdateID** | `number` |  | 
+| **RecordMediumWriteStatus** | `string` |  | 
+| **RecordStorageMedium** | `string` |  | 
+| **RelativeCounterPosition** | `number` |  | 
+| **RelativeTimePosition** | `string` |  | 
+| **RestartPending** | `boolean` |  | 
+| **SleepTimerGeneration** | `number` |  | 
+| **SnoozeRunning** | `boolean` |  | 
+| **TransportErrorDescription** | `string` |  | 
+| **TransportErrorHttpCode** | `string` |  | 
+| **TransportErrorHttpHeaders** | `string` |  | 
+| **TransportErrorURI** | `string` |  | 
+| **TransportPlaySpeed** | `string` |  | 
+| **TransportState** | `string` | `STOPPED` / `PLAYING` / `PAUSED_PLAYBACK` / `TRANSITIONING` | 
+| **TransportStatus** | `string` |  | 
+
+This file is automatically generated with [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs), do not edit manually.
