@@ -1,6 +1,6 @@
 /**
  * All sonos services exported as one file for easy access.
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io/sonos-api-docs
  *

@@ -1,6 +1,6 @@
 /**
  * Sonos MusicServicesService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

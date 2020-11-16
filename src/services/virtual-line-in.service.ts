@@ -1,13 +1,15 @@
 /**
  * Sonos VirtualLineInService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
-import { Track } from '../models';
+import {
+  Track,
+} from '../models';
 
 export class VirtualLineInService extends BaseService<VirtualLineInServiceEvent> {
   readonly serviceNane: string = 'VirtualLineIn';

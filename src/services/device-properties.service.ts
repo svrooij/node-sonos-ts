@@ -1,6 +1,6 @@
 /**
  * Sonos DevicePropertiesService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

@@ -1,6 +1,6 @@
 /**
  * Sonos ConnectionManagerService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

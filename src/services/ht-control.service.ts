@@ -1,6 +1,6 @@
 /**
  * Sonos HTControlService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

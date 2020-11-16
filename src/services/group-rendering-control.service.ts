@@ -1,6 +1,6 @@
 /**
  * Sonos GroupRenderingControlService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

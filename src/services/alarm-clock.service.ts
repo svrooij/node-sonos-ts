@@ -1,6 +1,6 @@
 /**
  * Sonos AlarmClockService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
@@ -10,7 +10,9 @@ import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
 import MetadataHelper from '../helpers/metadata-helper';
 import XmlHelper from '../helpers/xml-helper';
-import { Alarm, PatchAlarm, PlayMode, Track } from '../models';
+import {
+  Alarm, PatchAlarm, PlayMode, Track,
+} from '../models';
 
 /**
  * Control the sonos alarms

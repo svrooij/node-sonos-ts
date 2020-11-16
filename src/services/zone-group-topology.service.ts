@@ -1,14 +1,14 @@
 /**
  * Sonos ZoneGroupTopologyService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
+import { URL } from 'url';
 import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
-import { URL } from 'url';
 import XmlHelper from '../helpers/xml-helper';
 
 /**
@@ -148,13 +148,12 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
    */
   async GetParsedZoneGroupState(): Promise<ZoneGroup[]> {
     const groupStateResponse = await this.GetZoneGroupState();
-    if(typeof groupStateResponse.ZoneGroupState === 'string') {
+    if (typeof groupStateResponse.ZoneGroupState === 'string') {
       const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '');
       const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup);
       return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
-    } else {
-      return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
     }
+    return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
   }
 
   private static ParseMember(member: any): ZoneMember {

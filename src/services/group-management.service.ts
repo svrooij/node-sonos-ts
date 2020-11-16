@@ -1,6 +1,6 @@
 /**
  * Sonos GroupManagementService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

@@ -21,6 +21,7 @@ module.exports =  {
     "max-len":"off",
     "no-console": "off",
     "no-return-await": "off",
+    "linebreak-style": "off"
   },
   overrides: [
     {
@@ -47,7 +48,8 @@ module.exports =  {
     {
       files: ['src/services/*.ts'],
       rules: {
-        'import/order': 'warn'
+        'import/order': 'warn',
+        'no-multiple-empty-lines': 'warn'
       }
     },
     {

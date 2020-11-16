@@ -1,6 +1,6 @@
 /**
  * Sonos SystemPropertiesService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
@@ -182,7 +182,7 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
    */
   public async SavedAccounts(): Promise<number[] | undefined> {
     const result = await this.GetStringSafe('sonos-ts-accounts');
-    return result?.split('|').map(s => parseInt(s));
+    return result?.split('|').map((s) => parseInt(s, 10));
   }
 
   /**

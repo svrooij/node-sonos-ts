@@ -1,6 +1,6 @@
 /**
  * Sonos base device with all services defined.
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io/sonos-api-docs
  *

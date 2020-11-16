@@ -1,13 +1,15 @@
 /**
  * Sonos RenderingControlService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
-import { ChannelValue } from '../models';
+import {
+  ChannelValue,
+} from '../models';
 
 /**
  * Volume related controls

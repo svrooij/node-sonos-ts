@@ -1,6 +1,6 @@
 /**
  * Sonos QPlayService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *

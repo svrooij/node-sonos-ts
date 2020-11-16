@@ -1,13 +1,15 @@
 /**
  * Sonos AVTransportService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
-import { PlayMode, Track } from '../models';
+import {
+  PlayMode, Track,
+} from '../models';
 
 /**
  * Service that controls stuff related to transport (play/pause/next/special urls)

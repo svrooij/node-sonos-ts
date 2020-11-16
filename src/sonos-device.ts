@@ -328,11 +328,11 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async MusicServicesSubscribed(): Promise<Array<MusicService> | undefined> {
     const ids = await this.SystemPropertiesService.SavedAccounts();
-    if(ids === undefined || ids.length === 0) {
+    if (ids === undefined || ids.length === 0) {
       return undefined;
     }
     const list = await this.MusicServicesService.ListAndParseAvailableServices(true);
-    return list.filter(m => ids.indexOf(m.Id) > -1);
+    return list.filter((m) => ids.indexOf(m.Id) > -1);
   }
 
   /**

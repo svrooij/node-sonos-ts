@@ -1,13 +1,15 @@
 /**
  * Sonos QueueService
- * 
+ *
  * Stephan van Rooij
  * https://svrooij.io
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
-import { BrowseResponse, Track } from '../models';
+import {
+  BrowseResponse, Track,
+} from '../models';
 
 /**
  * Modify and browse queues
