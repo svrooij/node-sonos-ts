@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 export class GroupManagementService extends BaseService<GroupManagementServiceEvent> {
   readonly serviceNane: string = 'GroupManagement';
@@ -16,6 +18,8 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   readonly eventSubUrl: string = '/GroupManagement/Event';
 
   readonly scpUrl: string = '/xml/GroupManagement1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async AddMember(input: { MemberID: string; BootSeq: number }):

@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
  * Manage system-wide settings, mainly account stuff.
@@ -23,6 +25,8 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   readonly eventSubUrl: string = '/SystemProperties/Event';
 
   readonly scpUrl: string = '/xml/SystemProperties1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):

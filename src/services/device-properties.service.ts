@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
  * Modify device properties, like led status and stereo pairs -
@@ -23,6 +25,8 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   readonly eventSubUrl: string = '/DeviceProperties/Event';
 
   readonly scpUrl: string = '/xml/DeviceProperties1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async AddBondedZones(input: { ChannelMapSet: string }):

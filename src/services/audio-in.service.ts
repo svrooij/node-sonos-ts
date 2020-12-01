@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 export class AudioInService extends BaseService<AudioInServiceEvent> {
   readonly serviceNane: string = 'AudioIn';
@@ -16,6 +18,8 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
   readonly eventSubUrl: string = '/AudioIn/Event';
 
   readonly scpUrl: string = '/xml/AudioIn1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async GetAudioInputAttributes():

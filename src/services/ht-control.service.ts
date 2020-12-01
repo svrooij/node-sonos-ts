@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 export class HTControlService extends BaseService<HTControlServiceEvent> {
   readonly serviceNane: string = 'HTControl';
@@ -16,6 +18,8 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
   readonly eventSubUrl: string = '/HTControl/Event';
 
   readonly scpUrl: string = '/xml/HTControl1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async CommitLearnedIRCodes(input: { Name: string }):

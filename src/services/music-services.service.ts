@@ -9,6 +9,8 @@
 import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
  * External music services
@@ -25,6 +27,8 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   readonly eventSubUrl: string = '/MusicServices/Event';
 
   readonly scpUrl: string = '/xml/MusicServices1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async GetSessionId(input: { ServiceId: number; Username: string }):

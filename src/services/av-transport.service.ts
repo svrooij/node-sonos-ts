@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   PlayMode, Track,
 } from '../models';
@@ -26,6 +28,37 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   readonly eventSubUrl: string = '/MediaRenderer/AVTransport/Event';
 
   readonly scpUrl: string = '/xml/AVTransport1.xml';
+
+  /**
+   * Default errors and service specific errors
+   *
+   * @type {SonosUpnpError[]}
+   * @remarks See https://svrooij.io/sonos-api-docs/#manual-documentation-file
+   */
+  readonly errors: SonosUpnpError[] = [
+    ...SonosUpnpErrors.defaultErrors,
+    { code: 701, description: 'Transition not available' },
+    { code: 702, description: 'No content' },
+    { code: 703, description: 'Read error' },
+    { code: 704, description: 'Format not supported for playback' },
+    { code: 705, description: 'Transport is locked' },
+    { code: 706, description: 'Write error' },
+    { code: 707, description: 'Media protected or not writeable' },
+    { code: 708, description: 'Format not supported for recording' },
+    { code: 709, description: 'Media is full' },
+    { code: 710, description: 'Seek mode not supported' },
+    { code: 711, description: 'Illegal seek target' },
+    { code: 712, description: 'Play mode not supported' },
+    { code: 713, description: 'Record quality not supported' },
+    { code: 714, description: 'Illegal MIME-Type' },
+    { code: 715, description: 'Content busy' },
+    { code: 716, description: 'Resource not found' },
+    { code: 717, description: 'Play speed not supported' },
+    { code: 718, description: 'Invalid InstanceID' },
+    { code: 737, description: 'No dns configured' },
+    { code: 738, description: 'Bad domain' },
+    { code: 739, description: 'Server error' },
+  ];
 
   // #region actions
   async AddMultipleURIsToQueue(input: { InstanceID: number; UpdateID: number; NumberOfURIs: number; EnqueuedURIs: string; EnqueuedURIsMetaData: Track | string; ContainerURI: string; ContainerMetaData: Track | string; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):

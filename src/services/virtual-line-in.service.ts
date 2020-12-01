@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   Track,
 } from '../models';
@@ -19,6 +21,8 @@ export class VirtualLineInService extends BaseService<VirtualLineInServiceEvent>
   readonly eventSubUrl: string = '/MediaRenderer/VirtualLineIn/Event';
 
   readonly scpUrl: string = '/xml/VirtualLineIn1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async Next(input: { InstanceID: number } = { InstanceID: 0 }):
