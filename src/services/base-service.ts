@@ -13,6 +13,7 @@ import { ServiceEvents } from '../models/sonos-events';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { ServiceEvent } from '../models/service-event';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -71,6 +72,15 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   abstract readonly serviceNane: string;
+
+  /**
+   * Possible errors for this service
+   *
+   * @abstract
+   * @type {SonosUpnpError[]}
+   * @memberof BaseService
+   */
+  abstract readonly errors: SonosUpnpError[];
 
   /**
    * Creates an instance of the implemented service.
@@ -251,7 +261,9 @@ export default abstract class BaseService <TServiceEvent> {
       if (typeof errorResponse['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
-        throw new SonosError(action, error.faultcode, error.faultstring, error.detail?.UPnPError?.errorCode);
+        const upnpErrorCode = error.detail?.UPnPError?.errorCode as number | undefined;
+        const upnpError = upnpErrorCode !== undefined ? this.errors.find((e) => e.code === upnpErrorCode) : undefined;
+        throw new SonosError(action, error.faultcode, error.faultstring, upnpErrorCode, upnpError?.description);
       }
     }
     this.debug('handleRequest error %d %s', response.status, response.statusText);

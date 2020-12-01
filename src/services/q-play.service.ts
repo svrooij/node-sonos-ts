@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 export class QPlayService extends BaseService<undefined> {
   readonly serviceNane: string = 'QPlay';
@@ -16,6 +18,8 @@ export class QPlayService extends BaseService<undefined> {
   readonly eventSubUrl: string = '/QPlay/Event';
 
   readonly scpUrl: string = '/xml/QPlay1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async QPlayAuth(input: { Seed: string }):

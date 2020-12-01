@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   BrowseResponse, Track,
 } from '../models';
@@ -26,6 +28,8 @@ export class QueueService extends BaseService<QueueServiceEvent> {
   readonly eventSubUrl: string = '/MediaRenderer/Queue/Event';
 
   readonly scpUrl: string = '/xml/Queue1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async AddMultipleURIs(input: { QueueID: number; UpdateID: number; ContainerURI: string; ContainerMetaData: Track | string; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean; NumberOfURIs: number; EnqueuedURIsAndMetaData: string }):

@@ -10,6 +10,8 @@ import { URL } from 'url';
 import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
  * Zone config stuff, eg getting all the configured sonos zones.
@@ -26,6 +28,8 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
   readonly eventSubUrl: string = '/ZoneGroupTopology/Event';
 
   readonly scpUrl: string = '/xml/ZoneGroupTopology1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }):

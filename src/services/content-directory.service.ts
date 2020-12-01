@@ -10,6 +10,8 @@ import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
 import MetadataHelper from '../helpers/metadata-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   BrowseResponse,
 } from '../models';
@@ -29,6 +31,35 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   readonly eventSubUrl: string = '/MediaServer/ContentDirectory/Event';
 
   readonly scpUrl: string = '/xml/ContentDirectory1.xml';
+
+  /**
+   * Default errors and service specific errors
+   *
+   * @type {SonosUpnpError[]}
+   * @remarks See https://svrooij.io/sonos-api-docs/#manual-documentation-file
+   */
+  readonly errors: SonosUpnpError[] = [
+    ...SonosUpnpErrors.defaultErrors,
+    { code: 701, description: 'No such object' },
+    { code: 702, description: 'Invalid CurrentTagValue' },
+    { code: 703, description: 'Invalid NewTagValue' },
+    { code: 704, description: 'Required tag' },
+    { code: 705, description: 'Read-only tag' },
+    { code: 706, description: 'Parameter mismatch' },
+    { code: 708, description: 'Invalid search criteria' },
+    { code: 709, description: 'Invalid sort criteria' },
+    { code: 710, description: 'No such container' },
+    { code: 711, description: 'Restricted object' },
+    { code: 712, description: 'Bad metadata' },
+    { code: 713, description: 'Restricted parent object' },
+    { code: 714, description: 'No such source resource' },
+    { code: 715, description: 'Resource access denied' },
+    { code: 716, description: 'Transfer busy' },
+    { code: 717, description: 'No such file transfer' },
+    { code: 718, description: 'No such destination resource' },
+    { code: 719, description: 'Destinaton resource access denied' },
+    { code: 720, description: 'Cannot process the request' },
+  ];
 
   // #region actions
   /**

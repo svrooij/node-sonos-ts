@@ -10,6 +10,8 @@ import BaseService from './base-service';
 import ArrayHelper from '../helpers/array-helper';
 import MetadataHelper from '../helpers/metadata-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   Alarm, PatchAlarm, PlayMode, Track,
 } from '../models';
@@ -29,6 +31,17 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   readonly eventSubUrl: string = '/AlarmClock/Event';
 
   readonly scpUrl: string = '/xml/AlarmClock1.xml';
+
+  /**
+   * Default errors and service specific errors
+   *
+   * @type {SonosUpnpError[]}
+   * @remarks See https://svrooij.io/sonos-api-docs/#manual-documentation-file
+   */
+  readonly errors: SonosUpnpError[] = [
+    ...SonosUpnpErrors.defaultErrors,
+    { code: 801, description: 'Duplicate alarm time' },
+  ];
 
   // #region actions
   /**

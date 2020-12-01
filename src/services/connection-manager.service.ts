@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 export class ConnectionManagerService extends BaseService<ConnectionManagerServiceEvent> {
   readonly serviceNane: string = 'ConnectionManager';
@@ -16,6 +18,8 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   readonly eventSubUrl: string = '/MediaRenderer/ConnectionManager/Event';
 
   readonly scpUrl: string = '/xml/ConnectionManager1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   async GetCurrentConnectionIDs():

@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 import {
   ChannelValue,
 } from '../models';
@@ -26,6 +28,8 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   readonly eventSubUrl: string = '/MediaRenderer/RenderingControl/Event';
 
   readonly scpUrl: string = '/xml/RenderingControl1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   /**

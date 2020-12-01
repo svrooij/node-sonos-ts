@@ -7,6 +7,8 @@
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
 import BaseService from './base-service';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
  * Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players.
@@ -23,6 +25,8 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   readonly eventSubUrl: string = '/MediaRenderer/GroupRenderingControl/Event';
 
   readonly scpUrl: string = '/xml/GroupRenderingControl1.xml';
+
+  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
   /**
