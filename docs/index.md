@@ -10,17 +10,18 @@ permalink: /
 
 # Sonos (typescript / node)
 
-[![Support me on Github][badge_sponsor]][link_sponsor]
-[![npm][badge_npm]][link_npm]
-[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
-[![Run tests and publish][badge_build]][link_build]
-[![github issues][badge_issues]][link_issues]
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](//github.com/semantic-release/semantic-release)
-
 [![Sonos api documentation][badge_sonos-docs]][link_sonos-docs]
 [![Sonos2mqtt][badge_sonos-mqtt]][link_sonos-mqtt]
 [![Sonos cli][badge_sonos-cli]][link_sonos-cli]
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
+[![Join us on Discord][badge_discord]][link_discord]
+[![Support me on Github][badge_sponsor]][link_sponsor]
+
+[![npm][badge_npm]][link_npm]
+[![Run tests and publish][badge_build]][link_build]
+[![github issues][badge_issues]][link_issues]
+[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](//github.com/semantic-release/semantic-release)
 
 Typescript library to control your sonos speakers. Can be used in other typescript (or node) apps.
 
@@ -34,15 +35,16 @@ This library is in no way connected to [Sonos](//en.wikipedia.org/wiki/Sonos).
 - [x] Access to all (generated) services.
 - [x] Sonos device class with extra functionality.
 - [x] Strongly typed service events.
-- [x] Easier implemented [metadata generation](./src/helpers/metadata-helper.ts).
+- [x] Easier implemented [metadata generation](https://github.com/svrooij/node-sonos-ts/blob/master/src/helpers/metadata-helper.ts).
 
 ## Get Started
 
-To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
+To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](https://github.com/svrooij/node-sonos-ts/tree/master/examples) you still need to use node (or typescript).
 
 See **[Documentation](https://svrooij.github.io/node-sonos-ts/getting-started.html)**
 
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
+[![Join us on Discord][badge_discord]][link_discord]
 
 ## Packages using node-sonos-ts
 
@@ -85,20 +87,22 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors)
 specification. Contributions of any kind welcome!
 
-[badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red?style=flat-square
+[badge_build]: https://github.com/svrooij/node-sonos-ts/workflows/Run%20tests%20and%20publish/badge.svg
+[badge_discord]: https://img.shields.io/discord/782374564054564875?style=flat-square
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=flat-square
 [badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=flat-square
-[badge_build]: https://github.com/svrooij/node-sonos-ts/workflows/Run%20tests%20and%20publish/badge.svg
-[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=flat-square
 [badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=flat-square
+[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=flat-square
 [badge_sonos-mqtt]: https://img.shields.io/badge/sonos-mqtt-blue?style=flat-square
 [badge_sonos-typescript]: https://img.shields.io/badge/sonos-typescript-blue?style=flat-square
+[badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red?style=flat-square
 
-[link_sponsor]: https://github.com/sponsors/svrooij
+[link_build]: https://github.com/svrooij/node-sonos-ts/actions
+[link_discord]: https://discord.gg/VMtG6Ft36J
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
 [link_npm]: https://www.npmjs.com/package/@svrooij/sonos
-[link_build]: https://github.com/svrooij/node-sonos-ts/actions
-[link_sonos-docs]: https://svrooij.io/sonos-api-docs
 [link_sonos-cli]: https://github.com/svrooij/sonos-cli
+[link_sonos-docs]: https://svrooij.io/sonos-api-docs
 [link_sonos-mqtt]: https://svrooij.io/sonos2mqtt
 [link_sonos-typescript]: https://svrooij.io/node-sonos-ts
+[link_sponsor]: https://github.com/sponsors/svrooij
