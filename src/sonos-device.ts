@@ -606,7 +606,7 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.Volume, this.volume ?? 0);
     }
 
-    if (data.Mute && data.Mute.Master && this.muted !== data.Mute.Master) {
+    if (data.Mute && typeof data.Mute.Master === 'boolean' && this.muted !== data.Mute.Master) {
       this.muted = data.Mute.Master;
       this.Events.emit(SonosEvents.Mute, this.muted);
     }
