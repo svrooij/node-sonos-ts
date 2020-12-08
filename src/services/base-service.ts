@@ -464,7 +464,7 @@ export default abstract class BaseService <TServiceEvent> {
       case 'number':
         return parseInt(originalValue, 10);
       case 'boolean':
-        return originalValue === '1';
+        return originalValue === '1' || originalValue === 1;
       default:
         return originalValue;
     }
