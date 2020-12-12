@@ -349,6 +349,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   private async subscribeForEvents(): Promise<boolean> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
+    this.debug('Creating event subscription with callback: %s', callback);
     const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {

@@ -9,8 +9,6 @@
     "test": "npm run lint && jest",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
-    "gen-srv": "node ./src/generator/service-generator.js --save-description --generate --docs --load-files",
-    "semantic-release": "semantic-release",
     "serve-docs": "docker run --rm --volume=\"$PWD/docs/vendor/bundle:/usr/local/bundle\" --volume=\"$PWD/docs:/srv/jekyll\" -p 4000:4000 -p 35729:35729 -it jekyll/jekyll jekyll serve --livereload",
     "prepack": "npm run build"
   },
@@ -59,7 +57,6 @@
   "files": [
     "README.md",
     "LICENSE",
-    "Funding.yml",
     "lib/**/*.ts",
     "lib/**/*.js"
   ]

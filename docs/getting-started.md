@@ -46,7 +46,7 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .catch(console.error)
 ```
 
-## or control single device
+### or control single device
 
 If you just want to control a single device and don't want to use the SonosManager, you can also create a instance of **SonosDevice**, but you'll be missing the group options.
 
@@ -60,3 +60,20 @@ sonos.LoadDeviceData()
   })
   .catch(console.error)
 ```
+
+## Debugging issues
+
+This library uses the [debug](https://www.npmjs.com/package/debug) library. If you want a lot more information about what is happening you can turn on all debug messages by setting the environment variable `DEBUG` to `sonos:*`.
+
+All logging information might be a bit overkill, it you set `DEBUG` to `sonos:eventListener` you will only receive log information from the event listener.
+
+| Debug setting | What is logged |
+|---------------|----------------|
+| `sonos:*` | Everything is logged to the console |
+| `sonos:eventListener` | Messages about the event listener |
+| `sonos:metadata` | Messages about the MetaDataHelper |
+| `sonos:service:*` | All services logs will be emitted |
+| `sonos:service:{serviceName}:*` | All logs about a specific service will be emitted |
+| `sonos:service:{serviceName}:{ip}` | All messages for a specific service for a specific speaker. |
+
+Check out the debug library for more configuration options. You can also combine several instructions with a `,` or just remove a spefic event with `-` in front.

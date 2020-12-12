@@ -30,6 +30,9 @@ export default class SonosEventListener {
     let interfaces = Object.keys(ifaces).filter((k) => k !== 'lo0');
     if (process.env.SONOS_LISTENER_INTERFACE) {
       interfaces = interfaces.filter((i) => i === process.env.SONOS_LISTENER_INTERFACE);
+    } else {
+      // Remove unwanted interfaces on windows
+      interfaces = interfaces.filter((i) => i.indexOf('vEthernet') === -1);
     }
     if (interfaces === undefined || interfaces.length === 0) {
       throw new Error('No network interfaces found');
@@ -49,11 +52,15 @@ export default class SonosEventListener {
     throw new Error('No non-internal ipv4 addresses found');
   }
 
+  private readonly proxyHost?: string = process.env.SONOS_LISTENER_PROXY;
+
   private readonly listenerHost: string;
 
   private readonly port: number;
 
   private readonly debug: Debugger;
+
+  private listeningSince?: Date;
 
   private isListening = false;
 
@@ -65,11 +72,51 @@ export default class SonosEventListener {
     this.debug = debug('sonos:eventlistener');
     this.listenerHost = process.env.SONOS_LISTENER_HOST || SonosEventListener.getHostIp();
     this.port = parseInt((process.env.SONOS_LISTENER_PORT || '6329'), 10);
-    this.server = createServer((req, resp) => this.requestHandler(req, resp));
-    this.debug('Listener created host: %s port: %d', this.listenerHost, this.port);
+    this.server = createServer((req: IncomingMessage, resp: ServerResponse) => this.requestHandler(req, resp));
+    this.debug('Listener endpoint: %s', this.GetEndpoint('{sonos-uuid}', '{serviceName}'));
   }
 
   private requestHandler(req: IncomingMessage, resp: ServerResponse): void {
+    if (req.url) {
+      if (req.url.indexOf('/sonos/') > -1) {
+        return this.handleSonosRequest(req, resp);
+      }
+      if (req.url.endsWith('/status')) {
+        return this.handleStatusRequest(req, resp);
+      }
+      if (req.url.endsWith('/health')) {
+        return this.handleHealthRequest(req, resp);
+      }
+    }
+
+    resp.statusCode = 404;
+    return resp.end();
+  }
+
+  private handleHealthRequest(req: IncomingMessage, resp: ServerResponse): void {
+    resp.statusCode = 200;
+    resp.end();
+  }
+
+  private handleStatusRequest(req: IncomingMessage, resp: ServerResponse): void {
+    const responseObject = {
+      host: this.listenerHost,
+      port: this.port,
+      subscriptionUrl: this.GetEndpoint('{sonos-uuid}', '{serviceName}'),
+      listeningSince: this.listeningSince,
+      subscrptionCount: Object.keys(this.subscriptions).length,
+    };
+    SonosEventListener.WriteJson(resp, responseObject);
+  }
+
+  private static WriteJson(resp: ServerResponse, data: any): void {
+    resp.statusCode = 200;
+    resp.setHeader('Content-Type', 'application/json');
+    resp.write(JSON.stringify(data));
+    resp.end();
+  }
+
+  private handleSonosRequest(req: IncomingMessage, resp: ServerResponse): void {
     const sid = req.rawHeaders[req.rawHeaders.findIndex((v) => v === 'SID') + 1];
     this.debug('Got event on %s SID: %s', req.url, sid);
     const service = this.subscriptions[sid];
@@ -93,19 +140,38 @@ export default class SonosEventListener {
       });
   }
 
+  /**
+   * Get Endpoint generates the url where the sonos speaker should send it's events.
+   * @param uuid The UUID of the sonos speaker
+   * @param serviceName The name of the service
+   * @remarks Even though this is public, it should not be called by external applications.
+   */
   public GetEndpoint(uuid: string, serviceName: string): string {
-    return `http://${this.listenerHost}:${this.port}/sonos/${uuid}/${serviceName}`;
+    const suffix = `sonos/${uuid}/${serviceName}`;
+    if (this.proxyHost) {
+      return `${this.proxyHost}/${suffix}`;
+    }
+    return `http://${this.listenerHost}:${this.port}/${suffix}`;
   }
 
+  /**
+   * Register subscription lets the events listener forward the events to the correct service.
+   * @param sid Sonos subscription id
+   * @param service Instance of the service that will receive the events
+   */
   public RegisterSubscription(sid: string, service: BaseService<any>): void {
     if (this.isListening !== true) {
-      this.debug('Start listening on port %d', this.port);
+      this.debug('Starting event listener on port %d', this.port);
       this.server.listen(this.port);
       this.isListening = true;
+      this.listeningSince = new Date();
     }
     this.subscriptions[sid] = service;
   }
 
+  /**
+   * Stop the event listener.
+   */
   public StopListener(): void {
     this.server?.close();
   }
