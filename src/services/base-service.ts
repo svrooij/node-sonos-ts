@@ -13,6 +13,7 @@ import { ServiceEvents } from '../models/sonos-events';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { ServiceEvent } from '../models/service-event';
+import { SonosUpnpError } from '../models/sonos-upnp-error';
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -71,6 +72,15 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   abstract readonly serviceNane: string;
+
+  /**
+   * Possible errors for this service
+   *
+   * @abstract
+   * @type {SonosUpnpError[]}
+   * @memberof BaseService
+   */
+  abstract readonly errors: SonosUpnpError[];
 
   /**
    * Creates an instance of the implemented service.
@@ -251,7 +261,9 @@ export default abstract class BaseService <TServiceEvent> {
       if (typeof errorResponse['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
-        throw new SonosError(action, error.faultcode, error.faultstring, error.detail?.UPnPError?.errorCode);
+        const upnpErrorCode = error.detail?.UPnPError?.errorCode as number | undefined;
+        const upnpError = upnpErrorCode !== undefined ? this.errors.find((e) => e.code === upnpErrorCode) : undefined;
+        throw new SonosError(action, error.faultcode, error.faultstring, upnpErrorCode, upnpError?.description);
       }
     }
     this.debug('handleRequest error %d %s', response.status, response.statusText);
@@ -308,21 +320,36 @@ export default abstract class BaseService <TServiceEvent> {
         this.debug('Listener removed');
         if (this.events === undefined) return;
         const events = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
-        if (this.sid !== undefined && events.length === 0) await this.cancelSubscription();
+        if (this.sid !== undefined && events.length === 0) {
+          await this.cancelSubscription()
+            .catch((err) => {
+              this.debug('Cancelling event subscription failed', err);
+            });
+        }
       });
       this.events.on('newListener', async () => {
         this.debug('Listener added');
         if (this.sid === undefined && process.env.SONOS_DISABLE_EVENTS === undefined) {
           this.debug('Subscribing to events');
-          await this.subscribeForEvents();
+          await this.subscribeForEvents()
+            .catch((err) => {
+              this.debug('Subscriping for events failed', err);
+            });
         }
       });
     }
     return this.events;
   }
 
+  /**
+   * Subscribe to events of this service, is called automatically.
+   *
+   * @private
+   * @remarks Do not call manually!!
+   */
   private async subscribeForEvents(): Promise<boolean> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
+    this.debug('Creating event subscription with callback: %s', callback);
     const resp = await fetch(new Request(
       `http://${this.host}:${this.port}${this.eventSubUrl}`,
       {
@@ -341,7 +368,10 @@ export default abstract class BaseService <TServiceEvent> {
     this.sid = sid;
     if (this.eventRenewInterval === undefined) {
       this.eventRenewInterval = setInterval(async () => {
-        await this.renewEventSubscription();
+        await this.renewEventSubscription()
+          .catch((err) => {
+            this.debug('Renewing event subscription failed', err);
+          });
       }, 600 * 1000); // Renew events every 10 minutes.
     }
     SonosEventListener.DefaultInstance.RegisterSubscription(sid, this);
@@ -349,6 +379,12 @@ export default abstract class BaseService <TServiceEvent> {
     return true;
   }
 
+  /**
+   * Renew event subscription, is called automatically.
+   *
+   * @private
+   * @remarks Do not call manually!!
+   */
   private async renewEventSubscription(): Promise<boolean> {
     this.debug('Renewing event subscription');
     if (this.sid !== undefined) {
@@ -369,10 +405,19 @@ export default abstract class BaseService <TServiceEvent> {
     }
 
     this.debug('Renew event subscription failed, trying to resubscribe');
-    await this.subscribeForEvents();
-    return true;
+    await this.subscribeForEvents()
+      .catch((err) => {
+        this.debug('Subscriping for events failed', err);
+      });
+    return this.sid !== undefined;
   }
 
+  /**
+   * Unsubscribe to events of this service, is called automatically.
+   *
+   * @private
+   * @remarks Do not call manually!!
+   */
   private async cancelSubscription(): Promise<boolean> {
     this.debug('Cancelling event subscription');
     if (this.eventRenewInterval !== undefined) {
@@ -412,10 +457,11 @@ export default abstract class BaseService <TServiceEvent> {
   }
 
   /**
-   * Parse Event is used by the SonosEventListener and shouldn't be used by other people
+   * Parse Event called by the SonosEventListener, it will parse the xml and emit the right events
    *
    * @param {string} xml Event request body, received from the SonosEventListener
    * @memberof BaseService
+   * @remarks Should not be called by anything other then SonosEventListener.
    */
   public ParseEvent(xml: string): void {
     this.debug('Got event');
@@ -452,7 +498,7 @@ export default abstract class BaseService <TServiceEvent> {
       case 'number':
         return parseInt(originalValue, 10);
       case 'boolean':
-        return originalValue === '1';
+        return originalValue === '1' || originalValue === 1;
       default:
         return originalValue;
     }

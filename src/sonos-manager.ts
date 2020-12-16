@@ -91,7 +91,7 @@ export default class SonosManager {
   private zoneEventSubscription = this.handleZoneEventData.bind(this);
 
   private handleZoneEventData(data: ZoneGroupTopologyServiceEvent): void {
-    if (data.ZoneGroupState !== undefined) {
+    if (data.ZoneGroupState !== undefined && typeof data.ZoneGroupState !== 'string') {
       data.ZoneGroupState.forEach((g) => {
         let coordinator = this.devices.find((d) => d.Uuid === g.coordinator.uuid);
         if (coordinator === undefined) {

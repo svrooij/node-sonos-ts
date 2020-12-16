@@ -78,7 +78,6 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **docs/** These documentations
 - **examples/** Several examples on how to use this library.
 - **img/** Some static images used in the library
-- **src/generator/** The client generator (written in node). It's used to generate all the services and the base device.
 - **src/helpers/** Some usefull typesscript class, used everywhere in the library.
 - **src/helpers/metadata-helper.ts** This class will generate (actually guess) the needed metadata. Easily extended.
 - **src/models/** Hand-crafted models used by the library.

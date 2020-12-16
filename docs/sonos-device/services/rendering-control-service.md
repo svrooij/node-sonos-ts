@@ -9,6 +9,8 @@ grand_parent: Sonos device
 
 Volume related controls
 
+The RenderingControlService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 const sonos = new SonosDevice('192.168.x.x')
@@ -30,7 +32,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -46,7 +48,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` | EQ type such as DialogLevel, NightMode, SubGain |
 
 Output:
@@ -61,7 +63,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -77,8 +79,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` | Master |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
 
 Output:
 
@@ -92,8 +94,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 
 Output:
 
@@ -107,7 +109,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -121,7 +123,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -136,7 +138,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -152,7 +154,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -168,8 +170,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` | Master |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
 
 Output:
 
@@ -183,8 +185,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output:
 
@@ -198,8 +200,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output:
 
@@ -214,9 +216,9 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
-| **RampType** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
+| **RampType** | `string` |  Allowed values: `SLEEP_TIMER_RAMP_TYPE` / `ALARM_RAMP_TYPE` / `AUTOPLAY_RAMP_TYPE` |
 | **DesiredVolume** | `number` |  |
 | **ResetVolumeAfter** | `boolean` |  |
 | **ProgramURI** | `string` |  |
@@ -233,7 +235,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 
 Output:
 
@@ -251,7 +253,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` |  |
 
 ### RestoreVolumePriorToRamp
@@ -260,8 +262,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 ### SetBass
 
@@ -271,7 +273,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredBass** | `number` | between -10 and 10 |
 
 ### SetChannelMap
@@ -280,7 +282,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **ChannelMap** | `string` |  |
 
 ### SetEQ
@@ -291,7 +293,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` | DialogLevel, NightMode, SubGain |
 | **DesiredValue** | `number` | DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10 |
 
@@ -303,8 +305,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredLoudness** | `boolean` | true for on |
 
 ### SetMute
@@ -313,8 +315,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 | **DesiredMute** | `boolean` |  |
 
 ### SetOutputFixed
@@ -323,7 +325,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredFixed** | `boolean` |  |
 
 ### SetRelativeVolume
@@ -332,8 +334,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **Adjustment** | `number` |  |
 
 Output:
@@ -348,7 +350,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **RoomCalibrationEnabled** | `boolean` |  |
 
 ### SetRoomCalibrationX
@@ -357,7 +359,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **CalibrationID** | `string` |  |
 | **Coefficients** | `string` |  |
 | **CalibrationMode** | `string` |  |
@@ -370,7 +372,7 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
+| **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredTreble** | `number` | between -10 and 10 |
 
 ### SetVolume
@@ -379,8 +381,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
 
 ### SetVolumeDB
@@ -389,8 +391,8 @@ Input:
 
 | parameter | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | Sonos only serves one Instance always set to 0 |
-| **Channel** | `string` |  |
+| **InstanceID** | `number` | InstanceID should always be 0 |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
 
 ## RenderingControlService event
@@ -403,38 +405,40 @@ sonos.RenderingControlService.Events('serviceEvent', (data) => {
 });
 ```
 
-The **RenderingControlService** emits events with these properties. Not all properties are emitted everytime.
+The **RenderingControlService** emits events with these properties. Not all properties are emitted every time.
 
-| parameter | type |
-|:----------|:-----|
-| **AudioDelay** | `string` |
-| **AudioDelayLeftRear** | `string` |
-| **AudioDelayRightRear** | `string` |
-| **Bass** | `number` |
-| **DialogLevel** | `string` |
-| **EQValue** | `number` |
-| **HeadphoneConnected** | `boolean` |
-| **LastChange** | `string` |
-| **Loudness** | `boolean` |
-| **MusicSurroundLevel** | `string` |
-| **Mute** | `ChannelValue<boolean>` |
-| **NightMode** | `boolean` |
-| **OutputFixed** | `boolean` |
-| **PresetNameList** | `string` |
-| **RoomCalibrationAvailable** | `boolean` |
-| **RoomCalibrationCalibrationMode** | `string` |
-| **RoomCalibrationCoefficients** | `string` |
-| **RoomCalibrationEnabled** | `boolean` |
-| **RoomCalibrationID** | `string` |
-| **SpeakerSize** | `number` |
-| **SubCrossover** | `string` |
-| **SubEnabled** | `boolean` |
-| **SubGain** | `string` |
-| **SubPolarity** | `string` |
-| **SupportsOutputFixed** | `boolean` |
-| **SurroundEnabled** | `boolean` |
-| **SurroundLevel** | `string` |
-| **SurroundMode** | `string` |
-| **Treble** | `number` |
-| **Volume** | `ChannelValue<number>` |
-| **VolumeDB** | `number` |
+| parameter | type | possible values |
+|:----------|:-----|:----------------|
+| **AudioDelay** | `string` |  | 
+| **AudioDelayLeftRear** | `string` |  | 
+| **AudioDelayRightRear** | `string` |  | 
+| **Bass** | `number` |  | 
+| **DialogLevel** | `string` |  | 
+| **EQValue** | `number` |  | 
+| **HeadphoneConnected** | `boolean` |  | 
+| **LastChange** | `string` |  | 
+| **Loudness** | `boolean` |  | 
+| **MusicSurroundLevel** | `string` |  | 
+| **Mute** | `boolean` |  | 
+| **NightMode** | `boolean` |  | 
+| **OutputFixed** | `boolean` |  | 
+| **PresetNameList** | `string` |  | 
+| **RoomCalibrationAvailable** | `boolean` |  | 
+| **RoomCalibrationCalibrationMode** | `string` |  | 
+| **RoomCalibrationCoefficients** | `string` |  | 
+| **RoomCalibrationEnabled** | `boolean` |  | 
+| **RoomCalibrationID** | `string` |  | 
+| **SpeakerSize** | `number` |  | 
+| **SubCrossover** | `string` |  | 
+| **SubEnabled** | `boolean` |  | 
+| **SubGain** | `string` |  | 
+| **SubPolarity** | `string` |  | 
+| **SupportsOutputFixed** | `boolean` |  | 
+| **SurroundEnabled** | `boolean` |  | 
+| **SurroundLevel** | `string` |  | 
+| **SurroundMode** | `string` |  | 
+| **Treble** | `number` |  | 
+| **Volume** | `number` |  | 
+| **VolumeDB** | `number` |  | 
+
+This file is automatically generated with [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs), do not edit manually.

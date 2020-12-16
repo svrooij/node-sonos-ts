@@ -33,5 +33,5 @@ process.on('SIGINT', () => {
 
   setTimeout(() => {
     process.exit(0)
-  }, 1000)
+  }, 3000)
 })
