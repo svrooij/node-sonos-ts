@@ -7,6 +7,7 @@ import debug, { Debugger } from 'debug';
 import StrictEventEmitter from 'strict-event-emitter-types';
 import SoapHelper from '../helpers/soap-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { Track } from '../models/track';
 import MetadataHelper from '../helpers/metadata-helper';
 import SonosEventListener from '../sonos-event-listener';
 import { ServiceEvents } from '../models/sonos-events';
@@ -270,6 +271,8 @@ export default abstract class BaseService <TServiceEvent> {
     throw new HttpError(action, response.status, response.statusText);
   }
 
+  protected abstract responseProperties(): {[key: string]: string};
+
   /**
    * parseEmbeddedXml will parse the value of some response properties
    *
@@ -282,21 +285,34 @@ export default abstract class BaseService <TServiceEvent> {
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
     const output: {[key: string]: any } = {};
     const keys = Object.keys(input);
-    keys.forEach((k) => {
-      if (k.indexOf('MetaData') > -1 || k.indexOf('URI') > -1) {
-        const originalValue = input[k] as string;
-        if (k.indexOf('MetaData') > -1) {
-          output[k] = originalValue.startsWith('&lt;')
-            ? MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
-            : originalValue;
-        } else {
-          output[k] = XmlHelper.DecodeTrackUri(originalValue);
-        }
-      } else {
-        output[k] = input[k];
-      }
+    keys?.forEach((k) => {
+      output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
     });
     return output as TResponse;
+  }
+
+  protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
+    if (expectedType === 'Track | string' && typeof input === 'string') {
+      if (input.startsWith('&lt;')) {
+        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(input), this.host, this.port);
+      }
+      return undefined; // undefined is more appropriate, but that would be a breaking change.
+    }
+
+    if (name.indexOf('URI') > -1 && typeof input === 'string') {
+      return input === '' ? undefined : XmlHelper.DecodeTrackUri(input);
+    }
+
+    switch (expectedType) {
+      case 'boolean':
+        return input === 1 || input === '1';
+      case 'number':
+        return typeof input === 'number' ? input : parseInt(input as string, 10);
+      case 'string':
+        return typeof input === 'string' && input === '' ? undefined : input;
+      default:
+        return input;
+    }
   }
   // #endregion
 
@@ -487,16 +503,17 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    if (name.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;')) return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
-
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
     if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
+      if (name.endsWith('MetaData')) {
+        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
+      }
       return XmlHelper.DecodeAndParseXml(originalValue, '');
     }
 
     switch (type) {
       case 'number':
-        return parseInt(originalValue, 10);
+        return typeof originalValue === 'number' ? originalValue : parseInt(originalValue as string, 10);
       case 'boolean':
         return originalValue === '1' || originalValue === 1;
       default:

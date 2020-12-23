@@ -50,6 +50,12 @@ export class VirtualLineInService extends BaseService<VirtualLineInServiceEvent>
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmission', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentTransportSettings: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

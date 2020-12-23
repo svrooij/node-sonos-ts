@@ -63,6 +63,18 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
   Promise<SubmitDiagnosticsResponse> { return await this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      UpdateItem: 'string',
+      CurrentZoneGroupName: 'string',
+      CurrentZoneGroupID: 'string',
+      CurrentZonePlayerUUIDsInGroup: 'string',
+      CurrentMuseHouseholdId: 'string',
+      ZoneGroupState: 'Array<ZoneGroup> | string',
+      DiagnosticID: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

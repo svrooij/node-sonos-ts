@@ -92,7 +92,7 @@ export default class MetadataHelper {
     const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
 
     return {
-      trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri),
+      trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri) ?? '',
       metadata: metadata || '',
     };
   }

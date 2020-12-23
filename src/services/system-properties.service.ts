@@ -100,6 +100,18 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      AccountUDN: 'string',
+      AccountNickname: 'string',
+      RDMValue: 'boolean',
+      StringValue: 'string',
+      WebCode: 'string',
+      IsExpired: 'boolean',
+      NewAccountUDN: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

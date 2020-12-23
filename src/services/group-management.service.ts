@@ -35,6 +35,16 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentTransportSettings: 'string',
+      CurrentURI: 'string',
+      GroupUUIDJoined: 'string',
+      ResetVolumeAfter: 'boolean',
+      VolumeAVTransportURI: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

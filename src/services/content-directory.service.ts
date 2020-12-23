@@ -121,6 +121,26 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      Result: 'string',
+      NumberReturned: 'number',
+      TotalMatches: 'number',
+      UpdateID: 'number',
+      ObjectID: 'string',
+      StartingIndex: 'number',
+      AlbumArtistDisplayOption: 'string',
+      TotalPrefixes: 'number',
+      PrefixAndIndexCSV: 'string',
+      IsBrowseable: 'boolean',
+      LastIndexChange: 'string',
+      SearchCaps: 'string',
+      IsIndexing: 'boolean',
+      SortCaps: 'string',
+      Id: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

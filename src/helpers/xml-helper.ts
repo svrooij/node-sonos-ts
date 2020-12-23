@@ -23,8 +23,11 @@ export default class XmlHelper {
    * @returns {string} Decoded XML
    * @memberof XmlHelper
    */
-  static DecodeXml(text: string): string {
-    if (typeof text === 'undefined') return '';
+  static DecodeXml(text: unknown): string | undefined {
+    if (typeof text !== 'string' || text === '') {
+      return undefined;
+    }
+
     return text.replace(/&([^;]+);/g, (entity, entityCode) => {
       let match;
 
@@ -50,7 +53,9 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXml(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix });
+    const decoded = XmlHelper.DecodeXml(encodedXml);
+    if (typeof decoded === 'undefined') return undefined;
+    return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
   }
 
   /**
@@ -62,7 +67,8 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXmlNoNS(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix });
+    const decoded = XmlHelper.DecodeXml(encodedXml);
+    return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
   }
 
   /**
@@ -90,7 +96,10 @@ export default class XmlHelper {
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
   }
 
-  static DecodeTrackUri(input: string): string {
+  static DecodeTrackUri(input: string): string | undefined {
+    if (typeof input !== 'string' || input === '') {
+      return undefined;
+    }
     return XmlHelper.DecodeXml(decodeURIComponent(input));
   }
 }

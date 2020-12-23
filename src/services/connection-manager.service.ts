@@ -32,6 +32,21 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   Promise<GetProtocolInfoResponse> { return await this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      ConnectionIDs: 'string',
+      RcsID: 'number',
+      AVTransportID: 'number',
+      ProtocolInfo: 'string',
+      PeerConnectionManager: 'string',
+      PeerConnectionID: 'number',
+      Direction: 'string',
+      Status: 'string',
+      Source: 'string',
+      Sink: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
