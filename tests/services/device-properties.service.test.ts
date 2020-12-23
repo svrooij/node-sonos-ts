@@ -85,22 +85,4 @@ describe('DevicePropertiesService', () => {
       expect(zoneInfo.SerialNumber).to.be.eq('00-FF-FF-FF-FF-BC:A');
     })
   })
-
-  describe('GetZoneAttributes', () => {
-    it('works', async () => {
-      TestHelpers.mockRequest('/DeviceProperties/Control',
-        '"urn:schemas-upnp-org:service:DeviceProperties:1#GetZoneAttributes"',
-        '<u:GetZoneAttributes xmlns:u="urn:schemas-upnp-org:service:DeviceProperties:1"></u:GetZoneAttributes>',
-        'GetZoneAttributesResponse',
-        'DeviceProperties',
-        '<CurrentZoneName>Kantoor</CurrentZoneName><CurrentIcon>x-rincon-roomicon:office</CurrentIcon><CurrentConfiguration>1</CurrentConfiguration>'
-      );
-      const service = new DevicePropertiesService(TestHelpers.testHost, 1400);
-
-      const zoneAttributes = await service.GetZoneAttributes();
-      expect(zoneAttributes.CurrentZoneName).to.be.eq('Kantoor');
-      expect(zoneAttributes.CurrentIcon).to.be.eq('x-rincon-roomicon:office');
-      expect(zoneAttributes.CurrentConfiguration).to.be.eq(1);
-    })
-  })
 })

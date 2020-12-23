@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import { TestHelpers } from '../test-helpers';
+import { PlayMode } from '../../src/models';
 import { AVTransportService } from '../../src/services/av-transport.service';
 
 describe('AVTransportService', () => {
@@ -25,6 +26,65 @@ describe('AVTransportService', () => {
       expect(result).to.have.nested.property('FirstTrackNumberEnqueued', 1);
       expect(result).to.have.nested.property('NewQueueLength', 1);
       expect(result).to.have.nested.property('NumTracksAdded', 1);
+    });
+  });
+
+  describe('GetMediaInfo()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetMediaInfo"',
+        '<u:GetMediaInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetMediaInfo>',
+        'GetMediaInfoResponse',
+        'AVTransport',
+        '<NrTracks>300</NrTracks><MediaDuration>NOT_IMPLEMENTED</MediaDuration><CurrentURI>x-rincon-queue:RINCON_000xxx1400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData><NextURI></NextURI><NextURIMetaData></NextURIMetaData><PlayMedium>NETWORK</PlayMedium><RecordMedium>NOT_IMPLEMENTED</RecordMedium><WriteStatus>NOT_IMPLEMENTED</WriteStatus>'
+      );
+
+      const service = new AVTransportService(TestHelpers.testHost, 1400);
+      const result = await service.GetMediaInfo();
+      expect(result).to.have.nested.property('CurrentURI','x-rincon-queue:RINCON_000xxx1400#0');
+    });
+  });
+
+  describe('GetPositionInfo()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetPositionInfo"',
+        '<u:GetPositionInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetPositionInfo>',
+        'GetPositionInfoResponse',
+        'AVTransport',
+        `<Track>219</Track>
+        <TrackDuration>0:04:34</TrackDuration>
+        <TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;-1&quot; parentID=&quot;-1&quot; restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot; duration=&quot;0:04:34&quot;&gt;x-sonos-spotify:spotify%3atrack%3a6bblF1vFB4fFJYcvr63cBQ?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;r:streamContent&gt;&lt;/r:streamContent&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a6bblF1vFB4fFJYcvr63cBQ%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;All I Want for Christmas Is New Year&amp;apos;s Day&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Hurts&lt;/dc:creator&gt;&lt;upnp:album&gt;Happiness - Deluxe Edition&lt;/upnp:album&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData>
+        <TrackURI>x-sonos-spotify:spotify%3atrack%3a6bblF1vFB4fFJYcvr63cBQ?sid=9&amp;flags=8224&amp;sn=7</TrackURI>
+        <RelTime>0:02:04</RelTime
+        ><AbsTime>NOT_IMPLEMENTED</AbsTime>
+        <RelCount>2147483647</RelCount>
+        <AbsCount>2147483647</AbsCount>`
+      );
+
+      const service = new AVTransportService(TestHelpers.testHost, 1400);
+      //const service = new AVTransportService('192.168.96.56', 1400);
+      const result = await service.GetPositionInfo();
+      expect(result).to.have.nested.property('Track', 219);
+      expect(result.TrackMetaData).to.have.nested.property('Album', 'Happiness - Deluxe Edition');
+    });
+  });
+
+  describe('GetTransportSettings()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
+        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        'GetTransportSettingsResponse',
+        'AVTransport',
+        '<PlayMode>REPEAT_ALL</PlayMode><RecQualityMode>xxx</RecQualityMode>'
+      );
+
+      const service = new AVTransportService(TestHelpers.testHost, 1400);
+      const result = await service.GetTransportSettings();
+      expect(result).to.have.nested.property('PlayMode', PlayMode.RepeatAll);
+      expect(result).to.have.nested.property('RecQualityMode', 'xxx');
+
     });
   });
 

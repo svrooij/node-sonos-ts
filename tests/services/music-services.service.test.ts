@@ -23,12 +23,7 @@ describe('MusicServicesService', () => {
 
   describe('ListAndParseAvailableServices', () => {
     it('parses correctly and caching works', async () => {
-      TestHelpers.mockSoapRequestWithFile('/MusicServices/Control',
-        '"urn:schemas-upnp-org:service:MusicServices:1#ListAvailableServices"',
-        '<u:ListAvailableServices xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"></u:ListAvailableServices>',
-        'ListAvailableServicesResponse',
-        'MusicServices',
-        ['services', 'responses', 'music-services.ListAvailableServices.xml']);
+      TestHelpers.mockMusicServicesListResponse();
 
       const service = new MusicServicesService(TestHelpers.testHost, 1400);
 

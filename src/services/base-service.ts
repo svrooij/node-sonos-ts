@@ -197,7 +197,7 @@ export default abstract class BaseService <TServiceEvent> {
         if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
-        else messageBody += `<${key}>${value}</${key}>`;
+        else messageBody += `<${key}>${value ?? ''}</${key}>`;
       });
     }
     messageBody += `</u:${action}>`;

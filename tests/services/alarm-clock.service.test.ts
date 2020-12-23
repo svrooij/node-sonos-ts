@@ -58,7 +58,7 @@ describe('AlarmClockService', () => {
       const service = new AlarmClockService(TestHelpers.testHost, 1400);
 
       const result = await service.GetTimeZone();
-      expect(result).to.have.nested.property('AutoAdjustDst', 1);
+      expect(result).to.have.nested.property('AutoAdjustDst', true);
       expect(result).to.have.nested.property('Index', 27);
     });
   });
