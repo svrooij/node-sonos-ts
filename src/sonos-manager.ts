@@ -122,7 +122,7 @@ export default class SonosManager {
    * @memberof SonosManager
    */
   public CancelSubscription(): void {
-    if (this.zoneService !== undefined) this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
+    if (this.zoneService !== undefined) this.zoneService.Events.removeListener(ServiceEvents.ServiceEvent, this.zoneEventSubscription);
   }
 
   /**

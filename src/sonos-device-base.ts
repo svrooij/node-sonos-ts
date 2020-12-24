@@ -281,4 +281,58 @@ export default class SonosDeviceBase {
     if (this.zonegrouptopologyservice !== undefined) result = await this.zonegrouptopologyservice.CheckEventListener() || result;
     return result;
   }
+
+  protected GetServiceByName(name: string): AlarmClockService | AudioInService | AVTransportService | ConnectionManagerService | ContentDirectoryService | DevicePropertiesService | GroupManagementService | GroupRenderingControlService | HTControlService | MusicServicesService | QPlayService | QueueService | RenderingControlService | SystemPropertiesService | VirtualLineInService | ZoneGroupTopologyService | undefined {
+    if (typeof name !== 'string' || name === '') return undefined;
+    const lowerName = name.toLowerCase();
+    if (lowerName === 'alarmclockservice') {
+      return this.AlarmClockService;
+    }
+    if (lowerName === 'audioinservice') {
+      return this.AudioInService;
+    }
+    if (lowerName === 'avtransportservice') {
+      return this.AVTransportService;
+    }
+    if (lowerName === 'connectionmanagerservice') {
+      return this.ConnectionManagerService;
+    }
+    if (lowerName === 'contentdirectoryservice') {
+      return this.ContentDirectoryService;
+    }
+    if (lowerName === 'devicepropertiesservice') {
+      return this.DevicePropertiesService;
+    }
+    if (lowerName === 'groupmanagementservice') {
+      return this.GroupManagementService;
+    }
+    if (lowerName === 'grouprenderingcontrolservice') {
+      return this.GroupRenderingControlService;
+    }
+    if (lowerName === 'htcontrolservice') {
+      return this.HTControlService;
+    }
+    if (lowerName === 'musicservicesservice') {
+      return this.MusicServicesService;
+    }
+    if (lowerName === 'qplayservice') {
+      return this.QPlayService;
+    }
+    if (lowerName === 'queueservice') {
+      return this.QueueService;
+    }
+    if (lowerName === 'renderingcontrolservice') {
+      return this.RenderingControlService;
+    }
+    if (lowerName === 'systempropertiesservice') {
+      return this.SystemPropertiesService;
+    }
+    if (lowerName === 'virtuallineinservice') {
+      return this.VirtualLineInService;
+    }
+    if (lowerName === 'zonegrouptopologyservice') {
+      return this.ZoneGroupTopologyService;
+    }
+    return undefined;
+  }
 }

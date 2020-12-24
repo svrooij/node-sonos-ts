@@ -6,7 +6,7 @@ import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
 import { SmapiClient } from '../src/musicservices/smapi-client';
-import { AsyncHelper } from '../src/helpers/async-helper';
+import AsyncHelper from '../src/helpers/async-helper';
 
 (process.env.SONOS_HOST ? describe : describe.skip)('SonosDevice - local', () => {
 
@@ -193,6 +193,32 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
 
+    it('executes \'AlarmClockService.GetFormat\'', async () => {
+      TestHelpers.mockRequest('/AlarmClock/Control',
+        '"urn:schemas-upnp-org:service:AlarmClock:1#GetFormat"',
+        '<u:GetFormat xmlns:u="urn:schemas-upnp-org:service:AlarmClock:1"></u:GetFormat>',
+        'GetFormatResponse',
+        'AlarmClock',
+        '<CurrentTimeFormat>24H</CurrentTimeFormat><CurrentDateFormat>DMY</CurrentDateFormat>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      var result = await device.ExecuteCommand('AlarmclockService.Getformat');
+
+      expect(result).to.have.property('CurrentTimeFormat', '24H');
+      expect(result).to.have.property('CurrentDateFormat', 'DMY');
+    });
+
+    it('throws error on AudioInService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('AudioInService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    })
+
     it('executes \'AVTransportService.Next\'', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#Next"',
@@ -205,6 +231,152 @@ describe('SonosDevice', () => {
       var result = await device.ExecuteCommand('AVTransportService.Next');
       expect(result).to.be.eq(true);
     });
+
+    it('throws error on ConnectionManagerService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('ConnectionManagerService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on ContentDirectoryService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('ContentDirectoryService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on DevicePropertiesService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('DevicePropertiesService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on GroupManagementService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('GroupManagementService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on GroupRenderingControlService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('GroupRenderingControlService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on HTControlService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('HTControlService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on MusicServicesService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('MusicServicesService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on QPlayService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('QPlayService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on QueueService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('QueueService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on RenderingControlService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('RenderingControlService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on SystemPropertiesService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('SystemPropertiesService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('throws error on VirtualLineInService.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('VirtualLineInService.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    });
+
+    it('executes \'ZoneGroupTopologyService.GetZoneGroupAttributes\'', async () => {
+      TestHelpers.mockRequest('/ZoneGroupTopology/Control',
+        '"urn:schemas-upnp-org:service:ZoneGroupTopology:1#GetZoneGroupAttributes"',
+        '<u:GetZoneGroupAttributes xmlns:u="urn:schemas-upnp-org:service:ZoneGroupTopology:1"></u:GetZoneGroupAttributes>',
+        'GetZoneGroupAttributesResponse',
+        'ZoneGroupTopology',
+        '<CurrentZoneGroupName>Kantoor</CurrentZoneGroupName><CurrentZoneGroupID>fakeID</CurrentZoneGroupID>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      var result = await device.ExecuteCommand('zonegrouptopologyservice.getzonegroupAttributes');
+
+      expect(result).to.have.property('CurrentZoneGroupName', 'Kantoor');
+      expect(result).to.have.property('CurrentZoneGroupID', 'fakeID');
+    });
+
+    it('throws error on xxx.xxx', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.ExecuteCommand('xxx.xxx');
+      } catch {
+        return
+      }
+      expect(true).to.be.false;
+    })
   });
 
   describe('GetFavoriteRadioShows()', () => {

@@ -7,9 +7,10 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, StrongSonosEvents,
+  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse,
 } from './models';
-import { AsyncHelper } from './helpers/async-helper';
+import { StrongSonosEvents } from './models/strong-sonos-events';
+import AsyncHelper from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
@@ -134,39 +135,35 @@ export default class SonosDevice extends SonosDeviceBase {
       const split = command.split('.', 2);
       [service, correctCommand] = split;
     }
+    const foundService = this.GetServiceByName(service);
+    const objectToCallOn = typeof foundService !== 'undefined'
+      ? foundService as unknown as {[key: string]: any}
+      : this.executeCommandGetFunctions();
 
-    const objectToCall: {[key: string]: Function} = service !== '' ? this.executeCommandGetService(service) || this.executeCommandGetFunctions() : this.executeCommandGetFunctions();
-    if (objectToCall[correctCommand] === undefined) {
-      correctCommand = Object.keys(objectToCall).find((k) => k.toLowerCase() === correctCommand.toLowerCase()) || correctCommand;
-    }
-    if (typeof (objectToCall[correctCommand]) === 'function') {
+    const proto = Object.getPrototypeOf(objectToCallOn);
+    const propertyDescriptions = Object.getOwnPropertyDescriptors(proto);
+    const baseProto = Object.getPrototypeOf(proto);
+    const basePropertyDescriptions = Object.getOwnPropertyDescriptors(baseProto);
+    const allKeys = [...Object.keys(propertyDescriptions), ...Object.keys(basePropertyDescriptions)];
+    const functionToCall = allKeys.find((key) => (key as string).toLowerCase() === correctCommand.toLowerCase());
+
+    if (typeof functionToCall === 'string' && typeof (objectToCallOn[functionToCall]) === 'function') {
       if (options === undefined) {
-        return objectToCall[correctCommand]();
-      } if (typeof (options) === 'string') {
+        return objectToCallOn[functionToCall]();
+      }
+      if (typeof (options) === 'string') {
         const parsedOptions = JsonHelper.TryParse(options);
-        return objectToCall[correctCommand](parsedOptions);
-      } // number or object options;
-      return objectToCall[correctCommand](options);
+        return objectToCallOn[functionToCall](parsedOptions);
+      }
+      // number or object options;
+      return objectToCallOn[functionToCall](options);
     }
     throw new Error(`Command ${correctCommand} isn't a function`);
   }
 
-  private executeCommandGetFunctions(): {[key: string]: Function} {
+  private executeCommandGetFunctions(): {[key: string]: any} {
     // This code looks weird, but is required to convince TypeScript this is actually what we want.
-    return this as unknown as {[key: string]: Function};
-  }
-
-  private executeCommandGetService(serviceName: string): {[key: string]: Function} | undefined {
-    if (serviceName.toLowerCase().indexOf('service') === -1) { // Name doesn't have 'Service' in it.
-      return undefined;
-    }
-
-    const serviceDictionary = this.executeCommandGetFunctions();
-    if (serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
-    // Do case insensitive lookup
-    const checkedName = Object.keys(serviceDictionary).find((k) => k.toLowerCase() === serviceName.toLowerCase());
-    if (checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
-    return undefined;
+    return this as unknown as {[key: string]: any};
   }
 
   /**
@@ -553,8 +550,8 @@ export default class SonosDevice extends SonosDeviceBase {
         this.debug('Listener added');
         if (!this.isSubscribed) {
           this.isSubscribed = true;
-          this.AVTransportService.Events.on(ServiceEvents.LastChange, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.on(ServiceEvents.LastChange, this.boundHandleRenderingControlEvent);
+          this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+          this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
         }
       });
     }

@@ -130,6 +130,7 @@ export interface ZoneGroupTopologyServiceEvent {
   ZonePlayerUUIDsInGroup?: string;
 }
 
+
 export interface ZoneGroup {
   name: string;
   coordinator: ZoneMember;
@@ -201,7 +202,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     };
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
     const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type);
     if (name === 'ZoneGroupState') {
       const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup);

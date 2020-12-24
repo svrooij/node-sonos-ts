@@ -10,10 +10,9 @@ import XmlHelper from '../helpers/xml-helper';
 import { Track } from '../models/track';
 import MetadataHelper from '../helpers/metadata-helper';
 import SonosEventListener from '../sonos-event-listener';
-import { ServiceEvents } from '../models/sonos-events';
+import { ServiceEvent, ServiceEvents } from '../models/service-event';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
-import { ServiceEvent } from '../models/service-event';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 
 /**
@@ -493,7 +492,7 @@ export default abstract class BaseService <TServiceEvent> {
     const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if (rawBody.LastChange) {
-      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '');
+      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '') as any;
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)

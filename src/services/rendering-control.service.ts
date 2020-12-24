@@ -337,7 +337,7 @@ export interface RenderingControlServiceEvent {
 }
 
 export class RenderingControlService extends RenderingControlServiceBase {
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
     if (name === 'Mute') {
       const output = {} as ChannelValue<boolean>;
       (originalValue as Array<any>).forEach((v) => {

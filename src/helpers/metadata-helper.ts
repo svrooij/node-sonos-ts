@@ -1,5 +1,5 @@
-import debug = require('debug');
-import { Track } from '../models';
+import debug from 'debug';
+import { Track } from '../models/track';
 import XmlHelper from './xml-helper';
 
 export default class MetadataHelper {
@@ -9,15 +9,16 @@ export default class MetadataHelper {
    * ParseDIDLTrack will parse track metadata for you.
    *
    * @static
-   * @param {*} parsedItem Object from XmlParser
+   * @param {*} didl Object from XmlParser
    * @param {string} host Sonos host, to make album uri an absolute url
    * @param {number} [port=1400] Sonos port, to make album uri an absolute url
    * @returns {Track} Parsed track
    * @memberof MetadataHelper
    */
-  static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track | undefined {
-    if (typeof parsedItem === 'undefined') return undefined;
-    MetadataHelper.debug('Parsing DIDL %o', parsedItem);
+  static ParseDIDLTrack(didl: unknown, host: string, port = 1400): Track | undefined {
+    if (typeof didl === 'undefined') return undefined;
+    MetadataHelper.debug('Parsing DIDL %o', didl);
+    const parsedItem = didl as {[key: string]: any };
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
       Album: XmlHelper.EncodeXmlUndefined(didlItem['upnp:album']),

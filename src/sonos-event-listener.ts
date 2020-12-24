@@ -124,12 +124,13 @@ export default class SonosEventListener {
       .on('data', (chunk: any) => { body.push(chunk); })
       .on('end', () => {
         const bodyString = Buffer.concat(body).toString();
-        service.ParseEvent(bodyString);
         resp.statusCode = 200;
         resp.end('OK');
+        // End response before parsing event.
+        service.ParseEvent(bodyString);
       })
-      .on('error', (err: any) => {
-        console.error(err);
+      .on('error', (err: Error) => {
+        this.debug('Error receiving event', err);
       });
   }
 
