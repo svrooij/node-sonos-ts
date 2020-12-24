@@ -1,19 +1,5 @@
 import { parse } from 'fast-xml-parser';
-
-const htmlEntities: any = {
-  nbsp: ' ',
-  cent: '¢',
-  pound: '£',
-  yen: '¥',
-  euro: '€',
-  copy: '©',
-  reg: '®',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  amp: '&',
-  apos: '\'',
-};
+import { XmlEntities } from 'html-entities';
 export default class XmlHelper {
   /**
    * Decode an encoded xml string
@@ -28,20 +14,7 @@ export default class XmlHelper {
       return undefined;
     }
 
-    return text.replace(/&([^;]+);/g, (entity, entityCode) => {
-      let match;
-
-      if (entityCode in htmlEntities) {
-        return htmlEntities[entityCode];
-        /* eslint no-cond-assign: 0 */
-      } if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
-        return String.fromCharCode(parseInt(match[1], 16));
-        /* eslint no-cond-assign: 0 */
-      } if (match = entityCode.match(/^#(\d+)$/)) {
-        return String.fromCharCode(match[1]);
-      }
-      return entity;
-    });
+    return new XmlEntities().decode(text);
   }
 
   /**
@@ -52,7 +25,7 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXml(encodedXml: string, attributeNamePrefix = '_'): any {
+  static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): any {
     const decoded = XmlHelper.DecodeXml(encodedXml);
     if (typeof decoded === 'undefined') return undefined;
     return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
@@ -66,7 +39,7 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXmlNoNS(encodedXml: string, attributeNamePrefix = '_'): any {
+  static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): any {
     const decoded = XmlHelper.DecodeXml(encodedXml);
     return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
   }
@@ -79,9 +52,9 @@ export default class XmlHelper {
    * @returns {string}
    * @memberof XmlHelper
    */
-  static EncodeXml(xml: string): string {
-    if (typeof xml === 'undefined') return '';
-    return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  static EncodeXml(xml: unknown): string {
+    if (typeof xml !== 'string' || xml === '') return '';
+    return new XmlEntities().encode(xml);
   }
 
   static EncodeTrackUri(trackUri: string): string {
@@ -96,7 +69,7 @@ export default class XmlHelper {
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
   }
 
-  static DecodeTrackUri(input: string): string | undefined {
+  static DecodeTrackUri(input: unknown): string | undefined {
     if (typeof input !== 'string' || input === '') {
       return undefined;
     }

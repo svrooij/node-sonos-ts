@@ -52,6 +52,7 @@
     "debug": "4.2.0",
     "fast-xml-parser": "^3.17.4",
     "guid-typescript": "^1.0.9",
+    "html-entities": "^1.4.0",
     "node-fetch": "^2.6.1",
     "strict-event-emitter-types": "^2.0.0"
   },
