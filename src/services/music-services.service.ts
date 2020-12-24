@@ -128,7 +128,7 @@ export class MusicServicesService extends MusicServicesServiceBase {
       Id: parseInt(service.Id, 10),
       Policy: {
         Auth: service.Policy?.Auth,
-        PollInterval: parseInt(service?.Policy?.PollInterval || '-1', 10),
+        PollInterval: parseInt(service.Policy?.PollInterval || '-1', 10),
       },
     };
     delete temp.Id;

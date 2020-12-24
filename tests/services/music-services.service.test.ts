@@ -2,6 +2,8 @@ import { expect } from 'chai';
 
 import { TestHelpers } from '../test-helpers';
 import { MusicServicesService } from '../../src/services/music-services.service';
+import { ServiceEvents } from '../../src/models';
+import nock from 'nock';
 
 describe('MusicServicesService', () => {
   describe('GetSessionId', () => {
@@ -22,8 +24,8 @@ describe('MusicServicesService', () => {
   });
 
   describe('ListAndParseAvailableServices', () => {
-    it('parses correctly and caching works', async () => {
-      TestHelpers.mockMusicServicesListResponse();
+    it('does cache the list', async () => {
+      const scope = TestHelpers.mockMusicServicesListResponse();
 
       const service = new MusicServicesService(TestHelpers.testHost, 1400);
 
@@ -36,10 +38,59 @@ describe('MusicServicesService', () => {
       expect(musicService).to.have.property('Id', 38);
       expect(musicService).to.have.property('Name', '7digital');
       expect(musicService).to.have.nested.property('Policy.PollInterval', 30);
-
+      scope.done();
+      nock.cleanAll(); // Remove all current items.
       const cachedResult = await service.ListAndParseAvailableServices(true);
       expect(cachedResult).to.be.an('array');
       expect(cachedResult).to.have.lengthOf(70);
+    });
+  });
+
+  describe('ListAndParseAvailableServices', () => {
+    it('skips cache if disabled', async () => {
+      const scope = TestHelpers.mockMusicServicesListResponse();
+
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
+
+      const result = await service.ListAndParseAvailableServices();
+      expect(result).to.be.an('array');
+      expect(result).to.have.lengthOf(70);
+
+      scope.done();
+      nock.cleanAll(); // Remove all current items.
+      try {
+        await service.ListAndParseAvailableServices(false);
+      } catch (error) {
+        expect(error).to.have.property('code', 'ECONNREFUSED');
+        return;
+      }
+
+      // It should not get here
+      expect(false).to.be.true;
+    });
+  });
+
+  describe('ListAndParseAvailableServices', () => {
+    it('new copy if cache = false', async () => {
+      const scope = TestHelpers.mockMusicServicesListResponse();
+
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
+
+      const result = await service.ListAndParseAvailableServices(true);
+      expect(result).to.be.an('array');
+      expect(result).to.have.lengthOf(70);
+
+      scope.done();
+      nock.cleanAll(); // Remove all current items.
+      try {
+        await service.ListAndParseAvailableServices();
+      } catch (error) {
+        expect(error).to.have.property('code', 'ECONNREFUSED');
+        return;
+      }
+
+      // It should not get here
+      expect(false).to.be.true;
     });
   });
 
@@ -57,4 +108,17 @@ describe('MusicServicesService', () => {
       expect(result).to.be.true;
     });
   });
+
+  describe('Event parsing', () => {
+    it('works', (done) => {
+      process.env.SONOS_DISABLE_EVENTS = 'true'
+      const service = new MusicServicesService(TestHelpers.testHost, 1400);
+      service.Events.once(ServiceEvents.Data, (data) => {
+        expect(data.ServiceListVersion).to.be.equal('RINCON_xxx01400:990');
+        done();
+      })
+      service.ParseEvent('<e:propertyset xmlns:e="urn:schemas-upnp-org:event-1-0"><e:property><ServiceListVersion>RINCON_xxx01400:990</ServiceListVersion></e:property></e:propertyset>');
+      delete process.env.SONOS_DISABLE_EVENTS
+    }, 1)
+  })
 });
