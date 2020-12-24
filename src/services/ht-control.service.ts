@@ -47,6 +47,14 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentIRRepeaterState: 'string',
+      LEDFeedbackState: 'string',
+      RemoteConfigured: 'boolean',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

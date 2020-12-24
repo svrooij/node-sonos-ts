@@ -47,6 +47,12 @@ describe('MetadataHelper', () => {
       const track = MetadataHelper.GuessTrack(uri);
       expect(track).to.be.undefined;
     });
+
+    it('Returns undefined for unsupported spotify uri', () => {
+      const uri = 'spotify:fake:fake-id'
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).to.be.undefined;
+    });
   });
 
   describe('GuessTrackAndMetadata', () => {
@@ -111,9 +117,44 @@ describe('MetadataHelper', () => {
       expect(result).to.have.nested.property('Title', title);
       expect(result).to.have.nested.property('ItemId', id);
     })
+
+    it('parsed r:streamContent', () => {
+      const artist = 'Guus Meeuwis';
+      const id = 'FAKE_ITEM_ID'
+      const didl = {
+        _id: id,
+        'r:streamContent': artist
+      }
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host')
+      expect(result).to.be.an('object');
+      expect(result).to.have.nested.property('Artist', artist);
+      expect(result).to.have.nested.property('ItemId', id);
+    })
   })
 
   describe('TrackToMetaData', () => {
+    it('includes resource', () => {
+      const trackUri = 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3';
+      const albumUri = 'https://avatars2.githubusercontent.com/u/1292510?v=4'
+      const album = 'Just a Bell';
+      const duration = '00:28:07';
+      const fakeProtocolInfo = 'fake-protocol:*'
+      const metadata = MetadataHelper.TrackToMetaData({
+        ParentId: '11',
+        TrackUri: trackUri,
+        Duration: duration,
+        AlbumArtUri: albumUri,
+        Album: album,
+        ProtocolInfo: fakeProtocolInfo
+      }, true);
+      expect(metadata).to.be.not.undefined;
+      expect(metadata).to.contain(trackUri);
+      expect(metadata).to.contain(albumUri);
+      expect(metadata).to.contain(album);
+      expect(metadata).to.contain(duration);
+      expect(metadata).to.contain(fakeProtocolInfo);
+    });
+
     it('returns emtpy string when track undefined', () => {
       const result = MetadataHelper.TrackToMetaData(undefined);
       expect(result).to.be.eq('');

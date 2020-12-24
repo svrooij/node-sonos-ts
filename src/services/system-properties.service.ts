@@ -100,6 +100,18 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      AccountUDN: 'string',
+      AccountNickname: 'string',
+      RDMValue: 'boolean',
+      StringValue: 'string',
+      WebCode: 'string',
+      IsExpired: 'boolean',
+      NewAccountUDN: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
@@ -186,7 +198,8 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
    */
   public async SavedAccounts(): Promise<number[] | undefined> {
     const result = await this.GetStringSafe('sonos-ts-accounts');
-    return result?.split('|').map((s) => parseInt(s, 10));
+    if (typeof result === 'undefined') return undefined;
+    return result.toString().split('|').map((s) => parseInt(s, 10));
   }
 
   /**
@@ -216,11 +229,11 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
    */
   public async DeleteAccount(serviceId: number): Promise<boolean> {
     const accounts = await this.SavedAccounts() ?? [];
-    if (accounts?.indexOf(serviceId) > -1) {
+    if (accounts.indexOf(serviceId) > -1) {
       const newAccounts = accounts.filter((val) => val !== serviceId);
       await this.SetString({ VariableName: 'sonos-ts-accounts', StringValue: newAccounts.join('|') });
       await this.Remove({ VariableName: `sonos-ts-${serviceId}-key` });
-      await this.Remove({ VariableName: `sonos-ts${serviceId}-token` });
+      await this.Remove({ VariableName: `sonos-ts-${serviceId}-token` });
       return true;
     }
     return false;
@@ -239,7 +252,7 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
     const accounts = await this.SavedAccounts() ?? [];
     if (accounts.indexOf(serviceId) === -1) {
       accounts.push(serviceId);
-      accounts.sort();
+      accounts.sort((a: number, b: number) => a - b);
       await this.SetString({ VariableName: 'sonos-ts-accounts', StringValue: accounts.join('|') });
     }
     await this.SetString({ VariableName: `sonos-ts-${serviceId}-token`, StringValue: token });

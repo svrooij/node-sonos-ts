@@ -44,6 +44,16 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentName: 'string',
+      CurrentIcon: 'string',
+      CurrentLeftLineInLevel: 'number',
+      CurrentRightLineInLevel: 'number',
+      CurrentTransportSettings: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

@@ -11,51 +11,38 @@ module.exports =  {
   },
   rules:  {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
-    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "class-methods-use-this":"off",
-    "import/first": "warn",
-    "import/no-cycle": "off",
-    "import/no-duplicates": "warn",
-    "max-classes-per-file":"off",
-    "max-len":"off",
-    "no-console": "off",
-    "no-return-await": "off",
-    "linebreak-style": "off"
+    // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-explicit-any': 'off',
+    'class-methods-use-this':'off',
+    'max-classes-per-file':'off',
+    'max-len':'off',
+    'no-return-await': 'off',
+    'linebreak-style': 'off'
   },
   overrides: [
     {
-      files: ['src/services/virtual-line-in.service.ts'],
+      files: ['src/helpers/metadata-helper.ts'],
       rules: {
-        "@typescript-eslint/no-unused-vars": "off"
-      }
-    },
-    {
-      files: ['src/helpers/*.ts'],
-      rules: {
-        'no-bitwise': 'warn',
-        'no-underscore-dangle': 'warn',
-        'no-useless-escape': 'warn',
-        'prefer-destructuring': 'warn'
+        'no-underscore-dangle': 'off',
       }
     },
     {
       files: ['src/models/*.ts'],
       rules: {
-        'import/prefer-default-export': 'warn'
+        'import/prefer-default-export': 'off'
       }
     },
     {
       files: ['src/services/*.ts'],
       rules: {
         'import/order': 'warn',
-        'no-multiple-empty-lines': 'warn'
+        'no-multiple-empty-lines': 'off'
       }
     },
     {
-      files: ['src/sonos-device.ts'],
+      files: ['src/sonos-event-listener.ts', 'src/services/base-service.ts'],
       rules: {
-        '@typescript-eslint/ban-types': 'warn'
+        'import/no-cycle': 'off',
       }
     }
   ]

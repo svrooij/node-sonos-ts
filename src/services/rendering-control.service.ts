@@ -171,6 +171,31 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentBass: 'number',
+      CurrentValue: 'number',
+      CurrentHeadphoneConnected: 'boolean',
+      CurrentLoudness: 'boolean',
+      CurrentMute: 'boolean',
+      CurrentFixed: 'boolean',
+      RoomCalibrationEnabled: 'boolean',
+      RoomCalibrationAvailable: 'boolean',
+      CurrentSupportsFixed: 'boolean',
+      CurrentTreble: 'number',
+      CurrentVolume: 'number',
+      MinValue: 'number',
+      MaxValue: 'number',
+      RampTime: 'number',
+      Bass: 'number',
+      Treble: 'number',
+      Loudness: 'boolean',
+      LeftVolume: 'number',
+      RightVolume: 'number',
+      NewVolume: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
@@ -312,7 +337,7 @@ export interface RenderingControlServiceEvent {
 }
 
 export class RenderingControlService extends RenderingControlServiceBase {
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
     if (name === 'Mute') {
       const output = {} as ChannelValue<boolean>;
       (originalValue as Array<any>).forEach((v) => {

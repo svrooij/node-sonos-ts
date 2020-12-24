@@ -13,7 +13,7 @@ import XmlHelper from '../helpers/xml-helper';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 import {
-  BrowseResponse,
+  BrowseResponse, Track,
 } from '../models';
 
 /**
@@ -120,6 +120,26 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   async UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   // #endregion
+
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      Result: 'string',
+      NumberReturned: 'number',
+      TotalMatches: 'number',
+      UpdateID: 'number',
+      ObjectID: 'string',
+      StartingIndex: 'number',
+      AlbumArtistDisplayOption: 'string',
+      TotalPrefixes: 'number',
+      PrefixAndIndexCSV: 'string',
+      IsBrowseable: 'boolean',
+      LastIndexChange: 'string',
+      SearchCaps: 'string',
+      IsIndexing: 'boolean',
+      SortCaps: 'string',
+      Id: 'number',
+    };
+  }
 
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
@@ -231,10 +251,12 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
   async BrowseParsed(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
     const resp = await this.Browse(input);
     if (typeof resp.Result === 'string' && resp.NumberReturned > 0) {
-      const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
+      const parsedData = (XmlHelper.DecodeAndParseXml(resp.Result) as {[key: string]: any})['DIDL-Lite'];
       const itemObject = parsedData.item || parsedData.container;
       const items = ArrayHelper.ForceArray(itemObject);
-      resp.Result = items.map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
+      resp.Result = items
+        .map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port))
+        .filter((i) => typeof i !== 'undefined') as Track[];
     }
     return resp;
   }

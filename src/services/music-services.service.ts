@@ -44,6 +44,15 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   Promise<boolean> { return await this.SoapRequestNoResponse('UpdateAvailableServices'); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      SessionId: 'string',
+      AvailableServiceDescriptorList: 'string',
+      AvailableServiceTypeList: 'string',
+      AvailableServiceListVersion: 'string',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
@@ -119,7 +128,7 @@ export class MusicServicesService extends MusicServicesServiceBase {
       Id: parseInt(service.Id, 10),
       Policy: {
         Auth: service.Policy?.Auth,
-        PollInterval: parseInt(service?.Policy?.PollInterval || '-1', 10),
+        PollInterval: parseInt(service.Policy?.PollInterval || '-1', 10),
       },
     };
     delete temp.Id;

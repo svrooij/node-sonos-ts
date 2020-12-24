@@ -115,6 +115,32 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      State: 'string',
+      IncludeLinkedZones: 'boolean',
+      RoomUUID: 'string',
+      CurrentVolume: 'number',
+      CurrentButtonLockState: 'string',
+      CurrentHouseholdID: 'string',
+      CurrentLEDState: 'string',
+      UseVolume: 'boolean',
+      CurrentZoneName: 'string',
+      CurrentIcon: 'string',
+      CurrentConfiguration: 'string',
+      SerialNumber: 'string',
+      SoftwareVersion: 'string',
+      DisplaySoftwareVersion: 'string',
+      HardwareVersion: 'string',
+      IPAddress: 'string',
+      MACAddress: 'string',
+      CopyrightInfo: 'string',
+      ExtraInfo: 'string',
+      HTAudioIn: 'number',
+      Flags: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
