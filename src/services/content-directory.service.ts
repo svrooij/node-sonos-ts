@@ -13,7 +13,7 @@ import XmlHelper from '../helpers/xml-helper';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 import {
-  BrowseResponse,
+  BrowseResponse, Track,
 } from '../models';
 
 /**
@@ -254,7 +254,9 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
       const parsedData = XmlHelper.DecodeAndParseXml(resp.Result)['DIDL-Lite'];
       const itemObject = parsedData.item || parsedData.container;
       const items = ArrayHelper.ForceArray(itemObject);
-      resp.Result = items.map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port));
+      resp.Result = items
+        .map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port))
+        .filter(i => typeof i !== 'undefined') as Track[];
     }
     return resp;
   }

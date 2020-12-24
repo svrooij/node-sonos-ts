@@ -636,10 +636,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of AVTransportService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.AVTransportService;
+      expect(service).to.be.an('object');
+      const service2 = device.AVTransportService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize AlarmClockService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.AlarmClockService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of AlarmClockService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.AlarmClockService;
+      expect(service).to.be.an('object');
+      const service2 = device.AlarmClockService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize AudioInService', () => {
@@ -648,10 +664,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of AudioInService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.AudioInService;
+      expect(service).to.be.an('object');
+      const service2 = device.AudioInService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize ConnectionManagerService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.ConnectionManagerService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of ConnectionManagerService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.ConnectionManagerService;
+      expect(service).to.be.an('object');
+      const service2 = device.ConnectionManagerService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize ContentDirectoryService', () => {
@@ -660,10 +692,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of ContentDirectoryService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.ContentDirectoryService;
+      expect(service).to.be.an('object');
+      const service2 = device.ContentDirectoryService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize DevicePropertiesService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.DevicePropertiesService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of DevicePropertiesService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.DevicePropertiesService;
+      expect(service).to.be.an('object');
+      const service2 = device.DevicePropertiesService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize GroupManagementService', () => {
@@ -672,10 +720,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of GroupManagementService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.GroupManagementService;
+      expect(service).to.be.an('object');
+      const service2 = device.GroupManagementService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize GroupRenderingControlService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.GroupRenderingControlService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of GroupRenderingControlService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.GroupRenderingControlService;
+      expect(service).to.be.an('object');
+      const service2 = device.GroupRenderingControlService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize HTControlService', () => {
@@ -684,10 +748,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of HTControlService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.HTControlService;
+      expect(service).to.be.an('object');
+      const service2 = device.HTControlService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize MusicServicesService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.MusicServicesService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of MusicServicesService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.MusicServicesService;
+      expect(service).to.be.an('object');
+      const service2 = device.MusicServicesService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize QPlayService', () => {
@@ -696,10 +776,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of QPlayService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.QPlayService;
+      expect(service).to.be.an('object');
+      const service2 = device.QPlayService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize QueueService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.QueueService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of QueueService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.QueueService;
+      expect(service).to.be.an('object');
+      const service2 = device.QueueService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize RenderingControlService', () => {
@@ -708,10 +804,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of RenderingControlService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.RenderingControlService;
+      expect(service).to.be.an('object');
+      const service2 = device.RenderingControlService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize SystemPropertiesService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.SystemPropertiesService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of SystemPropertiesService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.SystemPropertiesService;
+      expect(service).to.be.an('object');
+      const service2 = device.SystemPropertiesService;
+      expect(service).to.be.equal(service2);
     });
 
     it('can initialize VirtualLineInService', () => {
@@ -720,10 +832,26 @@ describe('SonosDevice', () => {
       expect(service).to.be.an('object');
     });
 
+    it('uses instance of VirtualLineInService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.VirtualLineInService;
+      expect(service).to.be.an('object');
+      const service2 = device.VirtualLineInService;
+      expect(service).to.be.equal(service2);
+    });
+
     it('can initialize ZoneGroupTopologyService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const service = device.ZoneGroupTopologyService;
       expect(service).to.be.an('object');
+    });
+
+    it('uses instance of ZoneGroupTopologyService', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const service = device.ZoneGroupTopologyService;
+      expect(service).to.be.an('object');
+      const service2 = device.ZoneGroupTopologyService;
+      expect(service).to.be.equal(service2);
     });
 
   });
@@ -795,7 +923,36 @@ describe('SonosDevice', () => {
 
       const result2 = await device.AVTransportService.CheckEventListener();
       expect(result2).to.be.false;
+      SonosEventListener.DefaultInstance.StopListener();
     });
+
+    it('checks all services and returns false', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      device.AlarmClockService;
+      device.AudioInService;
+      device.AVTransportService;
+      device.ConnectionManagerService;
+      device.ContentDirectoryService;
+      device.DevicePropertiesService;
+      device.GroupManagementService;
+      device.GroupRenderingControlService;
+      device.HTControlService;
+      device.MusicServicesService;
+      device.QPlayService;
+      device.QueueService;
+      device.RenderingControlService;
+      device.SystemPropertiesService;
+      device.VirtualLineInService;
+      device.ZoneGroupTopologyService;
+
+      const result = await device.RefreshEventSubscriptions();
+      expect(result).to.be.false;
+
+      const result2 = await device.AVTransportService.CheckEventListener();
+      expect(result2).to.be.false;
+      SonosEventListener.DefaultInstance.StopListener();
+    });
+
   });
 
   describe('RefreshEventSubscriptions', () => {
@@ -836,6 +993,7 @@ describe('SonosDevice', () => {
       const result = await device.RefreshEventSubscriptions();
       expect(result).to.be.true;
       scope.isDone();
+      SonosEventListener.DefaultInstance.StopListener();
     });
   })
 });

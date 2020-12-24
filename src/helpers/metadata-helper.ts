@@ -15,7 +15,8 @@ export default class MetadataHelper {
    * @returns {Track} Parsed track
    * @memberof MetadataHelper
    */
-  static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track {
+  static ParseDIDLTrack(parsedItem: any, host: string, port = 1400): Track | undefined {
+    if (typeof parsedItem === 'undefined') return undefined;
     MetadataHelper.debug('Parsing DIDL %o', parsedItem);
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
