@@ -256,7 +256,7 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
       const items = ArrayHelper.ForceArray(itemObject);
       resp.Result = items
         .map((i: any) => MetadataHelper.ParseDIDLTrack(i, this.host, this.port))
-        .filter(i => typeof i !== 'undefined') as Track[];
+        .filter((i) => typeof i !== 'undefined') as Track[];
     }
     return resp;
   }
