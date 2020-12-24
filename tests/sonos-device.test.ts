@@ -372,7 +372,7 @@ describe('SonosDevice', () => {
         `<StringValue>9</StringValue>`,
         scope
       );
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new SonosDevice(TestHelpers.testHost);
       const result = await device.MusicServicesSubscribed();
       expect(result).to.be.an('array').that.has.lengthOf(1);
       const firstItem = result?.[0];
@@ -792,6 +792,50 @@ describe('SonosDevice', () => {
 
       const result = await device.RefreshEventSubscriptions();
       expect(result).to.be.false;
-    })
+
+      const result2 = await device.AVTransportService.CheckEventListener();
+      expect(result2).to.be.false;
+    });
+  });
+
+  describe('RefreshEventSubscriptions', () => {
+    it('refreshes some subscriptions', async () => {
+      SonosEventListener.DefaultInstance.StopListener();
+      const port = 1600;
+      const scope = TestHelpers.getScope(port)
+      const renderingControlSid = '78f289d1-6289-43a9-948d-3a2a5aaa3c9';
+      scope
+        .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: renderingControlSid
+        });
+      
+      scope
+        .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { SID: renderingControlSid, Timeout: 'Seconds-3600' }})
+        .reply(200, '');
+
+      const avtransportSid = '07896553-d7d6-4b7d-a3d9-f4d86baaa6d2'
+      scope
+        .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: avtransportSid
+        });
+      
+      scope
+        .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { SID: avtransportSid, Timeout: 'Seconds-3600' }})
+        .reply(400, '');
+
+      const device = new SonosDevice(TestHelpers.testHost, port);
+      device.Events.on('currentTrack', (track) => {
+
+      });
+      await AsyncHelper.Delay(50);
+
+
+
+      const result = await device.RefreshEventSubscriptions();
+      expect(result).to.be.true;
+      scope.isDone();
+    });
   })
 });

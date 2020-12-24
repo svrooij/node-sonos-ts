@@ -293,7 +293,7 @@ export default abstract class BaseService <TServiceEvent> {
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
     const output: {[key: string]: any } = {};
     const keys = Object.keys(input);
-    keys?.forEach((k) => {
+    keys.forEach((k) => {
       output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
     });
     return output as TResponse;
@@ -342,9 +342,9 @@ export default abstract class BaseService <TServiceEvent> {
       this.events = new EventEmitter();
       this.events.on('removeListener', async () => {
         this.debug('Listener removed');
-        if (this.events === undefined) return;
-        const events = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
-        if (this.sid !== undefined && events.length === 0) {
+        
+        const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+        if (this.sid !== undefined && events?.length === 0) {
           await this.cancelSubscription()
             .catch((err) => {
               this.debug('Cancelling event subscription failed', err);
@@ -532,7 +532,8 @@ export default abstract class BaseService <TServiceEvent> {
 
   protected abstract eventProperties(): {[key: string]: string};
 
-  private cleanEventLastChange(input: any): TServiceEvent {
+  private cleanEventLastChange(inputRaw: any): TServiceEvent {
+    const input = Array.isArray(inputRaw) ? inputRaw[0] : inputRaw;
     const output: {[key: string]: any} = {};
 
     const inKeys = Object.keys(input).filter((k) => k !== 'val');
@@ -544,6 +545,13 @@ export default abstract class BaseService <TServiceEvent> {
       if (originalValue === undefined || originalValue === '') return;
       output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
     });
+
+    if (Object.keys(output).length === 0) {
+      const entries = Object.entries(input);
+      if(entries.length === 1) {
+        return this.cleanEventLastChange(entries[0][1]);
+      }
+    }
 
     return output as unknown as TServiceEvent;
   }

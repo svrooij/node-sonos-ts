@@ -229,11 +229,11 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
    */
   public async DeleteAccount(serviceId: number): Promise<boolean> {
     const accounts = await this.SavedAccounts() ?? [];
-    if (accounts?.indexOf(serviceId) > -1) {
+    if (accounts.indexOf(serviceId) > -1) {
       const newAccounts = accounts.filter((val) => val !== serviceId);
       await this.SetString({ VariableName: 'sonos-ts-accounts', StringValue: newAccounts.join('|') });
       await this.Remove({ VariableName: `sonos-ts-${serviceId}-key` });
-      await this.Remove({ VariableName: `sonos-ts${serviceId}-token` });
+      await this.Remove({ VariableName: `sonos-ts-${serviceId}-token` });
       return true;
     }
     return false;
@@ -252,7 +252,7 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
     const accounts = await this.SavedAccounts() ?? [];
     if (accounts.indexOf(serviceId) === -1) {
       accounts.push(serviceId);
-      accounts.sort();
+      accounts.sort((a: number ,b: number) => a-b);
       await this.SetString({ VariableName: 'sonos-ts-accounts', StringValue: accounts.join('|') });
     }
     await this.SetString({ VariableName: `sonos-ts-${serviceId}-token`, StringValue: token });

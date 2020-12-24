@@ -13,7 +13,7 @@ describe('AlarmClockService', () => {
         'AlarmClock',
         '<AssignedID>100</AutoAdjustDst>');
 
-      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      const service = new AlarmClockService(TestHelpers.testHost);
 
       const result = await service.CreateAlarm({
         StartLocalTime: '09:00:00',
@@ -133,4 +133,23 @@ describe('AlarmClockService', () => {
       expect(result).to.be.true;
     });
   });
+
+  describe('Event parsing', () => {
+    it('works', (done) => {
+      process.env.SONOS_DISABLE_EVENTS = 'true'
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      service.Events.once('serviceEvent', (data) => {
+        expect(data.AlarmListVersion).to.be.equal('RINCON_xxx01400:2654');
+        expect(data.DailyIndexRefreshTime).to.be.equal('06:00:00');
+        expect(data.DateFormat).to.be.equal('DMY');
+        expect(data.TimeFormat).to.be.equal('24H');
+        expect(data.TimeGeneration).to.be.equal(15);
+        expect(data.TimeServer).to.be.equal('0.sonostime.pool.ntp.org,1.sonostime.pool.ntp.org,2.sonostime.pool.ntp.org,3.sonostime.pool.ntp.org');
+        expect(data.TimeZone).to.be.equal('ffc40a000503000003000502ffc4');
+        done()
+      })
+      service.ParseEvent('<e:propertyset xmlns:e="urn:schemas-upnp-org:event-1-0"><e:property><TimeZone>ffc40a000503000003000502ffc4</TimeZone></e:property><e:property><TimeServer>0.sonostime.pool.ntp.org,1.sonostime.pool.ntp.org,2.sonostime.pool.ntp.org,3.sonostime.pool.ntp.org</TimeServer></e:property><e:property><TimeGeneration>15</TimeGeneration></e:property><e:property><AlarmListVersion>RINCON_xxx01400:2654</AlarmListVersion></e:property><e:property><TimeFormat>24H</TimeFormat></e:property><e:property><DateFormat>DMY</DateFormat></e:property><e:property><DailyIndexRefreshTime>06:00:00</DailyIndexRefreshTime></e:property></e:propertyset>');
+      delete process.env.SONOS_DISABLE_EVENTS
+    }, 1)
+  })
 });
