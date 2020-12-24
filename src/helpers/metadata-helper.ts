@@ -175,12 +175,12 @@ export default class MetadataHelper {
     return undefined;
   }
 
-  private static guessSpotifyMetadata(trackUri: string, kind: string, region: string): Track | undefined{
+  private static guessSpotifyMetadata(trackUri: string, kind: string, region: string): Track | undefined {
     const spotifyUri = trackUri.replace(/:/g, '%3a');
     const track: Track = {
       Title: '',
-      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`
-    }
+      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
+    };
 
     switch (kind) {
       case 'album':

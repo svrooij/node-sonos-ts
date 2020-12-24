@@ -252,7 +252,7 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
     const accounts = await this.SavedAccounts() ?? [];
     if (accounts.indexOf(serviceId) === -1) {
       accounts.push(serviceId);
-      accounts.sort((a: number ,b: number) => a-b);
+      accounts.sort((a: number, b: number) => a - b);
       await this.SetString({ VariableName: 'sonos-ts-accounts', StringValue: accounts.join('|') });
     }
     await this.SetString({ VariableName: `sonos-ts-${serviceId}-token`, StringValue: token });

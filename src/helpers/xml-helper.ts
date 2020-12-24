@@ -1,7 +1,7 @@
 import { parse } from 'fast-xml-parser';
 import { XmlEntities } from 'html-entities';
-export default class XmlHelper {
 
+export default class XmlHelper {
   private static entities = new XmlEntities();
 
   /**
@@ -67,8 +67,8 @@ export default class XmlHelper {
     if (typeof xml === 'string') {
       return xml === '' ? undefined : XmlHelper.entities.encode(xml);
     }
-    
-    return XmlHelper.EncodeXml(`${xml}`)
+
+    return XmlHelper.EncodeXml(`${xml}`);
   }
 
   static EncodeTrackUri(trackUri: string): string {

@@ -342,7 +342,7 @@ export default abstract class BaseService <TServiceEvent> {
       this.events = new EventEmitter();
       this.events.on('removeListener', async () => {
         this.debug('Listener removed');
-        
+
         const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
         if (this.sid !== undefined && events?.length === 0) {
           await this.cancelSubscription()
@@ -548,7 +548,7 @@ export default abstract class BaseService <TServiceEvent> {
 
     if (Object.keys(output).length === 0) {
       const entries = Object.entries(input);
-      if(entries.length === 1) {
+      if (entries.length === 1) {
         return this.cleanEventLastChange(entries[0][1]);
       }
     }

@@ -130,7 +130,6 @@ export interface ZoneGroupTopologyServiceEvent {
   ZonePlayerUUIDsInGroup?: string;
 }
 
-
 export interface ZoneGroup {
   name: string;
   coordinator: ZoneMember;
