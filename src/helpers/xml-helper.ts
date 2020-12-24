@@ -1,6 +1,9 @@
 import { parse } from 'fast-xml-parser';
 import { XmlEntities } from 'html-entities';
 export default class XmlHelper {
+
+  private static entities = new XmlEntities();
+
   /**
    * Decode an encoded xml string
    *
@@ -14,7 +17,7 @@ export default class XmlHelper {
       return undefined;
     }
 
-    return new XmlEntities().decode(text);
+    return XmlHelper.entities.decode(text);
   }
 
   /**
@@ -54,7 +57,18 @@ export default class XmlHelper {
    */
   static EncodeXml(xml: unknown): string {
     if (typeof xml !== 'string' || xml === '') return '';
-    return new XmlEntities().encode(xml);
+    return XmlHelper.entities.encode(xml);
+  }
+
+  static EncodeXmlUndefined(xml: unknown): string | undefined {
+    if (typeof xml === 'undefined') {
+      return undefined;
+    }
+    if (typeof xml === 'string') {
+      return xml === '' ? undefined : XmlHelper.entities.encode(xml);
+    }
+    
+    return XmlHelper.EncodeXml(`${xml}`)
   }
 
   static EncodeTrackUri(trackUri: string): string {

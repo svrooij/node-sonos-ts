@@ -19,10 +19,10 @@ export default class MetadataHelper {
     MetadataHelper.debug('Parsing DIDL %o', parsedItem);
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
-      Album: didlItem['upnp:album'],
-      Artist: didlItem['dc:creator'],
+      Album: XmlHelper.EncodeXmlUndefined(didlItem['upnp:album']),
+      Artist: XmlHelper.EncodeXmlUndefined(didlItem['dc:creator']),
       AlbumArtUri: undefined,
-      Title: didlItem['dc:title'],
+      Title: XmlHelper.EncodeXmlUndefined(didlItem['dc:title']),
       UpnpClass: didlItem['upnp:class'],
       Duration: undefined,
       ItemId: didlItem._id,
@@ -33,13 +33,13 @@ export default class MetadataHelper {
     if (didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
       const streamContent = (didlItem['r:streamContent'] as string).split('-');
       if (streamContent.length === 2) {
-        track.Artist = streamContent[0].trim();
-        track.Title = streamContent[1].trim();
+        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
+        track.Title = XmlHelper.EncodeXmlUndefined(streamContent[1].trim());
       } else {
-        track.Artist = streamContent[0].trim();
+        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
         if (didlItem['r:radioShowMd'] && typeof didlItem['r:radioShowMd'] === 'string') {
           const radioShowMd = (didlItem['r:radioShowMd'] as string).split(',');
-          track.Title = radioShowMd[0].trim();
+          track.Title = XmlHelper.EncodeXmlUndefined(radioShowMd[0].trim());
         }
       }
     }
@@ -100,22 +100,12 @@ export default class MetadataHelper {
   static GuessTrack(trackUri: string, spotifyRegion = '2311'): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
+    // Can someone create a test for the next line.
     const match = /.*\/(.*)$/g.exec(trackUri.replace(/\.[a-zA-Z0-9]{3}$/, ''));
     if (match) {
       [, title] = match;
     }
     const track: Track = {
-      Album: undefined,
-      Artist: undefined,
-      AlbumArtUri: undefined,
-      Title: undefined,
-      UpnpClass: undefined,
-      Duration: undefined,
-      ItemId: undefined,
-      ParentId: undefined,
-      TrackUri: undefined,
-      ProtocolInfo: undefined,
-      CdUdn: undefined,
     };
     if (trackUri.startsWith('x-file-cifs')) {
       track.ItemId = trackUri.replace('x-file-cifs', 'S').replace(/\s/g, '%20');
@@ -148,7 +138,6 @@ export default class MetadataHelper {
     if (trackUri.startsWith('x-rincon-cpcontainer:1006206ccatalog')) { // Amazon prime container
       track.TrackUri = trackUri;
       track.ItemId = trackUri.replace('x-rincon-cpcontainer:', '');
-      // track.ParentId = ''
       track.UpnpClass = 'object.container.playlistContainer';
       return track;
     }
@@ -156,7 +145,6 @@ export default class MetadataHelper {
     if (trackUri.startsWith('x-rincon-cpcontainer:100d206cuser-fav')) { // Sound Cloud likes
       track.TrackUri = trackUri;
       track.ItemId = trackUri.replace('x-rincon-cpcontainer:', '');
-      // track.ParentId = ''
       track.UpnpClass = 'object.container.albumList';
       track.CdUdn = 'SA_RINCON40967_X_#Svc40967-0-Token';
       return track;
@@ -165,65 +153,13 @@ export default class MetadataHelper {
     if (trackUri.startsWith('x-rincon-cpcontainer:1006206cplaylist')) { // Sound Cloud playlists
       track.TrackUri = trackUri;
       track.ItemId = trackUri.replace('x-rincon-cpcontainer:', '');
-      // track.ParentId = ''
       track.UpnpClass = 'object.container.playlistContainer';
       track.CdUdn = 'SA_RINCON40967_X_#Svc40967-0-Token';
       return track;
     }
     const parts = trackUri.split(':');
     if (parts.length === 3 && parts[0] === 'spotify') {
-      const spotifyUri = trackUri.replace(/:/g, '%3a');
-      track.Title = '';
-      // track.ParentId = '';
-      track.CdUdn = `SA_RINCON${spotifyRegion}_X_#Svc${spotifyRegion}-0-Token`;
-      if (parts[1] === 'track') {
-        track.TrackUri = `x-sonos-spotify:${spotifyUri}?sid=9&amp;flags=8224&amp;sn=7`;
-        track.ItemId = `00032020${spotifyUri}`;
-        track.UpnpClass = 'object.item.audioItem.musicTrack';
-
-        return track;
-      }
-      if (parts[1] === 'album') {
-        track.TrackUri = `x-rincon-cpcontainer:1004206c${spotifyUri}?sid=9&flags=8300&sn=7`;
-        track.ItemId = `0004206c${spotifyUri}`;
-        track.UpnpClass = 'object.container.album.musicAlbum';
-        return track;
-      }
-
-      if (parts[1] === 'artistRadio') {
-        track.TrackUri = `x-sonosapi-radio:${spotifyUri}?sid=9&flags=8300&sn=7`;
-        track.ItemId = `100c206c${spotifyUri}`;
-        track.Title = 'Artist radio';
-        track.UpnpClass = 'object.item.audioItem.audioBroadcast.#artistRadio';
-        track.ParentId = `10052064${spotifyUri.replace('artistRadio', 'artist')}`;
-        return track;
-      }
-
-      if (parts[1] === 'artistTopTracks') {
-        track.TrackUri = `x-rincon-cpcontainer:100e206c${spotifyUri}?sid=9&flags=8300&sn=7`;
-        track.ItemId = `100e206c${spotifyUri}`;
-        track.ParentId = `10052064${spotifyUri.replace('artistTopTracks', 'artist')}`;
-        track.UpnpClass = 'object.container.playlistContainer';
-        return track;
-      }
-
-      if (parts[1] === 'playlist') {
-        track.TrackUri = `x-rincon-cpcontainer:1006206${spotifyUri}?sid=9&flags=8300&sn=7`;
-        track.ItemId = `10062a6c${spotifyUri}`;
-        track.Title = 'Spotify playlist';
-        track.UpnpClass = 'object.container.playlistContainer';
-        track.ParentId = '10fe2664playlists';
-        return track;
-      }
-
-      if (parts[1] === 'user') {
-        track.TrackUri = `x-rincon-cpcontainer:10062a6c${spotifyUri}?sid=9&flags=10860&sn=7`;
-        track.ItemId = `10062a6c${spotifyUri}`;
-        track.Title = 'User\'s playlist';
-        track.UpnpClass = 'object.container.playlistContainer';
-        track.ParentId = '10082664playlists';
-        return track;
-      }
+      return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
@@ -237,6 +173,58 @@ export default class MetadataHelper {
 
     MetadataHelper.debug('Don\'t support this TrackUri (yet) %s', trackUri);
     return undefined;
+  }
+
+  private static guessSpotifyMetadata(trackUri: string, kind: string, region: string): Track | undefined{
+    const spotifyUri = trackUri.replace(/:/g, '%3a');
+    const track: Track = {
+      Title: '',
+      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`
+    }
+
+    switch (kind) {
+      case 'album':
+        track.TrackUri = `x-rincon-cpcontainer:1004206c${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `0004206c${spotifyUri}`;
+        track.UpnpClass = 'object.container.album.musicAlbum';
+        break;
+      case 'artistRadio':
+        track.TrackUri = `x-sonosapi-radio:${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `100c206c${spotifyUri}`;
+        track.Title = 'Artist radio';
+        track.UpnpClass = 'object.item.audioItem.audioBroadcast.#artistRadio';
+        track.ParentId = `10052064${spotifyUri.replace('artistRadio', 'artist')}`;
+        break;
+      case 'artistTopTracks':
+        track.TrackUri = `x-rincon-cpcontainer:100e206c${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `100e206c${spotifyUri}`;
+        track.ParentId = `10052064${spotifyUri.replace('artistTopTracks', 'artist')}`;
+        track.UpnpClass = 'object.container.playlistContainer';
+        break;
+      case 'playlist':
+        track.TrackUri = `x-rincon-cpcontainer:1006206${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `10062a6c${spotifyUri}`;
+        track.Title = 'Spotify playlist';
+        track.UpnpClass = 'object.container.playlistContainer';
+        track.ParentId = '10fe2664playlists';
+        break;
+      case 'track':
+        track.TrackUri = `x-sonos-spotify:${spotifyUri}?sid=9&amp;flags=8224&amp;sn=7`;
+        track.ItemId = `00032020${spotifyUri}`;
+        track.UpnpClass = 'object.item.audioItem.musicTrack';
+        break;
+      case 'user':
+        track.TrackUri = `x-rincon-cpcontainer:10062a6c${spotifyUri}?sid=9&flags=10860&sn=7`;
+        track.ItemId = `10062a6c${spotifyUri}`;
+        track.Title = 'User\'s playlist';
+        track.UpnpClass = 'object.container.playlistContainer';
+        track.ParentId = '10082664playlists';
+        break;
+      default:
+        MetadataHelper.debug('Don\'t support this Spotify uri %s', trackUri);
+        return undefined;
+    }
+    return track;
   }
 
   private static GetUpnpClass(parentID: string): string {
