@@ -95,6 +95,14 @@ export default abstract class BaseService <TServiceEvent> {
     this.port = port;
   }
 
+  public get Host():string {
+    return this.host;
+  }
+
+  public get Uuid(): string {
+    return this.uuid;
+  }
+
   // #region Protected requests handlers
   /**
    * SoapRequest will do a request that expects a Response
@@ -450,6 +458,7 @@ export default abstract class BaseService <TServiceEvent> {
           },
         },
       ));
+      SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
       this.sid = undefined;
       this.debug('Cancelled event subscription success %o', resp.ok);
       return resp.ok;

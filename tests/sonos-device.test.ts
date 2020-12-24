@@ -6,6 +6,7 @@ import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
 import { SmapiClient } from '../src/musicservices/smapi-client';
+import { AsyncHelper } from '../src/helpers/async-helper';
 
 (process.env.SONOS_HOST ? describe : describe.skip)('SonosDevice - local', () => {
 
@@ -91,6 +92,92 @@ describe('SonosDevice', () => {
       expect(alarms).to.have.lengthOf(2);
     });
   });
+
+  describe('Events', () => {
+    it('automatically creates event subscription', async () => {
+      const port = 1402;
+      const scope = TestHelpers.getScope(port);
+
+      // Required to catch event subscription
+      //process.env.SONOS_LISTENER_HOST = 'localhost-events'
+      const renderingControlSid = Guid.create().toString();
+      scope
+        .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: renderingControlSid
+        });
+
+      const avtransportSid = Guid.create().toString();
+      scope
+        .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: avtransportSid
+        });
+
+      const randomUuid = Guid.create().toString();
+      const device = new SonosDevice(TestHelpers.testHost, port, randomUuid);
+      const statusBefore = SonosEventListener.DefaultInstance.GetStatus();
+      expect(statusBefore.isListening).to.be.false;
+      device.Events.on('currentTrack', (track) => {});
+      await AsyncHelper.Delay(50); // Delay is needed because the subscription is registered out-of-band.
+
+      const statusAfter = SonosEventListener.DefaultInstance.GetStatus();
+      expect(statusAfter.isListening).to.be.true;
+      expect(statusAfter.currentSubscriptions).to.be.an('array').that.has.lengthOf(2);
+
+      const avSubscription = statusAfter.currentSubscriptions.find((s) => s.sid === avtransportSid);
+      expect(avSubscription).to.be.not.undefined;
+      expect(avSubscription?.uuid).to.be.equal(randomUuid);
+      expect(avSubscription?.service).to.be.equal('AVTransport');
+      SonosEventListener.DefaultInstance.StopListener();
+    })
+  })
+
+  describe('Events', () => {
+    it('automatically unsubscribes event subscription', async () => {
+      const port = 1403;
+      const scope = TestHelpers.getScope(port);
+
+      // Required to catch event subscription
+      //process.env.SONOS_LISTENER_HOST = 'localhost-events'
+      const renderingControlSid = Guid.create().toString();
+      scope
+        .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: renderingControlSid
+        });
+
+      const avtransportSid = Guid.create().toString();
+      scope
+        .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
+        .reply(200, '', {
+          sid: avtransportSid
+        });
+      
+      scope
+        .intercept('/MediaRenderer/RenderingControl/Event', 'UNSUBSCRIBE', undefined , { reqheaders: { sid: renderingControlSid }})
+        .reply(204, '');
+
+      scope
+        .intercept('/MediaRenderer/AVTransport/Event', 'UNSUBSCRIBE', undefined, { reqheaders: { sid: avtransportSid }})
+        .reply(204, '');
+
+      const randomUuid = Guid.create().toString();
+      const device = new SonosDevice(TestHelpers.testHost, port, randomUuid);
+      device.Events.on('currentTrack', (track) => {});
+      await AsyncHelper.Delay(20); // Delay is needed because the subscription is registered out-of-band.
+
+      const statusBefore = SonosEventListener.DefaultInstance.GetStatus();
+      expect(statusBefore.currentSubscriptions).to.be.an('array').that.has.lengthOf(2);
+
+      device.Events.removeAllListeners('currentTrack');
+      await AsyncHelper.Delay(20); // Delay is needed because the subscription is registered out-of-band.
+
+      const statusAfter = SonosEventListener.DefaultInstance.GetStatus();
+      expect(statusAfter.currentSubscriptions).to.be.an('array').that.has.lengthOf(0);
+      SonosEventListener.DefaultInstance.StopListener();
+    })
+  })
 
   describe('ExecuteCommand()', () => {
     it('executes \'Play\'', async () => {
@@ -541,7 +628,6 @@ describe('SonosDevice', () => {
       expect(result).to.be.true;
     });
   });
-
 
   describe('Services', () => {
     it('can initialize AVTransportService', () => {

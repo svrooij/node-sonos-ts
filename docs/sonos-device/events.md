@@ -84,7 +84,17 @@ Check out [this sample](https://github.com/svrooij/node-sonos-ts/blob/master/exa
 
 ## Event listener status
 
-The event listener got 2 extra endpoints, a `/health` endpoint which will just respond with status code 200 if the listener is still running. There also is a `/status` endpoint, this will give some information about the event listener. 
+The event listener got 2 extra http endpoints, a `/health` endpoint which will just respond with status code 200 if the listener is still running. There also is a `/status` endpoint, this will give some information about the event listener. 
 
 The status endpoint is very handy if it looks you aren't receiving any events. It will show you the generated callback url. If that url isn't reachable from the network where the sonos speaker is in, you need to tweak your listener configuration.
 
+### Event listener status in your app
+
+You don't need to do an http call to the status endpoint, you can also directly get it from the `SonosEventListener`. Just call `SonosEventListener.DefaultInstance.GetStatus()` or `SonosEventListener.DefaultInstance.GetSubscriptions()`.
+
+## Starting and stopping the listener
+
+You probably won't need this, but if you want you can start and stop the event listener manually.
+
+- `SonosEventListener.DefaultInstance.StartListener()` Start the listener (this will also enable the status and health endpoints)
+- `SonosEventListener.DefaultInstance.StopListener()` Stop the listener, this will also unregister all subscriptions, but the services won't no you stopped the listener. It's better to unsubscribe first, see [event sample](https://github.com/svrooij/node-sonos-ts/blob/master/examples/events.js)
