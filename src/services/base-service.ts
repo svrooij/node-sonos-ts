@@ -351,7 +351,7 @@ export default abstract class BaseService <TServiceEvent> {
         }
       });
       this.events.on('newListener', async () => {
-        this.debug('Listener added');
+        this.debug(`Listener added  (sid: "${this.sid}", SONOS_DISABLE_EVENTS: "${process.env.SONOS_DISABLE_EVENTS}")`);
         if (this.sid === undefined && process.env.SONOS_DISABLE_EVENTS === undefined) {
           this.debug('Subscribing to events');
           await this.subscribeForEvents()
