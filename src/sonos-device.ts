@@ -974,8 +974,15 @@ export default class SonosDevice extends SonosDeviceBase {
 
     // Revert everything back
     this.debug('Reverting everything back to normal');
-    const isBroadcast = typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
-                        && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast'; // This UpnpClass should for sure be skipped.
+    let isBroadcast = false;
+    if (
+      // TODO: Analyze under which circumstances CurrentURIMetaData is undefined
+      originalMediaInfo.CurrentURIMetaData !== undefined
+      && typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
+      && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast' // This UpnpClass should for sure be skipped.
+    ) {
+      isBroadcast = true;
+    }
 
     if (originalVolume !== undefined) {
       await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
