@@ -17,7 +17,7 @@ import ArrayHelper from '../helpers/array-helper';
  * @param {string} householdId HouseholdId is used from authentication, take from DevicePropertiesService.GetHouseholdID().CurrentHouseholdID
  * @param {string} key private key is used for authentication (not sure how to fetch this from sonos)
  * @param {string} authToken authToken is used for authentication (not sure how to fetch from sonos)
- * 
+ *
  * @export
  * @interface SmapiClientOptions
  */
@@ -31,10 +31,10 @@ export interface SmapiClientOptions {
   householdId?: string;
   key?: string;
   authToken?: string;
-  saveNewAccount?: saveNemAccountHandler;
+  saveNewAccount?: SaveNemAccountHandler;
 }
 
-declare type saveNemAccountHandler = (serviceId: number, key: string, token: string) => void;
+declare type SaveNemAccountHandler = (serviceId: number, key: string, token: string) => void;
 
 export interface MediaList {
   index: number;
@@ -100,12 +100,12 @@ export enum SmapiClientErrors {
  * @class SmapiClient
  */
 export class SmapiClient {
-
   private readonly options: SmapiClientOptions;
 
   private debugger?: Debugger;
 
   private key?: string;
+
   private authToken?: string;
 
   protected get debug(): Debugger {
@@ -143,9 +143,9 @@ export class SmapiClient {
    */
   public async GetAppLink(): Promise<AppLinkResponse> {
     return await this.SoapRequestWithBody<any, AppLinkResponse>('getAppLink',
-    {
-      householdId: this.getHouseholdIdOrThrow()
-    });
+      {
+        householdId: this.getHouseholdIdOrThrow(),
+      });
   }
 
   /**
@@ -157,12 +157,12 @@ export class SmapiClient {
    */
   public async GetDeviceAuthToken(linkCode: string): Promise<DeviceAuthResponse> {
     return await this.SoapRequestWithBody<any, DeviceAuthResponse>('getDeviceAuthToken',
-    {
-      householdId: this.getHouseholdIdOrThrow(),
-      linkCode: linkCode,
-      linkDeviceId: this.options.deviceId
-    })
-      .then(async data => {
+      {
+        householdId: this.getHouseholdIdOrThrow(),
+        linkCode,
+        linkDeviceId: this.options.deviceId,
+      })
+      .then(async (data) => {
         if (this.options.saveNewAccount !== undefined) { // Save the account by the library provided way.
           await this.options.saveNewAccount(this.options.serviceId, data.privateKey, data.authToken);
         }
@@ -172,9 +172,9 @@ export class SmapiClient {
 
   public async GetDeviceLinkCode(): Promise<DeviceLink> {
     return await this.SoapRequestWithBody<any, DeviceLink>('getDeviceLinkCode',
-    {
-      householdId: this.getHouseholdIdOrThrow()
-    });
+      {
+        householdId: this.getHouseholdIdOrThrow(),
+      });
   }
 
   /**
@@ -219,11 +219,13 @@ export class SmapiClient {
 
     if (input.mediaMetadata !== undefined) {
       result.mediaMetadata = ArrayHelper.ForceArray<MediaMetadata>(input.mediaMetadata);
-      result.mediaMetadata.forEach((m) => {
-        if (m.itemType === 'stream') m.trackUri = `x-sonosapi-stream:${m.id}?sid=${this.options.serviceId}`;
+      result.mediaMetadata = result.mediaMetadata.map((m) => {
+        const withTrack = m;
+        if (m.itemType === 'stream') withTrack.trackUri = `x-sonosapi-stream:${m.id}?sid=${this.options.serviceId}`;
+        return withTrack;
       });
     }
-    
+
     if (input.mediaCollection !== undefined) {
       result.mediaCollection = ArrayHelper.ForceArray<MediaItem>(input.mediaCollection);
     }
@@ -232,34 +234,31 @@ export class SmapiClient {
   }
 
   // #region Private server stuff
-  private async SoapRequest<TResponse>(action: string, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
+  private async SoapRequest<TResponse>(action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
     this.debug('%s()', action);
     try {
       return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
-    }
-    catch(err) {
-      if(err instanceof SmapiError && err.Fault.faultstring == SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+    } catch (err) {
+      if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequest<TResponse>(action, true);
       }
       throw err;
     }
   }
 
-  private async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
+  private async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody, isRetryWithNewCredentials = false): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     try {
       return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
-    }
-    catch(err) {
-      if(err instanceof SmapiError && err.Fault.faultstring == SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+    } catch (err) {
+      if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
       }
       throw err;
     }
-    
   }
 
-  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string, isRetryWithNewCredentials: boolean = false): Promise<TResponse> {
+  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
     const response = await fetch(request);
     // if (!response.ok) {
     //   this.debug('handleRequest error %d %s', response.status, response.statusText);
@@ -273,7 +272,7 @@ export class SmapiClient {
     }
     if (typeof result.Envelope.Body.Fault !== 'undefined') {
       const fault = result.Envelope.Body.Fault;
-      if(!isRetryWithNewCredentials && fault.faultstring === 'tokenRefreshRequired') {
+      if (!isRetryWithNewCredentials && fault.faultstring === 'tokenRefreshRequired') {
         this.debug('Saving new tokens');
         // Set new tokens, maybe result in event?
         this.authToken = fault.detail?.refreshAuthTokenResult?.authToken;
@@ -284,12 +283,12 @@ export class SmapiClient {
         if (this.options.saveNewAccount !== undefined && this.key && this.authToken) {
           this.options.saveNewAccount(this.options.serviceId, this.key, this.authToken);
         }
-      } 
+      }
       this.debug('Soap error %s %o', action, fault);
       throw new SmapiError(this.options.name, action, fault);
     }
     this.debug('handleRequest success');
-    const body = result.Envelope.Body[`${action}Response`]
+    const body = result.Envelope.Body[`${action}Response`];
     return body[`${action}Result`] ?? body;
   }
 
@@ -323,25 +322,27 @@ export class SmapiClient {
   private generateSoapBody<TBody>(action: string, body: TBody): string {
     let messageBody = `<soap:Body>\r\n<s:${action}>`;
     if (body) {
-      for (const [key, value] of Object.entries(body)) {
+      Object.entries(body).forEach((v) => {
+        // Deconstruct v into key and value.
+        const [key, value] = v;
         if (typeof value === 'boolean') messageBody += `<s:${key}>${value === true ? '1' : '0'}</s:${key}>`;
         else messageBody += `<s:${key}>${value}</s:${key}>`;
-      }
+      });
     }
     messageBody += `</s:${action}>\r\n</soap:Body>`;
     return messageBody;
   }
 
   private getHouseholdIdOrThrow(): string {
-    if(this.options.householdId === undefined){
-      throw new Error("options.householdId is undefined, fetch from DevicePropertiesService.GetHouseholdID");
+    if (this.options.householdId === undefined) {
+      throw new Error('options.householdId is undefined, fetch from DevicePropertiesService.GetHouseholdID');
     }
     return this.options.householdId;
   }
 
   private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string;} = {}): string {
-    let header = '  <s:credentials>\r\n'
-    
+    let header = '  <s:credentials>\r\n';
+
     if (options.deviceId !== undefined) {
       header += `    <s:deviceId>${options.deviceId}</s:deviceId>\r\n`;
     }

@@ -542,8 +542,9 @@ export default class SonosDevice extends SonosDeviceBase {
         this.debug('Listener removed');
         const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
         if (events.length === 0) {
-          this.AVTransportService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleRenderingControlEvent);
+          this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+          this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+          this.isSubscribed = false;
         }
       });
       this.events.on('newListener', () => {
