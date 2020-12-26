@@ -5,8 +5,10 @@ on:
     branches:
       - master
       - beta
+      - feature/*
     paths-ignore:
       - 'docs/**'
+      - 'examples/**'
       - 'README.md'
   pull_request:
     paths-ignore:
@@ -27,9 +29,13 @@ jobs:
       run: npm ci
     - name: Build library
       run: npm run build
+    - name: Run code linting
+      run: npm run lint
     - name: Run tests
-      run: npm run test
+      if: ${{ always() }}
+      run: npm run jest
     - name: Send data to Coveralls
+      if: ${{ always() }}
       uses: coverallsapp/github-action@master
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
