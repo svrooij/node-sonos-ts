@@ -6,9 +6,9 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "tsc",
+    "jest": "jest --forceExit",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
-    "jest": "jest",
     "prepack": "npm run build",
     "serve-docs": "docker run --rm --volume=\"$PWD/docs/vendor/bundle:/usr/local/bundle\" --volume=\"$PWD/docs:/srv/jekyll\" -p 4000:4000 -p 35729:35729 -it jekyll/jekyll jekyll serve --livereload",
     "test": "npm run lint && jest --forceExit"
