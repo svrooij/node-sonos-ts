@@ -6,11 +6,12 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "tsc",
-    "test": "npm run lint && jest",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
+    "jest": "jest",
+    "prepack": "npm run build",
     "serve-docs": "docker run --rm --volume=\"$PWD/docs/vendor/bundle:/usr/local/bundle\" --volume=\"$PWD/docs:/srv/jekyll\" -p 4000:4000 -p 35729:35729 -it jekyll/jekyll jekyll serve --livereload",
-    "prepack": "npm run build"
+    "test": "npm run lint && jest --forceExit"
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,7 @@
     "debug": "4.2.0",
     "fast-xml-parser": "^3.17.4",
     "guid-typescript": "^1.0.9",
+    "html-entities": "^1.4.0",
     "node-fetch": "^2.6.1",
     "strict-event-emitter-types": "^2.0.0"
   },

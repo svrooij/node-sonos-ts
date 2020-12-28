@@ -7,12 +7,12 @@ import debug, { Debugger } from 'debug';
 import StrictEventEmitter from 'strict-event-emitter-types';
 import SoapHelper from '../helpers/soap-helper';
 import XmlHelper from '../helpers/xml-helper';
+import { Track } from '../models/track';
 import MetadataHelper from '../helpers/metadata-helper';
 import SonosEventListener from '../sonos-event-listener';
-import { ServiceEvents } from '../models/sonos-events';
+import { ServiceEvent, ServiceEvents } from '../models/service-event';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
-import { ServiceEvent } from '../models/service-event';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 
 /**
@@ -92,6 +92,14 @@ export default abstract class BaseService <TServiceEvent> {
   constructor(host: string, port = 1400, private uuid: string = Guid.create().toString()) {
     this.host = host;
     this.port = port;
+  }
+
+  public get Host():string {
+    return this.host;
+  }
+
+  public get Uuid(): string {
+    return this.uuid;
   }
 
   // #region Protected requests handlers
@@ -196,7 +204,7 @@ export default abstract class BaseService <TServiceEvent> {
         if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
-        else messageBody += `<${key}>${value}</${key}>`;
+        else messageBody += `<${key}>${value ?? ''}</${key}>`;
       });
     }
     messageBody += `</u:${action}>`;
@@ -270,6 +278,8 @@ export default abstract class BaseService <TServiceEvent> {
     throw new HttpError(action, response.status, response.statusText);
   }
 
+  protected abstract responseProperties(): {[key: string]: string};
+
   /**
    * parseEmbeddedXml will parse the value of some response properties
    *
@@ -283,20 +293,33 @@ export default abstract class BaseService <TServiceEvent> {
     const output: {[key: string]: any } = {};
     const keys = Object.keys(input);
     keys.forEach((k) => {
-      if (k.indexOf('MetaData') > -1 || k.indexOf('URI') > -1) {
-        const originalValue = input[k] as string;
-        if (k.indexOf('MetaData') > -1) {
-          output[k] = originalValue.startsWith('&lt;')
-            ? MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port)
-            : originalValue;
-        } else {
-          output[k] = XmlHelper.DecodeTrackUri(originalValue);
-        }
-      } else {
-        output[k] = input[k];
-      }
+      output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
     });
     return output as TResponse;
+  }
+
+  protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
+    if (expectedType === 'Track | string' && typeof input === 'string') {
+      if (input.startsWith('&lt;')) {
+        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(input), this.host, this.port);
+      }
+      return undefined; // undefined is more appropriate, but that would be a breaking change.
+    }
+
+    if (name.indexOf('URI') > -1 && typeof input === 'string') {
+      return input === '' ? undefined : XmlHelper.DecodeTrackUri(input);
+    }
+
+    switch (expectedType) {
+      case 'boolean':
+        return input === 1 || input === '1';
+      case 'number':
+        return typeof input === 'number' ? input : parseInt(input as string, 10);
+      case 'string':
+        return typeof input === 'string' && input === '' ? undefined : input;
+      default:
+        return input;
+    }
   }
   // #endregion
 
@@ -318,9 +341,9 @@ export default abstract class BaseService <TServiceEvent> {
       this.events = new EventEmitter();
       this.events.on('removeListener', async () => {
         this.debug('Listener removed');
-        if (this.events === undefined) return;
-        const events = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
-        if (this.sid !== undefined && events.length === 0) {
+
+        const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+        if (this.sid !== undefined && events?.length === 0) {
           await this.cancelSubscription()
             .catch((err) => {
               this.debug('Cancelling event subscription failed', err);
@@ -434,6 +457,7 @@ export default abstract class BaseService <TServiceEvent> {
           },
         },
       ));
+      SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
       this.sid = undefined;
       this.debug('Cancelled event subscription success %o', resp.ok);
       return resp.ok;
@@ -468,7 +492,7 @@ export default abstract class BaseService <TServiceEvent> {
     const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if (rawBody.LastChange) {
-      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '');
+      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '') as any;
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
@@ -487,16 +511,17 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    if (name.indexOf('MetaData') > -1 && originalValue.startsWith('&lt;')) return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
-
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
     if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
+      if (name.endsWith('MetaData')) {
+        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
+      }
       return XmlHelper.DecodeAndParseXml(originalValue, '');
     }
 
     switch (type) {
       case 'number':
-        return parseInt(originalValue, 10);
+        return typeof originalValue === 'number' ? originalValue : parseInt(originalValue as string, 10);
       case 'boolean':
         return originalValue === '1' || originalValue === 1;
       default:
@@ -506,7 +531,8 @@ export default abstract class BaseService <TServiceEvent> {
 
   protected abstract eventProperties(): {[key: string]: string};
 
-  private cleanEventLastChange(input: any): TServiceEvent {
+  private cleanEventLastChange(inputRaw: any): TServiceEvent {
+    const input = Array.isArray(inputRaw) ? inputRaw[0] : inputRaw;
     const output: {[key: string]: any} = {};
 
     const inKeys = Object.keys(input).filter((k) => k !== 'val');
@@ -518,6 +544,13 @@ export default abstract class BaseService <TServiceEvent> {
       if (originalValue === undefined || originalValue === '') return;
       output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
     });
+
+    if (Object.keys(output).length === 0) {
+      const entries = Object.entries(input);
+      if (entries.length === 1) {
+        return this.cleanEventLastChange(entries[0][1]);
+      }
+    }
 
     return output as unknown as TServiceEvent;
   }

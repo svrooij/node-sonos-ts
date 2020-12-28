@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import { expect } from 'chai';
 
-import { AsyncHelper } from '../../src/helpers/async-helper';
+import AsyncHelper from '../../src/helpers/async-helper';
 
 
 describe('AsyncHelper', () => {

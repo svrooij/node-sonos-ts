@@ -87,6 +87,14 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentMute: 'boolean',
+      CurrentVolume: 'number',
+      NewVolume: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {
