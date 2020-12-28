@@ -10,6 +10,11 @@ export interface PlayNotificationOptionsBase {
   delayMs?: number;
 
   /**
+   * Want to know when the notification played?
+   */
+  notificationFired?: NotificationFired;
+
+  /**
    * Should the notification only be played when the player is currently playing music
    *
    * @type {boolean}
@@ -18,10 +23,12 @@ export interface PlayNotificationOptionsBase {
   onlyWhenPlaying?: boolean;
 
   /**
-   * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
+   * Number of seconds to return back to the original source of playback.
    *
    * @type {number}
    * @memberof PlayNotificationOptionsBase
+   * @remarks Notifications use events from sonos to know when to switch back to the original playback source.
+   * Should be approx notification length plus 2 seconds for best results
    */
   timeout?: number;
 
@@ -94,3 +101,5 @@ export interface TtsResponse {
   uri: string;
   cdnUri: string;
 }
+
+declare type NotificationFired = (played: boolean) => void;
