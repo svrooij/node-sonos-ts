@@ -542,8 +542,9 @@ export default class SonosDevice extends SonosDeviceBase {
         this.debug('Listener removed');
         const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
         if (events.length === 0) {
-          this.AVTransportService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleRenderingControlEvent);
+          this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+          this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+          this.isSubscribed = false;
         }
       });
       this.events.on('newListener', () => {
@@ -890,6 +891,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
   /**
    * Turn on/off night mode, on your playbar.
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: dialogLevel === true ? 1 : 0 })
    *
    * @param {boolean} nightmode
    * @returns {Promise<boolean>}

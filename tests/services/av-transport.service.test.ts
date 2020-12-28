@@ -29,6 +29,82 @@ describe('AVTransportService', () => {
     });
   });
 
+  describe('BackupQueue', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'BackupQueue',
+        '<InstanceID>0</InstanceID>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.BackupQueue();
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('GetCrossfadeMode', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'GetCrossfadeMode',
+        '<InstanceID>0</InstanceID>',
+        '<CrossfadeMode>1</CrossfadeMode>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.GetCrossfadeMode();
+      expect(result.CrossfadeMode).to.be.true;
+    });
+  });
+
+  describe('GetCurrentTransportActions', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'GetCurrentTransportActions',
+        '<InstanceID>0</InstanceID>',
+        '<Actions>Set, Play</Actions>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.GetCurrentTransportActions();
+      expect(result.Actions).to.contain('Play');
+      done();
+    });
+  });
+
+  describe('GetDeviceCapabilities', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'GetDeviceCapabilities',
+        '<InstanceID>0</InstanceID>',
+        '<PlayMedia>NONE, NETWORK</PlayMedia><RecMedia>NOT_IMPLEMENTED</RecMedia><RecQualityModes>NOT_IMPLEMENTED</RecQualityModes>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.GetDeviceCapabilities();
+      expect(result.PlayMedia).to.contain('NONE');
+      expect(result.PlayMedia).to.contain('NETWORK');
+      expect(result.RecMedia).to.contain('NOT_IMPLEMENTED');
+      done();
+    });
+  });
+
+  describe('GetDeviceCapabilities', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'GetRemainingSleepTimerDuration',
+        '<InstanceID>0</InstanceID>',
+        '<RemainingSleepTimerDuration>00:29:44</RemainingSleepTimerDuration><CurrentSleepTimerGeneration>1</CurrentSleepTimerGeneration>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.GetRemainingSleepTimerDuration();
+      expect(result.RemainingSleepTimerDuration).to.be.equal('00:29:44');
+      expect(result.CurrentSleepTimerGeneration).to.be.equal(1);
+      done();
+    });
+  });
+
   describe('GetMediaInfo()', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',

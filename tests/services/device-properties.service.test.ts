@@ -83,8 +83,23 @@ describe('DevicePropertiesService', () => {
       const zoneInfo = await service.GetZoneInfo();
       expect(zoneInfo.MACAddress).to.be.eq('00:FF:FF:FF:FF:BC');
       expect(zoneInfo.SerialNumber).to.be.eq('00-FF-FF-FF-FF-BC:A');
-    })
-  })
+    });
+  });
+
+  describe('GetDeviceCapabilities', () => {
+    it('executes correct request', async (done) => {
+      TestHelpers.mockRequestToService('/DeviceProperties/Control',
+        'DeviceProperties',
+        'SetLEDState',
+        '<DesiredLEDState>Off</DesiredLEDState>',
+        ''
+      );
+      const service = new DevicePropertiesService(TestHelpers.testHost);
+      const result = await service.SetLEDState({ DesiredLEDState: 'Off'});
+      expect(result).to.be.true;
+      done();
+    });
+  });
 
   describe('Event parsing', () => {
     it('works', (done) => {

@@ -1,7 +1,7 @@
 import { expect }  from 'chai'
 import nock from 'nock'
+import { EventEmitter } from 'events';
 import SonosDevice from '../src/sonos-device'
-
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
@@ -90,6 +90,24 @@ describe('SonosDevice', () => {
       const alarms = await device.AlarmList();
       expect(alarms).to.be.an('array');
       expect(alarms).to.have.lengthOf(2);
+    });
+  });
+
+  describe('AlarmPatch()', () => {
+    it('calls AlarmClockService.PatchAlarm', async () => {
+      TestHelpers.mockAlarmListResponse();
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.AlarmPatch({
+          ID: 500,
+          Enabled: false,
+        });
+      } catch (error) {
+        expect(error).to.not.be.null;
+        expect(error).have.property('message').that.contains('500');
+        return;
+      }
+      expect(false).to.be.true; // This should not be reached.
     });
   });
 
@@ -193,6 +211,19 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
 
+    it('executes \'LoadUuid\'', async () => {
+      TestHelpers.mockRequestToService('/DeviceProperties/Control',
+        'DeviceProperties',
+        'GetZoneInfo',
+        '',
+        '<SerialNumber>00-FF-FF-FF-FF-BC:A</SerialNumber><SoftwareVersion>56.0-76060</SoftwareVersion><DisplaySoftwareVersion>11.1</DisplaySoftwareVersion><HardwareVersion>1.16.4.1-2</HardwareVersion><IPAddress>192.168.2.30</IPAddress><MACAddress>00:FF:FF:FF:FF:BC</MACAddress><CopyrightInfo>© 2003-2019, Sonos, Inc. All rights reserved.</CopyrightInfo><ExtraInfo>OTP: 1.1.1(1-16-4-zp5s-0.5)</ExtraInfo><HTAudioIn>0</HTAudioIn><Flags>1</Flags>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      var result = await device.ExecuteCommand('LoadUuid', true);
+      expect(result).to.be.eq('RINCON_00FFFFFFFFBC01400');
+    });
+
     it('executes \'AlarmClockService.GetFormat\'', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
         '"urn:schemas-upnp-org:service:AlarmClock:1#GetFormat"',
@@ -218,6 +249,19 @@ describe('SonosDevice', () => {
       }
       expect(true).to.be.false;
     })
+
+    it('executes \'AVTransportService.ConfigureSleepTimer\'', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'ConfigureSleepTimer',
+        '<InstanceID>0</InstanceID><NewSleepTimerDuration>00:03:05</NewSleepTimerDuration>',
+        ''
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const options = JSON.stringify({ InstanceID: 0, NewSleepTimerDuration: '00:03:05' });
+      var result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
+      expect(result).to.be.eq(true);
+    });
 
     it('executes \'AVTransportService.Next\'', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
@@ -379,6 +423,29 @@ describe('SonosDevice', () => {
     })
   });
 
+  describe('GetDeviceDescription()', () => {
+    it('loads device description', async () => {
+      TestHelpers.mockDeviceDesription();
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetDeviceDescription();
+      const playbar = 'Sonos Playbar';
+      expect(result.modelName).to.be.equal(playbar);
+      expect(result.modelDescription).to.be.equal(playbar);
+      expect(result.roomName).to.be.equal('TV');
+    });
+    it('throws error on http error', async () => {
+      TestHelpers.getScope(1410).get('/xml/devce_description.xml').reply(400, 'Bad Request');
+      const device = new SonosDevice(TestHelpers.testHost, 1410);
+      try {
+        const result = await device.GetDeviceDescription();
+      } catch(err) {
+        expect(err).to.not.be.null;
+        return;
+      }
+      expect(false).to.be.true; // Should never be reached
+    })
+  })
+
   describe('GetFavoriteRadioShows()', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaServer/ContentDirectory/Control',
@@ -415,6 +482,36 @@ describe('SonosDevice', () => {
       expect(result).to.have.property('TotalMatches', 12);
       expect(result).to.have.property('UpdateID', 1);
       expect(result).to.have.property('Result').that.is.an('array').with.lengthOf(12);
+    });
+  });
+
+  describe('GetNightMode', () => {
+    it('executes correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
+        '<u:GetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType></u:GetEQ>',
+        'GetEQResponse',
+        'RenderingControl',
+        '<CurrentValue>1</CurrentValue>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetNightMode();
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('GetSpeechEnhancement', () => {
+    it('executes correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
+        '<u:GetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType></u:GetEQ>',
+        'GetEQResponse',
+        'RenderingControl',
+        '<CurrentValue>0</CurrentValue>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetSpeechEnhancement();
+      expect(result).to.be.false;
     });
   });
 
@@ -801,6 +898,144 @@ describe('SonosDevice', () => {
     });
   });
 
+  describe('SetNightMode()', () => {
+    it('executes correct command when set to true', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetNightMode(true);
+      expect(result).to.be.true;
+    });
+    it('executes correct command when set to false', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetNightMode(false);
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('SetSpeechEnhancement', () => {
+    it('executes correct command when set to true', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetSpeechEnhancement(true);
+      expect(result).to.be.true;
+    });
+    it('executes correct command when set to false', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetSpeechEnhancement(false);
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('SetRelativeVolume', () => {
+    it('executes the correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+      '"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume"',
+      '<u:SetRelativeVolume xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><Channel>Master</Channel><Adjustment>40</Adjustment></u:SetRelativeVolume>',
+      'SetRelativeVolumeResponse',
+      'RenderingControl'
+    );
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetRelativeVolume(40);
+    });
+  });
+
+  describe('SetVolume', () => {
+    it('throws error when invalid volume', async (done) => {
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      try {
+        await device.SetVolume(105);
+      } catch(err) {
+        expect(err).to.not.be.undefined;
+        done();
+      }
+    });
+    it('executes the correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+      '"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume"',
+      `<u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>40</DesiredVolume></u:SetVolume>`,
+      'SetVolumeResponse',
+      'RenderingControl'
+    );
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetVolume(40);
+    });
+  });
+
+  describe('TogglePlayback()', () => {
+    it('Send play when stopped', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
+        '<u:GetTransportInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportInfo>',
+        'GetTransportInfoResponse',
+        'AVTransport',
+        '<CurrentTransportState>STOPPED</CurrentTransportState>',
+      );
+
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
+        'PlayResponse',
+        'AVTransport',
+        undefined,
+        scope
+      );
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.TogglePlayback();
+      expect(result).to.be.true;
+    });
+
+    it('Send pause when playing', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
+        '<u:GetTransportInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportInfo>',
+        'GetTransportInfoResponse',
+        'AVTransport',
+        '<CurrentTransportState>PLAYING</CurrentTransportState>',
+      );
+
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Pause"',
+        '<u:Pause xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:Pause>',
+        'PauseResponse',
+        'AVTransport',
+        undefined,
+        scope
+      );
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.TogglePlayback();
+      expect(result).to.be.true;
+    });
+  });
+
   describe('Services', () => {
     it('can initialize AVTransportService', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
@@ -1168,4 +1403,42 @@ describe('SonosDevice', () => {
       SonosEventListener.DefaultInstance.StopListener();
     });
   })
+
+  describe('Group options in constructor', () => {
+    it('returns correct groupname', (done) => {
+      const groupName = 'Special sonos group';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      expect(device.GroupName).to.be.equal(groupName);
+      expect(device.Name).to.be.equal(name);
+      done();
+    });
+
+    it('subscribes for group updates', (done) => {
+      const groupName = 'Special sonos group';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      
+      const subscriptions = emitter.eventNames();
+      expect(subscriptions).to.be.an('array').that.contains(uuid);
+      done();
+    });
+
+    it('Updates group name', (done) => {
+      const groupName = 'Special sonos group';
+      const newGroupName = 'Office-disco';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      
+      emitter.emit(uuid, { name: newGroupName });
+      expect(device.GroupName).to.be.equal(newGroupName);
+      done();
+    });
+  });
 });
