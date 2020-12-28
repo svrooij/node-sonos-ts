@@ -891,6 +891,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
   /**
    * Turn on/off night mode, on your playbar.
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: dialogLevel === true ? 1 : 0 })
    *
    * @param {boolean} nightmode
    * @returns {Promise<boolean>}

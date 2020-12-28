@@ -418,6 +418,36 @@ describe('SonosDevice', () => {
     });
   });
 
+  describe('GetNightMode', () => {
+    it('executes correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
+        '<u:GetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType></u:GetEQ>',
+        'GetEQResponse',
+        'RenderingControl',
+        '<CurrentValue>1</CurrentValue>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetNightMode();
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('GetSpeechEnhancement', () => {
+    it('executes correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
+        '<u:GetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType></u:GetEQ>',
+        'GetEQResponse',
+        'RenderingControl',
+        '<CurrentValue>0</CurrentValue>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetSpeechEnhancement();
+      expect(result).to.be.false;
+    });
+  });
+
   describe('JoinGroup(...)', () => {
     it('Joins known group', async () => {
       
@@ -797,6 +827,144 @@ describe('SonosDevice', () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
       const result = await device.SetAVTransportURI(track);
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('SetNightMode()', () => {
+    it('executes correct command when set to true', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetNightMode(true);
+      expect(result).to.be.true;
+    });
+    it('executes correct command when set to false', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>NightMode</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetNightMode(false);
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('SetSpeechEnhancement', () => {
+    it('executes correct command when set to true', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetSpeechEnhancement(true);
+      expect(result).to.be.true;
+    });
+    it('executes correct command when set to false', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
+        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
+        'SetEQResponse',
+        'RenderingControl',
+        undefined
+      );
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.SetSpeechEnhancement(false);
+      expect(result).to.be.true;
+    });
+  });
+
+  describe('SetRelativeVolume', () => {
+    it('executes the correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+      '"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume"',
+      '<u:SetRelativeVolume xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><Channel>Master</Channel><Adjustment>40</Adjustment></u:SetRelativeVolume>',
+      'SetRelativeVolumeResponse',
+      'RenderingControl'
+    );
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetRelativeVolume(40);
+    });
+  });
+
+  describe('SetVolume', () => {
+    it('throws error when invalid volume', async (done) => {
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      try {
+        await device.SetVolume(105);
+      } catch(err) {
+        expect(err).to.not.be.undefined;
+        done();
+      }
+    });
+    it('executes the correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+      '"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume"',
+      `<u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>40</DesiredVolume></u:SetVolume>`,
+      'SetVolumeResponse',
+      'RenderingControl'
+    );
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetVolume(40);
+    });
+  });
+
+  describe('TogglePlayback()', () => {
+    it('Send play when stopped', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
+        '<u:GetTransportInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportInfo>',
+        'GetTransportInfoResponse',
+        'AVTransport',
+        '<CurrentTransportState>STOPPED</CurrentTransportState>',
+      );
+
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Play"',
+        '<u:Play xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><Speed>1</Speed></u:Play>',
+        'PlayResponse',
+        'AVTransport',
+        undefined,
+        scope
+      );
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.TogglePlayback();
+      expect(result).to.be.true;
+    });
+
+    it('Send pause when playing', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
+        '<u:GetTransportInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportInfo>',
+        'GetTransportInfoResponse',
+        'AVTransport',
+        '<CurrentTransportState>PLAYING</CurrentTransportState>',
+      );
+
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#Pause"',
+        '<u:Pause xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:Pause>',
+        'PauseResponse',
+        'AVTransport',
+        undefined,
+        scope
+      );
+
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.TogglePlayback();
       expect(result).to.be.true;
     });
   });
