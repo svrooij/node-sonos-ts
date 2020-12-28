@@ -21,10 +21,10 @@ export default class MetadataHelper {
     const parsedItem = didl as {[key: string]: any };
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
-      Album: XmlHelper.EncodeXmlUndefined(didlItem['upnp:album']),
-      Artist: XmlHelper.EncodeXmlUndefined(didlItem['dc:creator']),
+      Album: XmlHelper.DecodeHtml(didlItem['upnp:album']),
+      Artist: XmlHelper.DecodeHtml(didlItem['dc:creator']),
       AlbumArtUri: undefined,
-      Title: XmlHelper.EncodeXmlUndefined(didlItem['dc:title']),
+      Title: XmlHelper.DecodeHtml(didlItem['dc:title']),
       UpnpClass: didlItem['upnp:class'],
       Duration: undefined,
       ItemId: didlItem._id,
@@ -35,19 +35,21 @@ export default class MetadataHelper {
     if (didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
       const streamContent = (didlItem['r:streamContent'] as string).split('-');
       if (streamContent.length === 2) {
-        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
-        track.Title = XmlHelper.EncodeXmlUndefined(streamContent[1].trim());
+        track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
+        track.Title = XmlHelper.DecodeHtml(streamContent[1].trim());
       } else {
-        track.Artist = XmlHelper.EncodeXmlUndefined(streamContent[0].trim());
+        track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
         if (didlItem['r:radioShowMd'] && typeof didlItem['r:radioShowMd'] === 'string') {
           const radioShowMd = (didlItem['r:radioShowMd'] as string).split(',');
-          track.Title = XmlHelper.EncodeXmlUndefined(radioShowMd[0].trim());
+          track.Title = XmlHelper.DecodeHtml(radioShowMd[0].trim());
         }
       }
     }
     if (didlItem['upnp:albumArtURI']) {
       const uri = Array.isArray(didlItem['upnp:albumArtURI']) ? didlItem['upnp:albumArtURI'][0] : didlItem['upnp:albumArtURI'];
-      const art = (uri as string).replace(/&amp;/gi, '&').replace(/%25/g, '%').replace(/%3a/gi, ':');
+      // Github user @hklages discovered that the album uri sometimes doesn't work because of encoding:
+      // See https://github.com/svrooij/node-sonos-ts/issues/93 if you found and album art uri that doesn't work.
+      const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
       track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
     }
 
