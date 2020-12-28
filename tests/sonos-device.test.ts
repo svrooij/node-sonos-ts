@@ -1,7 +1,7 @@
 import { expect }  from 'chai'
 import nock from 'nock'
+import { EventEmitter } from 'events';
 import SonosDevice from '../src/sonos-device'
-
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
@@ -90,6 +90,24 @@ describe('SonosDevice', () => {
       const alarms = await device.AlarmList();
       expect(alarms).to.be.an('array');
       expect(alarms).to.have.lengthOf(2);
+    });
+  });
+
+  describe('AlarmPatch()', () => {
+    it('calls AlarmClockService.PatchAlarm', async () => {
+      TestHelpers.mockAlarmListResponse();
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      try {
+        await device.AlarmPatch({
+          ID: 500,
+          Enabled: false,
+        });
+      } catch (error) {
+        expect(error).to.not.be.null;
+        expect(error).have.property('message').that.contains('500');
+        return;
+      }
+      expect(false).to.be.true; // This should not be reached.
     });
   });
 
@@ -193,6 +211,19 @@ describe('SonosDevice', () => {
       expect(result).to.be.eq(true);
     });
 
+    it('executes \'LoadUuid\'', async () => {
+      TestHelpers.mockRequestToService('/DeviceProperties/Control',
+        'DeviceProperties',
+        'GetZoneInfo',
+        '',
+        '<SerialNumber>00-FF-FF-FF-FF-BC:A</SerialNumber><SoftwareVersion>56.0-76060</SoftwareVersion><DisplaySoftwareVersion>11.1</DisplaySoftwareVersion><HardwareVersion>1.16.4.1-2</HardwareVersion><IPAddress>192.168.2.30</IPAddress><MACAddress>00:FF:FF:FF:FF:BC</MACAddress><CopyrightInfo>© 2003-2019, Sonos, Inc. All rights reserved.</CopyrightInfo><ExtraInfo>OTP: 1.1.1(1-16-4-zp5s-0.5)</ExtraInfo><HTAudioIn>0</HTAudioIn><Flags>1</Flags>'
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      var result = await device.ExecuteCommand('LoadUuid', true);
+      expect(result).to.be.eq('RINCON_00FFFFFFFFBC01400');
+    });
+
     it('executes \'AlarmClockService.GetFormat\'', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
         '"urn:schemas-upnp-org:service:AlarmClock:1#GetFormat"',
@@ -218,6 +249,19 @@ describe('SonosDevice', () => {
       }
       expect(true).to.be.false;
     })
+
+    it('executes \'AVTransportService.ConfigureSleepTimer\'', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'ConfigureSleepTimer',
+        '<InstanceID>0</InstanceID><NewSleepTimerDuration>00:03:05</NewSleepTimerDuration>',
+        ''
+      );
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const options = JSON.stringify({ InstanceID: 0, NewSleepTimerDuration: '00:03:05' });
+      var result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
+      expect(result).to.be.eq(true);
+    });
 
     it('executes \'AVTransportService.Next\'', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
@@ -378,6 +422,29 @@ describe('SonosDevice', () => {
       expect(true).to.be.false;
     })
   });
+
+  describe('GetDeviceDescription()', () => {
+    it('loads device description', async () => {
+      TestHelpers.mockDeviceDesription();
+      const device = new SonosDevice(TestHelpers.testHost);
+      const result = await device.GetDeviceDescription();
+      const playbar = 'Sonos Playbar';
+      expect(result.modelName).to.be.equal(playbar);
+      expect(result.modelDescription).to.be.equal(playbar);
+      expect(result.roomName).to.be.equal('TV');
+    });
+    it('throws error on http error', async () => {
+      TestHelpers.getScope(1410).get('/xml/devce_description.xml').reply(400, 'Bad Request');
+      const device = new SonosDevice(TestHelpers.testHost, 1410);
+      try {
+        const result = await device.GetDeviceDescription();
+      } catch(err) {
+        expect(err).to.not.be.null;
+        return;
+      }
+      expect(false).to.be.true; // Should never be reached
+    })
+  })
 
   describe('GetFavoriteRadioShows()', () => {
     it('works', async () => {
@@ -1336,4 +1403,42 @@ describe('SonosDevice', () => {
       SonosEventListener.DefaultInstance.StopListener();
     });
   })
+
+  describe('Group options in constructor', () => {
+    it('returns correct groupname', (done) => {
+      const groupName = 'Special sonos group';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      expect(device.GroupName).to.be.equal(groupName);
+      expect(device.Name).to.be.equal(name);
+      done();
+    });
+
+    it('subscribes for group updates', (done) => {
+      const groupName = 'Special sonos group';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      
+      const subscriptions = emitter.eventNames();
+      expect(subscriptions).to.be.an('array').that.contains(uuid);
+      done();
+    });
+
+    it('Updates group name', (done) => {
+      const groupName = 'Special sonos group';
+      const newGroupName = 'Office-disco';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      
+      emitter.emit(uuid, { name: newGroupName });
+      expect(device.GroupName).to.be.equal(newGroupName);
+      done();
+    });
+  });
 });

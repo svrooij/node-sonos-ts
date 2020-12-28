@@ -17,13 +17,23 @@ export class TestHelpers {
     return SoapHelper.PutInEnvelope(soapBody)
   }
   
-  static mockRequest(endpoint: string, action: string, requestBody: string | undefined, responseTag: string, responseService: string, responseBody?: string, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockRequest(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, responseBody?: string, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
     return scope
       .post(endpoint, requestBody ? SoapHelper.PutInEnvelope(requestBody) : undefined, { reqheaders: {
         soapaction: action
       }})
       .reply(200, TestHelpers.generateResponse(responseTag, responseService, responseBody))
     //return TestHelpers.mockRequestInScope(scope, endpoint, action, requestBody, responseTag, responseService, responseBody);
+  }
+
+  static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string, responseBody: string | undefined, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+    return TestHelpers.mockRequest(endpoint,
+      `"urn:schemas-upnp-org:service:${service}:1#${action}"`,
+      `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${service}:1">${requestBody}</u:${action}>`,
+      `${action}Response`,
+      service,
+      responseBody,
+      scope)
   }
 
   static mockHttpError(endpoint: string, action: string, requestBody: string, httpErrorCode: number = 500, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
@@ -85,5 +95,12 @@ export class TestHelpers {
       responseBody,
       scope
     );
+  }
+
+  static mockDeviceDesription(scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+    const responseBody = fs.readFileSync(path.join(__dirname, 'services', 'responses', 'device_description.xml')).toString()
+    return scope
+      .get('/xml/device_description.xml')
+      .reply(200, responseBody);
   }
 }

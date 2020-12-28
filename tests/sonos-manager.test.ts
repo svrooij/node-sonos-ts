@@ -38,4 +38,17 @@ import SonosManager from '../src/sonos-manager'
     expect(manager.Devices).to.have.length.greaterThan(1);
     done();
   }, 100)
+
+  it('refreshes event subscriptions', async(done) => {
+    const port = 1801;
+    const scope = TestHelpers.getScope(port);
+    TestHelpers.mockZoneGroupState(scope);
+    process.env.SONOS_DISABLE_EVENTS = "true";
+    const manager = new SonosManager();
+    await manager.InitializeFromDevice(TestHelpers.testHost, port);
+    await manager.CheckAllEventSubscriptions();
+    manager.CancelSubscription();
+    delete process.env.SONOS_DISABLE_EVENTS;
+    done();
+  })
 })
