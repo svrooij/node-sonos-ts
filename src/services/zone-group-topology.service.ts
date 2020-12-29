@@ -125,6 +125,10 @@ export interface ZoneGroup {
   members: ZoneMember[];
 }
 
+interface ChannelMapSet {
+  [channel: string]: string;
+}
+
 interface ZoneMember {
   host: string;
   port: number;
@@ -134,6 +138,7 @@ interface ZoneMember {
   MicEnabled: boolean;
   SoftwareVersion: string;
   SwGen: string;
+  ChannelMapSet?: ChannelMapSet;
 }
 
 /**
@@ -171,6 +176,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       MicEnabled: member.MicEnabled === 1,
       SoftwareVersion: member.SoftwareVersion,
       SwGen: member.SWGen,
+      ChannelMapSet: member.ChannelMapSet ? ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet) : undefined,
     };
   }
 
@@ -188,6 +194,20 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       coordinator,
       members,
     };
+  }
+
+  private static ParseChannelMapSet(channelMapSet: string): ChannelMapSet {
+    const channels = channelMapSet.split(';');
+    return channels.map(channel => {
+      const [uuid, channelId] = channel.split(',');
+      return {
+        uuid: uuid.split(':')[0],
+        channelId
+      }
+    }).reduce<ChannelMapSet>((channels, channel) => {
+      channels[channel.channelId] = channel.uuid;
+      return channels;
+    }, {});
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
