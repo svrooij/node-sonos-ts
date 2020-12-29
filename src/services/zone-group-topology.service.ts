@@ -198,15 +198,17 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
 
   private static ParseChannelMapSet(channelMapSet: string): ChannelMapSet {
     const channels = channelMapSet.split(';');
-    return channels.map(channel => {
+    return channels.map((channel) => {
       const [uuid, channelId] = channel.split(',');
       return {
         uuid: uuid.split(':')[0],
-        channelId
-      }
-    }).reduce<ChannelMapSet>((channels, channel) => {
-      channels[channel.channelId] = channel.uuid;
-      return channels;
+        channelId,
+      };
+    }).reduce<ChannelMapSet>((previousChannels, channel) => {
+      return {
+        ...previousChannels,
+        [channel.channelId]: channel.uuid,
+      };
     }, {});
   }
 
