@@ -118,7 +118,6 @@ export interface ZoneGroupTopologyServiceEvent {
   ZonePlayerUUIDsInGroup?: string;
 }
 
-
 export interface ZoneGroup {
   name: string;
   coordinator: ZoneMember;
@@ -204,12 +203,10 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
         uuid: uuid.split(':')[0],
         channelId,
       };
-    }).reduce<ChannelMapSet>((previousChannels, channel) => {
-      return {
-        ...previousChannels,
-        [channel.channelId]: channel.uuid,
-      };
-    }, {});
+    }).reduce<ChannelMapSet>((previousChannels, channel) => ({
+      ...previousChannels,
+      [channel.channelId]: channel.uuid,
+    }), {});
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
