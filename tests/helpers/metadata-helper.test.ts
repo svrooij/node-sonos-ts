@@ -100,6 +100,19 @@ describe('MetadataHelper', () => {
       done();
     });
 
+    it('decodes numeric album', (done) => {
+      const album = 19;
+      const artist = 'Adele';
+      const didl = {
+        'upnp:album': album,
+        'dc:creator': artist
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).to.has.property('Album','19');
+      expect(result).to.has.property('Artist', artist);
+      done();
+    });
+
     it('decodes spotify album art uri correctly', (done) => {
       const hostName = 'fake_host'
       const albumArt = '/getaa?s=1&amp;u=x-sonos-spotify%3aspotify%253atrack%253a0WS5DKZ6QnHvFYBk8lRRm0%3fsid%3d9%26flags%3d8224%26sn%3d7';
