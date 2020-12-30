@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { TestHelpers } from '../test-helpers';
-import { AlarmClockService } from '../../src/services/alarm-clock.service';
+import { AlarmClockService } from '../../src/services/alarm-clock.service.extension';
 import { PlayMode } from '../../src/models';
 
 describe('AlarmClockService', () => {
