@@ -120,6 +120,16 @@ export default class MetadataHelper {
       track.CdUdn = 'RINCON_AssociatedZPUDN';
       return track;
     }
+    if (trackUri.startsWith('file:///jffs/settings/savedqueues.rsq#') || trackUri.startsWith('sonos:playlist:')) {
+      const queueId = trackUri.match(/\d+/g);
+      if (queueId?.length === 1) {
+        track.TrackUri = `file:///jffs/settings/savedqueues.rsq#${queueId[0]}`;
+        track.UpnpClass = 'object.container.playlistContainer';
+        track.ItemId = `SQ:${queueId[0]}`;
+        track.CdUdn = 'RINCON_AssociatedZPUDN';
+        return track;
+      }
+    }
     if (trackUri.startsWith('x-rincon-playlist')) {
       const parentMatch = /.*#(.*)\/.*/g.exec(trackUri);
       if (parentMatch === null) throw new Error('ParentID not found');
@@ -161,9 +171,42 @@ export default class MetadataHelper {
       track.CdUdn = 'SA_RINCON40967_X_#Svc40967-0-Token';
       return track;
     }
+
+    if (trackUri.startsWith('x-rincon-cpcontainer:1004006calbum-')) { // Deezer Album
+      const numbers = trackUri.match(/\d+/g);
+      if (numbers && numbers.length >= 2) {
+        return MetadataHelper.deezerMetadata('album', numbers[1]);
+      }
+    }
+
+    if (trackUri.startsWith('x-rincon-cpcontainer:10fe206ctracks-artist-')) { // Deezer Artists Top Tracks
+      const numbers = trackUri.match(/\d+/g);
+      if (numbers && numbers.length >= 3) {
+        return MetadataHelper.deezerMetadata('artistTopTracks', numbers[2]);
+      }
+    }
+
+    if (trackUri.startsWith('x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-')) { // Deezer Playlist
+      const numbers = trackUri.match(/\d+/g);
+      if (numbers && numbers.length >= 3) {
+        return MetadataHelper.deezerMetadata('playlist', numbers[2]);
+      }
+    }
+
+    if (trackUri.startsWith('x-sonos-http:tr%3a') && trackUri.includes('sid=2')) { // Deezer Track
+      const numbers = trackUri.match(/\d+/g);
+      if (numbers && numbers.length >= 2) {
+        return MetadataHelper.deezerMetadata('track', numbers[1]);
+      }
+    }
+
     const parts = trackUri.split(':');
     if (parts.length === 3 && parts[0] === 'spotify') {
       return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
+    }
+
+    if (parts.length === 3 && parts[0] === 'deezer') {
+      return MetadataHelper.deezerMetadata(parts[1], parts[2]);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
@@ -226,6 +269,37 @@ export default class MetadataHelper {
         break;
       default:
         MetadataHelper.debug('Don\'t support this Spotify uri %s', trackUri);
+        return undefined;
+    }
+    return track;
+  }
+
+  private static deezerMetadata(kind: 'album' | 'artistTopTracks' | 'playlist' | 'track' | unknown, id: string, region = '519'): Track | undefined {
+    const track: Track = {
+      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
+    };
+    switch (kind) {
+      case 'album':
+        track.TrackUri = `x-rincon-cpcontainer:1004006calbum-${id}?sid=2&flags=108&sn=23`;
+        track.UpnpClass = 'object.container.album.musicAlbum.#HERO';
+        track.ItemId = `1004006calbum-${id}`;
+        break;
+      case 'artistTopTracks':
+        track.TrackUri = `x-rincon-cpcontainer:10fe206ctracks-artist-${id}?sid=2&flags=8300&sn=23`;
+        track.UpnpClass = 'object.container.#DEFAULT';
+        track.ItemId = `10fe206ctracks-artist-${id}`;
+        break;
+      case 'playlist':
+        track.TrackUri = `x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-${id}?sid=2&flags=108&sn=23`;
+        track.UpnpClass = 'object.container.playlistContainer.#DEFAULT';
+        track.ItemId = `1006006cplaylist_spotify%3aplaylist-${id}`;
+        break;
+      case 'track':
+        track.TrackUri = `x-sonos-http:tr:${id}.mp3?sid=2&flags=8224&sn=23`;
+        track.UpnpClass = 'object.item.audioItem.musicTrack.#DEFAULT';
+        track.ItemId = `10032020tr%3a${id}`;
+        break;
+      default:
         return undefined;
     }
     return track;

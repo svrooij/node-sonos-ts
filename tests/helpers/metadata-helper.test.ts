@@ -17,6 +17,70 @@ describe('MetadataHelper', () => {
   });
 
   describe('GuessTrack', () => {
+    it('Guess metadata for file:///jffs/settings/savedqueues.rsq#7', () => {
+      const track = MetadataHelper.GuessTrack('file:///jffs/settings/savedqueues.rsq#7');
+      expect(track).to.have.property('ItemId', 'SQ:7');
+      expect(track).to.have.property('TrackUri', 'file:///jffs/settings/savedqueues.rsq#7');
+    });
+
+    it('Guess metadata for sonos:playlist:7', () => {
+      const track = MetadataHelper.GuessTrack('sonos:playlist:7');
+      expect(track).to.have.property('ItemId', 'SQ:7');
+      expect(track).to.have.property('TrackUri', 'file:///jffs/settings/savedqueues.rsq#7');
+    });
+
+    it('Not guess metadata for sonos:playlist:a', () => {
+      const track = MetadataHelper.GuessTrack('sonos:playlist:a');
+      expect(track).to.be.undefined;
+    });
+  });
+
+  describe('GuessTrack -> Deezer', () => {
+    it('Guess metadata for deezer:album:169734362', () => {
+      const track = MetadataHelper.GuessTrack('deezer:album:169734362');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004006calbum-169734362?sid=2&flags=108&sn=23');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1004006calbum-169734362?sid=2&amp;flags=108&amp;sn=23', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1004006calbum-169734362?sid=2&amp;flags=108&amp;sn=23');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004006calbum-169734362?sid=2&flags=108&sn=23');
+      expect(track).to.have.property('UpnpClass', 'object.container.album.musicAlbum.#HERO');
+    });
+
+    it('Guess metadata for deezer:artistTopTracks:6049784', () => {
+      const track = MetadataHelper.GuessTrack('deezer:artistTopTracks:6049784');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:10fe206ctracks-artist-6049784?sid=2&flags=8300&sn=23');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:10fe206ctracks-artist-6049784?sid=2&amp;flags=8300&amp;sn=23', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:10fe206ctracks-artist-6049784?sid=2&amp;flags=8300&amp;sn=23');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:10fe206ctracks-artist-6049784?sid=2&flags=8300&sn=23');
+      expect(track).to.have.property('UpnpClass', 'object.container.#DEFAULT');
+    });
+
+    it('Guess metadata for deezer:playlist:1371651955', () => {
+      const track = MetadataHelper.GuessTrack('deezer:playlist:1371651955');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-1371651955?sid=2&flags=108&sn=23');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-1371651955?sid=2&amp;flags=108&amp;sn=23', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-1371651955?sid=2&amp;flags=108&amp;sn=23');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-1371651955?sid=2&flags=108&sn=23');
+    });
+
+    it('Guess metadata for deezer:track:1121931512', () => {
+      const track = MetadataHelper.GuessTrack('deezer:track:1121931512');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:tr:1121931512.mp3?sid=2&flags=8224&sn=23');
+    });
+
+    it('Guess metadata for x-sonos-http:tr%3a1121931512.mp3?sid=2&amp;flags=8224&amp;sn=23', () => {
+      const track = MetadataHelper.GuessTrack('x-sonos-http:tr%3a1121931512.mp3?sid=2&amp;flags=8224&amp;sn=23');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:tr:1121931512.mp3?sid=2&flags=8224&sn=23');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack.#DEFAULT');
+    });
+  });
+
+  describe('GuessTrack -> Spotify', () => {
     it('Guess metadata for Spotify artist top tracks', () => {
       const track = MetadataHelper.GuessTrack('spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv');
       expect(track).to.be.an('object');
@@ -97,6 +161,19 @@ describe('MetadataHelper', () => {
       const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
       expect(result).to.has.property('Album','Christmas & New Year');
       expect(result).to.has.property('Title', 'Bell\'s');
+      done();
+    });
+
+    it('decodes numeric album', (done) => {
+      const album = 19;
+      const artist = 'Adele';
+      const didl = {
+        'upnp:album': album,
+        'dc:creator': artist
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).to.has.property('Album','19');
+      expect(result).to.has.property('Artist', artist);
       done();
     });
 

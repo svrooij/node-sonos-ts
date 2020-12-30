@@ -31,10 +31,12 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeHtml(text: unknown): string | undefined {
-    if (typeof text !== 'string' || text === '') {
+    if (typeof text === 'undefined' || (typeof text === 'string' && text === '')) {
       return undefined;
     }
-
+    if (typeof text !== 'string') {
+      return XmlHelper.DecodeHtml(`${text}`);
+    }
     return XmlHelper.htmlEntities.decode(text);
   }
 
@@ -76,17 +78,6 @@ export default class XmlHelper {
   static EncodeXml(xml: unknown): string {
     if (typeof xml !== 'string' || xml === '') return '';
     return XmlHelper.xmlEntities.encode(xml);
-  }
-
-  static EncodeXmlUndefined(xml: unknown): string | undefined {
-    if (typeof xml === 'undefined') {
-      return undefined;
-    }
-    if (typeof xml === 'string') {
-      return xml === '' ? undefined : XmlHelper.xmlEntities.encode(xml);
-    }
-
-    return XmlHelper.EncodeXml(`${xml}`);
   }
 
   static EncodeTrackUri(trackUri: string): string {

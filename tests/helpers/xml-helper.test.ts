@@ -62,27 +62,6 @@ describe('XmlHelper', () => {
     });
   });
 
-  describe('EncodeXmlUndefined()', () => {
-
-    it('returns undefined when input is undefined', () => {
-      const xml = undefined;
-      const result = XmlHelper.EncodeXmlUndefined(xml);
-      expect(result).to.be.undefined;
-    });
-
-    it('returns undefined when input is empty string', () => {
-      const xml = '';
-      const result = XmlHelper.EncodeXmlUndefined(xml);
-      expect(result).to.be.undefined;
-    });
-
-    it('returns string when input is number', () => {
-      const xml = 19;
-      const result = XmlHelper.EncodeXmlUndefined(xml);
-      expect(result).to.be.string('19');
-    })
-  });
-
   describe('EncodeTrackUri()', () => {
 
     it('doesn\'t encode an uri starting with x-rincon-mp3radio', () => {
