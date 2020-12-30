@@ -31,7 +31,7 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeHtml(text: unknown): string | undefined {
-    if(typeof text === 'undefined' || (typeof text === 'string' && text === '')) {
+    if (typeof text === 'undefined' || (typeof text === 'string' && text === '')) {
       return undefined;
     }
     if (typeof text !== 'string') {

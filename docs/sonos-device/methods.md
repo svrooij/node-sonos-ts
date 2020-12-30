@@ -62,6 +62,11 @@ This library can guess the required metadata for certain track uri's. This is do
 
 Currently supported url's for metadata guessing:
 
+- `deezer:album:123456` - A Deezer album by id
+- `deezer:artistTopTracks:123456` - A Deezer artist top tracks
+- `deezer:playlist:123456` - A Deezer playlist by id
+- `deezer:track:123456` - A Deezer track by id
+- `sonos:playlist:7` - A saved sonos playlist by number.
 - `spotify:track:0GiWi4EkPduFWHQyhiKpRB` - Regular spotify track.
 - `spotify:artistRadio:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist radio (has to be added to queue).
 - `spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist top tracks (has to be added to queue).

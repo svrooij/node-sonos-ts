@@ -7,7 +7,7 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse,
+  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import AsyncHelper from './helpers/async-helper';
@@ -259,12 +259,12 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('JoinGroup(%s)', otherDevice);
     const zones = await this.ZoneGroupTopologyService.GetParsedZoneGroupState();
 
-    const groupToJoin = zones.find((z) => z.members.some((m) => m.name.toLowerCase() === otherDevice.toLowerCase()));
+    const groupToJoin = zones.find((z: ZoneGroup) => z.members.some((m) => m.name.toLowerCase() === otherDevice.toLowerCase()));
     if (groupToJoin === undefined) {
       throw new Error(`Player '${otherDevice}' isn't found!`);
     }
 
-    if (groupToJoin.members.some((m) => m.uuid === this.Uuid)) {
+    if (groupToJoin.members.some((m: ZoneMember) => m.uuid === this.Uuid)) {
       return Promise.resolve(false); // Already in the group.
     }
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
