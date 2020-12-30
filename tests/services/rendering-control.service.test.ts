@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { TestHelpers } from '../test-helpers';
-import { RenderingControlService } from '../../src/services/rendering-control.service';
+import { RenderingControlService } from '../../src/services/rendering-control.service.extension';
 
 describe('RenderingControlService', () => {
   describe('GetBass', () => {

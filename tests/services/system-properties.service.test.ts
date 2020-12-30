@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { TestHelpers } from '../test-helpers';
-import { SystemPropertiesService } from '../../src/services/system-properties.service';
+import { SystemPropertiesService } from '../../src/services/system-properties.service.extension';
 import { Guid } from 'guid-typescript';
 
 describe('SystemPropertiesService', () => {

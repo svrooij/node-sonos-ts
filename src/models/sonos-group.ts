@@ -1,6 +1,6 @@
 import SonosDevice from '../sonos-device';
 
-import { ZoneGroup } from '../services/zone-group-topology.service';
+import { ZoneGroup } from './zone-group';
 
 export class SonosGroup {
   public readonly Coordinator: SonosDevice;

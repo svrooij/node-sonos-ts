@@ -33,10 +33,15 @@ module.exports =  {
       }
     },
     {
-      files: ['src/services/*.ts'],
+      files: ['src/services/q-play.service.ts'],
       rules: {
-        'import/order': 'warn',
         'no-multiple-empty-lines': 'off'
+      }
+    },
+    {
+      files: ['src/services/*.extension.ts'],
+      rules: {
+        'import/prefer-default-export': 'off',
       }
     },
     {

@@ -1,6 +1,7 @@
 import debug, { Debugger } from 'debug';
 import { EventEmitter } from 'events';
-import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services';
+import { ZoneGroup } from './models/zone-group';
+import { ZoneGroupTopologyService, ZoneGroupTopologyServiceEvent } from './services';
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';

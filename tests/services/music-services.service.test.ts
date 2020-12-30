@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { TestHelpers } from '../test-helpers';
-import { MusicServicesService } from '../../src/services/music-services.service';
+import { MusicServicesService } from '../../src/services/music-services.service.extension';
 import { ServiceEvents } from '../../src/models';
 import nock from 'nock';
 
