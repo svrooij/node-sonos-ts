@@ -349,16 +349,17 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
+    const resolveAfterRevert = options.resolveAfterRevert === undefined ? true : options.resolveAfterRevert;
+
     this.debug('PlayNotification(%o)', options);
 
     if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
       throw new Error('Delay (if specified) should be between 1 and 4000');
     }
-
-    const eventName = this.addToNotificationQueue(options);
-    const result = await AsyncHelper.AsyncEvent<any>(this.notificationQueue.events, eventName, options.timeout);
-    this.debug(`Result of Play Notification is ${result}`);
-    return result;
+    const promise = new Promise<boolean>((resolve, reject) => {
+      this.addToNotificationQueue(options, resolve, reject, resolveAfterRevert);
+    });
+    return promise;
   }
 
   /**
@@ -901,7 +902,14 @@ export default class SonosDevice extends SonosDeviceBase {
     const currentOptions = currentItem.options;
     if (currentOptions.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('playQueue: Notification cancelled, player not playing');
-      this.notificationQueue.events.emit(currentItem.eventName, false);
+
+      if (currentItem.resolveAfterRevert === false) {
+        currentItem.resolve(false);
+      } else {
+        this.notificationQueue.promisesToResolve.push(
+          { promise: currentItem.resolve, value: false },
+        );
+      }
       this.notificationQueue.queue.shift();
       if (this.notificationQueue.queue.length > 0) {
         await AsyncHelper.Delay(50); // TH 25.12.2020: otherwise AVTransportServicePlay messes up somehow.
@@ -910,7 +918,7 @@ export default class SonosDevice extends SonosDeviceBase {
       return true;
     }
 
-    this.debug('playQueue: Going to play notification with event Name %s', currentItem.eventName);
+    this.debug('playQueue: Going to play next notification');
 
     // Generate metadata if needed
     if (currentOptions.metadata === undefined) {
@@ -919,22 +927,32 @@ export default class SonosDevice extends SonosDeviceBase {
       currentOptions.trackUri = guessedMetaData.trackUri;
     }
 
+    this.notificationQueue.anythingPlayed = true;
+
     // Start the notification
     await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: currentOptions.trackUri, CurrentURIMetaData: currentOptions.metadata ?? '' });
     if (currentOptions.volume !== undefined) {
+      this.notificationQueue.volumeChanged = true;
       this.debug('playQueue: Changing Volume to %o', currentOptions.volume);
       await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: currentOptions.volume });
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
     }
 
-    this.debug('playQueue: Initiating notification playing for event Name "%s" now.', currentItem.eventName);
+    this.debug('playQueue: Initiating notification playing for current Queue Item.');
     await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
 
     // Wait for event (or timeout)
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, currentOptions.timeout).catch((err) => this.debug(err));
 
-    this.debug('Recieved Playback Stop Event or Timeout for event Name "%s"', currentItem.eventName);
-    this.notificationQueue.events.emit(currentItem.eventName, true);
+    this.debug('Recieved Playback Stop Event or Timeout for current PlayNotification');
+    if (currentItem.resolveAfterRevert === false) {
+      currentItem.resolve(true);
+    } else {
+      this.notificationQueue.promisesToResolve.push(
+        { promise: currentItem.resolve, value: true },
+      );
+    }
+
     this.notificationQueue.queue.shift();
 
     if (this.notificationQueue.queue.length > 0) {
@@ -946,17 +964,26 @@ export default class SonosDevice extends SonosDeviceBase {
     return true;
   }
 
-  private addToNotificationQueue(options: PlayNotificationOptions): string {
-    const eventName = `QueueEvent_${(new Date()).getTime()}_${options.trackUri}`;
-    this.debug('Added Event with name "%s" to Notification Queue', eventName);
-    this.notificationQueue.queue.push({ options, eventName });
+  private addToNotificationQueue(
+    options: PlayNotificationOptions,
+    resolve: (resolve: boolean | PromiseLike<boolean>) => void,
+    reject: (reject: boolean | PromiseLike<boolean>) => void,
+    resolveAfterRevert: boolean,
+  ): void {
+    this.notificationQueue.queue.push(
+      {
+        options,
+        resolve,
+        reject,
+        resolveAfterRevert,
+      },
+    );
     if (!this.notificationQueue.playing) {
       this.notificationQueue.playing = true;
       setTimeout(() => {
         this.startQueue(options);
       });
     }
-    return eventName;
   }
 
   private async startQueue(options: PlayNotificationOptions): Promise<boolean> {
@@ -972,47 +999,63 @@ export default class SonosDevice extends SonosDeviceBase {
     await this.playQueue(originalState);
     this.debug('Notification Queue finished');
 
-    // Revert everything back
-    this.debug('Reverting everything back to normal');
-    let isBroadcast = false;
-    if (
-      // TODO: Analyze under which circumstances CurrentURIMetaData is undefined
-      originalMediaInfo.CurrentURIMetaData !== undefined
-      && typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
-      && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast' // This UpnpClass should for sure be skipped.
-    ) {
-      isBroadcast = true;
-    }
+    if (this.notificationQueue.anythingPlayed) {
+      // Revert everything back
+      this.debug('Reverting everything back to normal');
+      let isBroadcast = false;
+      if (
+        // TODO: Analyze under which circumstances CurrentURIMetaData is undefined
+        originalMediaInfo.CurrentURIMetaData !== undefined
+        && typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
+        && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast' // This UpnpClass should for sure be skipped.
+      ) {
+        isBroadcast = true;
+      }
 
-    if (originalVolume !== undefined) {
-      await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
+      if (originalVolume !== undefined && this.notificationQueue.volumeChanged === true) {
+        this.debug('This Queue changed the volume so revert it');
+        await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
+        if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
+        this.notificationQueue.volumeChanged = false;
+      }
+
+      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData });
       if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
+
+      if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
+        this.debug('Selecting track %d', originalPositionInfo.Track);
+        await this.SeekTrack(originalPositionInfo.Track)
+          .catch((err) => {
+            this.debug('Error selecting track, happens with some music services %o', err);
+          });
+      }
+
+      if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00' && !isBroadcast) {
+        this.debug('Setting back time to %s', originalPositionInfo.RelTime);
+        await this.SeekPosition(originalPositionInfo.RelTime)
+          .catch((err) => {
+            this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
+          });
+      }
+
+      if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
+        await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
+      }
     }
 
-    await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData });
-    if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
+    this.notificationQueue.promisesToResolve.forEach((element) => {
+      element.promise(element.value);
+    });
 
-    if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
-      this.debug('Selecting track %d', originalPositionInfo.Track);
-      await this.SeekTrack(originalPositionInfo.Track)
-        .catch((err) => {
-          this.debug('Error selecting track, happens with some music services %o', err);
-        });
+    this.notificationQueue.anythingPlayed = false;
+    this.notificationQueue.promisesToResolve = [];
+    if (this.notificationQueue.queue.length > 0) {
+      setTimeout(() => {
+        this.startQueue(options);
+      });
+    } else {
+      this.notificationQueue.playing = false;
     }
-
-    if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00' && !isBroadcast) {
-      this.debug('Setting back time to %s', originalPositionInfo.RelTime);
-      await this.SeekPosition(originalPositionInfo.RelTime)
-        .catch((err) => {
-          this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
-        });
-    }
-
-    if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
-    }
-    this.notificationQueue.playing = false;
-
     return true;
   }
   // #endregion

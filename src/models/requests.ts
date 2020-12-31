@@ -17,6 +17,8 @@ export interface PlayNotificationOptionsBase {
    */
   onlyWhenPlaying?: boolean;
 
+  resolveAfterRevert?: boolean;
+
   /**
    * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
    *
