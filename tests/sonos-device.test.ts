@@ -945,7 +945,6 @@ describe('SonosDevice', () => {
         endpoint: endpoint,
         volume: 10
       });
-
       expect(result).to.be.false;
       done();
     });

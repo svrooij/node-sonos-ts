@@ -1046,7 +1046,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
       if (onlyItemsWithOnlyWhenPlaying) {
         /*
-         * TH 01.01.2021: We have only items in the queue which are only to be played if any items in queue 
+         * TH 01.01.2021: We have only items in the queue which are only to be played if any items in queue
          *                --> directly resolve and exit
          */
         this.notificationQueue.queue.forEach((element) => {
