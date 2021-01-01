@@ -16,7 +16,7 @@ import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
 import DeviceDescription from './models/device-description';
-import { NotificationQueue } from './models/notificationQueue';
+import { NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem } from './models/notificationQueue';
 
 /**
  * Main class to control a single sonos device.
@@ -33,6 +33,15 @@ export default class SonosDevice extends SonosDeviceBase {
   private coordinator: SonosDevice | undefined;
 
   private notificationQueue: NotificationQueue = new NotificationQueue();
+
+  /*  TH 01.01.2021:
+   *  For debugging purposes in jest uncomment this line
+   *  and add "this.jestDebug.push(`${(new Date()).getTime()}: ...`);"
+   *  whereever needed. Additionally you may replace all "// this.jestDebug" with "this.jestDebug"
+   *  within Jest simply add "expect(device.jestDebug.join('\n')).to.be.eq("");" in desired test.
+   *  This will give you all messages split by newline Chars, allowing you to proper spot reasons for failing test.
+   */
+  // public jestDebug: string[] = [];
 
   /**
    * Creates an instance of SonosDevice.
@@ -894,31 +903,33 @@ export default class SonosDevice extends SonosDeviceBase {
   // #region Notification Queue
   private async playQueue(originalState: TransportState): Promise<boolean> {
     this.debug(`playQueue: Called, current Queue length: ${this.notificationQueue.queue.length}`);
+    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Called, current Queue length: ${this.notificationQueue.queue.length}`);
     if (this.notificationQueue.queue.length === 0) {
       throw new Error('Queue is already empty');
     }
 
     const currentItem = this.notificationQueue.queue[0];
+
+    if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
+      this.debug(
+        'General timeout for Notification fired already current Timestamp: %d, FireTime: %d, Calculated Time Left: %d',
+        (new Date()).getTime(),
+      );
+      // The Timeout already fired so play next item
+      return await this.playNextQueueItem(originalState);
+    }
+
     const currentOptions = currentItem.options;
     if (currentOptions.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('playQueue: Notification cancelled, player not playing');
 
-      if (currentItem.resolveAfterRevert === false) {
-        currentItem.resolve(false);
-      } else {
-        this.notificationQueue.promisesToResolve.push(
-          { promise: currentItem.resolve, value: false },
-        );
-      }
-      this.notificationQueue.queue.shift();
-      if (this.notificationQueue.queue.length > 0) {
-        await AsyncHelper.Delay(50); // TH 25.12.2020: otherwise AVTransportServicePlay messes up somehow.
-        return await this.playQueue(originalState);
-      }
-      return true;
+      await this.resolvePlayingQueueItem(currentItem, false);
+
+      return await this.playNextQueueItem(originalState);
     }
 
     this.debug('playQueue: Going to play next notification');
+    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Set next Transport URL, Queue Length: ${this.notificationQueue.queue.length}`);
 
     // Generate metadata if needed
     if (currentOptions.metadata === undefined) {
@@ -938,21 +949,41 @@ export default class SonosDevice extends SonosDeviceBase {
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
     }
 
+    if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
+      // The Timeout already fired so play next item
+      return await this.playNextQueueItem(originalState);
+    }
+
     this.debug('playQueue: Initiating notification playing for current Queue Item.');
+    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Execute Play, Queue Length: ${this.notificationQueue.queue.length}`);
     await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
 
     // Wait for event (or timeout)
+    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Wait for PlaybackStopped Event, Queue Length: ${this.notificationQueue.queue.length}`);
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, currentOptions.timeout).catch((err) => this.debug(err));
 
     this.debug('Recieved Playback Stop Event or Timeout for current PlayNotification');
+
+    await this.resolvePlayingQueueItem(currentItem, true);
+
+    return await this.playNextQueueItem(originalState);
+  }
+
+  private async resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
     if (currentItem.resolveAfterRevert === false) {
-      currentItem.resolve(true);
+      if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() > 0) {
+        clearTimeout(currentItem.generalTimeout.timeout);
+      }
+      currentItem.resolve(resolveValue);
     } else {
       this.notificationQueue.promisesToResolve.push(
-        { promise: currentItem.resolve, value: true },
+        { promise: currentItem.resolve, value: resolveValue, timeout: currentItem.generalTimeout },
       );
     }
+    return true;
+  }
 
+  private async playNextQueueItem(originalState: TransportState) {
     this.notificationQueue.queue.shift();
 
     if (this.notificationQueue.queue.length > 0) {
@@ -970,14 +1001,27 @@ export default class SonosDevice extends SonosDeviceBase {
     reject: (reject: boolean | PromiseLike<boolean>) => void,
     resolveAfterRevert: boolean,
   ): void {
-    this.notificationQueue.queue.push(
-      {
-        options,
-        resolve,
-        reject,
-        resolveAfterRevert,
-      },
-    );
+    const queueItem: NotificationQueueItem = {
+      options,
+      resolve,
+      reject,
+      resolveAfterRevert,
+    };
+
+    if (options.timeout) {
+      const fireTime = (new Date()).getTime() + options.timeout * 1000;
+      this.debug('Play notification timeout will fire at %d', fireTime);
+      const timeout = setTimeout(() => {
+        this.debug('Notification timeout fired --> resolve(false)');
+        // this.jestDebug.push(`Notification timeout fired (Firetime: ${fireTime})`);
+        resolve(false);
+      }, options.timeout * 1000);
+
+      queueItem.generalTimeout = new NotificationQueueTimeoutItem(timeout, fireTime);
+    }
+
+    this.notificationQueue.queue.push(queueItem);
+
     if (!this.notificationQueue.playing) {
       this.notificationQueue.playing = true;
       setTimeout(() => {
@@ -996,6 +1040,7 @@ export default class SonosDevice extends SonosDeviceBase {
     const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
 
     this.debug('Starting Notification Queue');
+    // this.jestDebug.push(`${(new Date()).getTime()}: Start Queue playing`);
     await this.playQueue(originalState);
     this.debug('Notification Queue finished');
 
@@ -1043,8 +1088,17 @@ export default class SonosDevice extends SonosDeviceBase {
       }
     }
 
+    // this.jestDebug.push(`${(new Date()).getTime()}: Resolve all remaining promises`);
     this.notificationQueue.promisesToResolve.forEach((element) => {
-      element.promise(element.value);
+      if (element.timeout === undefined) {
+        element.promise(element.value);
+        return;
+      }
+
+      if (element.timeout.timeLeft() > 0) {
+        clearTimeout(element.timeout.timeout);
+        element.promise(element.value);
+      }
     });
 
     this.notificationQueue.anythingPlayed = false;
