@@ -857,17 +857,16 @@ describe('SonosDevice', () => {
 
       const device = new SonosDevice(TestHelpers.testHost, port);
 
-      device.PlayNotification({
+      const result= await device.PlayNotification({
         delayMs: 10,
         onlyWhenPlaying: true,
-        timeout: 6,
+        timeout: 1,
         trackUri: 'spotify:artist:3b9xTm2eiaCRTGqUEWuzxc',
         volume: 10
-      }).then((result) => {
-        expect(result).to.be.false;
-        SonosEventListener.DefaultInstance.StopListener();
-        done();
       });
+      expect(result).to.be.false;
+      SonosEventListener.DefaultInstance.StopListener();
+      done();
     });
 
     it('throws error when incorrect delay is specified', async (done) => {
