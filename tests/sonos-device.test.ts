@@ -813,7 +813,6 @@ describe('SonosDevice', () => {
         trackUri: 'spotify:artistRadio:37i9dQZF1E4lKH7XBCfvaH',
         volume: notificationVolume
       });
-
       expect(result).to.be.eq(true);
       SonosEventListener.DefaultInstance.StopListener();
       
@@ -857,7 +856,7 @@ describe('SonosDevice', () => {
 
       const device = new SonosDevice(TestHelpers.testHost, port);
 
-      const result= await device.PlayNotification({
+      const result = await device.PlayNotification({
         delayMs: 10,
         onlyWhenPlaying: true,
         timeout: 1,
@@ -924,12 +923,6 @@ describe('SonosDevice', () => {
         '<CurrentVolume>6</CurrentVolume>',
         scope
       );
-
-       // Get Position info
-       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control', 'AVTransport', 'GetPositionInfo', '<InstanceID>0</InstanceID>',
-       '<Track>26</Track><TrackDuration>0:03:58</TrackDuration><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;-1&quot; parentID=&quot;-1&quot; restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot; duration=&quot;0:03:58&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1PWV26P0WRrRpKWj3Z7KVy?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;r:streamContent&gt;&lt;/r:streamContent&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1PWV26P0WRrRpKWj3Z7KVy%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;200 Dreams&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Noisecontrollers&lt;/dc:creator&gt;&lt;upnp:album&gt;200 Dreams EP&lt;/upnp:album&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData><TrackURI>x-sonos-spotify:spotify%3atrack%3a1PWV26P0WRrRpKWj3Z7KVy?sid=9&amp;flags=8224&amp;sn=7</TrackURI><RelTime>0:02:18</RelTime><AbsTime>NOT_IMPLEMENTED</AbsTime><RelCount>2147483647</RelCount><AbsCount>2147483647</AbsCount>',
-       scope
-     );
 
       const endpoint = 'http://localhost/tts-endpoint'
       const text = 'Er staat iemand aan de voordeur';

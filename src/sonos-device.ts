@@ -1034,6 +1034,30 @@ export default class SonosDevice extends SonosDeviceBase {
     const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
     this.debug('Current state is %s', originalState);
 
+    if (!(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
+      // TH 01.01.2021 Check if we only got items in queue which should only play, currently playing
+      let onlyItemsWithOnlyWhenPlaying = true;
+      this.notificationQueue.queue.forEach((element) => {
+        if (!onlyItemsWithOnlyWhenPlaying || element.options.onlyWhenPlaying === true) {
+          return;
+        }
+        onlyItemsWithOnlyWhenPlaying = false;
+      });
+
+      if (onlyItemsWithOnlyWhenPlaying) {
+        /*
+         * TH 01.01.2021: We have only items in the queue which are only to be played if any items in queue 
+         *                --> directly resolve and exit
+         */
+        this.notificationQueue.queue.forEach((element) => {
+          element.resolve(false);
+        });
+        this.notificationQueue.queue = [];
+        this.notificationQueue.playing = false;
+        return false;
+      }
+    }
+
     // Original data to revert to
     const originalVolume = (await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })).CurrentVolume;
     const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
