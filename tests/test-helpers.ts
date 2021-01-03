@@ -72,14 +72,14 @@ export class TestHelpers {
       scope);
     }
 
-  static mockZoneGroupState(scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockZoneGroupState(scope: nock.Scope = TestHelpers.getScope(), file: string = 'zone-group.GroupState.xml'): nock.Scope {
     return TestHelpers.mockSoapRequestWithFile(
       '/ZoneGroupTopology/Control',
       '"urn:schemas-upnp-org:service:ZoneGroupTopology:1#GetZoneGroupState"',
       '<u:GetZoneGroupState xmlns:u="urn:schemas-upnp-org:service:ZoneGroupTopology:1"></u:GetZoneGroupState>',
       'GetZoneGroupStateResponse',
       'ZoneGroupTopology',
-      ['services', 'responses', 'zone-group.GroupState.xml'],
+      ['services', 'responses', file],
       scope
     );
   }
