@@ -1,6 +1,6 @@
 import ArrayHelper from '../helpers/array-helper';
 import XmlHelper from '../helpers/xml-helper';
-import { ZoneGroup, ZoneMember } from '../models/zone-group';
+import { ChannelMapSet, ZoneGroup, ZoneMember } from '../models/zone-group';
 import { ZoneGroupTopologyServiceBase } from './zone-group-topology.service';
 
 /**
@@ -27,6 +27,23 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
   }
 
+  private static ParseChannelMapSet(channelMapSet: unknown): ChannelMapSet | undefined {
+    if (typeof channelMapSet !== 'string' || channelMapSet === '') {
+      return undefined;
+    }
+    const channels = channelMapSet.split(';');
+    return channels.map((channel) => {
+      const [uuid, channelId] = channel.split(',');
+      return {
+        uuid: uuid.split(':')[0],
+        channelId,
+      };
+    }).reduce<ChannelMapSet>((previousChannels, channel) => ({
+      ...previousChannels,
+      [channel.channelId]: channel.uuid,
+    }), {});
+  }
+
   private static ParseMember(member: any): ZoneMember {
     const uri = new URL(member.Location);
     return {
@@ -34,6 +51,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       uuid: member.UUID,
       host: uri.hostname,
       port: parseInt(uri.port, 10),
+      ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet),
       Icon: member.Icon,
       MicEnabled: member.MicEnabled === 1,
       SoftwareVersion: member.SoftwareVersion,

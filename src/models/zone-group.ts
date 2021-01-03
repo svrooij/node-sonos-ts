@@ -1,3 +1,7 @@
+export interface ChannelMapSet {
+  [channel: string]: string;
+}
+
 export interface ZoneGroup {
   name: string;
   coordinator: ZoneMember;
@@ -9,6 +13,7 @@ export interface ZoneMember {
   port: number;
   uuid: string;
   name: string;
+  ChannelMapSet?: ChannelMapSet;
   Icon: string;
   MicEnabled: boolean;
   SoftwareVersion: string;
