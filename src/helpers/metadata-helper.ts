@@ -179,6 +179,13 @@ export default class MetadataHelper {
       }
     }
 
+    if (trackUri.startsWith('x-rincon-cpcontainer:0004206c')) { // Apple Music Album
+      const id = trackUri.match(/x-rincon-cpcontainer:0004206c(\d+)$/);
+      if (id) {
+        return MetadataHelper.appleMetadata('album', id[1]);
+      }
+    }
+
     if (trackUri.startsWith('x-rincon-cpcontainer:10fe206ctracks-artist-')) { // Deezer Artists Top Tracks
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
@@ -200,6 +207,13 @@ export default class MetadataHelper {
       }
     }
 
+    if (trackUri.startsWith('x-sonos-http:') && trackUri.includes('sid=204')) { // Apple Music Track
+      const id = trackUri.match(/x-sonos-http:(\d+).mp4/);
+      if (id) {
+        return MetadataHelper.appleMetadata('track', id[1]);
+      }
+    }
+
     const parts = trackUri.split(':');
     if (parts.length === 3 && parts[0] === 'spotify') {
       return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
@@ -207,6 +221,10 @@ export default class MetadataHelper {
 
     if (parts.length === 3 && parts[0] === 'deezer') {
       return MetadataHelper.deezerMetadata(parts[1], parts[2]);
+    }
+
+    if (parts.length === 3 && parts[0] === 'apple') {
+      return MetadataHelper.appleMetadata(parts[1], parts[2]);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
@@ -300,6 +318,32 @@ export default class MetadataHelper {
         track.ItemId = `10032020tr%3a${id}`;
         break;
       default:
+        return undefined;
+    }
+    return track;
+  }
+
+  private static appleMetadata(kind: 'album' | 'track' | unknown, id: string, region = '52231'): Track | undefined {
+    const track: Track = {
+      Title: '',
+      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
+    };
+
+    switch (kind) {
+      case 'album':
+        track.TrackUri = `x-rincon-cpcontainer:1004206calbum:${id}?sid=204&flags=8300&sn=10`;
+        track.ItemId = `1004206calbum%3a${id}`;
+        track.UpnpClass = 'object.container.album.musicAlbum.#AlbumView';
+        track.ParentId = '00020000album%3a';
+        break;
+      case 'track':
+        track.TrackUri = `x-sonos-http:song:${id}.mp4?sid=204&flags=8224`;
+        track.ItemId = `10032020song%3a${id}`;
+        track.UpnpClass = 'object.item.audioItem.musicTrack';
+        track.ParentId = '1004206calbum%3a';
+        break;
+      default:
+        MetadataHelper.debug('Don\'t support this Apple Music kind %s', kind);
         return undefined;
     }
     return track;
