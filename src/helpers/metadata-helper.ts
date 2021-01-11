@@ -179,6 +179,21 @@ export default class MetadataHelper {
       }
     }
 
+    const appleAlbumItem = trackUri.match(/x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)(?:\?|$)/);
+    if (appleAlbumItem) { // Apple Music Album
+      return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2]);
+    }
+
+    const applePlaylistItem = trackUri.match(/x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)(?:\?|$)/);
+    if (applePlaylistItem) { // Apple Music Playlist
+      return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2]);
+    }
+
+    const appleTrackItem = trackUri.match(/x-sonos-http:(librarytrack|song):([.\d\w]+)\.mp4\?.*sid=204/);
+    if (appleTrackItem) { // Apple Music Track
+      return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2]);
+    }
+
     if (trackUri.startsWith('x-rincon-cpcontainer:10fe206ctracks-artist-')) { // Deezer Artists Top Tracks
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
@@ -207,6 +222,10 @@ export default class MetadataHelper {
 
     if (parts.length === 3 && parts[0] === 'deezer') {
       return MetadataHelper.deezerMetadata(parts[1], parts[2]);
+    }
+
+    if (parts.length === 3 && parts[0] === 'apple') {
+      return MetadataHelper.appleMetadata(parts[1], parts[2]);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
@@ -300,6 +319,43 @@ export default class MetadataHelper {
         track.ItemId = `10032020tr%3a${id}`;
         break;
       default:
+        return undefined;
+    }
+    return track;
+  }
+
+  private static appleMetadata(kind: 'album' | 'libraryalbum' | 'track' | 'librarytrack' | 'song' | 'playlist' | 'libraryplaylist' | unknown,
+    id: string, region = '52231'): Track | undefined {
+    const track: Track = {
+      Title: '',
+      CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
+    };
+    const trackLabels = { song: 'song', track: 'song', librarytrack: 'librarytrack' };
+    switch (kind) {
+      case 'album':
+      case 'libraryalbum':
+        track.TrackUri = `x-rincon-cpcontainer:1004206c${kind}:${id}?sid=204`;
+        track.ItemId = `1004206c${kind}%3a${id}`;
+        track.UpnpClass = 'object.item.audioItem.musicAlbum';
+        track.ParentId = '00020000album%3a';
+        break;
+      case 'playlist':
+      case 'libraryplaylist':
+        track.TrackUri = `x-rincon-cpcontainer:1006206c${kind}:${id}?sid=204`;
+        track.ItemId = `1006206c${kind}%3a${id}`;
+        track.UpnpClass = 'object.container.playlistContainer';
+        track.ParentId = '00020000playlist%3a';
+        break;
+      case 'track':
+      case 'librarytrack':
+      case 'song':
+        track.TrackUri = `x-sonos-http:${trackLabels[kind]}:${id}.mp4?sid=204`;
+        track.ItemId = `10032020${trackLabels[kind]}%3a${id}`;
+        track.UpnpClass = 'object.item.audioItem.musicTrack';
+        track.ParentId = '1004206calbum%3a';
+        break;
+      default:
+        MetadataHelper.debug('Don\'t support this Apple Music kind %s', kind);
         return undefined;
     }
     return track;
