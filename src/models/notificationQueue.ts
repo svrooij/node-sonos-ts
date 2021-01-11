@@ -35,6 +35,13 @@ export interface NotificationQueueItem {
    * @type {NotificationQueueTimeoutItem}
    */
   generalTimeout?: NotificationQueueTimeoutItem;
+
+  /**
+   * Object with details regarding the timeout for this specific queue item (Starting when this is Queue Item becomes first)
+   *
+   * @type {NotificationQueueTimeoutItem}
+   */
+  individualTimeout?: NotificationQueueTimeoutItem;
 }
 
 export class NotificationQueueTimeoutItem {

@@ -928,6 +928,17 @@ export default class SonosDevice extends SonosDeviceBase {
       return await this.playNextQueueItem(originalState);
     }
 
+    if (currentItem.options.specificTimeout) {
+      const fireTime = (new Date()).getTime() + currentItem.options.specificTimeout * 1000;
+      this.debug('Play notification timeout will fire at %d', fireTime);
+      const timeout = setTimeout(() => {
+        this.debug('Notification timeout fired --> resolve(false)');
+        // this.jestDebug.push(`Notification timeout fired (Firetime: ${fireTime})`);
+        currentItem.resolve(false);
+      }, currentItem.options.specificTimeout * 1000);
+      currentItem.individualTimeout = new NotificationQueueTimeoutItem(timeout, fireTime);
+    }
+
     this.debug('playQueue: Going to play next notification');
     // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Set next Transport URL, Queue Length: ${this.notificationQueue.queue.length}`);
 
@@ -949,8 +960,18 @@ export default class SonosDevice extends SonosDeviceBase {
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
     }
 
+    if (currentItem.individualTimeout !== undefined && currentItem.individualTimeout.timeLeft() < 0) {
+      if (currentItem.generalTimeout) {
+        clearTimeout(currentItem.generalTimeout.timeout);
+      }
+      return await this.playNextQueueItem(originalState);
+    }
+
     if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
       // The Timeout already fired so play next item
+      if (currentItem.individualTimeout) {
+        clearTimeout(currentItem.individualTimeout.timeout);
+      }
       return await this.playNextQueueItem(originalState);
     }
 
@@ -960,7 +981,19 @@ export default class SonosDevice extends SonosDeviceBase {
 
     // Wait for event (or timeout)
     // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Wait for PlaybackStopped Event, Queue Length: ${this.notificationQueue.queue.length}`);
-    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, currentOptions.timeout).catch((err) => this.debug(err));
+    let remainingTime: number = currentItem.options.defaultTimeout === undefined
+      ? 1800 * 1000
+      : currentItem.options.defaultTimeout * 1000; // 30 Minutes Default Timeout
+
+    if (currentItem.generalTimeout) {
+      remainingTime = Math.max(remainingTime, currentItem.generalTimeout.timeLeft());
+    }
+
+    if (currentItem.individualTimeout) {
+      remainingTime = Math.min(remainingTime, currentItem.individualTimeout.timeLeft());
+    }
+
+    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, remainingTime).catch((err) => this.debug(err));
 
     this.debug('Recieved Playback Stop Event or Timeout for current PlayNotification');
 

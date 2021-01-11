@@ -20,6 +20,20 @@ export interface PlayNotificationOptionsBase {
   resolveAfterRevert?: boolean;
 
   /**
+   * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
+   */
+  defaultTimeout?: number;
+
+  /**
+   * This timeout starts as soon as this item is played next in the queue.
+   * Thus in case of an error resolving the PlayNotificationCall with false.
+   *
+   * @type {number}
+   * @memberof PlayNotificationOptionsBase
+   */
+  specificTimeout?: number;
+
+  /**
    * If listening for events doesn't work you can set a timeout after which playback is reverted to the state before the notification.
    *
    * @type {number}
