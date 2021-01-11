@@ -35,6 +35,80 @@ describe('MetadataHelper', () => {
     });
   });
 
+  describe('GuessTrack -> Apple Music', () => {
+    it('Guess metadata for apple:album:1025210938', () => {
+      const track = MetadataHelper.GuessTrack('apple:album:1025210938');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004206calbum:1025210938?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicAlbum');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1004206calbum:1025210938', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1004206calbum:1025210938');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004206calbum:1025210938?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicAlbum');
+    });
+
+    it('Guess metadata for apple:libraryalbum:l.OIdA15a', () => {
+      const track = MetadataHelper.GuessTrack('apple:libraryalbum:l.OIdA15a');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004206clibraryalbum:l.OIdA15a?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicAlbum');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1004206clibraryalbum:l.OIdA15a', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1004206clibraryalbum:l.OIdA15a');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1004206clibraryalbum:l.OIdA15a?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicAlbum');
+    });
+
+    it('Guess metadata for apple:playlist:pl.cf589c8b40dc40cd9ddc2e61493d5efd', () => {
+      const track = MetadataHelper.GuessTrack('apple:playlist:pl.cf589c8b40dc40cd9ddc2e61493d5efd');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006206cplaylist:pl.cf589c8b40dc40cd9ddc2e61493d5efd?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.container.playlistContainer');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1006206cplaylist:pl.cf589c8b40dc40cd9ddc2e61493d5efd?sid=204', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1006206cplaylist:pl.cf589c8b40dc40cd9ddc2e61493d5efd?sid=204');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006206cplaylist:pl.cf589c8b40dc40cd9ddc2e61493d5efd?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.container.playlistContainer');
+    });
+
+    it('Guess metadata for apple:libraryplaylist:p.rQ5rCxE48W', () => {
+      const track = MetadataHelper.GuessTrack('apple:libraryplaylist:p.rQ5rCxE48W');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006206clibraryplaylist:p.rQ5rCxE48W?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.container.playlistContainer');
+    });
+
+    it('Guess metadata for x-rincon-cpcontainer:1006206clibraryplaylist:p.rQ5rCxE48W?sid=204', () => {
+      const track = MetadataHelper.GuessTrack('x-rincon-cpcontainer:1006206clibraryplaylist:p.rQ5rCxE48W?sid=204');
+      expect(track).to.have.property('TrackUri', 'x-rincon-cpcontainer:1006206clibraryplaylist:p.rQ5rCxE48W?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.container.playlistContainer');
+    });
+
+    it('Guess metadata for apple:track:1025212410', () => {
+      const track = MetadataHelper.GuessTrack('apple:track:1025212410');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:song:1025212410.mp4?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack');
+    });
+
+    it('Guess metadata for x-sonos-http:song:1025212410.mp4?sid=204', () => {
+      const track = MetadataHelper.GuessTrack('x-sonos-http:song:1025212410.mp4?sid=204');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:song:1025212410.mp4?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack');
+    });
+
+    it('Guess metadata for apple:librarytrack:i.m3g9uLvzB7', () => {
+      const track = MetadataHelper.GuessTrack('apple:librarytrack:i.m3g9uLvzB7');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack');
+    });
+
+    it('Guess metadata for x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204', () => {
+      const track = MetadataHelper.GuessTrack('x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204');
+      expect(track).to.have.property('TrackUri', 'x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204');
+      expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack');
+    });
+  });
+
   describe('GuessTrack -> Deezer', () => {
     it('Guess metadata for deezer:album:169734362', () => {
       const track = MetadataHelper.GuessTrack('deezer:album:169734362');

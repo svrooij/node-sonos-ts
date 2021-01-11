@@ -72,6 +72,12 @@ Currently supported url's for metadata guessing:
 - `spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist top tracks (has to be added to queue).
 - `spotify:album:5c4y5oD0jCAVHJNusKpy4d` - Spotify album (has to be added to queue).
 - `spotify:playlist:37i9dQZF1DXcx1szy2g67M` - Spotify playlist (has to be added to queue).
+- `apple:album:1025210938` - Apple Music album (not in user's music library).
+- `apple:libraryalbum:l.OIdA15a` - Apple Music album from user's music library.
+- `apple:playlist:pl.cf589c8b40dc40cd9ddc2e61493d5efd` - Apple Music playlist (not in user's music library).
+- `apple:libraryplaylist:p.rQ5rCxE48W` - Apple Music playlist from user's music library.
+- `apple:track:1025212410` - Apple Music track (not in user's library).
+- `apple:librarytrack:i.m3g9uLvzB7` - Apple Music track from user's music library.
 - `radio:s113577` - Tunein radio station.
 
 This library will guess the metadata automatically for the following methods, but you can also use the **MetadataHelper**, yourself.
