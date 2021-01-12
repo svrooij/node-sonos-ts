@@ -39,6 +39,10 @@ git checkout master
 git rebase upstream/master
 ```
 
+## Install Pull
+
+We like to use the Github [pull](https://github.com/apps/pull) application, to keep our beta branch and the forks up-to-date. You have to install this application yourself, but it will work automatically.
+
 ## Compile the library
 
 Before you can use this library is has to be compiled.
