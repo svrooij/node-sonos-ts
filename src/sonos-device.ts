@@ -522,7 +522,10 @@ export default class SonosDevice extends SonosDeviceBase {
       const newSimpleState = newState === TransportState.Paused || newState === TransportState.Stopped ? TransportState.Stopped : TransportState.Playing;
       this.debug('Received TransportState new State "%s" newSimpleState "%s"', newState, newSimpleState);
       if (newSimpleState !== this.CurrentTransportStateSimple) this.Events.emit(SonosEvents.CurrentTransportStateSimple, newSimpleState);
-      if (this.currentTransportState !== newState) {
+
+      // Handle those events which are new ...
+      // ...always handle stop, as in some cases the previous events (TRANSITIONING, PLAYING) don't fire
+      if (this.currentTransportState !== newState || newState === TransportState.Stopped) {
         this.currentTransportState = newState;
         this.Events.emit(SonosEvents.CurrentTransportState, newState);
         if (newState === TransportState.Stopped) this.Events.emit(SonosEvents.PlaybackStopped);
