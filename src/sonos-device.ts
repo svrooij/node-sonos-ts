@@ -488,26 +488,28 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public get Events(): StrictEventEmitter<EventEmitter, StrongSonosEvents> {
-    if (this.events === undefined) {
-      this.events = new EventEmitter();
-      this.events.on('removeListener', () => {
-        this.debug('Listener removed');
-        const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
-        if (events.length === 0) {
-          this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
-          this.isSubscribed = false;
-        }
-      });
-      this.events.on('newListener', () => {
-        this.debug('Listener added (isSubscribed: "%o")', this.isSubscribed);
-        if (!this.isSubscribed) {
-          this.isSubscribed = true;
-          this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
-        }
-      });
+    if (this.events !== undefined) {
+      return this.events;
     }
+
+    this.events = new EventEmitter();
+    this.events.on('removeListener', () => {
+      this.debug('Listener removed');
+      const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+      if (events.length === 0) {
+        this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+        this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+        this.isSubscribed = false;
+      }
+    });
+    this.events.on('newListener', () => {
+      this.debug('Listener added (isSubscribed: "%o")', this.isSubscribed);
+      if (!this.isSubscribed) {
+        this.isSubscribed = true;
+        this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+        this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+      }
+    });
     return this.events;
   }
 
