@@ -479,6 +479,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
    * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
    *
+   * @deprecated This is experimental, do not depend on this. (missing the jsdocs experimental descriptor)
    * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
    */
   public async PlayNotificationTwo(options: PlayNotificationOptions): Promise<boolean> {
@@ -513,6 +514,31 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
     this.debug('PlayTTS(%o)', options);
+
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+
+    return await this.PlayNotification(notificationOptions);
+  }
+
+  /**
+   * Download the url for the specified text, play as a notification and revert back to current track.
+   *
+   * @param {PlayTtsOptions} options
+   * @param {string} options.text Text to request a TTS file for.
+   * @param {string} options.lang Language to request tts file for.
+   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
+   * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
+   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
+   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @deprecated TTS using experimental notification feature
+   * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
+   * @memberof SonosDevice
+   */
+  public async PlayTTSTwo(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTSTwo(%o)', options);
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
