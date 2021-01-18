@@ -69,5 +69,19 @@ describe('XmlHelper', () => {
       const result = XmlHelper.EncodeTrackUri(uri);
       expect(result).to.be.eq(uri);
     });
+
+    it('encodes a local playlist url correctly', () => {
+      const uri = 'x-rincon-playlist:RINCON_000E58FE3AEA01400#A:ALBUM/Diamond Life'
+      const expectedUri = 'x-rincon-playlist:RINCON_000E58FE3AEA01400#A:ALBUM/Diamond%20Life'
+      const result = XmlHelper.EncodeTrackUri(uri);
+      expect(result).to.be.equal(expectedUri);
+    })
+
+    it('encodes a local playlist url correctly (no change)', () => {
+      const uri = 'x-rincon-playlist:RINCON_000E58FE3AEA01400#A:ALBUM/Diamond%20Life'
+      const expectedUri = 'x-rincon-playlist:RINCON_000E58FE3AEA01400#A:ALBUM/Diamond%20Life'
+      const result = XmlHelper.EncodeTrackUri(uri);
+      expect(result).to.be.equal(expectedUri);
+    })
   });
 });
