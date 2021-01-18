@@ -22,22 +22,6 @@ export interface PlayNotificationOptionsBase {
    */
   onlyWhenPlaying?: boolean;
 
-  resolveAfterRevert?: boolean;
-
-  /**
-   * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
-   */
-  defaultTimeout?: number;
-
-  /**
-   * This timeout starts as soon as this item is played next in the queue.
-   * Thus in case of an error resolving the PlayNotificationCall with false.
-   *
-   * @type {number}
-   * @memberof PlayNotificationOptionsBase
-   */
-  specificTimeout?: number;
-
   /**
    * Number of seconds to return back to the original source of playback.
    *
@@ -55,6 +39,28 @@ export interface PlayNotificationOptionsBase {
    * @memberof PlayNotificationOptionsBase
    */
   volume?: number;
+
+  /**
+   * 
+   * @deprecated Experimental feature, please dont depend on this
+   */
+  resolveAfterRevert?: boolean;
+
+
+  /**
+   * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
+   * @deprecated Experimental feature, please dont depend on this
+   */
+  defaultTimeout?: number;
+
+  /**
+   * This timeout starts as soon as this item is played next in the queue.
+   * Thus in case of an error resolving the PlayNotificationCall with false.
+   *
+   * @deprecated Experimental feature, please dont depend on this
+   */
+  specificTimeout?: number;
+
 }
 
 export interface PlayNotificationOptions extends PlayNotificationOptionsBase {

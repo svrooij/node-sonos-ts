@@ -471,6 +471,33 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * A second implementation of PlayNotification. 
+   * 
+   * @param {PlayNotificationOptions} options The options
+   * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
+   * @param {string|Track} [options.metadata] The metadata of the track to play, will be guesses if undefined.
+   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability. Use 100 to 800 for best results
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
+   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * 
+   * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
+   */
+  public async PlayNotificationTwo(options: PlayNotificationOptions): Promise<boolean> {
+    const resolveAfterRevert = options.resolveAfterRevert === undefined ? true : options.resolveAfterRevert;
+
+    this.debug('PlayNotificationTwo(%o)', options);
+
+    if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
+      throw new Error('Delay (if specified) should be between 1 and 4000');
+    }
+    const promise = new Promise<boolean>((resolve, reject) => {
+      this.addToNotificationQueue(options, resolve, reject, resolveAfterRevert);
+    });
+    return promise;
+  }
+
+  /**
    * Download the url for the specified text, play as a notification and revert back to current track.
    *
    * @param {PlayTtsOptions} options
