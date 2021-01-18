@@ -23,23 +23,28 @@ export class AlarmClockService extends AlarmClockServiceBase {
    */
   public async ListAndParseAlarms(): Promise<Alarm[]> {
     const alarmList = await super.ListAlarms();
+    if (alarmList.CurrentAlarmList === undefined || alarmList.CurrentAlarmList === '') {
+      return [];
+    }
     const parsedList = XmlHelper.DecodeAndParseXml(alarmList.CurrentAlarmList, '');
     const alarms = ArrayHelper.ForceArray<any>(parsedList.Alarms.Alarm);
     const results: Array<Alarm> = [];
     alarms.forEach((alarm: any) => {
-      results.push({
-        Duration: alarm.Duration,
-        Enabled: alarm.Enabled === '1',
-        ID: parseInt(alarm.ID, 10),
-        IncludeLinkedZones: alarm.IncludeLinkedZones === '1',
-        PlayMode: alarm.PlayMode,
-        ProgramMetaData: MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port),
-        ProgramURI: XmlHelper.DecodeTrackUri(alarm.ProgramURI),
-        Recurrence: alarm.Recurrence,
-        RoomUUID: alarm.RoomUUID,
-        StartLocalTime: alarm.StartTime,
-        Volume: parseInt(alarm.Volume, 10),
-      } as Alarm);
+      if (alarm.ID !== undefined) {
+        results.push({
+          Duration: alarm.Duration,
+          Enabled: alarm.Enabled === '1',
+          ID: parseInt(alarm.ID, 10),
+          IncludeLinkedZones: alarm.IncludeLinkedZones === '1',
+          PlayMode: alarm.PlayMode,
+          ProgramMetaData: MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port),
+          ProgramURI: XmlHelper.DecodeTrackUri(alarm.ProgramURI),
+          Recurrence: alarm.Recurrence,
+          RoomUUID: alarm.RoomUUID,
+          StartLocalTime: alarm.StartTime,
+          Volume: parseInt(alarm.Volume, 10),
+        } as Alarm);
+      }
     });
     return results;
   }
