@@ -22,7 +22,7 @@ Every sonos speaker has several soap services. Each service has one or more acti
 | [**AVTransport**](av-transport-service.html) | Service that controls stuff related to transport (play/pause/next/special urls) |
 | [**ConnectionManager**](connection-manager-service.html) |  |
 | [**ContentDirectory**](content-directory-service.html) | Browse for local content |
-| [**DeviceProperties**](device-properties-service.html) | Modify device properties, like led status and stereo pairs - |
+| [**DeviceProperties**](device-properties-service.html) | Modify device properties, like led status and stereo pairs |
 | [**GroupManagement**](group-management-service.html) |  |
 | [**GroupRenderingControl**](group-rendering-control-service.html) | Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players. |
 | [**HTControl**](ht-control-service.html) |  |

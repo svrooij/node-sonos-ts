@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.SystemPropertiesService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,25 +26,33 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddAccountX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.AddAccountX({ AccountType:..., AccountID:..., AccountPassword:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 | **AccountPassword** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountUDN** | `string` |  |
 
 ### AddOAuthAccountX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.AddOAuthAccountX({ AccountType:..., AccountToken:..., AccountKey:..., OAuthDeviceID:..., AuthorizationCode:..., RedirectURI:..., UserIdHashCode:..., AccountTier:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountToken** | `string` |  |
@@ -55,52 +63,76 @@ Input:
 | **UserIdHashCode** | `string` |  |
 | **AccountTier** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountUDN** | `string` |  |
 | **AccountNickname** | `string` |  |
 
 ### DoPostUpdateTasks
 
-No input parameters
+```js
+const result = await sonos.SystemPropertiesService.DoPostUpdateTasks();
+```
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### EditAccountMd
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.EditAccountMd({ AccountType:..., AccountID:..., NewAccountMd:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 | **NewAccountMd** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### EditAccountPasswordX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.EditAccountPasswordX({ AccountType:..., AccountID:..., NewAccountPassword:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 | **NewAccountPassword** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### EnableRDM
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.EnableRDM({ RDMValue:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **RDMValue** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### GetRDM
 
-No input parameters
+```js
+const result = await sonos.SystemPropertiesService.GetRDM();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RDMValue** | `boolean` |  |
 
@@ -108,15 +140,19 @@ Output:
 
 Get a saved string.
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.GetString({ VariableName:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **VariableName** | `string` | The key for this variable |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **StringValue** | `string` |  |
 
@@ -124,72 +160,102 @@ Output:
 
 ### GetWebCode
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.GetWebCode({ AccountType:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **WebCode** | `string` |  |
 
 ### ProvisionCredentialedTrialAccountX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.ProvisionCredentialedTrialAccountX({ AccountType:..., AccountID:..., AccountPassword:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 | **AccountPassword** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **IsExpired** | `boolean` |  |
 | **AccountUDN** | `string` |  |
 
 ### RefreshAccountCredentialsX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.RefreshAccountCredentialsX({ AccountType:..., AccountUID:..., AccountToken:..., AccountKey:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountUID** | `number` |  |
 | **AccountToken** | `string` |  |
 | **AccountKey** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### Remove
 
 Remove a saved string
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.Remove({ VariableName:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **VariableName** | `string` | The key for this variable |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Not sure what happens if you call this with a VariableName that doesn&#x27;t exists.
 
 ### RemoveAccount
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.RemoveAccount({ AccountType:..., AccountID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountType** | `number` |  |
 | **AccountID** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ReplaceAccountX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.ReplaceAccountX({ AccountUDN:..., NewAccountID:..., NewAccountPassword:..., AccountToken:..., AccountKey:..., OAuthDeviceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountUDN** | `string` |  |
 | **NewAccountID** | `string` |  |
@@ -198,35 +264,51 @@ Input:
 | **AccountKey** | `string` |  |
 | **OAuthDeviceID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewAccountUDN** | `string` |  |
 
 ### ResetThirdPartyCredentials
 
-No input parameters
+```js
+const result = await sonos.SystemPropertiesService.ResetThirdPartyCredentials();
+```
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### SetAccountNicknameX
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.SetAccountNicknameX({ AccountUDN:..., AccountNickname:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AccountUDN** | `string` |  |
 | **AccountNickname** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### SetString
 
 Save a string in the system
 
-Input:
+```js
+const result = await sonos.SystemPropertiesService.SetString({ VariableName:..., StringValue:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **VariableName** | `string` | The key for this variable, use something unique |
 | **StringValue** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Strings are saved in the system, retrieve values with GetString.
 

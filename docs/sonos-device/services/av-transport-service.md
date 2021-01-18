@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.AVTransportService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,9 +26,13 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMultipleURIsToQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.AddMultipleURIsToQueue({ InstanceID:..., UpdateID:..., NumberOfURIs:..., EnqueuedURIs:..., EnqueuedURIsMetaData:..., ContainerURI:..., ContainerMetaData:..., DesiredFirstTrackNumberEnqueued:..., EnqueueAsNext:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **UpdateID** | `number` |  |
@@ -40,9 +44,9 @@ Input:
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **FirstTrackNumberEnqueued** | `number` |  |
 | **NumTracksAdded** | `number` |  |
@@ -51,9 +55,13 @@ Output:
 
 ### AddURIToQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.AddURIToQueue({ InstanceID:..., EnqueuedURI:..., EnqueuedURIMetaData:..., DesiredFirstTrackNumberEnqueued:..., EnqueueAsNext:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **EnqueuedURI** | `string` |  |
@@ -61,9 +69,9 @@ Input:
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **FirstTrackNumberEnqueued** | `number` |  |
 | **NumTracksAdded** | `number` |  |
@@ -71,9 +79,13 @@ Output:
 
 ### AddURIToSavedQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.AddURIToSavedQueue({ InstanceID:..., ObjectID:..., UpdateID:..., EnqueuedURI:..., EnqueuedURIMetaData:..., AddAtIndex:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
@@ -82,9 +94,9 @@ Input:
 | **EnqueuedURIMetaData** | `Track | string` |  |
 | **AddAtIndex** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NumTracksAdded** | `number` |  |
 | **NewQueueLength** | `number` |  |
@@ -92,34 +104,48 @@ Output:
 
 ### BackupQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.BackupQueue({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### BecomeCoordinatorOfStandaloneGroup
 
 Leave the current group and revert to a single player.
 
-Input:
+```js
+const result = await sonos.AVTransportService.BecomeCoordinatorOfStandaloneGroup({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **DelegatedGroupCoordinatorID** | `string` |  |
 | **NewGroupID** | `string` |  |
 
 ### BecomeGroupCoordinator
 
-Input:
+```js
+const result = await sonos.AVTransportService.BecomeGroupCoordinator({ InstanceID:..., CurrentCoordinator:..., CurrentGroupID:..., OtherMembers:..., TransportSettings:..., CurrentURI:..., CurrentURIMetaData:..., SleepTimerState:..., AlarmState:..., StreamRestartState:..., CurrentQueueTrackList:..., CurrentVLIState:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
@@ -134,11 +160,17 @@ Input:
 | **CurrentQueueTrackList** | `string` |  |
 | **CurrentVLIState** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### BecomeGroupCoordinatorAndSource
 
-Input:
+```js
+const result = await sonos.AVTransportService.BecomeGroupCoordinatorAndSource({ InstanceID:..., CurrentCoordinator:..., CurrentGroupID:..., OtherMembers:..., CurrentURI:..., CurrentURIMetaData:..., SleepTimerState:..., AlarmState:..., StreamRestartState:..., CurrentAVTTrackList:..., CurrentQueueTrackList:..., CurrentSourceState:..., ResumePlayback:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
@@ -154,11 +186,17 @@ Input:
 | **CurrentSourceState** | `string` |  |
 | **ResumePlayback** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ChangeCoordinator
 
-Input:
+```js
+const result = await sonos.AVTransportService.ChangeCoordinator({ InstanceID:..., CurrentCoordinator:..., NewCoordinator:..., NewTransportSettings:..., CurrentAVTransportURI:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentCoordinator** | `string` |  |
@@ -166,43 +204,61 @@ Input:
 | **NewTransportSettings** | `string` |  |
 | **CurrentAVTransportURI** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ChangeTransportSettings
 
-Input:
+```js
+const result = await sonos.AVTransportService.ChangeTransportSettings({ InstanceID:..., NewTransportSettings:..., CurrentAVTransportURI:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewTransportSettings** | `string` |  |
 | **CurrentAVTransportURI** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ConfigureSleepTimer
 
 Stop playing after set sleep timer
 
-Input:
+```js
+const result = await sonos.AVTransportService.ConfigureSleepTimer({ InstanceID:..., NewSleepTimerDuration:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewSleepTimerDuration** | `string` | Time to stop after, as hh:mm:ss |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Send to non-coordinator returns error code 800
 
 ### CreateSavedQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.CreateSavedQueue({ InstanceID:..., Title:..., EnqueuedURI:..., EnqueuedURIMetaData:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Title** | `string` |  |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `Track | string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NumTracksAdded** | `number` |  |
 | **NewQueueLength** | `number` |  |
@@ -213,37 +269,53 @@ Output:
 
 Delegates the coordinator role to another player in the same group
 
-Input:
+```js
+const result = await sonos.AVTransportService.DelegateGroupCoordinationTo({ InstanceID:..., NewCoordinator:..., RejoinGroup:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewCoordinator** | `string` | uuid of the new coordinator - must be in same group |
 | **RejoinGroup** | `boolean` | Should former coordinator rejoin the group? |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 **Remarks** Send to non-coordinator has no results - should be avoided.
 
 ### EndDirectControlSession
 
-Input:
+```js
+const result = await sonos.AVTransportService.EndDirectControlSession({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### GetCrossfadeMode
 
 Get crossfade mode, 1 for on, 0 for off
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetCrossfadeMode({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CrossfadeMode** | `boolean` |  |
 
@@ -253,15 +325,19 @@ Output:
 
 Get current transport actions such as Set, Stop, Pause, Play, X_DLNA_SeekTime, Next, X_DLNA_SeekTrackNr
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetCurrentTransportActions({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Actions** | `string` |  |
 
@@ -269,15 +345,19 @@ Output:
 
 ### GetDeviceCapabilities
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetDeviceCapabilities({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **PlayMedia** | `string` |  |
 | **RecMedia** | `string` |  |
@@ -287,15 +367,19 @@ Output:
 
 Get information about the current playing media (queue)
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetMediaInfo({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NrTracks** | `number` |  |
 | **MediaDuration** | `string` |  |
@@ -311,15 +395,19 @@ Output:
 
 Get information about current position (position in queue and time in current song)
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetPositionInfo({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Track** | `number` |  |
 | **TrackDuration** | `string` |  |
@@ -334,15 +422,19 @@ Output:
 
 Get time left on sleeptimer or empty string
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetRemainingSleepTimerDuration({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RemainingSleepTimerDuration** | `string` |  |
 | **CurrentSleepTimerGeneration** | `number` |  |
@@ -351,15 +443,19 @@ Output:
 
 ### GetRunningAlarmProperties
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetRunningAlarmProperties({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AlarmID** | `number` |  |
 | **GroupID** | `string` |  |
@@ -369,15 +465,19 @@ Output:
 
 Get current transport status, speed and state such as PLAYING, STOPPED, PLAYING, PAUSED_PLAYBACK, TRANSITIONING, NO_MEDIA_PRESENT
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetTransportInfo({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTransportState** | `string` |  Possible values: `STOPPED` / `PLAYING` / `PAUSED_PLAYBACK` / `TRANSITIONING` |
 | **CurrentTransportStatus** | `string` |  |
@@ -389,15 +489,19 @@ Output:
 
 Get transport settings
 
-Input:
+```js
+const result = await sonos.AVTransportService.GetTransportSettings({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **PlayMode** | `PlayMode` |  Possible values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **RecQualityMode** | `string` |  |
@@ -408,96 +512,146 @@ Output:
 
 Go to next song, not always supported - see GetCurrentTransportActions
 
-Input:
+```js
+const result = await sonos.AVTransportService.Next({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### NotifyDeletedURI
 
-Input:
+```js
+const result = await sonos.AVTransportService.NotifyDeletedURI({ InstanceID:..., DeletedURI:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DeletedURI** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### Pause
 
 Pause playback
 
-Input:
+```js
+const result = await sonos.AVTransportService.Pause({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### Play
 
 Start playing the set TransportURI
 
-Input:
+```js
+const result = await sonos.AVTransportService.Play({ InstanceID:..., Speed:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Speed** | `string` | Play speed usually 1, can be a fraction of 1 Allowed values:  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### Previous
 
 Go to previous song, not always supported - GetCurrentTransportActions
 
-Input:
+```js
+const result = await sonos.AVTransportService.Previous({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### RemoveAllTracksFromQueue
 
 Flushes the SONOS queue. If queue is already empty it throw error 804
 
-Input:
+```js
+const result = await sonos.AVTransportService.RemoveAllTracksFromQueue({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Send to non-coordinator returns error code 800.
 
 ### RemoveTrackFromQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.RemoveTrackFromQueue({ InstanceID:..., ObjectID:..., UpdateID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### RemoveTrackRangeFromQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.RemoveTrackRangeFromQueue({ InstanceID:..., UpdateID:..., StartingIndex:..., NumberOfTracks:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **UpdateID** | `number` |  |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewUpdateID** | `number` |  |
 
 ### ReorderTracksInQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.ReorderTracksInQueue({ InstanceID:..., StartingIndex:..., NumberOfTracks:..., InsertBefore:..., UpdateID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **StartingIndex** | `number` |  |
@@ -505,11 +659,17 @@ Input:
 | **InsertBefore** | `number` |  |
 | **UpdateID** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ReorderTracksInSavedQueue
 
-Input:
+```js
+const result = await sonos.AVTransportService.ReorderTracksInSavedQueue({ InstanceID:..., ObjectID:..., UpdateID:..., TrackList:..., NewPositionList:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ObjectID** | `string` |  |
@@ -517,9 +677,9 @@ Input:
 | **TrackList** | `string` |  |
 | **NewPositionList** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueLengthChange** | `number` |  |
 | **NewQueueLength** | `number` |  |
@@ -527,9 +687,13 @@ Output:
 
 ### RunAlarm
 
-Input:
+```js
+const result = await sonos.AVTransportService.RunAlarm({ InstanceID:..., AlarmID:..., LoggedStartTime:..., Duration:..., ProgramURI:..., ProgramMetaData:..., PlayMode:..., Volume:..., IncludeLinkedZones:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **AlarmID** | `number` |  |
@@ -541,21 +705,27 @@ Input:
 | **Volume** | `number` |  |
 | **IncludeLinkedZones** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SaveQueue
 
 Saves the current SONOS queue as a SONOS playlist and outputs objectID
 
-Input:
+```js
+const result = await sonos.AVTransportService.SaveQueue({ InstanceID:..., Title:..., ObjectID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Title** | `string` | SONOS playlist title |
 | **ObjectID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AssignedObjectID** | `string` |  |
 
@@ -565,13 +735,19 @@ Output:
 
 Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions
 
-Input:
+```js
+const result = await sonos.AVTransportService.Seek({ InstanceID:..., Unit:..., Target:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Unit** | `string` | What to seek Allowed values: `TRACK_NR` / `REL_TIME` / `TIME_DELTA` |
 | **Target** | `string` | Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Returns error code 701 in case that content does not support Seek or send to non-coordinator
 
@@ -579,13 +755,19 @@ Input:
 
 Set the transport URI to a song, a stream, the queue, another player-rincon and a lot more
 
-Input:
+```js
+const result = await sonos.AVTransportService.SetAVTransportURI({ InstanceID:..., CurrentURI:..., CurrentURIMetaData:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CurrentURI** | `string` | The new TransportURI - its a special SONOS format |
 | **CurrentURIMetaData** | `Track | string` | Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** If set to another player RINCON, the player is grouped with that one.
 
@@ -593,35 +775,53 @@ Input:
 
 Set crossfade mode off
 
-Input:
+```js
+const result = await sonos.AVTransportService.SetCrossfadeMode({ InstanceID:..., CrossfadeMode:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CrossfadeMode** | `boolean` | true for on, false for off |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.
 
 ### SetNextAVTransportURI
 
-Input:
+```js
+const result = await sonos.AVTransportService.SetNextAVTransportURI({ InstanceID:..., NextURI:..., NextURIMetaData:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `Track | string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetPlayMode
 
 Set the PlayMode
 
-Input:
+```js
+const result = await sonos.AVTransportService.SetPlayMode({ InstanceID:..., NewPlayMode:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **NewPlayMode** | `PlayMode` | New playmode Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 **Remarks** Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.
 
@@ -629,18 +829,28 @@ Input:
 
 Snooze the current alarm for some time.
 
-Input:
+```js
+const result = await sonos.AVTransportService.SnoozeAlarm({ InstanceID:..., Duration:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Duration** | `string` | Snooze time as hh:mm:ss, 10 minutes = 00:10:00 |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### StartAutoplay
 
-Input:
+```js
+const result = await sonos.AVTransportService.StartAutoplay({ InstanceID:..., ProgramURI:..., ProgramMetaData:..., Volume:..., IncludeLinkedZones:..., ResetVolumeAfter:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ProgramURI** | `string` |  |
@@ -649,15 +859,23 @@ Input:
 | **IncludeLinkedZones** | `boolean` |  |
 | **ResetVolumeAfter** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### Stop
 
 Stop playback
 
-Input:
+```js
+const result = await sonos.AVTransportService.Stop({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## AVTransportService event
 

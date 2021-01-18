@@ -125,7 +125,7 @@ export default class SonosDeviceBase {
   private devicepropertiesservice: DevicePropertiesService | undefined;
 
   /**
-    * Modify device properties, like led status and stereo pairs -
+    * Modify device properties, like led status and stereo pairs
     * will be initialized on first use.
     *
     * @readonly

@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.GroupManagementService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,16 +24,20 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMember
 
-Input:
+```js
+const result = await sonos.GroupManagementService.AddMember({ MemberID:..., BootSeq:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **MemberID** | `string` |  |
 | **BootSeq** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTransportSettings** | `string` |  |
 | **CurrentURI** | `string` |  |
@@ -43,28 +47,46 @@ Output:
 
 ### RemoveMember
 
-Input:
+```js
+const result = await sonos.GroupManagementService.RemoveMember({ MemberID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **MemberID** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ReportTrackBufferingResult
 
-Input:
+```js
+const result = await sonos.GroupManagementService.ReportTrackBufferingResult({ MemberID:..., ResultCode:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **MemberID** | `string` |  |
 | **ResultCode** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetSourceAreaIds
 
-Input:
+```js
+const result = await sonos.GroupManagementService.SetSourceAreaIds({ DesiredSourceAreaIds:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredSourceAreaIds** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## GroupManagementService event
 

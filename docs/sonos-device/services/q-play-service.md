@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.QPlayService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,15 +24,19 @@ All methods that require input expect an object with the specified parameters, e
 
 ### QPlayAuth
 
-Input:
+```js
+const result = await sonos.QPlayService.QPlayAuth({ Seed:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Seed** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Code** | `string` |  |
 | **MID** | `string` |  |
