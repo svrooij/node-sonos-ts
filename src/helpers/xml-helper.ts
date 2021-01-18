@@ -87,6 +87,11 @@ export default class XmlHelper {
       || trackUri.startsWith('x-rincon-mp3radio')
     ) return trackUri;
 
+    if (trackUri.startsWith('x-rincon-playlist:')) {
+      const index = trackUri.indexOf('/');
+      return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a').replace(/ /g, '%20');
+    }
+
     // Part below needs some work.
     const index = trackUri.indexOf(':') + 1;
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
