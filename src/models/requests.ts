@@ -41,11 +41,10 @@ export interface PlayNotificationOptionsBase {
   volume?: number;
 
   /**
-   * 
+   *
    * @deprecated Experimental feature, please dont depend on this
    */
   resolveAfterRevert?: boolean;
-
 
   /**
    * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only

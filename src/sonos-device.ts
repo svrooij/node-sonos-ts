@@ -422,8 +422,6 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async PlayNotification(options: PlayNotificationOptions): Promise<boolean> {
-    const resolveAfterRevert = options.resolveAfterRevert === undefined ? true : options.resolveAfterRevert;
-
     this.debug('PlayNotification(%o)', options);
 
     if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
@@ -471,8 +469,8 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
-   * A second implementation of PlayNotification. 
-   * 
+   * A second implementation of PlayNotification.
+   *
    * @param {PlayNotificationOptions} options The options
    * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
    * @param {string|Track} [options.metadata] The metadata of the track to play, will be guesses if undefined.
@@ -480,7 +478,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
    * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
-   * 
+   *
    * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
    */
   public async PlayNotificationTwo(options: PlayNotificationOptions): Promise<boolean> {
