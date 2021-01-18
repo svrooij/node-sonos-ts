@@ -197,6 +197,24 @@ describe('SonosDevice', () => {
     })
   })
 
+  describe('EventListener', () => {
+    it('allows updating host and port', () => {
+      const result = SonosEventListener.DefaultInstance.UpdateSettings({ host: 'fake-host' , port: 10000 });
+      expect(result).to.be.true;
+      const endpoint = SonosEventListener.DefaultInstance.GetEndpoint('fake-uuid', 'test-service');
+      expect(endpoint).to.be.equal('http://fake-host:10000/sonos/fake-uuid/test-service');
+    });
+  })
+
+  describe('EventListener', () => {
+    it('disallows updating host and port', () => {
+      SonosEventListener.DefaultInstance.StartListener();
+      const result = SonosEventListener.DefaultInstance.UpdateSettings({ host: 'fake-host' , port: 10000 });
+      expect(result).to.be.false;
+      SonosEventListener.DefaultInstance.StopListener();
+    });
+  })
+
   describe('ExecuteCommand()', () => {
     it('executes \'Play\'', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
