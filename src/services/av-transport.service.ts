@@ -324,6 +324,51 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
   // #endregion
 
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      FirstTrackNumberEnqueued: 'number',
+      NumTracksAdded: 'number',
+      NewQueueLength: 'number',
+      NewUpdateID: 'number',
+      DelegatedGroupCoordinatorID: 'string',
+      NewGroupID: 'string',
+      AssignedObjectID: 'string',
+      CrossfadeMode: 'boolean',
+      Actions: 'string',
+      PlayMedia: 'string',
+      RecMedia: 'string',
+      RecQualityModes: 'string',
+      NrTracks: 'number',
+      MediaDuration: 'string',
+      CurrentURI: 'string',
+      CurrentURIMetaData: 'Track | string',
+      NextURI: 'string',
+      NextURIMetaData: 'Track | string',
+      PlayMedium: 'string',
+      RecordMedium: 'string',
+      WriteStatus: 'string',
+      Track: 'number',
+      TrackDuration: 'string',
+      TrackMetaData: 'Track | string',
+      TrackURI: 'string',
+      RelTime: 'string',
+      AbsTime: 'string',
+      RelCount: 'number',
+      AbsCount: 'number',
+      RemainingSleepTimerDuration: 'string',
+      CurrentSleepTimerGeneration: 'number',
+      AlarmID: 'number',
+      GroupID: 'string',
+      LoggedStartTime: 'string',
+      CurrentTransportState: 'string',
+      CurrentTransportStatus: 'string',
+      CurrentSpeed: 'string',
+      PlayMode: 'PlayMode',
+      RecQualityMode: 'string',
+      QueueLengthChange: 'number',
+    };
+  }
+
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
     return {

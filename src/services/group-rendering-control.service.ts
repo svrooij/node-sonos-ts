@@ -26,14 +26,23 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
 
   readonly scpUrl: string = '/xml/GroupRenderingControl1.xml';
 
-  readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
+  /**
+   * Default errors and service specific errors
+   *
+   * @type {SonosUpnpError[]}
+   * @remarks See https://svrooij.io/sonos-api-docs/#manual-documentation-file
+   */
+  readonly errors: SonosUpnpError[] = [
+    ...SonosUpnpErrors.defaultErrors,
+    { code: 701, description: 'Player isn&#x27;t the coordinator' },
+  ];
 
   // #region actions
   /**
-   * Get 1 for muted, 0 for un-muted
+   * Whether or not the group is muted.
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupMuteResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
@@ -42,7 +51,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * Get the group volume.
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
@@ -52,7 +61,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {boolean} input.DesiredMute - True for mute, false for un-mute
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
@@ -62,7 +71,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {number} input.DesiredVolume - New volume between 0 and 100
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
@@ -72,7 +81,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {number} input.Adjustment - Number between -100 and +100
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
   Promise<SetRelativeGroupVolumeResponse> { return await this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
@@ -81,11 +90,19 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * Creates a new group volume snapshot,  the volume ratio between all players. It is used by SetGroupVolume and SetRelativeGroupVolume
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
-   * @remarks Send to non-coordinator returns error code 701
+   * @remarks Sould be send to coordinator only
    */
   async SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   // #endregion
+
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentMute: 'boolean',
+      CurrentVolume: 'number',
+      NewVolume: 'number',
+    };
+  }
 
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {

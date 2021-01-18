@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.ContentDirectoryService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,11 +26,15 @@ All methods that require input expect an object with the specified parameters, e
 
 ### Browse
 
-Browse for content, see BrowseParsed for a better experience.
+Browse for content.
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.Browse({ ObjectID:..., BrowseFlag:..., Filter:..., StartingIndex:..., RequestedCount:..., SortCriteria:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` | The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it. |
 | **BrowseFlag** | `string` | How to browse Allowed values: `BrowseMetadata` / `BrowseDirectChildren` |
@@ -39,76 +43,98 @@ Input:
 | **RequestedCount** | `number` | Paging, number of items |
 | **SortCriteria** | `string` | Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title. |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Result** | `string` |  |
 | **NumberReturned** | `number` |  |
 | **TotalMatches** | `number` |  |
 | **UpdateID** | `number` |  |
 
+**Remarks** Some libraries support a BrowseAndParse, so you don&#x27;t have to parse the xml.
+
 ### CreateObject
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.CreateObject({ ContainerID:..., Elements:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ContainerID** | `string` |  |
 | **Elements** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 | **Result** | `string` |  |
 
 ### DestroyObject
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.DestroyObject({ ObjectID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### FindPrefix
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.FindPrefix({ ObjectID:..., Prefix:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 | **Prefix** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **StartingIndex** | `number` |  |
 | **UpdateID** | `number` |  |
 
 ### GetAlbumArtistDisplayOption
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetAlbumArtistDisplayOption();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AlbumArtistDisplayOption** | `string` |  |
 
 ### GetAllPrefixLocations
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.GetAllPrefixLocations({ ObjectID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **TotalPrefixes** | `number` |  |
 | **PrefixAndIndexCSV** | `string` |  |
@@ -116,97 +142,133 @@ Output:
 
 ### GetBrowseable
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetBrowseable();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **IsBrowseable** | `boolean` |  |
 
 ### GetLastIndexChange
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetLastIndexChange();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **LastIndexChange** | `string` |  |
 
 ### GetSearchCapabilities
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetSearchCapabilities();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **SearchCaps** | `string` |  |
 
 ### GetShareIndexInProgress
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetShareIndexInProgress();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **IsIndexing** | `boolean` |  |
 
 ### GetSortCapabilities
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetSortCapabilities();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **SortCaps** | `string` |  |
 
 ### GetSystemUpdateID
 
-No input parameters
+```js
+const result = await sonos.ContentDirectoryService.GetSystemUpdateID();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Id** | `number` |  |
 
 ### RefreshShareIndex
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.RefreshShareIndex({ AlbumArtistDisplayOption:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **AlbumArtistDisplayOption** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### RequestResort
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.RequestResort({ SortOrder:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **SortOrder** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetBrowseable
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.SetBrowseable({ Browseable:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Browseable** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### UpdateObject
 
-Input:
+```js
+const result = await sonos.ContentDirectoryService.UpdateObject({ ObjectID:..., CurrentTagValue:..., NewTagValue:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 | **CurrentTagValue** | `string` |  |
 | **NewTagValue** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## ContentDirectoryService event
 

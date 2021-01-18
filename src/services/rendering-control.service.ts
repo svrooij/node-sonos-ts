@@ -41,10 +41,11 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<GetBassResponse> { return await this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
 
   /**
-   * Get EQ value (see SetEQ) for different EQTypes - not supported by all devices (is TV related)
+   * Get EQ value (see SetEQ) for different EQTypes
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {string} input.EQType - EQ type such as DialogLevel, NightMode, SubGain
+   * @remarks Not supported by all speakers, TV related
    */
   async GetEQ(input: { InstanceID: number; EQType: string }):
   Promise<GetEQResponse> { return await this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
@@ -53,7 +54,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<GetHeadphoneConnectedResponse> { return await this.SoapRequestWithBody<typeof input, GetHeadphoneConnectedResponse>('GetHeadphoneConnected', input); }
 
   /**
-   * Get loudness 1 for on, 0 for off
+   * Whether or not Loudness is on
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {string} input.Channel - Master [ 'Master' / 'LF' / 'RF' ]
@@ -74,7 +75,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<GetSupportsOutputFixedResponse> { return await this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
 
   /**
-   * Get treble between -10 and 10
+   * Get treble, between -10 and 10
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    */
@@ -82,7 +83,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<GetTrebleResponse> { return await this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
 
   /**
-   * Get volume between 0 and 100
+   * Get volume, between 0 and 100
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {string} input.Channel - Master [ 'Master' / 'LF' / 'RF' ]
@@ -121,11 +122,12 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
 
   /**
-   * Set EQ value for different types - not supported by all devices (is TV related)
+   * Set EQ value for different types
    *
    * @param {number} input.InstanceID - InstanceID should always be 0
    * @param {string} input.EQType - DialogLevel, NightMode, SubGain
    * @param {number} input.DesiredValue - DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10
+   * @remarks Not supported by all speakers, TV related
    */
   async SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetEQ', input); }
@@ -170,6 +172,31 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   async SetVolumeDB(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
   // #endregion
+
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      CurrentBass: 'number',
+      CurrentValue: 'number',
+      CurrentHeadphoneConnected: 'boolean',
+      CurrentLoudness: 'boolean',
+      CurrentMute: 'boolean',
+      CurrentFixed: 'boolean',
+      RoomCalibrationEnabled: 'boolean',
+      RoomCalibrationAvailable: 'boolean',
+      CurrentSupportsFixed: 'boolean',
+      CurrentTreble: 'number',
+      CurrentVolume: 'number',
+      MinValue: 'number',
+      MaxValue: 'number',
+      RampTime: 'number',
+      Bass: 'number',
+      Treble: 'number',
+      Loudness: 'boolean',
+      LeftVolume: 'number',
+      RightVolume: 'number',
+      NewVolume: 'number',
+    };
+  }
 
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
@@ -309,25 +336,4 @@ export interface RenderingControlServiceEvent {
   Treble?: number;
   Volume?: ChannelValue<number>;
   VolumeDB?: number;
-}
-
-export class RenderingControlService extends RenderingControlServiceBase {
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    if (name === 'Mute') {
-      const output = {} as ChannelValue<boolean>;
-      (originalValue as Array<any>).forEach((v) => {
-        output[v.channel] = v.val === '1';
-      });
-      return output;
-    }
-
-    if (name === 'Volume') {
-      const output = {} as ChannelValue<number>;
-      (originalValue as Array<any>).forEach((v) => {
-        output[v.channel] = parseInt(v.val, 10);
-      });
-      return output;
-    }
-    return super.ResolveEventPropertyValue(name, originalValue, type);
-  }
 }

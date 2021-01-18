@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.HTControlService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,74 +24,110 @@ All methods that require input expect an object with the specified parameters, e
 
 ### CommitLearnedIRCodes
 
-Input:
+```js
+const result = await sonos.HTControlService.CommitLearnedIRCodes({ Name:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Name** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### GetIRRepeaterState
 
-No input parameters
+```js
+const result = await sonos.HTControlService.GetIRRepeaterState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentIRRepeaterState** | `string` |  Possible values: `On` / `Off` / `Disabled` |
 
 ### GetLEDFeedbackState
 
-No input parameters
+```js
+const result = await sonos.HTControlService.GetLEDFeedbackState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **LEDFeedbackState** | `string` |  Possible values: `On` / `Off` |
 
 ### IdentifyIRRemote
 
-Input:
+```js
+const result = await sonos.HTControlService.IdentifyIRRemote({ Timeout:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Timeout** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### IsRemoteConfigured
 
-No input parameters
+```js
+const result = await sonos.HTControlService.IsRemoteConfigured();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RemoteConfigured** | `boolean` |  |
 
 ### LearnIRCode
 
-Input:
+```js
+const result = await sonos.HTControlService.LearnIRCode({ IRCode:..., Timeout:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **IRCode** | `string` |  |
 | **Timeout** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetIRRepeaterState
 
-Input:
+```js
+const result = await sonos.HTControlService.SetIRRepeaterState({ DesiredIRRepeaterState:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredIRRepeaterState** | `string` |  Allowed values: `On` / `Off` / `Disabled` |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetLEDFeedbackState
 
-Input:
+```js
+const result = await sonos.HTControlService.SetLEDFeedbackState({ LEDFeedbackState:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **LEDFeedbackState** | `string` |  Allowed values: `On` / `Off` |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## HTControlService event
 

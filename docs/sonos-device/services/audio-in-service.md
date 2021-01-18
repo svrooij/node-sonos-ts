@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.AudioInService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,73 +24,105 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetAudioInputAttributes
 
-No input parameters
+```js
+const result = await sonos.AudioInService.GetAudioInputAttributes();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentName** | `string` |  |
 | **CurrentIcon** | `string` |  |
 
 ### GetLineInLevel
 
-No input parameters
+```js
+const result = await sonos.AudioInService.GetLineInLevel();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentLeftLineInLevel** | `number` |  |
 | **CurrentRightLineInLevel** | `number` |  |
 
 ### SelectAudio
 
-Input:
+```js
+const result = await sonos.AudioInService.SelectAudio({ ObjectID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ObjectID** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetAudioInputAttributes
 
-Input:
+```js
+const result = await sonos.AudioInService.SetAudioInputAttributes({ DesiredName:..., DesiredIcon:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredName** | `string` |  |
 | **DesiredIcon** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetLineInLevel
 
-Input:
+```js
+const result = await sonos.AudioInService.SetLineInLevel({ DesiredLeftLineInLevel:..., DesiredRightLineInLevel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredLeftLineInLevel** | `number` |  |
 | **DesiredRightLineInLevel** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### StartTransmissionToGroup
 
-Input:
+```js
+const result = await sonos.AudioInService.StartTransmissionToGroup({ CoordinatorID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **CoordinatorID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTransportSettings** | `string` |  |
 
 ### StopTransmissionToGroup
 
-Input:
+```js
+const result = await sonos.AudioInService.StopTransmissionToGroup({ CoordinatorID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **CoordinatorID** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## AudioInService event
 

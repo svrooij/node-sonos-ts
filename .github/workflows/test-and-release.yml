@@ -5,8 +5,10 @@ on:
     branches:
       - master
       - beta
+      # - feature/*
     paths-ignore:
       - 'docs/**'
+      - 'examples/**'
       - 'README.md'
   pull_request:
     paths-ignore:
@@ -27,12 +29,11 @@ jobs:
       run: npm ci
     - name: Build library
       run: npm run build
+    - name: Run code linting
+      run: npm run lint
     - name: Run tests
-      run: npm run test
-    - name: Send data to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      if: ${{ always() }}
+      run: npm run jest
     - uses: svrooij/secret-gate-action@v1
       id: mygate
       with:
@@ -46,3 +47,9 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - name: Send data to Coveralls
+      if: ${{ always() }}
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+

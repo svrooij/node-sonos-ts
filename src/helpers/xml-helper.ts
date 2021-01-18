@@ -1,20 +1,11 @@
 import { parse } from 'fast-xml-parser';
+import { XmlEntities, AllHtmlEntities } from 'html-entities';
 
-const htmlEntities: any = {
-  nbsp: ' ',
-  cent: '¢',
-  pound: '£',
-  yen: '¥',
-  euro: '€',
-  copy: '©',
-  reg: '®',
-  lt: '<',
-  gt: '>',
-  quot: '"',
-  amp: '&',
-  apos: '\'',
-};
 export default class XmlHelper {
+  private static xmlEntities = new XmlEntities();
+
+  private static htmlEntities = new AllHtmlEntities();
+
   /**
    * Decode an encoded xml string
    *
@@ -23,22 +14,30 @@ export default class XmlHelper {
    * @returns {string} Decoded XML
    * @memberof XmlHelper
    */
-  static DecodeXml(text: string): string {
-    if (typeof text === 'undefined') return '';
-    return text.replace(/&([^;]+);/g, (entity, entityCode) => {
-      let match;
+  static DecodeXml(text: unknown): string | undefined {
+    if (typeof text !== 'string' || text === '') {
+      return undefined;
+    }
 
-      if (entityCode in htmlEntities) {
-        return htmlEntities[entityCode];
-        /* eslint no-cond-assign: 0 */
-      } if (match = entityCode.match(/^#x([\da-fA-F]+)$/)) {
-        return String.fromCharCode(parseInt(match[1], 16));
-        /* eslint no-cond-assign: 0 */
-      } if (match = entityCode.match(/^#(\d+)$/)) {
-        return String.fromCharCode(match[1]);
-      }
-      return entity;
-    });
+    return XmlHelper.xmlEntities.decode(text);
+  }
+
+  /**
+   * Decode an encoded xml string
+   *
+   * @static
+   * @param {string} text Encoded XML
+   * @returns {string} Decoded XML
+   * @memberof XmlHelper
+   */
+  static DecodeHtml(text: unknown): string | undefined {
+    if (typeof text === 'undefined' || (typeof text === 'string' && text === '')) {
+      return undefined;
+    }
+    if (typeof text !== 'string') {
+      return XmlHelper.DecodeHtml(`${text}`);
+    }
+    return XmlHelper.htmlEntities.decode(text);
   }
 
   /**
@@ -49,8 +48,10 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXml(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, attributeNamePrefix });
+  static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): any {
+    const decoded = XmlHelper.DecodeXml(encodedXml);
+    if (typeof decoded === 'undefined') return undefined;
+    return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
   }
 
   /**
@@ -61,8 +62,9 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXmlNoNS(encodedXml: string, attributeNamePrefix = '_'): any {
-    return parse(XmlHelper.DecodeXml(encodedXml), { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix });
+  static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): any {
+    const decoded = XmlHelper.DecodeXml(encodedXml);
+    return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
   }
 
   /**
@@ -73,9 +75,9 @@ export default class XmlHelper {
    * @returns {string}
    * @memberof XmlHelper
    */
-  static EncodeXml(xml: string): string {
-    if (typeof xml === 'undefined') return '';
-    return xml.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  static EncodeXml(xml: unknown): string {
+    if (typeof xml !== 'string' || xml === '') return '';
+    return XmlHelper.xmlEntities.encode(xml);
   }
 
   static EncodeTrackUri(trackUri: string): string {
@@ -85,12 +87,20 @@ export default class XmlHelper {
       || trackUri.startsWith('x-rincon-mp3radio')
     ) return trackUri;
 
+    if (trackUri.startsWith('x-rincon-playlist:')) {
+      const index = trackUri.indexOf('/');
+      return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a').replace(/ /g, '%20');
+    }
+
     // Part below needs some work.
     const index = trackUri.indexOf(':') + 1;
     return trackUri.substr(0, index) + this.EncodeXml(trackUri.substr(index)).replace(/:/g, '%3a');
   }
 
-  static DecodeTrackUri(input: string): string {
+  static DecodeTrackUri(input: unknown): string | undefined {
+    if (typeof input !== 'string' || input === '') {
+      return undefined;
+    }
     return XmlHelper.DecodeXml(decodeURIComponent(input));
   }
 }

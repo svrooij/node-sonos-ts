@@ -62,6 +62,17 @@ This library can guess the required metadata for certain track uri's. This is do
 
 Currently supported url's for metadata guessing:
 
+- `apple:album:1025210938` - Apple Music album (not in user's music library).
+- `apple:libraryalbum:l.OIdA15a` - Apple Music album from user's music library.
+- `apple:libraryplaylist:p.rQ5rCxE48W` - Apple Music playlist from user's music library.
+- `apple:librarytrack:i.m3g9uLvzB7` - Apple Music track from user's music library.
+- `apple:playlist:pl.cf589c8b40dc40cd9ddc2e61493d5efd` - Apple Music playlist (not in user's music library).
+- `apple:track:1025212410` - Apple Music track (not in user's library).
+- `deezer:album:123456` - A Deezer album by id
+- `deezer:artistTopTracks:123456` - A Deezer artist top tracks
+- `deezer:playlist:123456` - A Deezer playlist by id
+- `deezer:track:123456` - A Deezer track by id
+- `sonos:playlist:7` - A saved sonos playlist by number.
 - `spotify:track:0GiWi4EkPduFWHQyhiKpRB` - Regular spotify track.
 - `spotify:artistRadio:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist radio (has to be added to queue).
 - `spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist top tracks (has to be added to queue).

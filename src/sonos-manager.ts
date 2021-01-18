@@ -1,6 +1,7 @@
 import debug, { Debugger } from 'debug';
 import { EventEmitter } from 'events';
-import { ZoneGroupTopologyService, ZoneGroup, ZoneGroupTopologyServiceEvent } from './services';
+import { ZoneGroup } from './models/zone-group';
+import { ZoneGroupTopologyService, ZoneGroupTopologyServiceEvent } from './services';
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
@@ -122,7 +123,7 @@ export default class SonosManager {
    * @memberof SonosManager
    */
   public CancelSubscription(): void {
-    if (this.zoneService !== undefined) this.zoneService.Events.removeListener(ServiceEvents.Data, this.zoneEventSubscription);
+    if (this.zoneService !== undefined) this.zoneService.Events.removeListener(ServiceEvents.ServiceEvent, this.zoneEventSubscription);
   }
 
   /**

@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.ConnectionManagerService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,25 +24,31 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetCurrentConnectionIDs
 
-No input parameters
+```js
+const result = await sonos.ConnectionManagerService.GetCurrentConnectionIDs();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **ConnectionIDs** | `string` |  |
 
 ### GetCurrentConnectionInfo
 
-Input:
+```js
+const result = await sonos.ConnectionManagerService.GetCurrentConnectionInfo({ ConnectionID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ConnectionID** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RcsID** | `number` |  |
 | **AVTransportID** | `number` |  |
@@ -54,11 +60,13 @@ Output:
 
 ### GetProtocolInfo
 
-No input parameters
+```js
+const result = await sonos.ConnectionManagerService.GetProtocolInfo();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 | **Sink** | `string` |  |

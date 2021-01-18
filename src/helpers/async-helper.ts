@@ -1,18 +1,5 @@
 import { EventEmitter } from 'events';
-
-/**
- * Error that is thrown by AsyncEvent, if event didn't trigger before timeout
- *
- * @export
- * @class EventTimeoutError
- * @extends {Error}
- */
-export class EventTimeoutError extends Error {
-  constructor(eventName: string) {
-    super(`Event ${eventName} didn't fire before timeout`);
-    this.name = 'EventTimeoutError';
-  }
-}
+import EventTimeoutError from './event-timeout-error';
 
 /**
  * Async helper exposes a function to wait for an event or timeout.
@@ -21,7 +8,7 @@ export class EventTimeoutError extends Error {
  * @hidden
  * @class AsyncHelper
  */
-export class AsyncHelper {
+export default class AsyncHelper {
   /**
    * Awaitable event handler with timeout
    *
@@ -49,7 +36,7 @@ export class AsyncHelper {
   }
 
   /**
-   * Awaitable timeout
+   * Awaitable delay
    *
    * @static
    * @param {number} ms Time to wait in milliseconds
@@ -57,6 +44,6 @@ export class AsyncHelper {
    * @memberof AsyncHelper
    */
   static async Delay(ms: number): Promise<void> {
-    await new Promise((resolve) => setTimeout(() => resolve(), ms));
+    await new Promise((resolve) => setTimeout(() => resolve(undefined), ms));
   }
 }

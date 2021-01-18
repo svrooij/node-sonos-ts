@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.ZoneGroupTopologyService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,27 +26,37 @@ All methods that require input expect an object with the specified parameters, e
 
 ### BeginSoftwareUpdate
 
-Input:
+```js
+const result = await sonos.ZoneGroupTopologyService.BeginSoftwareUpdate({ UpdateURL:..., Flags:..., ExtraOptions:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **UpdateURL** | `string` |  |
 | **Flags** | `number` |  |
 | **ExtraOptions** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### CheckForUpdate
 
-Input:
+```js
+const result = await sonos.ZoneGroupTopologyService.CheckForUpdate({ UpdateType:..., CachedOnly:..., Version:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **UpdateType** | `string` |  Allowed values: `All` / `Software` |
 | **CachedOnly** | `boolean` |  |
 | **Version** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **UpdateItem** | `string` |  |
 
@@ -54,11 +64,13 @@ Output:
 
 Get information about the current Zone
 
-No input parameters
+```js
+const result = await sonos.ZoneGroupTopologyService.GetZoneGroupAttributes();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentZoneGroupName** | `string` |  |
 | **CurrentZoneGroupID** | `string` |  |
@@ -69,49 +81,73 @@ Output:
 
 Get all the Sonos groups, (as XML)
 
-No input parameters
+```js
+const result = await sonos.ZoneGroupTopologyService.GetZoneGroupState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **ZoneGroupState** | `Array<ZoneGroup> | string` |  |
 
+**Remarks** Some libraries also support GetParsedZoneGroupState that parses the xml for you.
+
 ### RegisterMobileDevice
 
-Input:
+```js
+const result = await sonos.ZoneGroupTopologyService.RegisterMobileDevice({ MobileDeviceName:..., MobileDeviceUDN:..., MobileIPAndPort:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **MobileDeviceName** | `string` |  |
 | **MobileDeviceUDN** | `string` |  |
 | **MobileIPAndPort** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### ReportAlarmStartedRunning
 
-No input parameters
+```js
+const result = await sonos.ZoneGroupTopologyService.ReportAlarmStartedRunning();
+```
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### ReportUnresponsiveDevice
 
-Input:
+```js
+const result = await sonos.ZoneGroupTopologyService.ReportUnresponsiveDevice({ DeviceUUID:..., DesiredAction:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DeviceUUID** | `string` |  |
 | **DesiredAction** | `string` |  Allowed values: `Remove` / `TopologyMonitorProbe` / `VerifyThenRemoveSystemwide` |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SubmitDiagnostics
 
-Input:
+```js
+const result = await sonos.ZoneGroupTopologyService.SubmitDiagnostics({ IncludeControllers:..., Type:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **IncludeControllers** | `boolean` |  |
 | **Type** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **DiagnosticID** | `number` |  |
 

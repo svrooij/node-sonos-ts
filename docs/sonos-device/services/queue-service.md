@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.QueueService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,9 +26,13 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddMultipleURIs
 
-Input:
+```js
+const result = await sonos.QueueService.AddMultipleURIs({ QueueID:..., UpdateID:..., ContainerURI:..., ContainerMetaData:..., DesiredFirstTrackNumberEnqueued:..., EnqueueAsNext:..., NumberOfURIs:..., EnqueuedURIsAndMetaData:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
@@ -39,9 +43,9 @@ Input:
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIsAndMetaData** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **FirstTrackNumberEnqueued** | `number` |  |
 | **NumTracksAdded** | `number` |  |
@@ -50,9 +54,13 @@ Output:
 
 ### AddURI
 
-Input:
+```js
+const result = await sonos.QueueService.AddURI({ QueueID:..., UpdateID:..., EnqueuedURI:..., EnqueuedURIMetaData:..., DesiredFirstTrackNumberEnqueued:..., EnqueueAsNext:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
@@ -61,9 +69,9 @@ Input:
 | **DesiredFirstTrackNumberEnqueued** | `number` |  |
 | **EnqueueAsNext** | `boolean` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **FirstTrackNumberEnqueued** | `number` |  |
 | **NumTracksAdded** | `number` |  |
@@ -72,36 +80,48 @@ Output:
 
 ### AttachQueue
 
-Input:
+```js
+const result = await sonos.QueueService.AttachQueue({ QueueOwnerID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueOwnerID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **QueueOwnerContext** | `string` |  |
 
 ### Backup
 
-No input parameters
+```js
+const result = await sonos.QueueService.Backup();
+```
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### Browse
 
-Input:
+```js
+const result = await sonos.QueueService.Browse({ QueueID:..., StartingIndex:..., RequestedCount:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **StartingIndex** | `number` |  |
 | **RequestedCount** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Result** | `string` |  |
 | **NumberReturned** | `number` |  |
@@ -110,57 +130,73 @@ Output:
 
 ### CreateQueue
 
-Input:
+```js
+const result = await sonos.QueueService.CreateQueue({ QueueOwnerID:..., QueueOwnerContext:..., QueuePolicy:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueOwnerID** | `string` |  |
 | **QueueOwnerContext** | `string` |  |
 | **QueuePolicy** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 
 ### RemoveAllTracks
 
-Input:
+```js
+const result = await sonos.QueueService.RemoveAllTracks({ QueueID:..., UpdateID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewUpdateID** | `number` |  |
 
 ### RemoveTrackRange
 
-Input:
+```js
+const result = await sonos.QueueService.RemoveTrackRange({ QueueID:..., UpdateID:..., StartingIndex:..., NumberOfTracks:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewUpdateID** | `number` |  |
 
 ### ReorderTracks
 
-Input:
+```js
+const result = await sonos.QueueService.ReorderTracks({ QueueID:..., StartingIndex:..., NumberOfTracks:..., InsertBefore:..., UpdateID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **StartingIndex** | `number` |  |
@@ -168,17 +204,21 @@ Input:
 | **InsertBefore** | `number` |  |
 | **UpdateID** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewUpdateID** | `number` |  |
 
 ### ReplaceAllTracks
 
-Input:
+```js
+const result = await sonos.QueueService.ReplaceAllTracks({ QueueID:..., UpdateID:..., ContainerURI:..., ContainerMetaData:..., CurrentTrackIndex:..., NewCurrentTrackIndices:..., NumberOfURIs:..., EnqueuedURIsAndMetaData:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **UpdateID** | `number` |  |
@@ -189,26 +229,30 @@ Input:
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIsAndMetaData** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewQueueLength** | `number` |  |
 | **NewUpdateID** | `number` |  |
 
 ### SaveAsSonosPlaylist
 
-Input:
+```js
+const result = await sonos.QueueService.SaveAsSonosPlaylist({ QueueID:..., Title:..., ObjectID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **QueueID** | `number` |  |
 | **Title** | `string` |  |
 | **ObjectID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AssignedObjectID** | `string` |  |
 

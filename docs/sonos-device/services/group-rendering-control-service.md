@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.GroupRenderingControlService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,96 +26,126 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetGroupMute
 
-Get 1 for muted, 0 for un-muted
+Whether or not the group is muted.
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.GetGroupMute({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentMute** | `boolean` |  |
 
-**Remarks** Send to non-coordinator returns error code 701
+**Remarks** Sould be send to coordinator only
 
 ### GetGroupVolume
 
 Get the group volume.
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.GetGroupVolume({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentVolume** | `number` |  |
 
-**Remarks** Send to non-coordinator returns error code 701
+**Remarks** Sould be send to coordinator only
 
 ### SetGroupMute
 
 (Un-/)Mute the entire group
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.SetGroupMute({ InstanceID:..., DesiredMute:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredMute** | `boolean` | True for mute, false for un-mute |
 
-**Remarks** Send to non-coordinator returns error code 701
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Sould be send to coordinator only
 
 ### SetGroupVolume
 
 Change group volume. Players volume will be changed proportionally based on last snapshot
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.SetGroupVolume({ InstanceID:..., DesiredVolume:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredVolume** | `number` | New volume between 0 and 100 |
 
-**Remarks** Send to non-coordinator returns error code 701
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Sould be send to coordinator only
 
 ### SetRelativeGroupVolume
 
 Relatively change group volume - returns final group volume. Players volume will be changed proportionally based on last snapshot
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.SetRelativeGroupVolume({ InstanceID:..., Adjustment:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Adjustment** | `number` | Number between -100 and +100 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewVolume** | `number` |  |
 
-**Remarks** Send to non-coordinator returns error code 701
+**Remarks** Sould be send to coordinator only
 
 ### SnapshotGroupVolume
 
 Creates a new group volume snapshot,  the volume ratio between all players. It is used by SetGroupVolume and SetRelativeGroupVolume
 
-Input:
+```js
+const result = await sonos.GroupRenderingControlService.SnapshotGroupVolume({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-**Remarks** Send to non-coordinator returns error code 701
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Sould be send to coordinator only
 
 ## GroupRenderingControlService event
 

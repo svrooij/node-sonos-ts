@@ -7,9 +7,10 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, StrongSonosEvents,
+  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
 } from './models';
-import { AsyncHelper } from './helpers/async-helper';
+import { StrongSonosEvents } from './models/strong-sonos-events';
+import AsyncHelper from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
 import JsonHelper from './helpers/json-helper';
@@ -134,39 +135,35 @@ export default class SonosDevice extends SonosDeviceBase {
       const split = command.split('.', 2);
       [service, correctCommand] = split;
     }
+    const foundService = this.GetServiceByName(service);
+    const objectToCallOn = typeof foundService !== 'undefined'
+      ? foundService as unknown as {[key: string]: any}
+      : this.executeCommandGetFunctions();
 
-    const objectToCall: {[key: string]: Function} = service !== '' ? this.executeCommandGetService(service) || this.executeCommandGetFunctions() : this.executeCommandGetFunctions();
-    if (objectToCall[correctCommand] === undefined) {
-      correctCommand = Object.keys(objectToCall).find((k) => k.toLowerCase() === correctCommand.toLowerCase()) || correctCommand;
-    }
-    if (typeof (objectToCall[correctCommand]) === 'function') {
+    const proto = Object.getPrototypeOf(objectToCallOn);
+    const propertyDescriptions = Object.getOwnPropertyDescriptors(proto);
+    const baseProto = Object.getPrototypeOf(proto);
+    const basePropertyDescriptions = Object.getOwnPropertyDescriptors(baseProto);
+    const allKeys = [...Object.keys(propertyDescriptions), ...Object.keys(basePropertyDescriptions)];
+    const functionToCall = allKeys.find((key) => (key as string).toLowerCase() === correctCommand.toLowerCase());
+
+    if (typeof functionToCall === 'string' && typeof (objectToCallOn[functionToCall]) === 'function') {
       if (options === undefined) {
-        return objectToCall[correctCommand]();
-      } if (typeof (options) === 'string') {
+        return objectToCallOn[functionToCall]();
+      }
+      if (typeof (options) === 'string') {
         const parsedOptions = JsonHelper.TryParse(options);
-        return objectToCall[correctCommand](parsedOptions);
-      } // number or object options;
-      return objectToCall[correctCommand](options);
+        return objectToCallOn[functionToCall](parsedOptions);
+      }
+      // number or object options;
+      return objectToCallOn[functionToCall](options);
     }
     throw new Error(`Command ${correctCommand} isn't a function`);
   }
 
-  private executeCommandGetFunctions(): {[key: string]: Function} {
+  private executeCommandGetFunctions(): {[key: string]: any} {
     // This code looks weird, but is required to convince TypeScript this is actually what we want.
-    return this as unknown as {[key: string]: Function};
-  }
-
-  private executeCommandGetService(serviceName: string): {[key: string]: Function} | undefined {
-    if (serviceName.toLowerCase().indexOf('service') === -1) { // Name doesn't have 'Service' in it.
-      return undefined;
-    }
-
-    const serviceDictionary = this.executeCommandGetFunctions();
-    if (serviceDictionary[serviceName]) return serviceDictionary[serviceName] as unknown as {[key: string]: Function};
-    // Do case insensitive lookup
-    const checkedName = Object.keys(serviceDictionary).find((k) => k.toLowerCase() === serviceName.toLowerCase());
-    if (checkedName !== undefined) return serviceDictionary[checkedName] as unknown as {[key: string]: Function};
-    return undefined;
+    return this as unknown as {[key: string]: any};
   }
 
   /**
@@ -262,12 +259,12 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('JoinGroup(%s)', otherDevice);
     const zones = await this.ZoneGroupTopologyService.GetParsedZoneGroupState();
 
-    const groupToJoin = zones.find((z) => z.members.some((m) => m.name.toLowerCase() === otherDevice.toLowerCase()));
+    const groupToJoin = zones.find((z: ZoneGroup) => z.members.some((m) => m.name.toLowerCase() === otherDevice.toLowerCase()));
     if (groupToJoin === undefined) {
       throw new Error(`Player '${otherDevice}' isn't found!`);
     }
 
-    if (groupToJoin.members.some((m) => m.uuid === this.Uuid)) {
+    if (groupToJoin.members.some((m: ZoneMember) => m.uuid === this.Uuid)) {
       return Promise.resolve(false); // Already in the group.
     }
     return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
@@ -389,7 +386,7 @@ export default class SonosDevice extends SonosDeviceBase {
     // Revert everything back
     this.debug('Reverting everything back to normal');
     const isBroadcast = typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
-                        && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast'; // This UpnpClass should for sure be skipped.
+                        && originalMediaInfo.CurrentURIMetaData?.UpnpClass === 'object.item.audioItem.audioBroadcast'; // This UpnpClass should for sure be skipped.
 
     if (originalVolume !== undefined) {
       await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
@@ -545,16 +542,17 @@ export default class SonosDevice extends SonosDeviceBase {
         this.debug('Listener removed');
         const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
         if (events.length === 0) {
-          this.AVTransportService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.removeListener(ServiceEvents.LastChange, this.boundHandleRenderingControlEvent);
+          this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+          this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+          this.isSubscribed = false;
         }
       });
       this.events.on('newListener', () => {
         this.debug('Listener added');
         if (!this.isSubscribed) {
           this.isSubscribed = true;
-          this.AVTransportService.Events.on(ServiceEvents.LastChange, this.boundHandleAvTransportEvent);
-          this.RenderingControlService.Events.on(ServiceEvents.LastChange, this.boundHandleRenderingControlEvent);
+          this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+          this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
         }
       });
     }
@@ -893,6 +891,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
   /**
    * Turn on/off night mode, on your playbar.
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: dialogLevel === true ? 1 : 0 })
    *
    * @param {boolean} nightmode
    * @returns {Promise<boolean>}

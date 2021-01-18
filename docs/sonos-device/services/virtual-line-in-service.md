@@ -15,7 +15,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.VirtualLineInService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -24,77 +24,123 @@ All methods that require input expect an object with the specified parameters, e
 
 ### Next
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.Next({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### Pause
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.Pause({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### Play
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.Play({ InstanceID:..., Speed:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 | **Speed** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### Previous
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.Previous({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetVolume
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.SetVolume({ InstanceID:..., DesiredVolume:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 | **DesiredVolume** | `number` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### StartTransmission
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.StartTransmission({ InstanceID:..., CoordinatorID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 | **CoordinatorID** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTransportSettings** | `string` |  |
 
 ### Stop
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.Stop({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### StopTransmission
 
-Input:
+```js
+const result = await sonos.VirtualLineInService.StopTransmission({ InstanceID:..., CoordinatorID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` |  |
 | **CoordinatorID** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## VirtualLineInService event
 

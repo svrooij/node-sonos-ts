@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { TestHelpers } from '../test-helpers';
-import { RenderingControlService } from '../../src/services/rendering-control.service';
+import { RenderingControlService } from '../../src/services/rendering-control.service.extension';
 
 describe('RenderingControlService', () => {
   describe('GetBass', () => {
@@ -30,7 +30,23 @@ describe('RenderingControlService', () => {
       const service = new RenderingControlService(TestHelpers.testHost, 1400);
 
       const response = await service.GetHeadphoneConnected({InstanceID: 0});
-      expect(response.CurrentHeadphoneConnected).to.be.eq(0);
+      expect(response.CurrentHeadphoneConnected).to.be.false;
+    })
+  })
+
+  describe('GetMute', () => {
+    it('works', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetMute"',
+        '<u:GetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetMute>',
+        'GetMuteResponse',
+        'RenderingControl',
+        '<CurrentMute>1</CurrentMute>'
+      );
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+
+      const response = await service.GetMute({InstanceID: 0, Channel: 'Master'});
+      expect(response.CurrentMute).to.be.true
     })
   })
 

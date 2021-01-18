@@ -7,7 +7,7 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'jsx', 'js', 'json'],
   testEnvironment: 'node',
   collectCoverage: true,
-  coverageReporters: ['text', 'text-summary', 'lcov'],
+  coverageReporters: ['text', 'text-summary', 'lcov', 'html'],
   collectCoverageFrom: [
     'src/*.ts',
     'src/helpers/**/*.ts',

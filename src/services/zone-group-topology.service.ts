@@ -6,12 +6,12 @@
  *
  * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
  */
-import { URL } from 'url';
 import BaseService from './base-service';
-import ArrayHelper from '../helpers/array-helper';
-import XmlHelper from '../helpers/xml-helper';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
+import {
+  ZoneGroup,
+} from '../models';
 
 /**
  * Zone config stuff, eg getting all the configured sonos zones.
@@ -46,6 +46,7 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
 
   /**
    * Get all the Sonos groups, (as XML)
+   * @remarks Some libraries also support GetParsedZoneGroupState that parses the xml for you.
    */
   async GetZoneGroupState():
   Promise<GetZoneGroupStateResponse> { return await this.SoapRequest<GetZoneGroupStateResponse>('GetZoneGroupState'); }
@@ -62,6 +63,18 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
   async SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
   Promise<SubmitDiagnosticsResponse> { return await this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
   // #endregion
+
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      UpdateItem: 'string',
+      CurrentZoneGroupName: 'string',
+      CurrentZoneGroupID: 'string',
+      CurrentZonePlayerUUIDsInGroup: 'string',
+      CurrentMuseHouseholdId: 'string',
+      ZoneGroupState: 'Array<ZoneGroup> | string',
+      DiagnosticID: 'number',
+    };
+  }
 
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {
@@ -116,87 +129,4 @@ export interface ZoneGroupTopologyServiceEvent {
   ZoneGroupName?: string;
   ZoneGroupState?: Array<ZoneGroup> | string;
   ZonePlayerUUIDsInGroup?: string;
-}
-
-
-export interface ZoneGroup {
-  name: string;
-  coordinator: ZoneMember;
-  members: ZoneMember[];
-}
-
-interface ZoneMember {
-  host: string;
-  port: number;
-  uuid: string;
-  name: string;
-  Icon: string;
-  MicEnabled: boolean;
-  SoftwareVersion: string;
-  SwGen: string;
-}
-
-/**
- * Zone config stuff, eg getting all the configured sonos zones.
- *
- * @export
- * @class ZoneGroupTopologyService
- * @extends {ZoneGroupTopologyServiceBase}
- */
-export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
-  /**
-   * Get all the sonos groups in your current network. Parsed the GetZoneGroupState output.
-   *
-   * @returns {Promise<ZoneGroup[]>}
-   * @memberof ZoneGroupTopologyService
-   */
-  async GetParsedZoneGroupState(): Promise<ZoneGroup[]> {
-    const groupStateResponse = await this.GetZoneGroupState();
-    if (typeof groupStateResponse.ZoneGroupState === 'string') {
-      const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '');
-      const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup);
-      return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
-    }
-    return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
-  }
-
-  private static ParseMember(member: any): ZoneMember {
-    const uri = new URL(member.Location);
-    return {
-      name: member.ZoneName,
-      uuid: member.UUID,
-      host: uri.hostname,
-      port: parseInt(uri.port, 10),
-      Icon: member.Icon,
-      MicEnabled: member.MicEnabled === 1,
-      SoftwareVersion: member.SoftwareVersion,
-      SwGen: member.SWGen,
-    };
-  }
-
-  private static ParseGroup(group: any): ZoneGroup {
-    const members: ZoneMember[] = ArrayHelper.ForceArray(group.ZoneGroupMember).map((m: any) => ZoneGroupTopologyService.ParseMember(m));
-    const coordinator: ZoneMember | undefined = members.find((m) => m.uuid === group.Coordinator);
-
-    if (coordinator === undefined) throw new Error('Error parsing ZoneGroup');
-
-    let { name } = coordinator;
-    if (members.length > 1) name += ` + ${members.length - 1}`;
-
-    return {
-      name,
-      coordinator,
-      members,
-    };
-  }
-
-  protected ResolveEventPropertyValue(name: string, originalValue: any, type: string): any {
-    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type);
-    if (name === 'ZoneGroupState') {
-      const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup);
-      return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
-    }
-
-    return parsedValue;
-  }
 }

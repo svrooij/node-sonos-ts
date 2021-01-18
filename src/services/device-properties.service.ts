@@ -11,7 +11,7 @@ import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
- * Modify device properties, like led status and stereo pairs -
+ * Modify device properties, like led status and stereo pairs
  *
  * @export
  * @class DevicePropertiesService
@@ -36,9 +36,10 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('AddHTSatellite', input); }
 
   /**
-   * Create a stereo pair (left, right speakers), right one becomes hidden - only supported by some players
+   * Create a stereo pair (left, right speakers), right one becomes hidden
    *
    * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   * @remarks No all speakers support StereoPairs
    */
   async CreateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('CreateStereoPair', input); }
@@ -86,9 +87,10 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
   /**
-   * Separate a stereo pair - only supported by some players
+   * Separate a stereo pair
    *
    * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   * @remarks No all speakers support StereoPairs
    */
   async SeparateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SeparateStereoPair', input); }
@@ -114,6 +116,32 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
+
+  protected responseProperties(): {[key: string]: string} {
+    return {
+      State: 'string',
+      IncludeLinkedZones: 'boolean',
+      RoomUUID: 'string',
+      CurrentVolume: 'number',
+      CurrentButtonLockState: 'string',
+      CurrentHouseholdID: 'string',
+      CurrentLEDState: 'string',
+      UseVolume: 'boolean',
+      CurrentZoneName: 'string',
+      CurrentIcon: 'string',
+      CurrentConfiguration: 'string',
+      SerialNumber: 'string',
+      SoftwareVersion: 'string',
+      DisplaySoftwareVersion: 'string',
+      HardwareVersion: 'string',
+      IPAddress: 'string',
+      MACAddress: 'string',
+      CopyrightInfo: 'string',
+      ExtraInfo: 'string',
+      HTAudioIn: 'number',
+      Flags: 'number',
+    };
+  }
 
   // Event properties from service description.
   protected eventProperties(): {[key: string]: string} {

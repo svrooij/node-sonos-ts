@@ -32,7 +32,8 @@ export default class SonosEventListener {
       interfaces = interfaces.filter((i) => i === process.env.SONOS_LISTENER_INTERFACE);
     } else {
       // Remove unwanted interfaces on windows
-      interfaces = interfaces.filter((i) => i.indexOf('vEthernet') === -1);
+      interfaces = interfaces.filter((i) => i.indexOf('vEthernet') === -1
+        && i.indexOf('tun') === -1);
     }
     if (interfaces === undefined || interfaces.length === 0) {
       throw new Error('No network interfaces found');
@@ -40,23 +41,26 @@ export default class SonosEventListener {
 
     let address: string | undefined;
 
-    interfaces.forEach((inf) => {
+    interfaces.every((inf): boolean => {
       const currentInterface = ifaces[inf];
-      if (currentInterface === undefined) return;
+      if (currentInterface === undefined) return true;
       const info = currentInterface.find((i) => i.family === 'IPv4' && i.internal === false);
       if (info !== undefined) {
         address = info.address;
+        return false;
       }
+      return true;
     });
+
     if (address !== undefined) return address;
     throw new Error('No non-internal ipv4 addresses found');
   }
 
   private readonly proxyHost?: string = process.env.SONOS_LISTENER_PROXY;
 
-  private readonly listenerHost: string;
+  private listenerHost: string;
 
-  private readonly port: number;
+  private port: number;
 
   private readonly debug: Debugger;
 
@@ -74,6 +78,29 @@ export default class SonosEventListener {
     this.port = parseInt((process.env.SONOS_LISTENER_PORT || '6329'), 10);
     this.server = createServer((req: IncomingMessage, resp: ServerResponse) => this.requestHandler(req, resp));
     this.debug('Listener endpoint: %s', this.GetEndpoint('{sonos-uuid}', '{serviceName}'));
+  }
+
+  /**
+   * Change the settings of the event listener.
+   * @param {string?} settings.host - The new host
+   * @param {number?} settings.port - The new port - cannot be changed when listener already started
+   *
+   * @remarks Will only change the host for new subscriptions
+   * @returns Returns true is settings where changed and false if settings where not changed (already running)
+   */
+  public UpdateSettings(settings: { host?: string, port?: number}): boolean {
+    this.debug('Updating settings host: %s, port: %d', settings.host, settings.port);
+    if (settings.port !== undefined) {
+      if (this.isListening) {
+        return false;
+      }
+      this.port = settings.port;
+    }
+    if (settings.host !== undefined) {
+      this.listenerHost = settings.host;
+    }
+    this.debug('New Listener endpoint: %s', this.GetEndpoint('{sonos-uuid}', '{serviceName}'));
+    return true;
   }
 
   private requestHandler(req: IncomingMessage, resp: ServerResponse): void {
@@ -99,14 +126,7 @@ export default class SonosEventListener {
   }
 
   private handleStatusRequest(req: IncomingMessage, resp: ServerResponse): void {
-    const responseObject = {
-      host: this.listenerHost,
-      port: this.port,
-      subscriptionUrl: this.GetEndpoint('{sonos-uuid}', '{serviceName}'),
-      listeningSince: this.listeningSince,
-      subscrptionCount: Object.keys(this.subscriptions).length,
-    };
-    SonosEventListener.WriteJson(resp, responseObject);
+    SonosEventListener.WriteJson(resp, this.GetStatus());
   }
 
   private static WriteJson(resp: ServerResponse, data: any): void {
@@ -131,12 +151,13 @@ export default class SonosEventListener {
       .on('data', (chunk: any) => { body.push(chunk); })
       .on('end', () => {
         const bodyString = Buffer.concat(body).toString();
-        service.ParseEvent(bodyString);
         resp.statusCode = 200;
         resp.end('OK');
+        // End response before parsing event.
+        service.ParseEvent(bodyString);
       })
-      .on('error', (err: any) => {
-        console.error(err);
+      .on('error', (err: Error) => {
+        this.debug('Error receiving event', err);
       });
   }
 
@@ -155,18 +176,69 @@ export default class SonosEventListener {
   }
 
   /**
+   * Get debug information about the listener.
+   */
+  public GetStatus(): SonosEventListenerStatus {
+    return {
+      host: this.listenerHost,
+      port: this.port,
+      isListening: this.isListening,
+      subscriptionUrl: this.GetEndpoint('{sonos-uuid}', '{serviceName}'),
+      listeningSince: this.listeningSince,
+      subscriptionCount: Object.keys(this.subscriptions).length,
+      currentSubscriptions: this.GetSubscriptions(),
+    };
+  }
+
+  /**
+   * Get all active subscriptions
+   * @remarks Subscriptions are automatically unregistered, but this doesn't always succeed
+   */
+  public GetSubscriptions(): Array<SubscriptionInfo> {
+    return Object.entries(this.subscriptions)
+      .map(([key, value]) => ({
+        sid: key,
+        uuid: value.Uuid,
+        host: value.Host,
+        service: value.serviceNane,
+      }));
+  }
+
+  /**
    * Register subscription lets the events listener forward the events to the correct service.
    * @param sid Sonos subscription id
-   * @param service Instance of the service that will receive the events
+   * @param service Instance of the service that will receive the events'
+   *
+   * @remarks Even though this is public, it should not be called by external applications.
    */
   public RegisterSubscription(sid: string, service: BaseService<any>): void {
+    this.StartListener();
+    this.subscriptions[sid] = service;
+  }
+
+  /**
+   * Unregister the subscription, this means that the service will no longer receive these events.
+   * @param sid The old subscription ID
+   * @remarks Even though this is public, it should not be called by external applications.
+   */
+  public UnregisterSubscription(sid: string): void {
+    if (typeof sid === 'string' && this.subscriptions[sid]) {
+      delete this.subscriptions[sid];
+    }
+  }
+
+  /**
+   * Start the event listener, in case you want the status endpoint without an actual event subscription.
+   *
+   * @remarks The event listener is started automatically, so you probably don't need to start it yourself.
+   */
+  public StartListener(): void {
     if (this.isListening !== true) {
+      this.isListening = true;
       this.debug('Starting event listener on port %d', this.port);
       this.server.listen(this.port);
-      this.isListening = true;
       this.listeningSince = new Date();
     }
-    this.subscriptions[sid] = service;
   }
 
   /**
@@ -174,5 +246,25 @@ export default class SonosEventListener {
    */
   public StopListener(): void {
     this.server?.close();
+    this.isListening = false;
+    this.listeningSince = undefined;
+    Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
   }
+}
+
+interface SubscriptionInfo {
+  sid: string;
+  service: string;
+  uuid: string;
+  host: string;
+}
+
+interface SonosEventListenerStatus {
+  host: string;
+  port: number;
+  isListening: boolean;
+  subscriptionUrl: string;
+  listeningSince?: Date;
+  subscriptionCount: number;
+  currentSubscriptions: Array<SubscriptionInfo>;
 }
