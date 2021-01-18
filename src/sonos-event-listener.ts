@@ -32,10 +32,8 @@ export default class SonosEventListener {
       interfaces = interfaces.filter((i) => i === process.env.SONOS_LISTENER_INTERFACE);
     } else {
       // Remove unwanted interfaces on windows
-      interfaces = interfaces.filter((i) => 
-        i.indexOf('vEthernet') === -1
-        && i.indexOf('tun') === -1
-      );
+      interfaces = interfaces.filter((i) => i.indexOf('vEthernet') === -1
+        && i.indexOf('tun') === -1);
     }
     if (interfaces === undefined || interfaces.length === 0) {
       throw new Error('No network interfaces found');
@@ -43,9 +41,9 @@ export default class SonosEventListener {
 
     let address: string | undefined;
 
-    interfaces.every((inf) => {
+    interfaces.every((inf): boolean => {
       const currentInterface = ifaces[inf];
-      if (currentInterface === undefined) return;
+      if (currentInterface === undefined) return true;
       const info = currentInterface.find((i) => i.family === 'IPv4' && i.internal === false);
       if (info !== undefined) {
         address = info.address;
@@ -53,6 +51,7 @@ export default class SonosEventListener {
       }
       return true;
     });
+
     if (address !== undefined) return address;
     throw new Error('No non-internal ipv4 addresses found');
   }
