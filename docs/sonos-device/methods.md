@@ -20,6 +20,8 @@ These methods aren't possible with the generated services.
 - **.SwitchToQueue()** - Switch to queue (after power-on or when playing a radiostream).
 - **.SwitchToTV()** - On your playbar you can use this to switch to TV input.
 - **.TogglePlayback()** - If playing or transitioning your playback is paused. If stopped or paused your playback is resumed.
+- **.GetState()** - To get the current state of the speaker (can be serialized as json and saved to disk).
+- **.RestoreState(state, delayMs)** - To restore the playback to the previous state.
 
 ---
 
