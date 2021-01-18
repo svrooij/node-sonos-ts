@@ -387,7 +387,7 @@ export default class SonosDevice extends SonosDeviceBase {
     }
     return true;
   }
-  
+
   // Internal notification queue
   private notifications: PlayNotificationOptions[] = [];
 
