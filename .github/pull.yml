@@ -4,7 +4,7 @@ rules:                      # Array of rules
     upstream: svrooij:master    # Required. Must be in the same fork network.
     mergeMethod: hardreset  # Optional, one of [none, merge, squash, rebase, hardreset], Default: none.
     mergeUnstable: false    # Optional, merge pull request even when the mergeable_state is not clean. Default: false
-  - base: dev
+  - base: beta
     upstream: master        # Required. Can be a branch in the same forked repo.
     assignees:              # Optional
       - svrooij
