@@ -60,7 +60,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
 
   // #region actions
   /**
-   * Browse for content, see BrowseParsed for a better experience.
+   * Browse for content.
    *
    * @param {string} input.ObjectID - The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
    * @param {string} input.BrowseFlag - How to browse [ 'BrowseMetadata' / 'BrowseDirectChildren' ]
@@ -68,6 +68,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
    * @param {number} input.StartingIndex - Paging, where to start
    * @param {number} input.RequestedCount - Paging, number of items
    * @param {string} input.SortCriteria - Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title.
+   * @remarks Some libraries support a BrowseAndParse, so you don't have to parse the xml.
    */
   async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
   Promise<BrowseResponse> { return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }

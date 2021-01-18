@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.RenderingControlService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -28,193 +28,247 @@ All methods that require input expect an object with the specified parameters, e
 
 Get bass level between -10 and 10
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetBass({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentBass** | `number` |  |
 
 ### GetEQ
 
-Get EQ value (see SetEQ) for different EQTypes - not supported by all devices (is TV related)
+Get EQ value (see SetEQ) for different EQTypes
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetEQ({ InstanceID:..., EQType:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` | EQ type such as DialogLevel, NightMode, SubGain |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentValue** | `number` |  |
 
+**Remarks** Not supported by all speakers, TV related
+
 ### GetHeadphoneConnected
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetHeadphoneConnected({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentHeadphoneConnected** | `boolean` |  |
 
 ### GetLoudness
 
-Get loudness 1 for on, 0 for off
+Whether or not Loudness is on
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetLoudness({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentLoudness** | `boolean` |  |
 
 ### GetMute
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetMute({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentMute** | `boolean` |  |
 
 ### GetOutputFixed
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetOutputFixed({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentFixed** | `boolean` |  |
 
 ### GetRoomCalibrationStatus
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetRoomCalibrationStatus({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RoomCalibrationEnabled** | `boolean` |  |
 | **RoomCalibrationAvailable** | `boolean` |  |
 
 ### GetSupportsOutputFixed
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetSupportsOutputFixed({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentSupportsFixed** | `boolean` |  |
 
 ### GetTreble
 
-Get treble between -10 and 10
+Get treble, between -10 and 10
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetTreble({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTreble** | `number` |  |
 
 ### GetVolume
 
-Get volume between 0 and 100
+Get volume, between 0 and 100
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetVolume({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentVolume** | `number` |  |
 
 ### GetVolumeDB
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetVolumeDB({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentVolume** | `number` |  |
 
 ### GetVolumeDBRange
 
-Input:
+```js
+const result = await sonos.RenderingControlService.GetVolumeDBRange({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **MinValue** | `number` |  |
 | **MaxValue** | `number` |  |
 
 ### RampToVolume
 
-Input:
+```js
+const result = await sonos.RenderingControlService.RampToVolume({ InstanceID:..., Channel:..., RampType:..., DesiredVolume:..., ResetVolumeAfter:..., ProgramURI:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
@@ -223,23 +277,27 @@ Input:
 | **ResetVolumeAfter** | `boolean` |  |
 | **ProgramURI** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RampTime** | `number` |  |
 
 ### ResetBasicEQ
 
-Input:
+```js
+const result = await sonos.RenderingControlService.ResetBasicEQ({ InstanceID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Bass** | `number` |  |
 | **Treble** | `number` |  |
@@ -249,151 +307,235 @@ Output:
 
 ### ResetExtEQ
 
-Input:
+```js
+const result = await sonos.RenderingControlService.ResetExtEQ({ InstanceID:..., EQType:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### RestoreVolumePriorToRamp
 
-Input:
+```js
+const result = await sonos.RenderingControlService.RestoreVolumePriorToRamp({ InstanceID:..., Channel:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### SetBass
 
 Set bass level
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetBass({ InstanceID:..., DesiredBass:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredBass** | `number` | between -10 and 10 |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetChannelMap
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetChannelMap({ InstanceID:..., ChannelMap:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **ChannelMap** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetEQ
 
-Set EQ value for different types - not supported by all devices (is TV related)
+Set EQ value for different types
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetEQ({ InstanceID:..., EQType:..., DesiredValue:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **EQType** | `string` | DialogLevel, NightMode, SubGain |
 | **DesiredValue** | `number` | DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10 |
 
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Not supported by all speakers, TV related
+
 ### SetLoudness
 
 Set loudness on / off
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetLoudness({ InstanceID:..., Channel:..., DesiredLoudness:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredLoudness** | `boolean` | true for on |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetMute
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetMute({ InstanceID:..., Channel:..., DesiredMute:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 | **DesiredMute** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetOutputFixed
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetOutputFixed({ InstanceID:..., DesiredFixed:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredFixed** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetRelativeVolume
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetRelativeVolume({ InstanceID:..., Channel:..., Adjustment:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **Adjustment** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **NewVolume** | `number` |  |
 
 ### SetRoomCalibrationStatus
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetRoomCalibrationStatus({ InstanceID:..., RoomCalibrationEnabled:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **RoomCalibrationEnabled** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetRoomCalibrationX
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetRoomCalibrationX({ InstanceID:..., CalibrationID:..., Coefficients:..., CalibrationMode:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **CalibrationID** | `string` |  |
 | **Coefficients** | `string` |  |
 | **CalibrationMode** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetTreble
 
 Set treble level
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetTreble({ InstanceID:..., DesiredTreble:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **DesiredTreble** | `number` | between -10 and 10 |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetVolume
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetVolume({ InstanceID:..., Channel:..., DesiredVolume:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### SetVolumeDB
 
-Input:
+```js
+const result = await sonos.RenderingControlService.SetVolumeDB({ InstanceID:..., Channel:..., DesiredVolume:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be 0 |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## RenderingControlService event
 

@@ -33,7 +33,8 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   Promise<GetSessionIdResponse> { return await this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
 
   /**
-   * Load music service list (xml), see ListAndParseAvailableServices() for parsed version.
+   * Load music service list as xml
+   * @remarks Some libraries also support ListAndParseAvailableServices
    */
   async ListAvailableServices():
   Promise<ListAvailableServicesResponse> { return await this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }

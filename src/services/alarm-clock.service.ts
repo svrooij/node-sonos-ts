@@ -61,7 +61,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   /**
    * Delete an alarm
    *
-   * @param {number} input.ID - The Alarm ID, see ListAndParseAlarms
+   * @param {number} input.ID - The Alarm ID from ListAlarms
    */
   async DestroyAlarm(input: { ID: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyAlarm', input); }
@@ -91,7 +91,8 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   Promise<GetTimeZoneRuleResponse> { return await this.SoapRequestWithBody<typeof input, GetTimeZoneRuleResponse>('GetTimeZoneRule', input); }
 
   /**
-   * Get the AlarmList as XML, use ListAndParseAlarms for parsed version
+   * Get the AlarmList as XML
+   * @remarks Some libraries also provide a ListAndParseAlarms where the alarm list xml is parsed
    */
   async ListAlarms():
   Promise<ListAlarmsResponse> { return await this.SoapRequest<ListAlarmsResponse>('ListAlarms'); }
@@ -112,7 +113,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeZone', input); }
 
   /**
-   * Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter
+   * Update an alarm, all parameters are required.
    *
    * @param {number} input.ID - The ID of the alarm see ListAndParseAlarms
    * @param {string} input.StartLocalTime - The start time as hh:mm:ss
@@ -125,6 +126,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
    * @param {PlayMode} input.PlayMode - Alarm play mode [ 'NORMAL' / 'REPEAT_ALL' / 'SHUFFLE_NOREPEAT' / 'SHUFFLE' ]
    * @param {number} input.Volume - Volume between 0 and 100
    * @param {boolean} input.IncludeLinkedZones - Should grouped players also play the alarm?
+   * @remarks Some libraries support PatchAlarm where you can update a single parameter
    */
   async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: Track | string; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }

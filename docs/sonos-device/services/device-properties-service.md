@@ -7,7 +7,7 @@ grand_parent: Sonos device
 # DevicePropertiesService
 {: .no_toc }
 
-Modify device properties, like led status and stereo pairs -
+Modify device properties, like led status and stereo pairs
 
 The DevicePropertiesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
 
@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.DevicePropertiesService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,156 +26,212 @@ All methods that require input expect an object with the specified parameters, e
 
 ### AddBondedZones
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.AddBondedZones({ ChannelMapSet:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### AddHTSatellite
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.AddHTSatellite({ HTSatChanMapSet:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **HTSatChanMapSet** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### CreateStereoPair
 
-Create a stereo pair (left, right speakers), right one becomes hidden - only supported by some players
+Create a stereo pair (left, right speakers), right one becomes hidden
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.CreateStereoPair({ ChannelMapSet:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
 
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** No all speakers support StereoPairs
+
 ### EnterConfigMode
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.EnterConfigMode({ Mode:..., Options:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Mode** | `string` |  |
 | **Options** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **State** | `string` |  |
 
 ### ExitConfigMode
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.ExitConfigMode({ Options:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Options** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### GetAutoplayLinkedZones
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.GetAutoplayLinkedZones({ Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **IncludeLinkedZones** | `boolean` |  |
 
 ### GetAutoplayRoomUUID
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.GetAutoplayRoomUUID({ Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **RoomUUID** | `string` |  |
 
 ### GetAutoplayVolume
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.GetAutoplayVolume({ Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentVolume** | `number` |  |
 
 ### GetButtonLockState
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetButtonLockState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentButtonLockState** | `string` |  Possible values: `On` / `Off` |
 
 ### GetButtonState
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetButtonState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **State** | `string` |  |
 
 ### GetHouseholdID
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetHouseholdID();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentHouseholdID** | `string` |  |
 
 ### GetLEDState
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetLEDState();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentLEDState** | `string` |  Possible values: `On` / `Off` |
 
 ### GetUseAutoplayVolume
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.GetUseAutoplayVolume({ Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Source** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **UseVolume** | `boolean` |  |
 
 ### GetZoneAttributes
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetZoneAttributes();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentZoneName** | `string` |  |
 | **CurrentIcon** | `string` |  |
@@ -183,11 +239,13 @@ Output:
 
 ### GetZoneInfo
 
-No input parameters
+```js
+const result = await sonos.DevicePropertiesService.GetZoneInfo();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **SerialNumber** | `string` |  |
 | **SoftwareVersion** | `string` |  |
@@ -202,92 +260,154 @@ Output:
 
 ### RemoveBondedZones
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.RemoveBondedZones({ ChannelMapSet:..., KeepGrouped:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` |  |
 | **KeepGrouped** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### RemoveHTSatellite
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.RemoveHTSatellite({ SatRoomUUID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **SatRoomUUID** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SeparateStereoPair
 
-Separate a stereo pair - only supported by some players
+Separate a stereo pair
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SeparateStereoPair({ ChannelMapSet:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
 
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** No all speakers support StereoPairs
+
 ### SetAutoplayLinkedZones
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetAutoplayLinkedZones({ IncludeLinkedZones:..., Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **IncludeLinkedZones** | `boolean` |  |
 | **Source** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetAutoplayRoomUUID
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetAutoplayRoomUUID({ RoomUUID:..., Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **RoomUUID** | `string` |  |
 | **Source** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetAutoplayVolume
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetAutoplayVolume({ Volume:..., Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Volume** | `number` |  |
 | **Source** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetButtonLockState
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetButtonLockState({ DesiredButtonLockState:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredButtonLockState** | `string` |  Allowed values: `On` / `Off` |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetLEDState
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetLEDState({ DesiredLEDState:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredLEDState** | `string` |  Allowed values: `On` / `Off` |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetUseAutoplayVolume
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetUseAutoplayVolume({ UseVolume:..., Source:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **UseVolume** | `boolean` |  |
 | **Source** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetZoneAttributes
 
-Input:
+```js
+const result = await sonos.DevicePropertiesService.SetZoneAttributes({ DesiredZoneName:..., DesiredIcon:..., DesiredConfiguration:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredZoneName** | `string` |  |
 | **DesiredIcon** | `string` |  |
 | **DesiredConfiguration** | `string` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## DevicePropertiesService event
 

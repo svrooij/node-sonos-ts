@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.AlarmClockService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -28,9 +28,13 @@ All methods that require input expect an object with the specified parameters, e
 
 Create a single alarm, all properties are required
 
-Input:
+```js
+const result = await sonos.AlarmClockService.CreateAlarm({ StartLocalTime:..., Duration:..., Recurrence:..., Enabled:..., RoomUUID:..., ProgramURI:..., ProgramMetaData:..., PlayMode:..., Volume:..., IncludeLinkedZones:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **StartLocalTime** | `string` | The start time as hh:mm:ss |
 | **Duration** | `string` | The duration as hh:mm:ss |
@@ -43,9 +47,9 @@ Input:
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AssignedID** | `number` |  |
 
@@ -53,54 +57,70 @@ Output:
 
 Delete an alarm
 
-Input:
+```js
+const result = await sonos.AlarmClockService.DestroyAlarm({ ID:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
-| **ID** | `number` | The Alarm ID, see ListAndParseAlarms |
+| **ID** | `number` | The Alarm ID from ListAlarms |
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ### GetDailyIndexRefreshTime
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetDailyIndexRefreshTime();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentDailyIndexRefreshTime** | `string` |  |
 
 ### GetFormat
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetFormat();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTimeFormat** | `string` |  |
 | **CurrentDateFormat** | `string` |  |
 
 ### GetHouseholdTimeAtStamp
 
-Input:
+```js
+const result = await sonos.AlarmClockService.GetHouseholdTimeAtStamp({ TimeStamp:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **TimeStamp** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **HouseholdUTCTime** | `string` |  |
 
 ### GetTimeNow
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetTimeNow();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentUTCTime** | `string` |  |
 | **CurrentLocalTime** | `string` |  |
@@ -109,32 +129,38 @@ Output:
 
 ### GetTimeServer
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetTimeServer();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentTimeServer** | `string` |  |
 
 ### GetTimeZone
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetTimeZone();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Index** | `number` |  |
 | **AutoAdjustDst** | `boolean` |  |
 
 ### GetTimeZoneAndRule
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.GetTimeZoneAndRule();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **Index** | `number` |  |
 | **AutoAdjustDst** | `boolean` |  |
@@ -142,81 +168,123 @@ Output:
 
 ### GetTimeZoneRule
 
-Input:
+```js
+const result = await sonos.AlarmClockService.GetTimeZoneRule({ Index:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Index** | `number` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **TimeZone** | `string` |  |
 
 ### ListAlarms
 
-Get the AlarmList as XML, use ListAndParseAlarms for parsed version
+Get the AlarmList as XML
 
-No input parameters
+```js
+const result = await sonos.AlarmClockService.ListAlarms();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **CurrentAlarmList** | `string` |  |
 | **CurrentAlarmListVersion** | `string` |  |
 
+**Remarks** Some libraries also provide a ListAndParseAlarms where the alarm list xml is parsed
+
 ### SetDailyIndexRefreshTime
 
-Input:
+```js
+const result = await sonos.AlarmClockService.SetDailyIndexRefreshTime({ DesiredDailyIndexRefreshTime:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredDailyIndexRefreshTime** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetFormat
 
-Input:
+```js
+const result = await sonos.AlarmClockService.SetFormat({ DesiredTimeFormat:..., DesiredDateFormat:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredTimeFormat** | `string` |  |
 | **DesiredDateFormat** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetTimeNow
 
-Input:
+```js
+const result = await sonos.AlarmClockService.SetTimeNow({ DesiredTime:..., TimeZoneForDesiredTime:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredTime** | `string` |  |
 | **TimeZoneForDesiredTime** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetTimeServer
 
-Input:
+```js
+const result = await sonos.AlarmClockService.SetTimeServer({ DesiredTimeServer:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **DesiredTimeServer** | `string` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SetTimeZone
 
-Input:
+```js
+const result = await sonos.AlarmClockService.SetTimeZone({ Index:..., AutoAdjustDst:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **Index** | `number` |  |
 | **AutoAdjustDst** | `boolean` |  |
 
+This actions returns a boolean whether or not the requests succeeded.
+
 ### UpdateAlarm
 
-Update an alarm, all parameters are required. Use PatchAlarm where you can update a single parameter
+Update an alarm, all parameters are required.
 
-Input:
+```js
+const result = await sonos.AlarmClockService.UpdateAlarm({ ID:..., StartLocalTime:..., Duration:..., Recurrence:..., Enabled:..., RoomUUID:..., ProgramURI:..., ProgramMetaData:..., PlayMode:..., Volume:..., IncludeLinkedZones:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ID** | `number` | The ID of the alarm see ListAndParseAlarms |
 | **StartLocalTime** | `string` | The start time as hh:mm:ss |
@@ -229,6 +297,10 @@ Input:
 | **PlayMode** | `PlayMode` | Alarm play mode Allowed values: `NORMAL` / `REPEAT_ALL` / `SHUFFLE_NOREPEAT` / `SHUFFLE` |
 | **Volume** | `number` | Volume between 0 and 100 |
 | **IncludeLinkedZones** | `boolean` | Should grouped players also play the alarm? |
+
+This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Some libraries support PatchAlarm where you can update a single parameter
 
 ## AlarmClockService event
 

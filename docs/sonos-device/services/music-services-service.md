@@ -17,7 +17,7 @@ const sonos = new SonosDevice('192.168.x.x')
 sonos.MusicServicesService.OneOfTheMethodsBelow({...})
 ```
 
-All methods that require input expect an object with the specified parameters, even if it only requires one parameter.
+All actions that require input expect an object with the specified parameters, even if it only requires one parameter.
 
 1. TOC
 {:toc}
@@ -26,36 +26,48 @@ All methods that require input expect an object with the specified parameters, e
 
 ### GetSessionId
 
-Input:
+```js
+const result = await sonos.MusicServicesService.GetSessionId({ ServiceId:..., Username:... });
+```
 
-| parameter | type | description |
+Input object:
+
+| property | type | description |
 |:----------|:-----|:------------|
 | **ServiceId** | `number` |  |
 | **Username** | `string` |  |
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **SessionId** | `string` |  |
 
 ### ListAvailableServices
 
-Load music service list (xml), see ListAndParseAvailableServices() for parsed version.
+Load music service list as xml
 
-No input parameters
+```js
+const result = await sonos.MusicServicesService.ListAvailableServices();
+```
 
-Output:
+Output object:
 
-| parameter | type | description |
+| property | type | description |
 |:----------|:-----|:------------|
 | **AvailableServiceDescriptorList** | `string` |  |
 | **AvailableServiceTypeList** | `string` |  |
 | **AvailableServiceListVersion** | `string` |  |
 
+**Remarks** Some libraries also support ListAndParseAvailableServices
+
 ### UpdateAvailableServices
 
-No input parameters
+```js
+const result = await sonos.MusicServicesService.UpdateAvailableServices();
+```
+
+This actions returns a boolean whether or not the requests succeeded.
 
 ## MusicServicesService event
 

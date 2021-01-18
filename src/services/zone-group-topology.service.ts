@@ -46,6 +46,7 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
 
   /**
    * Get all the Sonos groups, (as XML)
+   * @remarks Some libraries also support GetParsedZoneGroupState that parses the xml for you.
    */
   async GetZoneGroupState():
   Promise<GetZoneGroupStateResponse> { return await this.SoapRequest<GetZoneGroupStateResponse>('GetZoneGroupState'); }
