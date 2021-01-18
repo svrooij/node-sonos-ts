@@ -6,6 +6,7 @@ rules:                      # Array of rules
     mergeUnstable: false    # Optional, merge pull request even when the mergeable_state is not clean. Default: false
   - base: beta
     upstream: master        # Required. Can be a branch in the same forked repo.
+    mergeMethod: hardreset
     assignees:              # Optional
       - svrooij
     reviewers:              # Optional
