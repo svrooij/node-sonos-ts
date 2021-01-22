@@ -3,7 +3,7 @@ import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
 import { SonosEvents, ServiceEvents } from './models';
 import SonosManager from './sonos-manager';
-import SonosEventListener from './sonos-event-listener'
+import SonosEventListener from './sonos-event-listener';
 
 import { SmapiClient } from './musicservices/smapi-client';
 
