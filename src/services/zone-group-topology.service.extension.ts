@@ -54,6 +54,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet),
       Icon: member.Icon,
       MicEnabled: member.MicEnabled === 1,
+      Invisible: member.Invisible === 1,
       SoftwareVersion: member.SoftwareVersion,
       SwGen: member.SWGen,
     };
