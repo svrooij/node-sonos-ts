@@ -53,7 +53,8 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       port: parseInt(uri.port, 10),
       ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet),
       Icon: member.Icon,
-      MicEnabled: member.MicEnabled === 1,
+      MicEnabled: member.MicEnabled === '1',
+      Invisible: member.Invisible === '1',
       SoftwareVersion: member.SoftwareVersion,
       SwGen: member.SWGen,
     };
