@@ -66,7 +66,11 @@ export default class SonosEventListener {
 
   private listeningSince?: Date;
 
-  private isListening = false;
+  private listenerStarted?: boolean;
+
+  private get isListening(): boolean {
+    return this.listenerStarted === true; // && this.server.listening;
+  }
 
   private subscriptions: {[key: string]: BaseService<any>} = {};
 
@@ -233,22 +237,48 @@ export default class SonosEventListener {
    * @remarks The event listener is started automatically, so you probably don't need to start it yourself.
    */
   public StartListener(): void {
-    if (this.isListening !== true) {
-      this.isListening = true;
+    if (!this.isListening) {
       this.debug('Starting event listener on port %d', this.port);
-      this.server.listen(this.port);
+      this.listenerStarted = true;
       this.listeningSince = new Date();
+      if (!this.server.listening) {
+        this.server.listen(this.port);
+      }
     }
   }
 
   /**
    * Stop the event listener.
    */
-  public StopListener(): void {
-    this.server?.close();
-    this.isListening = false;
-    this.listeningSince = undefined;
-    Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
+  public async StopListener(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.isListening !== true && this.server.listening !== true) {
+        Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
+        resolve();
+        return;
+      }
+
+      this.listeningSince = undefined;
+      this.listenerStarted = false;
+      Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
+
+      const timer = setTimeout(() => {
+        reject(new Error('Listener not closed before timeout'));
+      }, 1000);
+
+      this.server.close((err?: Error) => {
+        this.listenerStarted = undefined;
+        if (timer) {
+          clearTimeout(timer);
+        }
+
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
+    });
   }
 }
 
