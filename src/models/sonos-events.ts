@@ -31,5 +31,9 @@ export enum SonosEvents {
   /**
    * This event is emitted if the groupname changes.
    */
-  GroupName = 'groupname'
+  GroupName = 'groupname',
+  /**
+   * This event is emitted if something went wrong while subscribing for events
+   */
+  SubscriptionError = 'subscriptionError',
 }

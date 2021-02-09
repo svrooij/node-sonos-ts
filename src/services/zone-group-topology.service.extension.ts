@@ -53,8 +53,9 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       port: parseInt(uri.port, 10),
       ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet),
       Icon: member.Icon,
-      MicEnabled: member.MicEnabled === 1,
-      Invisible: member.Invisible === 1,
+      // This code looks strange, but have a look at https://github.com/svrooij/node-sonos-ts/issues/125
+      MicEnabled: member.MicEnabled === 1 || member.MicEnabled === '1',
+      Invisible: member.Invisible === 1 || member.Invisible === '1',
       SoftwareVersion: member.SoftwareVersion,
       SwGen: member.SWGen,
     };

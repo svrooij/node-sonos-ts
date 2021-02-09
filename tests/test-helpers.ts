@@ -8,7 +8,7 @@ import SoapHelper from '../src/helpers/soap-helper'
  */
 export class TestHelpers {
   static get testHost (): string {
-    return 'localhost';
+    return 'sonos-test-host';
   }
 
   /**

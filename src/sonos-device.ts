@@ -10,6 +10,7 @@ import {
   PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
+import { EventsError } from './models/event-errors';
 import AsyncHelper from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
@@ -659,7 +660,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public CancelEvents(): void {
     if (this.events !== undefined) {
-      const eventNames = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+      const eventNames = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== SonosEvents.SubscriptionError);
       eventNames.forEach((e) => {
         if (this.events !== undefined) this.events.removeAllListeners(e);
       });
@@ -680,24 +681,38 @@ export default class SonosDevice extends SonosDeviceBase {
     }
 
     this.events = new EventEmitter();
-    this.events.on('removeListener', () => {
-      this.debug('Listener removed');
-      const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+    this.events.on('removeListener', (eventName: string | symbol) => {
+      this.debug('Listener removed for %s', eventName);
+      if (eventName === SonosEvents.SubscriptionError) return;
+      const events = this.Events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== SonosEvents.SubscriptionError);
       if (events.length === 0) {
         this.AVTransportService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+        this.AVTransportService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+        this.RenderingControlService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.isSubscribed = false;
       }
     });
-    this.events.on('newListener', () => {
-      this.debug('Listener added (isSubscribed: "%o")', this.isSubscribed);
+    this.events.on('newListener', (eventName: string | symbol) => {
+      this.debug('Listener added for %s (isSubscribed: %o)', eventName, this.isSubscribed);
+      if (eventName === SonosEvents.SubscriptionError) return;
       if (!this.isSubscribed) {
         this.isSubscribed = true;
+        this.AVTransportService.Events.on(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
+        this.RenderingControlService.Events.on(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
       }
     });
     return this.events;
+  }
+
+  private boundHandleEventErrorEvent = this.handleEventErrorEvent.bind(this);
+
+  private handleEventErrorEvent(err: EventsError): void {
+    if (this.events !== undefined) {
+      this.events.emit(SonosEvents.SubscriptionError, err);
+    }
   }
 
   private boundHandleAvTransportEvent = this.handleAvTransportEvent.bind(this);

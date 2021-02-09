@@ -27,9 +27,10 @@ repository: svrooij/node-sonos-ts
 
 # Build settings
 markdown: kramdown
-remote_theme: pmarsceill/just-the-docs
+remote_theme: svrooij/just-the-docs@relative-everything
 plugins:
   - jekyll-feed
+  - jemoji
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
@@ -50,9 +51,11 @@ heading_anchors: true
 aux_links:
   "Sonos on GitHub":
     - "//github.com/svrooij/node-sonos-ts"
+  "Become sponsor":
+    - "//github.com/sponsors/svrooij/"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2020 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
+footer_content: "Copyright &copy; 2021 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
 
 toc:
   max_levels: 2

@@ -1,8 +1,11 @@
+import { EventsError } from './event-errors';
+
 export interface ServiceEvent<TEventType> {
   serviceEvent: (eventData: TEventType) => void;
+  subscriptionError: (error: EventsError) => void;
   rawEvent: (eventData: unknown) => void;
-  removeListener: void;
-  newListener: void;
+  removeListener: (eventName: string | symbol) => void;
+  newListener: (eventName: string | symbol) => void;
 }
 
 export enum ServiceEvents {
@@ -15,5 +18,6 @@ export enum ServiceEvents {
    */
   LastChange = 'serviceEvent',
   ServiceEvent = 'serviceEvent',
+  SubscriptionError = 'subscriptionError',
   Unprocessed = 'rawEvent'
 }

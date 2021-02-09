@@ -1,6 +1,7 @@
 import { TransportState } from './transport-state';
 import { Track } from './track';
 import { AVTransportServiceEvent, RenderingControlServiceEvent } from '../services/index';
+import { EventsError } from './event-errors';
 
 export interface StrongSonosEvents {
   avtransport: (data: AVTransportServiceEvent) => void;
@@ -21,7 +22,9 @@ export interface StrongSonosEvents {
   coordinator: (uuid: string) => void;
   groupname: (name: string) => void;
 
+  subscriptionError: (error: EventsError) => void;
+
   // For internal use to unsubscribe on last user.
-  removeListener: void;
-  newListener: void;
+  removeListener: (eventName: string | symbol) => void;
+  newListener: (eventName: string | symbol) => void;
 }
