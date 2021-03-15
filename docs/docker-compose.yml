@@ -1,0 +1,15 @@
+# --------------------------------------------------
+# docker-compose.yml to enable documentation live reload using docker
+# see https://svrooij.io/2020/12/31/github-pages-live-reload/
+# --------------------------------------------------
+version: '3.7'
+services:
+  jekyll:
+    volumes:
+        # - './vendor:/usr/local/bundle'
+        - './:/srv/jekyll'
+    ports:
+        - '4000:4000'
+        - '35729:35729'
+    image: jekyll/jekyll
+    command: jekyll serve --livereload --force_polling --incremental -b /

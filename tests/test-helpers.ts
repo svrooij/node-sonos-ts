@@ -3,20 +3,38 @@ import fs from 'fs'
 import path from 'path'
 import SoapHelper from '../src/helpers/soap-helper'
 
+/**
+ * Some helpers to setup mocked sonos http requests
+ */
 export class TestHelpers {
   static get testHost (): string {
-    return 'localhost';
+    return 'sonos-test-host';
   }
 
+  /**
+   * Create a scope separate from the request to set specific settings (like a different port)
+   * @param port The port the nock scope should be for.
+   * @param options Extra nock options
+   */
   static getScope(port = 1400, options: nock.Options | undefined = undefined): nock.Scope {
     return nock(`http://${TestHelpers.testHost}:${port}`, options);
   }
 
-  static generateResponse (responseTag: string, serviceName: string, responseBody: string | undefined) {
+  private static generateResponse (responseTag: string, serviceName: string, responseBody: string | undefined) {
     const soapBody = `<u:${responseTag} xmlns:u="urn:schemas-upnp-org:service:${serviceName}:1">${(responseBody || '')}</u:${responseTag}>`
     return SoapHelper.PutInEnvelope(soapBody)
   }
   
+  /**
+   * Mock a soap request, hard way, see TestHelpers.mockRequestToService(...)
+   * @param endpoint Soap endpoint
+   * @param action Soap action
+   * @param requestBody How should the request look like
+   * @param responseTag Response tag, like '{ActionName}Response'
+   * @param responseService Name of service (used in response)
+   * @param responseBody This should be returned inside the soap response
+   * @param scope (optional) use this scope instead of creating a new scope
+   */
   static mockRequest(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, responseBody?: string, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
     return scope
       .post(endpoint, requestBody ? SoapHelper.PutInEnvelope(requestBody) : undefined, { reqheaders: {
@@ -26,6 +44,15 @@ export class TestHelpers {
     //return TestHelpers.mockRequestInScope(scope, endpoint, action, requestBody, responseTag, responseService, responseBody);
   }
 
+  /**
+   * Mock a soap request, easy way
+   * @param endpoint Soap endpoint
+   * @param service Service name like 'AVTransport'
+   * @param action Soap action like 'Play'
+   * @param requestBody the request body should look like this to match, like '<InstanceID>0</InstanceID>'
+   * @param responseBody the soap response body, or ''
+   * @param scope (optional) use this scope instead of creating a new scope
+   */
   static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string, responseBody: string | undefined, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
     return TestHelpers.mockRequest(endpoint,
       `"urn:schemas-upnp-org:service:${service}:1#${action}"`,

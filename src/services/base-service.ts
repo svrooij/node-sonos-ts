@@ -11,6 +11,7 @@ import { Track } from '../models/track';
 import MetadataHelper from '../helpers/metadata-helper';
 import SonosEventListener from '../sonos-event-listener';
 import { ServiceEvent, ServiceEvents } from '../models/service-event';
+import { EventsError, EventsErrorCode } from '../models/event-errors';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -181,6 +182,7 @@ export default abstract class BaseService <TServiceEvent> {
           'Content-type': 'text/xml; charset=utf8',
         },
         body: this.generateRequestBody<TBody>(action, body),
+        timeout: 5000,
       },
     );
   }
@@ -339,29 +341,38 @@ export default abstract class BaseService <TServiceEvent> {
   public get Events(): StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>> {
     if (this.events === undefined) {
       this.events = new EventEmitter();
-      this.events.on('removeListener', async () => {
-        this.debug('Listener removed');
+      this.events.on('removeListener', async (eventName: string | symbol) => {
+        this.debug('Listener removed for %s', eventName);
 
-        const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener');
+        const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== ServiceEvents.SubscriptionError);
         if (this.sid !== undefined && events?.length === 0) {
           await this.cancelSubscription()
-            .catch((err) => {
+            .catch((err: Error) => {
               this.debug('Cancelling event subscription failed', err);
+              this.emitEventsError(new EventsError(EventsErrorCode.UnsubscribeFailed, err));
             });
         }
       });
-      this.events.on('newListener', async () => {
-        this.debug('Listener added');
+      this.events.on('newListener', async (eventName: string | symbol) => {
+        if (eventName === ServiceEvents.SubscriptionError) return;
+        this.debug('Listener added for %s  (sid: \'%s\', SONOS_DISABLE_EVENTS: %o)', eventName, this.sid, (typeof process.env.SONOS_DISABLE_EVENTS === 'undefined'));
         if (this.sid === undefined && process.env.SONOS_DISABLE_EVENTS === undefined) {
           this.debug('Subscribing to events');
           await this.subscribeForEvents()
-            .catch((err) => {
+            .catch((err: Error) => {
               this.debug('Subscriping for events failed', err);
+              this.emitEventsError(new EventsError(EventsErrorCode.SubscribeFailed, err));
             });
         }
       });
     }
     return this.events;
+  }
+
+  private emitEventsError(err: EventsError): void {
+    if (this.events !== undefined) {
+      this.events.emit(ServiceEvents.SubscriptionError, err);
+    }
   }
 
   /**
@@ -382,6 +393,7 @@ export default abstract class BaseService <TServiceEvent> {
           NT: 'upnp:event',
           Timeout: 'Second-3600',
         },
+        timeout: 5000,
       },
     ));
     const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
@@ -392,8 +404,9 @@ export default abstract class BaseService <TServiceEvent> {
     if (this.eventRenewInterval === undefined) {
       this.eventRenewInterval = setInterval(async () => {
         await this.renewEventSubscription()
-          .catch((err) => {
+          .catch((err: Error) => {
             this.debug('Renewing event subscription failed', err);
+            this.emitEventsError(new EventsError(EventsErrorCode.RenewSubscriptionFailed, err));
           });
       }, 600 * 1000); // Renew events every 10 minutes.
     }
@@ -410,7 +423,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   private async renewEventSubscription(): Promise<boolean> {
     this.debug('Renewing event subscription');
-    if (this.sid !== undefined) {
+    if (typeof this.sid === 'string' && this.sid !== '') {
       const resp = await fetch(new Request(
         `http://${this.host}:${this.port}${this.eventSubUrl}`,
         {
@@ -419,6 +432,7 @@ export default abstract class BaseService <TServiceEvent> {
             SID: this.sid,
             Timeout: 'Second-3600',
           },
+          timeout: 5000,
         },
       ));
       if (resp.ok) {
@@ -428,10 +442,7 @@ export default abstract class BaseService <TServiceEvent> {
     }
 
     this.debug('Renew event subscription failed, trying to resubscribe');
-    await this.subscribeForEvents()
-      .catch((err) => {
-        this.debug('Subscriping for events failed', err);
-      });
+    await this.subscribeForEvents();
     return this.sid !== undefined;
   }
 
@@ -455,6 +466,7 @@ export default abstract class BaseService <TServiceEvent> {
           headers: {
             SID: this.sid,
           },
+          timeout: 5000,
         },
       ));
       SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
@@ -496,18 +508,15 @@ export default abstract class BaseService <TServiceEvent> {
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
-      this.Events.emit(ServiceEvents.Data, parsedEvent);
-      // this.Events.emit(ServiceEvents.LastChange, parsedEvent)
+      this.Events.emit(ServiceEvents.ServiceEvent, parsedEvent);
     } else {
       const properties = Array.isArray(rawBody) ? rawBody : [rawBody];
       try {
         const parsedEvent = this.cleanEventBody(properties);
-        this.Events.emit(ServiceEvents.Data, parsedEvent);
+        this.Events.emit(ServiceEvents.ServiceEvent, parsedEvent);
       } catch (e) {
         this.debug('Error %o', e);
       }
-
-      // this.Events.emit(ServiceEvents.Data, parsedEvent)
     }
   }
 

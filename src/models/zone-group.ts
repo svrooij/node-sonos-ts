@@ -16,6 +16,7 @@ export interface ZoneMember {
   ChannelMapSet?: ChannelMapSet;
   Icon: string;
   MicEnabled: boolean;
+  Invisible: boolean;
   SoftwareVersion: string;
   SwGen: string;
 }
