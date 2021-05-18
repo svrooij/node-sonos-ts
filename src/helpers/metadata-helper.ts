@@ -216,7 +216,7 @@ export default class MetadataHelper {
     }
 
     const parts = trackUri.split(':');
-    if (parts.length === 3 && parts[0] === 'spotify') {
+    if ((parts.length === 3 || parts.length === 5) && parts[0] === 'spotify') {
       return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
     }
 
@@ -268,8 +268,8 @@ export default class MetadataHelper {
         track.UpnpClass = 'object.container.playlistContainer';
         break;
       case 'playlist':
-        track.TrackUri = `x-rincon-cpcontainer:1006206${spotifyUri}?sid=9&flags=8300&sn=7`;
-        track.ItemId = `10062a6c${spotifyUri}`;
+        track.TrackUri = `x-rincon-cpcontainer:1006206c${spotifyUri}?sid=9&flags=8300&sn=7`;
+        track.ItemId = `1006206c${spotifyUri}`;
         track.Title = 'Spotify playlist';
         track.UpnpClass = 'object.container.playlistContainer';
         track.ParentId = '10fe2664playlists';
