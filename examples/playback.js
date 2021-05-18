@@ -12,9 +12,9 @@ const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 //   })
 //   .catch(err => console.error(err))
 
-// // sonos.AddUriToQueue('spotify:track:7dVjKRYCkszdHEHIBj9OMc')
-// //   .then(success => console.log(success))
-// //   .catch(err => console.error(err))
+sonos.AddUriToQueue('spotify:playlist:4SBTLjJ4qb7DsA7Vjscezj')
+  .then(success => console.log(success))
+  .catch(err => console.error(err))
 
 // sonos.SetAVTransportURI('x-sonosapi-stream:station_KISNFM?sid=162')
 //   .then(success => {
@@ -22,7 +22,7 @@ const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 //   })
 //   .catch(console.error)
 
-sonos.AVTransportService.Play({ InstanceID: 1, Speed: '4' })
-  .catch(err => {
-    console.log('Sonos error', err)
-  })
+// sonos.AVTransportService.Play({ InstanceID: 0, Speed: '4' })
+//   .catch(err => {
+//     console.log('Sonos error', err)
+//   })
