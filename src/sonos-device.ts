@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import StrictEventEmitter from 'strict-event-emitter-types';
+import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
 import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
@@ -649,7 +649,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Events
-  private events?: StrictEventEmitter<EventEmitter, StrongSonosEvents>;
+  private events?: TypedEmitter<StrongSonosEvents>;
 
   private isSubscribed = false;
 
@@ -660,7 +660,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public CancelEvents(): void {
     if (this.events !== undefined) {
-      const eventNames = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== SonosEvents.SubscriptionError);
+      const eventNames = this.events.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== SonosEvents.SubscriptionError) as (keyof StrongSonosEvents)[];
       eventNames.forEach((e) => {
         if (this.events !== undefined) this.events.removeAllListeners(e);
       });
@@ -675,12 +675,12 @@ export default class SonosDevice extends SonosDeviceBase {
    * @type {EventEmitter}
    * @memberof SonosDevice
    */
-  public get Events(): StrictEventEmitter<EventEmitter, StrongSonosEvents> {
+  public get Events(): TypedEmitter<StrongSonosEvents> {
     if (this.events !== undefined) {
       return this.events;
     }
 
-    this.events = new EventEmitter();
+    this.events = new EventEmitter as TypedEmitter<StrongSonosEvents>;
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;

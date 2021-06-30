@@ -72,7 +72,7 @@ export default class SonosEventListener {
     return this.listenerStarted === true; // && this.server.listening;
   }
 
-  private subscriptions: {[key: string]: BaseService<any>} = {};
+  private subscriptions: {[key: string]: BaseService<unknown>} = {};
 
   private server: Server;
 

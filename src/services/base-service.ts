@@ -4,7 +4,7 @@ import { parse } from 'fast-xml-parser';
 import { Guid } from 'guid-typescript';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
-import StrictEventEmitter from 'strict-event-emitter-types';
+import TypedEmitter from 'typed-emitter';
 import SoapHelper from '../helpers/soap-helper';
 import XmlHelper from '../helpers/xml-helper';
 import { Track } from '../models/track';
@@ -36,7 +36,7 @@ export default abstract class BaseService <TServiceEvent> {
     return this.debugger;
   }
 
-  private events?: StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>>;
+  private events?: TypedEmitter<ServiceEvent<TServiceEvent>>;
 
   /**
    * Control URL is the relative endpoint to send command to.
@@ -338,7 +338,7 @@ export default abstract class BaseService <TServiceEvent> {
    * @type {EventEmitter}
    * @memberof BaseService
    */
-  public get Events(): StrictEventEmitter<EventEmitter, ServiceEvent<TServiceEvent>> {
+  public get Events(): TypedEmitter<ServiceEvent<TServiceEvent>> {
     if (this.events === undefined) {
       this.events = new EventEmitter();
       this.events.on('removeListener', async (eventName: string | symbol) => {
