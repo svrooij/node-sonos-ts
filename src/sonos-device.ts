@@ -543,7 +543,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
-    return await this.PlayNotification(notificationOptions);
+    return await this.PlayNotificationTwo(notificationOptions);
   }
 
   private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
