@@ -38,6 +38,7 @@ Each **Sonos Device** has the following shortcuts (things you could also do by u
 - **.Next()** - Go to next song (when playing the queue) *.
 - **.Previous()** - Go to previous song (when playing the queue) *.
 - **.SetNightMode(desiredState)** - Turn on/off nightmode on your playbar.
+- **.SetRelativeGroupVolume(adjustment)** - Change the group volume relative to current *.
 - **.SetRelativeVolume(adjustment)** - Change the volume relative to current.
 - **.SetSpeechEnhancement(desiredState)** - Turn on/off speech enhancement on your playbar.
 - **.SetVolume(newVolume)** - Change the volume.

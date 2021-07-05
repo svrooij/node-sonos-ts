@@ -4,7 +4,7 @@ import { AlarmClockService } from '../../src/services/alarm-clock.service.extens
 import { PlayMode } from '../../src/models';
 
 describe('AlarmClockService', () => {
-  describe('CreateAlarm', () => {
+  describe('CreateAlarm(...)', () => {
     it('encodes track uri and metadata', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
         '"urn:schemas-upnp-org:service:AlarmClock:1#CreateAlarm"',
@@ -31,7 +31,7 @@ describe('AlarmClockService', () => {
     });
   });
 
-  describe('DestroyAlarm', () => {
+  describe('DestroyAlarm(...)', () => {
     it('sends the correct request', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
         '"urn:schemas-upnp-org:service:AlarmClock:1#DestroyAlarm"',
@@ -46,7 +46,7 @@ describe('AlarmClockService', () => {
     })
   })
 
-  describe('GetTimeZone', () => {
+  describe('GetTimeZone()', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
         '"urn:schemas-upnp-org:service:AlarmClock:1#GetTimeZone"',

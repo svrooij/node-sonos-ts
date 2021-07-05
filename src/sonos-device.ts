@@ -1061,6 +1061,18 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * Set relative group volume, shortcut to .Coordinator.GroupRenderingControlService.SetRelativeGroupVolume({ InstanceID: 0, Adjustment: volumeAdjustment })
+   *
+   * @param {number} volumeAdjustment the adjustment, positive or negative
+   * @returns {Promise<number>}
+   * @memberof SonosDevice
+   */
+  public async SetRelativeGroupVolume(volumeAdjustment: number): Promise<number> {
+    return await this.Coordinator.GroupRenderingControlService.SetRelativeGroupVolume({ InstanceID: 0, Adjustment: volumeAdjustment })
+      .then((response) => response.NewVolume);
+  }
+
+  /**
    * Set relative volume, shortcut to .RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
    *
    * @param {number} volumeAdjustment the adjustment, positive or negative
