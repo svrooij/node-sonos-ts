@@ -9,32 +9,37 @@ sonos.Events.on('currentTrack', (track) => {
 
 setTimeout(async () => {
   // Add a second notification (by some other event)
-  sonos.PlayNotification({
+  await sonos.PlayNotification({
     trackUri: 'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', // Cached text-to-speech file.
     onlyWhenPlaying: false, // make sure that it only plays when you're listening to music. So it won't play when you're sleeping.
     notificationFired: (played) => {
       console.log('Second notification %o', played);
     },
     timeout: 10, // If the events don't work (to see when it stops playing) or if you turned on a stream, it will revert back after this amount of seconds.
-    volume: 16, // Set the volume for the notification (and revert back afterwards)
-    delayMs: 100 // Pause between commands in ms, (when sonos fails to play notification often).
+    volume: 20, // Set the volume for the notification (and revert back afterwards)
+    delayMs: 700 // Pause between commands in ms, (when sonos fails to play notification often).
+  });
+  await sonos.PlayTTS({
+    text: 'Iemand aan de deur', // Text to speech input
+    timeout: 10, // If the events don't work (to see when it stops playing) or if you turned on a stream, it will revert back after this amount of seconds.
+    volume: 20, // Set the volume for the notification (and revert back afterwards)
+    delayMs: 700 // Pause between commands in ms, (when sonos fails to play notification often).
   })
-}, 500)
+}, 1000)
 
 sonos.PlayNotification({
   trackUri: 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', // Can be any uri sonos understands
-  // trackUri: 'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', // Cached text-to-speech file.
   onlyWhenPlaying: false, // make sure that it only plays when you're listening to music. So it won't play when you're sleeping.
   timeout: 10, // If the events don't work (to see when it stops playing) or if you turned on a stream, it will revert back after this amount of seconds.
   volume: 15, // Set the volume for the notification (and revert back afterwards)
-  delayMs: 100 // Pause between commands in ms, (when sonos fails to play notification often).
+  delayMs: 700 // Pause between commands in ms, (when sonos fails to play notification often).
 })
   .then(played => {
     console.log('Played notification(s) %o', played)
     sonos.CancelEvents();
     setTimeout(() => {
       process.exit(0)
-    }, 1000)
+    }, 5000)
   })
   .catch(console.error)
 

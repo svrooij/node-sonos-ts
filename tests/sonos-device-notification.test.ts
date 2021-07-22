@@ -40,6 +40,10 @@ describe('SonosDevice - Notifications', () => {
         scope
       );
 
+      // Get Mute
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetMute',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>', '<CurrentMute>0</CurrentMute>', scope);
+
       // GetMediaInfo
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetMediaInfo"',
@@ -173,6 +177,10 @@ describe('SonosDevice - Notifications', () => {
         `<CurrentVolume>10</CurrentVolume>`,
         scope
       );
+
+      // Get Mute
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetMute',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>', '<CurrentMute>0</CurrentMute>', scope);
     
       // GetMediaInfo
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
@@ -219,6 +227,10 @@ describe('SonosDevice - Notifications', () => {
       // Get Volume
       TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetVolume',
         '<InstanceID>0</InstanceID><Channel>Master</Channel>', `<CurrentVolume>${currentVolume}</CurrentVolume>`, scope);
+
+      // Get Mute
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetMute',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>', '<CurrentMute>0</CurrentMute>', scope);
 
       // GetMediaInfo
       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control', 'AVTransport', 'GetMediaInfo', '<InstanceID>0</InstanceID>',
@@ -385,6 +397,10 @@ describe('SonosDevice - Notifications', () => {
         `<CurrentVolume>10</CurrentVolume>`,
         scope
       );
+
+      // Get Mute
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetMute',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>', '<CurrentMute>0</CurrentMute>', scope);
         
       // GetMediaInfo
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',

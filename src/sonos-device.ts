@@ -350,11 +350,18 @@ export default class SonosDevice extends SonosDeviceBase {
    * Get the state of the speaker, which can be reverted to with RestoreState
    */
   public async GetState(): Promise<SonosState> {
+    if (this.muted === undefined) {
+      this.muted = (await this.RenderingControlService.GetMute({ InstanceID: 0, Channel: 'Master' })).CurrentMute;
+    }
+    if (this.volume === undefined) {
+      this.volume = (await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })).CurrentVolume;
+    }
     return {
-      transportState: this.CurrentTransportStateSimple ?? (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState,
       mediaInfo: await this.AVTransportService.GetMediaInfo(),
+      muted: this.Muted === true,
       positionInfo: await this.AVTransportService.GetPositionInfo(),
-      volume: this.Volume ?? (await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })).CurrentVolume,
+      transportState: this.CurrentTransportStateSimple ?? (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState,
+      volume: this.Volume ?? 15,
     };
   }
 
@@ -368,6 +375,10 @@ export default class SonosDevice extends SonosDeviceBase {
     if (this.Volume !== state.volume) {
       await this.SetVolume(state.volume);
       if (delayBetweenCommands !== undefined) await AsyncHelper.Delay(delayBetweenCommands);
+    }
+
+    if (this.Muted !== state.muted) {
+      await this.RenderingControlService.SetMute({ InstanceID: 0, Channel: 'Master', DesiredMute: state.muted });
     }
 
     const isBroadcast = typeof state.mediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
@@ -470,6 +481,67 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * Download the url for the specified text, play as a notification and revert back to current track.
+   *
+   * @param {PlayTtsOptions} options
+   * @param {string} options.text Text to request a TTS file for.
+   * @param {string} options.lang Language to request tts file for.
+   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
+   * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
+   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
+   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
+   * @memberof SonosDevice
+   */
+  public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTS(%o)', options);
+
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+
+    return await this.PlayNotification(notificationOptions);
+  }
+
+  private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
+    let result = havePlayed === true;
+    if (this.notifications.length === 0) {
+      return Promise.resolve(result);
+    }
+
+    // Start the notification
+    const notification = this.notifications[0];
+
+    if (notification.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
+      this.debug('Skip notification, because of not playing %s', notification.trackUri);
+      if (notification.notificationFired !== undefined) {
+        notification.notificationFired(false);
+      }
+    } else {
+      result = true;
+      this.debug('Start notification playback uri %s', notification.trackUri);
+      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' });
+      if (notification.volume !== undefined && notification.volume !== this.volume) {
+        await this.SetVolume(notification.volume);
+        if (notification.delayMs !== undefined) await AsyncHelper.Delay(notification.delayMs);
+      }
+      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
+
+      // Wait for event (or timeout)
+      await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
+
+      if (notification.notificationFired !== undefined) {
+        notification.notificationFired(true);
+      }
+    }
+
+    // Remove first item from queue.
+    this.notifications.shift();
+    return this.PlayNextNotification(originalState, result);
+  }
+
+  /**
    * A second implementation of PlayNotification.
    *
    * @param {PlayNotificationOptions} options The options
@@ -509,31 +581,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
-   * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
-   * @memberof SonosDevice
-   */
-  public async PlayTTS(options: PlayTtsOptions): Promise<boolean> {
-    this.debug('PlayTTS(%o)', options);
-
-    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
-
-    return await this.PlayNotification(notificationOptions);
-  }
-
-  /**
-   * Download the url for the specified text, play as a notification and revert back to current track.
-   *
-   * @param {PlayTtsOptions} options
-   * @param {string} options.text Text to request a TTS file for.
-   * @param {string} options.lang Language to request tts file for.
-   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
-   * @param {string} [options.gender] Supply gender, some languages support both genders.
-   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
-   * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
-   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
-   * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    * @deprecated TTS using experimental notification feature
    * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
    * @memberof SonosDevice
@@ -544,43 +592,6 @@ export default class SonosDevice extends SonosDeviceBase {
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
     return await this.PlayNotificationTwo(notificationOptions);
-  }
-
-  private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
-    let result = havePlayed === true;
-    if (this.notifications.length === 0) {
-      return Promise.resolve(result);
-    }
-
-    // Start the notification
-    const notification = this.notifications[0];
-
-    if (notification.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
-      this.debug('Skip notification, because of not playing %s', notification.trackUri);
-      if (notification.notificationFired !== undefined) {
-        notification.notificationFired(false);
-      }
-    } else {
-      result = true;
-      this.debug('Start notification playback uri %s', notification.trackUri);
-      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' });
-      if (notification.volume !== undefined && notification.volume !== this.volume) {
-        await this.SetVolume(notification.volume);
-        if (notification.delayMs !== undefined) await AsyncHelper.Delay(notification.delayMs);
-      }
-      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
-
-      // Wait for event (or timeout)
-      await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
-
-      if (notification.notificationFired !== undefined) {
-        notification.notificationFired(true);
-      }
-    }
-
-    // Remove first item from queue.
-    this.notifications.shift();
-    return this.PlayNextNotification(originalState, result);
   }
 
   /**
@@ -680,7 +691,7 @@ export default class SonosDevice extends SonosDeviceBase {
       return this.events;
     }
 
-    this.events = new EventEmitter as TypedEmitter<StrongSonosEvents>;
+    this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>;
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;
