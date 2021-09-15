@@ -70,3 +70,6 @@ docs-automatic/
 docs/_site/
 docs/.sass-cache/
 docs/vendor/
+
+# Exclude Webstorm
+.idea/

@@ -1379,7 +1379,15 @@ export default class SonosDevice extends SonosDeviceBase {
         this.notificationQueue.volumeChanged = false;
       }
 
-      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData });
+      await this.AVTransportService.SetAVTransportURI(
+        {
+          InstanceID: 0,
+          CurrentURI: originalMediaInfo.CurrentURI,
+          CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData,
+        },
+      ).catch((err) => {
+        this.debug('Error settingAVTransportURI, but this shouldn\'t stop the queue:  %o', err);
+      });
       if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
 
       if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
@@ -1399,7 +1407,9 @@ export default class SonosDevice extends SonosDeviceBase {
       }
 
       if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-        await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
+        await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => {
+          this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
+        });
       }
     }
 
