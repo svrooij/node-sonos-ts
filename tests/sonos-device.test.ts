@@ -397,7 +397,7 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('GetNightMode', () => {
+  describe('GetNightMode()', () => {
     it('executes correct command', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
@@ -412,7 +412,7 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('GetSpeechEnhancement', () => {
+  describe('GetSpeechEnhancement()', () => {
     it('executes correct command', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#GetEQ"',
@@ -617,7 +617,7 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('SetSpeechEnhancement', () => {
+  describe('SetSpeechEnhancement()', () => {
     it('executes correct command when set to true', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
@@ -644,7 +644,20 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('SetRelativeVolume', () => {
+  describe('SetRelativeGroupVolume()', () => {
+    it('executes the correct command', async () => {
+      TestHelpers.mockRequest('/MediaRenderer/GroupRenderingControl/Control',
+      '"urn:schemas-upnp-org:service:GroupRenderingControl:1#SetRelativeGroupVolume"',
+      '<u:SetRelativeGroupVolume xmlns:u="urn:schemas-upnp-org:service:GroupRenderingControl:1"><InstanceID>0</InstanceID><Adjustment>40</Adjustment></u:SetRelativeGroupVolume>',
+      'SetRelativeGroupVolumeResponse',
+      'GroupRenderingControl'
+    );
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetRelativeGroupVolume(40);
+    });
+  });
+
+  describe('SetRelativeVolume()', () => {
     it('executes the correct command', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
       '"urn:schemas-upnp-org:service:RenderingControl:1#SetRelativeVolume"',
@@ -657,7 +670,7 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('SetVolume', () => {
+  describe('SetVolume()', () => {
     it('throws error when invalid volume', async (done) => {
 
       const device = new SonosDevice(TestHelpers.testHost);
@@ -956,7 +969,7 @@ describe('SonosDevice', () => {
   });
 
   describe('SwitchTo..', () => {
-    it('SwitchToLineIn sends correct command', async () => {
+    it('SwitchToLineIn() sends correct command', async () => {
       TestHelpers.mockRequest('/DeviceProperties/Control',
         '"urn:schemas-upnp-org:service:DeviceProperties:1#GetZoneInfo"',
         '<u:GetZoneInfo xmlns:u="urn:schemas-upnp-org:service:DeviceProperties:1"></u:GetZoneInfo>',
@@ -980,7 +993,7 @@ describe('SonosDevice', () => {
       const result = await device.SwitchToLineIn();
       expect(result).to.be.eq(true);
     });
-    it('SwitchToQueue sends correct command', async () => {
+    it('SwitchToQueue() sends correct command', async () => {
       const deviceID = 'RINCON_00FFFFFFFFBC01400';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
@@ -993,7 +1006,7 @@ describe('SonosDevice', () => {
       const result = await device.SwitchToQueue();
       expect(result).to.be.eq(true);
     });
-    it('SwitchToTV sends correct command', async () => {
+    it('SwitchToTV() sends correct command', async () => {
       const deviceID = 'RINCON_00FFFFFFFFBC01400';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',

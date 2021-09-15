@@ -38,6 +38,7 @@ Each **Sonos Device** has the following shortcuts (things you could also do by u
 - **.Next()** - Go to next song (when playing the queue) *.
 - **.Previous()** - Go to previous song (when playing the queue) *.
 - **.SetNightMode(desiredState)** - Turn on/off nightmode on your playbar.
+- **.SetRelativeGroupVolume(adjustment)** - Change the group volume relative to current *.
 - **.SetRelativeVolume(adjustment)** - Change the volume relative to current.
 - **.SetSpeechEnhancement(desiredState)** - Turn on/off speech enhancement on your playbar.
 - **.SetVolume(newVolume)** - Change the volume.
@@ -80,6 +81,7 @@ Currently supported url's for metadata guessing:
 - `spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv` - Spotify artist top tracks (has to be added to queue).
 - `spotify:album:5c4y5oD0jCAVHJNusKpy4d` - Spotify album (has to be added to queue).
 - `spotify:playlist:37i9dQZF1DXcx1szy2g67M` - Spotify playlist (has to be added to queue).
+- `spotify:user:spotify:playlist:37i9dQZF1DX1htCFhfVtyK` - Spotify playlist of a different user (summer rewind from user spotify in this case).
 - `radio:s113577` - Tunein radio station.
 
 This library will guess the metadata automatically for the following methods, but you can also use the **MetadataHelper**, yourself.

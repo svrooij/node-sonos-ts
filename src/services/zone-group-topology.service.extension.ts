@@ -58,6 +58,10 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       Invisible: member.Invisible === 1 || member.Invisible === '1',
       SoftwareVersion: member.SoftwareVersion,
       SwGen: member.SWGen,
+      HasConfiguredSSID: member.HasConfiguredSSID === '1' || member.HasConfiguredSSID === 1,
+      WifiEnabled: member.WifiEnabled === '1' || member.WifiEnabled === 1,
+      TVConfigurationError: parseInt(member.TVConfigurationError, 10),
+      HdmiCecAvailable: member.HdmiCecAvailable === '1' || member.HdmiCecAvailable === 1,
     };
   }
 
@@ -71,6 +75,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     if (members.length > 1) name += ` + ${members.length - 1}`;
 
     return {
+      groupId: group.ID,
       name,
       coordinator,
       members,

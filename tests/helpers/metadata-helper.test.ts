@@ -171,6 +171,14 @@ describe('MetadataHelper', () => {
       expect(track).to.be.an('object');
     });
 
+    it('Guess metadata for Spotify user (Summer rewind)', () => {
+      const uri = 'spotify:user:spotify:playlist:37i9dQZF1DWSBi5svWQ9Nk'
+      const expectedTrackUri = 'x-rincon-cpcontainer:10062a6cspotify%3auser%3aspotify%3aplaylist%3a37i9dQZF1DWSBi5svWQ9Nk?sid=9&flags=10860&sn=7';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).to.be.an('object');
+      expect(track).to.have.property('TrackUri', expectedTrackUri);
+    });
+
     it('Produces same metadata as legacy for Spotify track', () => {
       const track = MetadataHelper.GuessTrack(spotifyTrack);
       expect(track).to.be.an('object');
@@ -219,8 +227,8 @@ describe('MetadataHelper', () => {
     it('Works for Spotify playlist', () => {
       const data = MetadataHelper.GuessMetaDataAndTrackUri('spotify:playlist:37i9dQZEVXbLoATJ81JYX');
       expect(data).to.be.an('object');
-      expect(data).to.have.property('trackUri', 'x-rincon-cpcontainer:1006206spotify:playlist:37i9dQZEVXbLoATJ81JYX?sid=9&flags=8300&sn=7');
-      expect(data).to.have.nested.property('metadata.ItemId', '10062a6cspotify%3aplaylist%3a37i9dQZEVXbLoATJ81JYX');
+      expect(data).to.have.property('trackUri', 'x-rincon-cpcontainer:1006206cspotify:playlist:37i9dQZEVXbLoATJ81JYX?sid=9&flags=8300&sn=7');
+      expect(data).to.have.nested.property('metadata.ItemId', '1006206cspotify%3aplaylist%3a37i9dQZEVXbLoATJ81JYX');
     });
   })
 

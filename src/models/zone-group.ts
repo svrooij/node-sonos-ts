@@ -3,6 +3,7 @@ export interface ChannelMapSet {
 }
 
 export interface ZoneGroup {
+  groupId: string;
   name: string;
   coordinator: ZoneMember;
   members: ZoneMember[];
@@ -19,4 +20,8 @@ export interface ZoneMember {
   Invisible: boolean;
   SoftwareVersion: string;
   SwGen: string;
+  TVConfigurationError: number;
+  HdmiCecAvailable: boolean;
+  HasConfiguredSSID: boolean;
+  WifiEnabled: boolean;
 }
