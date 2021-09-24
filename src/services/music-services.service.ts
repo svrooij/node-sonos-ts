@@ -1,5 +1,5 @@
 /**
- * Sonos MusicServicesService
+ * Sonos MusicServices service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -11,7 +11,7 @@ import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
- * External music services
+ * Access to external music services, like Spotify or Youtube Music
  *
  * @export
  * @class MusicServicesServiceBase

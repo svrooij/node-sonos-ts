@@ -1,15 +1,15 @@
 ---
 layout: default
-title: DevicePropertiesService
+title: DeviceProperties
 parent: Services
 grand_parent: Sonos device
 ---
-# DevicePropertiesService
+# DeviceProperties service
 {: .no_toc }
 
-Modify device properties, like led status and stereo pairs
+Modify device properties, like LED status and stereo pairs
 
-The DevicePropertiesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The DeviceProperties service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -64,7 +64,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
+| **ChannelMapSet** | `string` | example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -159,6 +159,8 @@ Output object:
 
 ### GetButtonLockState
 
+Get the current button lock state
+
 ```js
 const result = await sonos.DevicePropertiesService.GetButtonLockState();
 ```
@@ -194,6 +196,8 @@ Output object:
 | **CurrentHouseholdID** | `string` |  |
 
 ### GetLEDState
+
+Get the current LED state
 
 ```js
 const result = await sonos.DevicePropertiesService.GetLEDState();
@@ -239,6 +243,8 @@ Output object:
 
 ### GetZoneInfo
 
+Get information about this specific speaker
+
 ```js
 const result = await sonos.DevicePropertiesService.GetZoneInfo();
 ```
@@ -255,7 +261,7 @@ Output object:
 | **MACAddress** | `string` |  |
 | **CopyrightInfo** | `string` |  |
 | **ExtraInfo** | `string` |  |
-| **HTAudioIn** | `number` |  |
+| **HTAudioIn** | `number` | SPDIF input, `0` not connected / `2` stereo / `7` Dolby 2.0 / `18` dolby 5.1 / `21` not listening / `22` silence |
 | **Flags** | `number` |  |
 
 ### RemoveBondedZones
@@ -287,6 +293,40 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
+### RoomDetectionStartChirping
+
+```js
+const result = await sonos.DevicePropertiesService.RoomDetectionStartChirping({ Channel:..., DurationMilliseconds:... });
+```
+
+Input object:
+
+| property | type | description |
+|:----------|:-----|:------------|
+| **Channel** | `number` |  |
+| **DurationMilliseconds** | `number` |  |
+
+Output object:
+
+| property | type | description |
+|:----------|:-----|:------------|
+| **PlayId** | `number` |  |
+| **ChirpIfPlayingSwappableAudio** | `boolean` |  |
+
+### RoomDetectionStopChirping
+
+```js
+const result = await sonos.DevicePropertiesService.RoomDetectionStopChirping({ PlayId:... });
+```
+
+Input object:
+
+| property | type | description |
+|:----------|:-----|:------------|
+| **PlayId** | `number` |  |
+
+This actions returns a boolean whether or not the requests succeeded.
+
 ### SeparateStereoPair
 
 Separate a stereo pair
@@ -299,7 +339,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ChannelMapSet** | `string` | example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF |
+| **ChannelMapSet** | `string` | example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -352,6 +392,8 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### SetButtonLockState
 
+Set the button lock state
+
 ```js
 const result = await sonos.DevicePropertiesService.SetButtonLockState({ DesiredButtonLockState:... });
 ```
@@ -365,6 +407,8 @@ Input object:
 This actions returns a boolean whether or not the requests succeeded.
 
 ### SetLEDState
+
+Set the LED state
 
 ```js
 const result = await sonos.DevicePropertiesService.SetLEDState({ DesiredLEDState:... });
@@ -468,6 +512,7 @@ The **DevicePropertiesService** emits events with these properties. Not all prop
 | **SoftwareVersion** | `string` |  | 
 | **SupportsAudioClip** | `boolean` |  | 
 | **SupportsAudioIn** | `boolean` |  | 
+| **TargetRoomName** | `string` |  | 
 | **TVConfigurationError** | `boolean` |  | 
 | **VoiceConfigState** | `number` |  | 
 | **WifiEnabled** | `boolean` |  | 

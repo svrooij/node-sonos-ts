@@ -1,15 +1,15 @@
 ---
 layout: default
-title: ContentDirectoryService
+title: ContentDirectory
 parent: Services
 grand_parent: Sonos device
 ---
-# ContentDirectoryService
+# ContentDirectory service
 {: .no_toc }
 
 Browse for local content
 
-The ContentDirectoryService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The ContentDirectory service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -26,7 +26,7 @@ All actions that require input expect an object with the specified parameters, e
 
 ### Browse
 
-Browse for content.
+Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
 
 ```js
 const result = await sonos.ContentDirectoryService.Browse({ ObjectID:..., BrowseFlag:..., Filter:..., StartingIndex:..., RequestedCount:..., SortCriteria:... });
@@ -36,23 +36,23 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ObjectID** | `string` | The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it. |
+| **ObjectID** | `string` | The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `S:` / `SQ:` / `FV:2` / `R:0/0` / `R:0/1`) with optionally `:search+query` behind it. |
 | **BrowseFlag** | `string` | How to browse Allowed values: `BrowseMetadata` / `BrowseDirectChildren` |
-| **Filter** | `string` | Which fields should be returned '*' for all. |
-| **StartingIndex** | `number` | Paging, where to start |
-| **RequestedCount** | `number` | Paging, number of items |
-| **SortCriteria** | `string` | Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title. |
+| **Filter** | `string` | Which fields should be returned `*` for all. |
+| **StartingIndex** | `number` | Paging, where to start, usually 0 |
+| **RequestedCount** | `number` | Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned.  |
+| **SortCriteria** | `string` | Sort the results based on metadata fields. `+upnp:artist,+dc:title` for sorting on artist then on title. |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **Result** | `string` |  |
+| **Result** | `string` | Encoded DIDL-Lite XML. See remark (2) |
 | **NumberReturned** | `number` |  |
 | **TotalMatches** | `number` |  |
 | **UpdateID** | `number` |  |
 
-**Remarks** Some libraries support a BrowseAndParse, so you don&#x27;t have to parse the xml.
+**Remarks** (1) If the title contains an apostrophe the returned uri will contain a `&apos;`. (2) Some libraries support a BrowseAndParse, so you don't have to parse the xml.
 
 ### CreateObject
 

@@ -1,5 +1,5 @@
 /**
- * Sonos AudioInService
+ * Sonos AudioIn service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -10,6 +10,13 @@ import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
+/**
+ * Control line in
+ *
+ * @export
+ * @class AudioInService
+ * @extends {BaseService}
+ */
 export class AudioInService extends BaseService<AudioInServiceEvent> {
   readonly serviceNane: string = 'AudioIn';
 

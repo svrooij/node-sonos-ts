@@ -1,5 +1,5 @@
 /**
- * Sonos HTControlService
+ * Sonos HTControl service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -10,6 +10,13 @@ import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
+/**
+ * Service related to the TV remote control
+ *
+ * @export
+ * @class HTControlService
+ * @extends {BaseService}
+ */
 export class HTControlService extends BaseService<HTControlServiceEvent> {
   readonly serviceNane: string = 'HTControl';
 

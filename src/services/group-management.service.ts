@@ -1,5 +1,5 @@
 /**
- * Sonos GroupManagementService
+ * Sonos GroupManagement service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -10,6 +10,13 @@ import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
+/**
+ * Services related to groups
+ *
+ * @export
+ * @class GroupManagementService
+ * @extends {BaseService}
+ */
 export class GroupManagementService extends BaseService<GroupManagementServiceEvent> {
   readonly serviceNane: string = 'GroupManagement';
 

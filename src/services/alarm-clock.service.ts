@@ -1,5 +1,5 @@
 /**
- * Sonos AlarmClockService
+ * Sonos AlarmClock service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -14,7 +14,7 @@ import {
 } from '../models';
 
 /**
- * Control the sonos alarms
+ * Control the sonos alarms and times
  *
  * @export
  * @class AlarmClockServiceBase
@@ -44,8 +44,8 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   /**
    * Create a single alarm, all properties are required
    *
-   * @param {string} input.StartLocalTime - The start time as hh:mm:ss
-   * @param {string} input.Duration - The duration as hh:mm:ss
+   * @param {string} input.StartLocalTime - The start time as `hh:mm:ss`
+   * @param {string} input.Duration - The duration as `hh:mm:ss`
    * @param {string} input.Recurrence - Repeat this alarm on [ 'ONCE' / 'WEEKDAYS' / 'WEEKENDS' / 'DAILY' ]
    * @param {boolean} input.Enabled - Alarm enabled after creation
    * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for
@@ -115,9 +115,9 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   /**
    * Update an alarm, all parameters are required.
    *
-   * @param {number} input.ID - The ID of the alarm see ListAndParseAlarms
-   * @param {string} input.StartLocalTime - The start time as hh:mm:ss
-   * @param {string} input.Duration - The duration as hh:mm:ss
+   * @param {number} input.ID - The ID of the alarm see ListAlarms
+   * @param {string} input.StartLocalTime - The start time as `hh:mm:ss`
+   * @param {string} input.Duration - The duration as `hh:mm:ss`
    * @param {string} input.Recurrence - Repeat this alarm on [ 'ONCE' / 'WEEKDAYS' / 'WEEKENDS' / 'DAILY' ]
    * @param {boolean} input.Enabled - Alarm enabled after creation
    * @param {string} input.RoomUUID - The UUID of the speaker you want this alarm for

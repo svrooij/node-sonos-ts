@@ -1,5 +1,5 @@
 /**
- * Sonos DevicePropertiesService
+ * Sonos DeviceProperties service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -11,7 +11,7 @@ import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
- * Modify device properties, like led status and stereo pairs
+ * Modify device properties, like LED status and stereo pairs
  *
  * @export
  * @class DevicePropertiesService
@@ -38,7 +38,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   /**
    * Create a stereo pair (left, right speakers), right one becomes hidden
    *
-   * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   * @param {string} input.ChannelMapSet - example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF`
    * @remarks No all speakers support StereoPairs
    */
   async CreateStereoPair(input: { ChannelMapSet: string }):
@@ -59,6 +59,9 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async GetAutoplayVolume(input: { Source: string }):
   Promise<GetAutoplayVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetAutoplayVolumeResponse>('GetAutoplayVolume', input); }
 
+  /**
+   * Get the current button lock state
+   */
   async GetButtonLockState():
   Promise<GetButtonLockStateResponse> { return await this.SoapRequest<GetButtonLockStateResponse>('GetButtonLockState'); }
 
@@ -68,6 +71,9 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async GetHouseholdID():
   Promise<GetHouseholdIDResponse> { return await this.SoapRequest<GetHouseholdIDResponse>('GetHouseholdID'); }
 
+  /**
+   * Get the current LED state
+   */
   async GetLEDState():
   Promise<GetLEDStateResponse> { return await this.SoapRequest<GetLEDStateResponse>('GetLEDState'); }
 
@@ -77,6 +83,9 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async GetZoneAttributes():
   Promise<GetZoneAttributesResponse> { return await this.SoapRequest<GetZoneAttributesResponse>('GetZoneAttributes'); }
 
+  /**
+   * Get information about this specific speaker
+   */
   async GetZoneInfo():
   Promise<GetZoneInfoResponse> { return await this.SoapRequest<GetZoneInfoResponse>('GetZoneInfo'); }
 
@@ -86,10 +95,16 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async RemoveHTSatellite(input: { SatRoomUUID: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
+  async RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number }):
+  Promise<RoomDetectionStartChirpingResponse> { return await this.SoapRequestWithBody<typeof input, RoomDetectionStartChirpingResponse>('RoomDetectionStartChirping', input); }
+
+  async RoomDetectionStopChirping(input: { PlayId: number }):
+  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RoomDetectionStopChirping', input); }
+
   /**
    * Separate a stereo pair
    *
-   * @param {string} input.ChannelMapSet - example: RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF
+   * @param {string} input.ChannelMapSet - example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF`
    * @remarks No all speakers support StereoPairs
    */
   async SeparateStereoPair(input: { ChannelMapSet: string }):
@@ -104,9 +119,19 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async SetAutoplayVolume(input: { Volume: number; Source: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayVolume', input); }
 
+  /**
+   * Set the button lock state
+   *
+   * @param {string} input.DesiredButtonLockState [ 'On' / 'Off' ]
+   */
   async SetButtonLockState(input: { DesiredButtonLockState: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetButtonLockState', input); }
 
+  /**
+   * Set the LED state
+   *
+   * @param {string} input.DesiredLEDState [ 'On' / 'Off' ]
+   */
   async SetLEDState(input: { DesiredLEDState: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDState', input); }
 
@@ -140,6 +165,8 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       ExtraInfo: 'string',
       HTAudioIn: 'number',
       Flags: 'number',
+      PlayId: 'number',
+      ChirpIfPlayingSwappableAudio: 'boolean',
     };
   }
 
@@ -191,6 +218,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       SoftwareVersion: 'string',
       SupportsAudioClip: 'boolean',
       SupportsAudioIn: 'boolean',
+      TargetRoomName: 'string',
       TVConfigurationError: 'boolean',
       VoiceConfigState: 'number',
       WifiEnabled: 'boolean',
@@ -257,6 +285,11 @@ export interface GetZoneInfoResponse {
   Flags: number;
 }
 
+export interface RoomDetectionStartChirpingResponse {
+  PlayId: number;
+  ChirpIfPlayingSwappableAudio: boolean;
+}
+
 // Strong type event
 export interface DevicePropertiesServiceEvent {
   AirPlayEnabled?: boolean;
@@ -304,6 +337,7 @@ export interface DevicePropertiesServiceEvent {
   SoftwareVersion?: string;
   SupportsAudioClip?: boolean;
   SupportsAudioIn?: boolean;
+  TargetRoomName?: string;
   TVConfigurationError?: boolean;
   VoiceConfigState?: number;
   WifiEnabled?: boolean;

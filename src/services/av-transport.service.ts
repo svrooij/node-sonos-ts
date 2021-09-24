@@ -1,5 +1,5 @@
 /**
- * Sonos AVTransportService
+ * Sonos AVTransport service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -58,12 +58,23 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
     { code: 737, description: 'No dns configured' },
     { code: 738, description: 'Bad domain' },
     { code: 739, description: 'Server error' },
+    { code: 800, description: 'Command not supported or not a coordinator' },
   ];
 
   // #region actions
   async AddMultipleURIsToQueue(input: { InstanceID: number; UpdateID: number; NumberOfURIs: number; EnqueuedURIs: string; EnqueuedURIsMetaData: Track | string; ContainerURI: string; ContainerMetaData: Track | string; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
   Promise<AddMultipleURIsToQueueResponse> { return await this.SoapRequestWithBody<typeof input, AddMultipleURIsToQueueResponse>('AddMultipleURIsToQueue', input); }
 
+  /**
+   * Adds songs to the SONOS queue
+   *
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.EnqueuedURI
+   * @param {Track | string} input.EnqueuedURIMetaData
+   * @param {number} input.DesiredFirstTrackNumberEnqueued - use `0` to add at the end or `1` to insert at the beginning
+   * @param {boolean} input.EnqueueAsNext
+   * @remarks In NORMAL play mode the songs are added prior to the specified `DesiredFirstTrackNumberEnqueued`.
+   */
   async AddURIToQueue(input: { InstanceID: number; EnqueuedURI: string; EnqueuedURIMetaData: Track | string; DesiredFirstTrackNumberEnqueued: number; EnqueueAsNext: boolean }):
   Promise<AddURIToQueueResponse> { return await this.SoapRequestWithBody<typeof input, AddURIToQueueResponse>('AddURIToQueue', input); }
 
@@ -76,7 +87,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Leave the current group and revert to a single player.
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async BecomeCoordinatorOfStandaloneGroup(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<BecomeCoordinatorOfStandaloneGroupResponse> { return await this.SoapRequestWithBody<typeof input, BecomeCoordinatorOfStandaloneGroupResponse>('BecomeCoordinatorOfStandaloneGroup', input); }
@@ -94,10 +105,10 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ChangeTransportSettings', input); }
 
   /**
-   * Stop playing after set sleep timer
+   * Stop playing after set sleep timer or cancel
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.NewSleepTimerDuration - Time to stop after, as hh:mm:ss
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.NewSleepTimerDuration - Time to stop after, as `hh:mm:ss` or empty string to cancel
    * @remarks Send to non-coordinator returns error code 800
    */
   async ConfigureSleepTimer(input: { InstanceID: number; NewSleepTimerDuration: string }):
@@ -109,7 +120,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Delegates the coordinator role to another player in the same group
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.NewCoordinator - uuid of the new coordinator - must be in same group
    * @param {boolean} input.RejoinGroup - Should former coordinator rejoin the group?
    * @remarks Send to non-coordinator has no results - should be avoided.
@@ -121,9 +132,9 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EndDirectControlSession', input); }
 
   /**
-   * Get crossfade mode, 1 for on, 0 for off
+   * Get crossfade mode
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Send to non-coordinator may return wrong value as only the coordinator value in a group
    */
   async GetCrossfadeMode(input: { InstanceID: number } = { InstanceID: 0 }):
@@ -132,8 +143,8 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get current transport actions such as Set, Stop, Pause, Play, X_DLNA_SeekTime, Next, X_DLNA_SeekTrackNr
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @remarks Send to non-coordinator always returns Stop, Play
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @remarks Send to non-coordinator returns only `Start` and `Stop` since it cannot control the stream.
    */
   async GetCurrentTransportActions(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetCurrentTransportActionsResponse> { return await this.SoapRequestWithBody<typeof input, GetCurrentTransportActionsResponse>('GetCurrentTransportActions', input); }
@@ -144,7 +155,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get information about the current playing media (queue)
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async GetMediaInfo(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetMediaInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetMediaInfoResponse>('GetMediaInfo', input); }
@@ -152,15 +163,15 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get information about current position (position in queue and time in current song)
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async GetPositionInfo(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetPositionInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetPositionInfoResponse>('GetPositionInfo', input); }
 
   /**
-   * Get time left on sleeptimer or empty string
+   * Get time left on sleeptimer.
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Send to non-coordinator returns error code 800
    */
   async GetRemainingSleepTimerDuration(input: { InstanceID: number } = { InstanceID: 0 }):
@@ -172,7 +183,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get current transport status, speed and state such as PLAYING, STOPPED, PLAYING, PAUSED_PLAYBACK, TRANSITIONING, NO_MEDIA_PRESENT
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Send to non-coordinator always returns PLAYING
    */
   async GetTransportInfo(input: { InstanceID: number } = { InstanceID: 0 }):
@@ -181,16 +192,17 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Get transport settings
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Send to non-coordinator returns the settings of it's queue
    */
   async GetTransportSettings(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTransportSettingsResponse> { return await this.SoapRequestWithBody<typeof input, GetTransportSettingsResponse>('GetTransportSettings', input); }
 
   /**
-   * Go to next song, not always supported - see GetCurrentTransportActions
+   * Go to next song
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @remarks Possibly not supported at the moment see GetCurrentTransportActions
    */
   async Next(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
@@ -201,7 +213,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Pause playback
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
@@ -209,25 +221,26 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Start playing the set TransportURI
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.Speed - Play speed usually 1, can be a fraction of 1 [  ]
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.Speed - Play speed usually 1, can be a fraction of 1 [ '1' ]
    */
   async Play(input: { InstanceID: number; Speed: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
   /**
-   * Go to previous song, not always supported - GetCurrentTransportActions
+   * Go to previous song
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @remarks Possibly not supported at the moment see GetCurrentTransportActions
    */
   async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
   /**
-   * Flushes the SONOS queue. If queue is already empty it throw error 804
+   * Flushes the SONOS queue.
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @remarks Send to non-coordinator returns error code 800.
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @remarks If queue is already empty it throw error 804. Send to non-coordinator returns error code 800.
    */
   async RemoveAllTracksFromQueue(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAllTracksFromQueue', input); }
@@ -235,6 +248,14 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   async RemoveTrackFromQueue(input: { InstanceID: number; ObjectID: string; UpdateID: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveTrackFromQueue', input); }
 
+  /**
+   * Removes the specified range of songs from the SONOS queue.
+   *
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {number} input.UpdateID - Leave blank
+   * @param {number} input.StartingIndex - between 1 and queue-length
+   * @param {number} input.NumberOfTracks
+   */
   async RemoveTrackRangeFromQueue(input: { InstanceID: number; UpdateID: number; StartingIndex: number; NumberOfTracks: number }):
   Promise<RemoveTrackRangeFromQueueResponse> { return await this.SoapRequestWithBody<typeof input, RemoveTrackRangeFromQueueResponse>('RemoveTrackRangeFromQueue', input); }
 
@@ -250,20 +271,20 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Saves the current SONOS queue as a SONOS playlist and outputs objectID
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.Title - SONOS playlist title
-   * @param {string} input.ObjectID
+   * @param {string} input.ObjectID - Leave blank
    * @remarks Send to non-coordinator returns error code 800
    */
   async SaveQueue(input: { InstanceID: number; Title: string; ObjectID: string }):
   Promise<SaveQueueResponse> { return await this.SoapRequestWithBody<typeof input, SaveQueueResponse>('SaveQueue', input); }
 
   /**
-   * Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions
+   * Seek track in queue, time delta or absolute time in song
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.Unit - What to seek [ 'TRACK_NR' / 'REL_TIME' / 'TIME_DELTA' ]
-   * @param {string} input.Target - Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA
+   * @param {string} input.Target - Position of track in queue (start at 1) or `hh:mm:ss` for `REL_TIME` or `+/-hh:mm:ss` for `TIME_DELTA`
    * @remarks Returns error code 701 in case that content does not support Seek or send to non-coordinator
    */
   async Seek(input: { InstanceID: number; Unit: string; Target: string }):
@@ -272,7 +293,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Set the transport URI to a song, a stream, the queue, another player-rincon and a lot more
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.CurrentURI - The new TransportURI - its a special SONOS format
    * @param {Track | string} input.CurrentURIMetaData - Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri
    * @remarks If set to another player RINCON, the player is grouped with that one.
@@ -281,10 +302,10 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAVTransportURI', input); }
 
   /**
-   * Set crossfade mode off
+   * Set crossfade mode
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {boolean} input.CrossfadeMode - true for on, false for off
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {boolean} input.CrossfadeMode
    * @remarks Send to non-coordinator returns error code 800. Same for content, which does not support crossfade mode.
    */
   async SetCrossfadeMode(input: { InstanceID: number; CrossfadeMode: boolean }):
@@ -296,7 +317,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Set the PlayMode
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {PlayMode} input.NewPlayMode - New playmode [ 'NORMAL' / 'REPEAT_ALL' / 'REPEAT_ONE' / 'SHUFFLE_NOREPEAT' / 'SHUFFLE' / 'SHUFFLE_REPEAT_ONE' ]
    * @remarks Send to non-coordinator returns error code 712. If SONOS queue is not activated returns error code 712.
    */
@@ -306,8 +327,8 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Snooze the current alarm for some time.
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.Duration - Snooze time as hh:mm:ss, 10 minutes = 00:10:00
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.Duration - Snooze time as `hh:mm:ss`, 10 minutes = 00:10:00
    */
   async SnoozeAlarm(input: { InstanceID: number; Duration: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnoozeAlarm', input); }
@@ -318,7 +339,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   /**
    * Stop playback
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }

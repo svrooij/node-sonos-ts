@@ -1,5 +1,5 @@
 /**
- * Sonos SystemPropertiesService
+ * Sonos SystemProperties service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -11,7 +11,7 @@ import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
 /**
- * Manage system-wide settings, mainly account stuff.
+ * Manage system-wide settings, mainly account stuff
  *
  * @export
  * @class SystemPropertiesServiceBase
@@ -54,7 +54,7 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * Get a saved string.
    *
    * @param {string} input.VariableName - The key for this variable
-   * @remarks Strings are saved in the system with SetString, every speaker should send the same data. Will error when not existing
+   * @remarks Strings are saved in the system with SetString, every speaker should return the same data. Will error when not existing
    */
   async GetString(input: { VariableName: string }):
   Promise<GetStringResponse> { return await this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }

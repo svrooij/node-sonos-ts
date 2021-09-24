@@ -1,13 +1,15 @@
 ---
 layout: default
-title: ConnectionManagerService
+title: ConnectionManager
 parent: Services
 grand_parent: Sonos device
 ---
-# ConnectionManagerService
+# ConnectionManager service
 {: .no_toc }
 
-The ConnectionManagerService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+Services related to connections and protocols
+
+The ConnectionManager service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

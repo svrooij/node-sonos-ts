@@ -1,5 +1,5 @@
 /**
- * Sonos ZoneGroupTopologyService
+ * Sonos ZoneGroupTopology service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -14,7 +14,7 @@ import {
 } from '../models';
 
 /**
- * Zone config stuff, eg getting all the configured sonos zones.
+ * Zone config stuff, eg getting all the configured sonos zones
  *
  * @export
  * @class ZoneGroupTopologyServiceBase

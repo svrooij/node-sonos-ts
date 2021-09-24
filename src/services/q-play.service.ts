@@ -1,5 +1,5 @@
 /**
- * Sonos QPlayService
+ * Sonos QPlay service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -10,6 +10,13 @@ import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
+/**
+ * Services related to Chinese Tencent Qplay service
+ *
+ * @export
+ * @class QPlayService
+ * @extends {BaseService}
+ */
 export class QPlayService extends BaseService<undefined> {
   readonly serviceNane: string = 'QPlay';
 

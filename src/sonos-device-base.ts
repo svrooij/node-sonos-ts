@@ -66,7 +66,7 @@ export default class SonosDeviceBase {
   private alarmclockservice: AlarmClockService | undefined;
 
   /**
-    * Control the sonos alarms
+    * Control the sonos alarms and times
     * will be initialized on first use.
     *
     * @readonly
@@ -80,6 +80,14 @@ export default class SonosDeviceBase {
 
   private audioinservice: AudioInService | undefined;
 
+  /**
+    * Control line in
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {AudioInService}
+    * @memberof SonosDeviceBase
+    */
   public get AudioInService(): AudioInService {
     if (this.audioinservice === undefined) this.audioinservice = new AudioInService(this.host, this.port, this.uuid);
     return this.audioinservice;
@@ -102,6 +110,14 @@ export default class SonosDeviceBase {
 
   private connectionmanagerservice: ConnectionManagerService | undefined;
 
+  /**
+    * Services related to connections and protocols
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {ConnectionManagerService}
+    * @memberof SonosDeviceBase
+    */
   public get ConnectionManagerService(): ConnectionManagerService {
     if (this.connectionmanagerservice === undefined) this.connectionmanagerservice = new ConnectionManagerService(this.host, this.port, this.uuid);
     return this.connectionmanagerservice;
@@ -125,7 +141,7 @@ export default class SonosDeviceBase {
   private devicepropertiesservice: DevicePropertiesService | undefined;
 
   /**
-    * Modify device properties, like led status and stereo pairs
+    * Modify device properties, like LED status and stereo pairs
     * will be initialized on first use.
     *
     * @readonly
@@ -139,6 +155,14 @@ export default class SonosDeviceBase {
 
   private groupmanagementservice: GroupManagementService | undefined;
 
+  /**
+    * Services related to groups
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {GroupManagementService}
+    * @memberof SonosDeviceBase
+    */
   public get GroupManagementService(): GroupManagementService {
     if (this.groupmanagementservice === undefined) this.groupmanagementservice = new GroupManagementService(this.host, this.port, this.uuid);
     return this.groupmanagementservice;
@@ -147,7 +171,7 @@ export default class SonosDeviceBase {
   private grouprenderingcontrolservice: GroupRenderingControlService | undefined;
 
   /**
-    * Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players.
+    * Volume related controls for groups
     * will be initialized on first use.
     *
     * @readonly
@@ -161,6 +185,14 @@ export default class SonosDeviceBase {
 
   private htcontrolservice: HTControlService | undefined;
 
+  /**
+    * Service related to the TV remote control
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {HTControlService}
+    * @memberof SonosDeviceBase
+    */
   public get HTControlService(): HTControlService {
     if (this.htcontrolservice === undefined) this.htcontrolservice = new HTControlService(this.host, this.port, this.uuid);
     return this.htcontrolservice;
@@ -169,7 +201,7 @@ export default class SonosDeviceBase {
   private musicservicesservice: MusicServicesService | undefined;
 
   /**
-    * External music services
+    * Access to external music services, like Spotify or Youtube Music
     * will be initialized on first use.
     *
     * @readonly
@@ -183,6 +215,14 @@ export default class SonosDeviceBase {
 
   private qplayservice: QPlayService | undefined;
 
+  /**
+    * Services related to Chinese Tencent Qplay service
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type {QPlayService}
+    * @memberof SonosDeviceBase
+    */
   public get QPlayService(): QPlayService {
     if (this.qplayservice === undefined) this.qplayservice = new QPlayService(this.host, this.port, this.uuid);
     return this.qplayservice;
@@ -221,7 +261,7 @@ export default class SonosDeviceBase {
   private systempropertiesservice: SystemPropertiesService | undefined;
 
   /**
-    * Manage system-wide settings, mainly account stuff.
+    * Manage system-wide settings, mainly account stuff
     * will be initialized on first use.
     *
     * @readonly
@@ -243,7 +283,7 @@ export default class SonosDeviceBase {
   private zonegrouptopologyservice: ZoneGroupTopologyService | undefined;
 
   /**
-    * Zone config stuff, eg getting all the configured sonos zones.
+    * Zone config stuff, eg getting all the configured sonos zones
     * will be initialized on first use.
     *
     * @readonly
