@@ -17,7 +17,7 @@ on:
 
 jobs:
   test:
-    name: 'Build and test on node v${{ matix.node }}'
+    name: 'Build and test on node v${{ matrix.node }}'
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -28,7 +28,7 @@ jobs:
         with:
             node-version: ${{ matrix.node }}
 
-      - name: Install depencencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Build library
@@ -61,7 +61,7 @@ jobs:
         with:
           node-version: 16
 
-      - name: Install depencencies
+      - name: Install dependencies
         run: npm ci
 
       - name: Build library
