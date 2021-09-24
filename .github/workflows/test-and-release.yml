@@ -16,40 +16,83 @@ on:
       - 'README.md'
 
 jobs:
-  build-and-test:
+  test:
+    name: 'Build and test on node v${{ matix.node }}'
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [12, 14, 16]
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Use node 12
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12
-    - name: Install depencencies
-      run: npm ci
-    - name: Build library
-      run: npm run build
-    - name: Run code linting
-      run: npm run lint
-    - name: Run tests
-      if: ${{ always() }}
-      run: npm run jest
-    - uses: svrooij/secret-gate-action@v1
-      id: mygate
-      with:
-        inputsToCheck: 'NPM_TOKEN'
-      env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - name: Semantic Release
-      uses: cycjimmy/semantic-release-action@v2
-      if: steps.mygate.outputs.inputsChecked == 'true'
-      id: semantic
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-    - name: Send data to Coveralls
-      if: ${{ always() }}
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+            node-version: ${{ matrix.node }}
 
+      - name: Install depencencies
+        run: npm ci
+
+      - name: Build library
+        run: npm run build
+
+      - name: Run code linting
+        run: npm run lint
+
+      - name: Run tests
+        if: ${{ always() }}
+        run: npm run jest
+
+      - name: Send data to Coveralls
+        if: always() && matrix.node == 16
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}          
+
+  npm-release:
+    name: 'Release to npm'
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Use node 16
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install depencencies
+        run: npm ci
+
+      - name: Build library
+        run: npm run build
+
+      - uses: svrooij/secret-gate-action@v1
+        id: mygate
+        with:
+          inputsToCheck: 'NPM_TOKEN'
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Semantic Release
+        uses: cycjimmy/semantic-release-action@v2
+        if: steps.mygate.outputs.inputsChecked == 'true'
+        id: semantic
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup node for Github Registry
+        if: steps.semantic.outputs.new_release_published == 'true'
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          registry-url: 'https://npm.pkg.github.com'
+          scope: 'svrooij'
+
+      - name: Publish To GitHub Package Registry
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
