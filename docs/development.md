@@ -95,6 +95,18 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **src/sonos-manager.ts** SonosManager class, logical devices.
 - **tests/..** - All the tests, using the Jest framework.
 
+## Regenerate files
+
+A lot of files in this library are generated, you can use the [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs) generator,
+with the template in the [./.generator/ts/](./.generator/ts/) folder.
+
+This will load the latest version of the manual documentation, and the latest version of the generated services. And at last regenerate the documentation and the services.
+
+```bash
+# Regenerate all services and documentation files.
+npm run generate
+```
+
 ## Contributors ✨
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->

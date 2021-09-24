@@ -73,3 +73,6 @@ docs/vendor/
 
 # Exclude Webstorm
 .idea/
+
+# Generator temp files
+.cache/combined.json

@@ -1,0 +1,98 @@
+/**
+ * Sonos base device with all services defined.
+ *
+ * Stephan van Rooij
+ * https://svrooij.io/sonos-api-docs
+ *
+ * This file is generated, do not edit manually.
+ */
+import { Guid } from 'guid-typescript';
+import debug, { Debugger } from 'debug';
+
+import {
+{{#each services}}  {{name}}Service,
+{{/each}}
+} from './services';
+
+/**
+ * SonosDeviceBase is auto-generated to link to all available services of your Sonos Device
+ *
+ * @export
+ * @class SonosDeviceBase
+ */
+export default class SonosDeviceBase {
+  protected readonly host: string;
+
+  protected readonly port: number;
+
+  private debugger?: Debugger;
+
+  protected get debug(): Debugger {
+    if (this.debugger === undefined) {
+      this.debugger = debug(`sonos:device:${this.host}`);
+    }
+    return this.debugger;
+  }
+
+  protected uuid: string;
+
+  /**
+   *Creates an instance of SonosDeviceBase.
+   * @param {string} host The IP of the speaker
+   * @param {number} [port=1400] The port, always 1400
+   * @param {string} [uuid=Guid.create().toString()] The UUID of the speaker like RINCON_macaddres01400, used in some commands.
+   * @memberof SonosDeviceBase
+   */
+  constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
+    this.host = host;
+    this.port = port;
+    this.uuid = uuid;
+  }
+
+  {{#each services}}
+  private {{lower name}}service: {{name}}Service | undefined;
+
+  {{#if description}}
+  /**
+    * {{description}}
+    * will be initialized on first use.
+    *
+    * @readonly
+    * @type { {{~ name ~}} Service}
+    * @memberof SonosDeviceBase
+    */
+  {{/if}}
+  public get {{name}}Service(): {{name}}Service {
+    if (this.{{lower name}}service === undefined) this.{{lower name}}service = new {{name}}Service(this.host, this.port, this.uuid);
+    return this.{{lower name}}service;
+  }
+  {{#unless @last}}
+
+  {{/unless}}
+  {{/each}}
+
+  /**
+   * Refresh all service event subscriptions, if you were already subscribed.
+   *
+   * @returns {Promise<boolean>} returns true if at least one service subscription is refreshed.
+   * @memberof SonosDeviceBase
+   */
+  public async RefreshEventSubscriptions(): Promise<boolean> {
+    let result = false;
+    {{#each services}}
+    if (this.{{lower name}}service !== undefined) result = await this.{{lower name}}service.CheckEventListener() || result;
+    {{/each}}
+    return result;
+  }
+
+  protected GetServiceByName(name: string): {{#each services}}{{name}}Service | {{/each}}undefined {
+    if (typeof name !== 'string' || name === '') return undefined;
+    const lowerName = name.toLowerCase();
+    {{#each services}}
+    if (lowerName === '{{lower name}}service') {
+      return this.{{name}}Service;
+    }
+    {{/each}}
+    return undefined;
+  }
+}
