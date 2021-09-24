@@ -4,3 +4,10 @@ export enum TransportState {
   Paused = 'PAUSED_PLAYBACK',
   Transitioning = 'TRANSITIONING'
 }
+
+export enum GroupTransportState {
+  GroupStopped = 'GROUP_STOPPED',
+  GroupPlaying = 'GROUP_PLAYING'
+}
+
+export type ExtendedTransportState = TransportState | GroupTransportState;

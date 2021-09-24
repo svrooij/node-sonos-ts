@@ -7,7 +7,7 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
+  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import { EventsError } from './models/event-errors';
@@ -39,7 +39,7 @@ export default class SonosDevice extends SonosDeviceBase {
   /*  TH 01.01.2021:
    *  For debugging purposes in jest uncomment this line
    *  and add "this.jestDebug.push(`${(new Date()).getTime()}: ...`);"
-   *  whereever needed. Additionally you may replace all "// this.jestDebug" with "this.jestDebug"
+   *  wherever needed. Additionally you may replace all "// this.jestDebug" with "this.jestDebug"
    *  within Jest simply add "expect(device.jestDebug.join('\n')).to.be.eq("");" in desired test.
    *  This will give you all messages split by newline Chars, allowing you to proper spot reasons for failing test.
    */
@@ -61,6 +61,7 @@ export default class SonosDevice extends SonosDeviceBase {
       this.groupName = groupConfig.name;
       if (groupConfig.coordinator !== undefined && uuid !== groupConfig.coordinator.uuid) {
         this.coordinator = groupConfig.coordinator;
+        this.handleCoordinatorSimpleStateEvent(this.coordinator.currentTransportState === TransportState.Playing ? TransportState.Playing : TransportState.Stopped);
       }
       if (uuid) {
         groupConfig.managerEvents.on(uuid, this.boundHandleGroupUpdate);
@@ -138,7 +139,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * Execute any sonos command by name, see examples/commands.js
    *
    * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
-   * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
+   * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automatically parsed to an object (if possible).
    * @returns {Promise<any>}
    * @memberof SonosDevice
    */
@@ -286,8 +287,8 @@ export default class SonosDevice extends SonosDeviceBase {
 
   public async LoadUuid(force = false): Promise<string> {
     if (!this.uuid.startsWith('RINCON') || force) {
-      const attrinutes = await this.DevicePropertiesService.GetZoneInfo();
-      this.uuid = `RINCON_${attrinutes.MACAddress.replace(/:/g, '')}0${this.port}`;
+      const attributes = await this.DevicePropertiesService.GetZoneInfo();
+      this.uuid = `RINCON_${attributes.MACAddress.replace(/:/g, '')}0${this.port}`;
     }
     return this.uuid;
   }
@@ -295,7 +296,7 @@ export default class SonosDevice extends SonosDeviceBase {
   private deviceId?: string;
 
   /**
-   * Create a client for a specific music serivce
+   * Create a client for a specific music service
    *
    * @param {number} id The id of the music service, see MusicServicesList
    * @param {string} options.key Cached authentication key
@@ -418,7 +419,7 @@ export default class SonosDevice extends SonosDeviceBase {
   private playingNotification?: boolean;
 
   /**
-   * Play some url, and revert back to what was playing before. Very usefull for playing a notification or TTS sound.
+   * Play some url, and revert back to what was playing before. Very useful for playing a notification or TTS sound.
    *
    * @param {PlayNotificationOptions} options The options
    * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
@@ -427,7 +428,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {callback} [options.notificationFired] Specify a callback that is called when this notification has played.
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    * @returns {Promise<true>} Returns when added to queue or (for the first) when all notifications have played.
    * @remarks The first notification will return when all notifications have played, notifications send in between will return when added to the queue.
    * Use 'notificationFired' in the request if you want to know when your specific notification has played.
@@ -492,7 +493,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
    * @memberof SonosDevice
    */
@@ -550,7 +551,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability. Use 100 to 800 for best results
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    *
    * @deprecated This is experimental, do not depend on this. (missing the jsdocs experimental descriptor)
    * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
@@ -701,6 +702,7 @@ export default class SonosDevice extends SonosDeviceBase {
         this.AVTransportService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
         this.RenderingControlService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
+        this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
         this.isSubscribed = false;
       }
     });
@@ -713,6 +715,10 @@ export default class SonosDevice extends SonosDeviceBase {
         this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
         this.RenderingControlService.Events.on(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+        if (this.coordinator !== undefined) {
+          this.coordinator?.Events.on('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
+          this.boundHandleCoordinatorSimpleStateEvent(this.coordinator.CurrentTransportStateSimple);
+        }
       }
     });
     return this.events;
@@ -730,7 +736,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
   private handleAvTransportEvent(data: AVTransportServiceEvent): void {
     this.Events.emit(SonosEvents.AVTransport, data);
-    if (data.TransportState !== undefined) {
+    if (data.TransportState !== undefined && this.coordinator === undefined) {
       const newState = data.TransportState as TransportState;
       const newSimpleState = newState === TransportState.Paused || newState === TransportState.Stopped ? TransportState.Stopped : TransportState.Playing;
       this.debug('Received TransportState new State "%s" newSimpleState "%s"', newState, newSimpleState);
@@ -778,24 +784,42 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.Mute, this.muted);
     }
   }
+
+  private boundHandleCoordinatorSimpleStateEvent = this.handleCoordinatorSimpleStateEvent.bind(this);
+
+  private handleCoordinatorSimpleStateEvent(state: TransportState | undefined): void {
+    const newState = state === TransportState.Playing ? GroupTransportState.GroupPlaying : GroupTransportState.GroupStopped;
+    this.events?.emit('transportState', newState);
+    this.currentTransportState = newState;
+  }
   // #endregion
 
   // #region Group stuff
   private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
   private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string}): void {
-    if (data.coordinator && data.coordinator.uuid !== this.uuid && (!this.coordinator || this.coordinator.uuid !== data.coordinator.uuid)) {
+    if (data.coordinator && data.coordinator?.uuid !== this.Uuid && (!this.coordinator || this.coordinator?.Uuid !== data.coordinator?.Uuid)) {
       this.debug('Coordinator changed for %s', this.uuid);
+      this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
       this.coordinator = data.coordinator;
       if (this.events !== undefined) {
+        // this.boundHandleCoordinatorSimpleStateEvent(this.coordinator.CurrentTransportStateSimple);
         this.events.emit(SonosEvents.Coordinator, this.coordinator.uuid);
+        this.coordinator?.Events.on('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
+        setTimeout(() => {
+          this.boundHandleCoordinatorSimpleStateEvent(this.coordinator?.CurrentTransportStateSimple);
+        }, 50);
       }
     }
     if (this.coordinator && (data.coordinator === undefined || data.coordinator.uuid === this.uuid)) {
       this.debug('Coordinator removed for %s', this.uuid);
+      this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
       this.coordinator = undefined;
       if (this.events !== undefined) {
         this.events.emit(SonosEvents.Coordinator, this.uuid);
+        this.currentTransportState = undefined;
+        this.events.emit(SonosEvents.CurrentTransportState, TransportState.Stopped);
+        this.events.emit(SonosEvents.CurrentTransportStateSimple, TransportState.Stopped);
       }
     }
     if (data.name && data.name !== this.groupName) {
@@ -870,7 +894,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.nextTrackUri;
   }
 
-  private currentTransportState?: TransportState;
+  private currentTransportState?: ExtendedTransportState;
 
   /**
    * Current transport state, only set when listening for events
@@ -879,7 +903,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @type {(TransportState | undefined)}
    * @memberof SonosDevice
    */
-  public get CurrentTransportState(): TransportState | undefined {
+  public get CurrentTransportState(): ExtendedTransportState | undefined {
     return this.currentTransportState;
   }
 
@@ -891,8 +915,10 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public get CurrentTransportStateSimple(): TransportState | undefined {
-    if (this.currentTransportState !== undefined) {
-      return this.currentTransportState === TransportState.Playing || this.currentTransportState === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
+    const state = this.coordinator?.currentTransportState ?? this.currentTransportState;
+
+    if (state !== undefined) {
+      return state === TransportState.Playing || state === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
     }
     return undefined;
   }
@@ -1239,11 +1265,11 @@ export default class SonosDevice extends SonosDeviceBase {
     // Timeout + 1 to ensure the timeout action fired already
     await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, remainingTime + 5).catch((err) => this.debug(err));
 
-    this.debug('Recieved Playback Stop Event or Timeout for current PlayNotification("%s")', currentName);
+    this.debug('Received Playback Stop Event or Timeout for current PlayNotification("%s")', currentName);
 
     if (currentItem.individualTimeout === undefined) {
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
-      this.debug('Playing notification("%s") finished sucessfully', currentName);
+      this.debug('Playing notification("%s") finished successfully', currentName);
       await this.resolvePlayingQueueItem(currentItem, true);
       return await this.playNextQueueItem(originalState);
     }

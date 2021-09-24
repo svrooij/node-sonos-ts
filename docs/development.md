@@ -61,9 +61,16 @@ or (to test against your actual device)
 
 ## Debugging
 
-This library has several VSCode tasks defined, be sure to change your sonos host in the `.vscode/launch.json` file. If you open an example file and press **F5** the example is run and you can set breakpoints in the sample code and in the TypeScript code.
+This library has several VSCode tasks defined, be sure to create a `.env` file which is used in `.vscode/launch.json` file. If you open an example file and press **F5** the example is run and you can set breakpoints in the sample code and in the TypeScript code.
 
-You can also debug the service generator of the tests.
+```bash
+DEBUG=sonos:*
+SONOS_HOST=192.168.x.x
+SONOS_TTS_ENDPOINT=http://your-tts-host/api/generate
+SONOS_TTS_LANG=nl-NL
+```
+
+You can also debug the tests.
 
 This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
 If you run the examples with the VSCode debug task, this variable is set to `sonos:*` so you should see all the logs.

@@ -46,6 +46,8 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .catch(console.error)
 ```
 
+Using the manager will also make sure the players in a group will have two new `TransportState` values, `GROUP_PLAYING` and `GROUP_STOPPED`.
+
 ### or control single device
 
 If you just want to control a single device and don't want to use the SonosManager, you can also create a instance of **SonosDevice**, but you'll be missing the group options.

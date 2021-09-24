@@ -1,4 +1,4 @@
-import { TransportState } from './transport-state';
+import { TransportState, ExtendedTransportState } from './transport-state';
 import { Track } from './track';
 import { AVTransportServiceEvent, RenderingControlServiceEvent } from '../services/index';
 import { EventsError } from './event-errors';
@@ -11,9 +11,9 @@ export interface StrongSonosEvents {
   enqueuedTransportUri: (transportUri: string) => void;
   nextTrack: (track: Track) => void;
   nextTrackUri: (trackUri: string) => void;
-  transportState: (state: TransportState) => void;
+  transportState: (state: ExtendedTransportState) => void;
   simpleTransportState: (state: TransportState) => void;
-  playbackStopped: void;
+  playbackStopped: () => void;
 
   renderingcontrol: (data: RenderingControlServiceEvent) => void;
   muted: (muted: boolean) => void;

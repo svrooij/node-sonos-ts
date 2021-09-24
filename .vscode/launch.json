@@ -11,12 +11,7 @@
       "program": "${file}",
       "preLaunchTask": "tsc: build - tsconfig.json",
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
-      "env": {
-        "DEBUG":"sonos:*",
-        "SONOS_HOST":"192.168.96.56",
-        "SONOS_TTS_ENDPOINT": "https://xxx/api/generate",
-        "SONOS_TTS_LANG": "nl-NL"
-      },
+      "envFile": "${workspaceFolder}/.env",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen"
     },
@@ -55,24 +50,6 @@
       "env": {
         "SONOS_HOST":"192.168.96.53",
       },
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Debug generator",
-      "program": "${workspaceFolder}/src/generator/service-generator.js",
-      "args": [
-        "--save-description",
-        "--docs",
-        "--load-files",
-        "--generate"
-      ],
-      "console": "integratedTerminal",
-      "sourceMaps": true,
-      "internalConsoleOptions": "neverOpen",
-      "env": {
-        "SONOS_HOST":"192.168.96.57"
-      },
-    },
+    }
   ]
 }

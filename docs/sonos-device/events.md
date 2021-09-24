@@ -68,6 +68,8 @@ sonosDevice.RenderingControlService.Events.on(ServiceEvents.Data, data => {
 })
 ```
 
+If you used the manager (to automatically monitor group updates), all players in a group that are not the coordinator, will emit a new `TransportState` namely `GROUP_STOPPED` or `GROUP_PLAYING`. These will reflect the status of the coordinator, because member players always report playing when in a group.
+
 ## How it works
 
 Using the events for a service or the **SonosDevice** works by just adding a listener to the EventEmitter.

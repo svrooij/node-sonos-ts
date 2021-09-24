@@ -27,7 +27,7 @@ export default class SonosManager {
   }
 
   /**
-   * Initialize the manager with one known device. Usefull in special network environments.
+   * Initialize the manager with one known device. Useful in special network environments.
    *
    * @param {string} host
    * @param {number} [port=1400]
@@ -84,7 +84,7 @@ export default class SonosManager {
 
   private SubscribeForGroupEvents(success: boolean): boolean {
     if (success && this.zoneService) {
-      this.zoneService.Events.on(ServiceEvents.Data, this.zoneEventSubscription);
+      this.zoneService.Events.on(ServiceEvents.ServiceEvent, this.zoneEventSubscription);
     }
     return success;
   }
