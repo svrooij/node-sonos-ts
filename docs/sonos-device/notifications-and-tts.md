@@ -36,7 +36,7 @@ sonos.PlayNotification({
 
 A lot of people want to send text to sonos to use for notifications (or a welcome message in your B&B).
 This library has support for text-to-speech but you'll need a text-to-speech endpoint.
-To keep this library as clean as possible, the text-to-speech server is build in a seperate package.
+To keep this library as clean as possible, the text-to-speech server is build in a separate package.
 See [node-sonos-tts-polly](https://github.com/svrooij/node-sonos-tts-polly) for a text-to-speech server that uses Amazon Polly for speech generation.
 
 For my [sponsors][link_sponsor] I've setup a hosted version, so if you don't want to setup your own server, you know what to do.
@@ -52,7 +52,7 @@ This way you don't have to worry about encoding the text so sonos understands it
 
 You can also set the endpoint with the `SONOS_TTS_ENDPOINT` environment variable, so you don't have to supply it every time. The default language can be set with the environment variable `SONOS_TTS_LANG`.
 
-The server I've build is based on Amazon Polly, but I invite eveybody to build their own if you want to support an other tts service.
+The server I've build is based on Amazon Polly, but I invite everybody to build their own if you want to support an other tts service.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

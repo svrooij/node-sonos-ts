@@ -12,7 +12,7 @@ A lot of music services require you to login, which wasn't possible until recent
 
 ## Login to external music service
 
-First you'll have to load a list of all available services. Make sure you check-out [getting started](../getting-started.html) on how to get an instance of **SonosDevice**. Starting from the SonosDevice is **higly recommended**, since it get all the needed data from the device and also auto-saves the account credentials.
+First you'll have to load a list of all available services. Make sure you check-out [getting started](../getting-started.html) on how to get an instance of **SonosDevice**. Starting from the SonosDevice is **highly recommended**, since it get all the needed data from the device and also auto-saves the account credentials.
 
 ```js
 // Load all music services

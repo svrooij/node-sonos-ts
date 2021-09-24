@@ -51,7 +51,7 @@ Before you can use this library is has to be compiled.
 
 ## Run the tests
 
-After changing somehting you should run the tests (as they are automatically run before your PR is accepted). Important code should be covered by tests, and is uploaded to [Coveralls.io](https://coveralls.io/github/svrooij/node-sonos-ts)
+After changing something you should run the tests (as they are automatically run before your PR is accepted). Important code should be covered by tests, and is uploaded to [Coveralls.io](https://coveralls.io/github/svrooij/node-sonos-ts)
 
 `npm run test`
 
@@ -82,11 +82,11 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **docs/** These documentations
 - **examples/** Several examples on how to use this library.
 - **img/** Some static images used in the library
-- **src/helpers/** Some usefull typesscript class, used everywhere in the library.
+- **src/helpers/** Some useful typescript class, used everywhere in the library.
 - **src/helpers/metadata-helper.ts** This class will generate (actually guess) the needed metadata. Easily extended.
 - **src/models/** Hand-crafted models used by the library.
 - **src/services/** All automatic generated services.
-- **src/services/base-service.ts** Base service class, where all the generated services depend opon. This is where most of the magic happens.
+- **src/services/base-service.ts** Base service class, where all the generated services depend upon. This is where most of the magic happens.
 - **src/index.ts** Just an index to expose all classes that need to be exposed.
 - **src/sonos-device-base.ts** Generated SonosDeviceBase, to expose all the services in the derived class.
 - **src/sonos-device-discovery.ts** Async device discovery (by using SSDP, multicast)
@@ -98,7 +98,7 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 ## Regenerate files
 
 A lot of files in this library are generated, you can use the [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs) generator,
-with the template in the [./.generator/ts/](./.generator/ts/) folder.
+with the template in the [./.generator/ts/](https://github.com/svrooij/node-sonos-ts/tree/master/.generator/ts) folder.
 
 This will load the latest version of the manual documentation, and the latest version of the generated services. And at last regenerate the documentation and the services.
 

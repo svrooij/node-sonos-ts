@@ -76,4 +76,4 @@ All logging information might be a bit overkill, it you set `DEBUG` to `sonos:ev
 | `sonos:service:{serviceName}:*` | All logs about a specific service will be emitted |
 | `sonos:service:{serviceName}:{ip}` | All messages for a specific service for a specific speaker. |
 
-Check out the debug library for more configuration options. You can also combine several instructions with a `,` or just remove a spefic event with `-` in front.
+Check out the debug library for more configuration options. You can also combine several instructions with a `,` or just remove a specif event with `-` in front.

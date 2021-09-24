@@ -15,7 +15,7 @@ const SonosDevice = require('@svrooij/sonos').SonosDevice
 const sonos = new SonosDevice('192.168.x.x')
 ```
 
-Explore all the posibillities of the SonosDevice below.
+Explore all the possibilities of the SonosDevice below.
 
 ## Methods
 
@@ -31,6 +31,6 @@ We made it really easy to get [events](events.html) from the sonos speakers, so 
 
 ## All services
 
-Each Sonos devices exposes serveral [services](services/services.html) which are used to control everything, like you would with the sonos app.
+Each Sonos devices exposes several [services](services/services.html) which are used to control everything, like you would with the sonos app.
 
 ![Awesome illustration from undraw.co](/assets/images/undraw_listening_1u79.svg)

@@ -1,10 +1,10 @@
 ---
 layout: default
-title: {{serviceName}}
+title: {{name}}
 parent: Services
 grand_parent: Sonos device
 ---
-# {{serviceName}}
+# {{name}} service
 {: .no_toc }
 {{#if description}}
 
@@ -12,7 +12,7 @@ grand_parent: Sonos device
 {{/if}}
 {{#if availableAt}}
 
-The {{serviceName}} is available on these models: {{#each availableAt}}`{{this}}`{{#unless @last}} / {{/unless}}{{/each}}.
+The {{name}} service is available on these models: {{#each availableAt}}`{{this}}`{{#unless @last}} / {{/unless}}{{/each}}.
 {{/if}}
 
 ```js
@@ -68,7 +68,7 @@ This actions returns a boolean whether or not the requests succeeded.
 {{/if}}
 {{#if remarks}}
 
-**Remarks** {{remarks}}
+**Remarks** {{{remarks}}}
 {{/if}}
 
 {{/each}}
