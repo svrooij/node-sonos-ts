@@ -24,12 +24,12 @@
     "real-time",
     "home-automation"
   ],
-  "author": "Stephan van Rooij <github@svrooij.nl> (https://svrooij.nl)",
+  "author": "Stephan van Rooij <sonos@svrooij.io> (https://svrooij.io)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/svrooij/node-sonos-ts/issues"
   },
-  "homepage": "https://github.com/svrooij/node-sonos-ts#readme",
+  "homepage": "https://svrooij.io/node-sonos-ts/",
   "devDependencies": {
     "@types/chai": "^4.2.16",
     "@types/debug": "^4.1.5",
