@@ -12,11 +12,11 @@ manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .then(() => {
     manager.Devices.forEach(d => {
       console.log('Device %s (%s) is joined in %s', d.Name, d.Uuid, d.GroupName)
-      d.Events.on(SonosEvents.Coordinator, uuid => {
-        console.log('Coordinator for %s changed to %s', d.Name, d.Uuid)
+      d.Events.on(SonosEvents.Coordinator, Uuid => {
+        console.log('Coordinator for %s changed to %s', d.Name, Uuid)
       })
       d.Events.on(SonosEvents.GroupName, newName => {
-        console.log('Groupname for %s changed to %s', d.Name, newName)
+        console.log('Group name for %s changed to %s', d.Name, newName)
       })
       d.Events.on(SonosEvents.CurrentTrack, uri => {
         console.log('Current Track for %s %s', d.Name, uri)

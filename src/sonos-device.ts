@@ -140,10 +140,10 @@ export default class SonosDevice extends SonosDeviceBase {
    *
    * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
    * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automatically parsed to an object (if possible).
-   * @returns {Promise<any>}
+   * @returns {Promise<unknown>}
    * @memberof SonosDevice
    */
-  public async ExecuteCommand(command: string, options?: string | unknown | number): Promise<any> {
+  public async ExecuteCommand(command: string, options?: string | unknown | number): Promise<unknown> {
     let service = '';
     let correctCommand = command;
     if (command.indexOf('.') > -1) {
@@ -160,7 +160,7 @@ export default class SonosDevice extends SonosDeviceBase {
     const baseProto = Object.getPrototypeOf(proto);
     const basePropertyDescriptions = Object.getOwnPropertyDescriptors(baseProto);
     const allKeys = [...Object.keys(propertyDescriptions), ...Object.keys(basePropertyDescriptions)];
-    const functionToCall = allKeys.find((key) => (key as string).toLowerCase() === correctCommand.toLowerCase());
+    const functionToCall = allKeys.find((key) => key.toLowerCase() === correctCommand.toLowerCase());
 
     if (typeof functionToCall === 'string' && typeof (objectToCallOn[functionToCall]) === 'function') {
       if (options === undefined) {
@@ -327,8 +327,9 @@ export default class SonosDevice extends SonosDeviceBase {
       householdId: service.Policy.Auth === 'AppLink' || service.Policy.Auth === 'DeviceLink' ? (await this.DevicePropertiesService.GetHouseholdID()).CurrentHouseholdID : undefined,
       authToken: accountData?.AuthToken ?? options.authToken,
       key: accountData?.Key ?? options.key,
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      saveNewAccount: async (serviceName, key, token) => this.SystemPropertiesService.SaveAccount(serviceName, key, token),
+      saveNewAccount: async (serviceName, key, token) => {
+        await this.SystemPropertiesService.SaveAccount(serviceName, key, token);
+      },
     });
   }
 
@@ -530,7 +531,7 @@ export default class SonosDevice extends SonosDeviceBase {
       await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
 
       // Wait for event (or timeout)
-      await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
+      await AsyncHelper.AsyncEvent<unknown>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
 
       if (notification.notificationFired !== undefined) {
         notification.notificationFired(true);
@@ -692,7 +693,8 @@ export default class SonosDevice extends SonosDeviceBase {
       return this.events;
     }
 
-    this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>;
+    // this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>; incorrect according to DeepSource
+    this.events = new EventEmitter();
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;
@@ -1263,7 +1265,7 @@ export default class SonosDevice extends SonosDeviceBase {
     this.debug('playQueue: Notification("%s") --> Maximum wait time for PlayBackStopped Event %d s.', currentName, remainingTime);
 
     // Timeout + 1 to ensure the timeout action fired already
-    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, remainingTime + 5).catch((err) => this.debug(err));
+    await AsyncHelper.AsyncEvent<unknown>(this.Events, SonosEvents.PlaybackStopped, remainingTime + 5).catch((err) => this.debug(err));
 
     this.debug('Received Playback Stop Event or Timeout for current PlayNotification("%s")', currentName);
 

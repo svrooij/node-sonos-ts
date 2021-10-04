@@ -31,7 +31,7 @@ export class MusicServicesService extends MusicServicesServiceBase {
     }
     const encodedResponse = await this.ListAvailableServices();
     const raw = XmlHelper.DecodeAndParseXml(encodedResponse.AvailableServiceDescriptorList, '');
-    const result = ArrayHelper.ForceArray(raw.Services.Service)
+    const result = ArrayHelper.ForceArray((raw as any).Services.Service)
       .map((service) => MusicServicesService.ParseMusicService(service))
       .sort((a, b) => a.Name.localeCompare(b.Name));
 

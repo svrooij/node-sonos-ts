@@ -35,7 +35,7 @@ export class TestHelpers {
    * @param responseBody This should be returned inside the soap response
    * @param scope (optional) use this scope instead of creating a new scope
    */
-  static mockRequest(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, responseBody?: string, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockRequest(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, responseBody: string | undefined = undefined, scope = TestHelpers.getScope()): nock.Scope {
     return scope
       .post(endpoint, requestBody ? SoapHelper.PutInEnvelope(requestBody) : undefined, { reqheaders: {
         soapaction: action
@@ -53,7 +53,7 @@ export class TestHelpers {
    * @param responseBody the soap response body, or ''
    * @param scope (optional) use this scope instead of creating a new scope
    */
-  static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string, responseBody: string | undefined, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string, responseBody: string | undefined, scope = TestHelpers.getScope()): nock.Scope {
     return TestHelpers.mockRequest(endpoint,
       `"urn:schemas-upnp-org:service:${service}:1#${action}"`,
       `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${service}:1">${requestBody}</u:${action}>`,
@@ -63,13 +63,13 @@ export class TestHelpers {
       scope)
   }
 
-  static mockHttpError(endpoint: string, action: string, requestBody: string, httpErrorCode: number = 500, scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockHttpError(endpoint: string, action: string, requestBody: string, httpErrorCode = 500, scope = TestHelpers.getScope()): nock.Scope {
     return scope
       .post(endpoint, SoapHelper.PutInEnvelope(requestBody), { reqheaders: { soapaction: action } })
       .reply(httpErrorCode, '' );
   }
 
-  static mockSoapError(endpoint: string, action: string, requestBody: string, upnpErrorCode: number = 718, httpErrorCode: number = 500, faultCode: string = 's:Client', faultString: string = 'UPnPError', scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockSoapError(endpoint: string, action: string, requestBody: string, upnpErrorCode = 718, httpErrorCode = 500, faultCode = 's:Client', faultString = 'UPnPError', scope = TestHelpers.getScope()): nock.Scope {
     return scope
       .post(endpoint, SoapHelper.PutInEnvelope(requestBody), { reqheaders: { soapaction: action } })
       .reply(httpErrorCode, 
@@ -77,7 +77,7 @@ export class TestHelpers {
       );
   }
 
-  static mockAlarmListResponse(scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockAlarmListResponse(scope = TestHelpers.getScope()): nock.Scope {
     return TestHelpers.mockSoapRequestWithFile(
       '/AlarmClock/Control',
       '"urn:schemas-upnp-org:service:AlarmClock:1#ListAlarms"',
@@ -89,7 +89,7 @@ export class TestHelpers {
     );
   }
 
-  static mockMusicServicesListResponse(scope: nock.Scope = TestHelpers.getScope()) : nock.Scope {
+  static mockMusicServicesListResponse(scope = TestHelpers.getScope()) : nock.Scope {
     return TestHelpers.mockSoapRequestWithFile('/MusicServices/Control',
       '"urn:schemas-upnp-org:service:MusicServices:1#ListAvailableServices"',
       '<u:ListAvailableServices xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"></u:ListAvailableServices>',
@@ -99,7 +99,7 @@ export class TestHelpers {
       scope);
     }
 
-  static mockZoneGroupState(scope: nock.Scope = TestHelpers.getScope(), file: string = 'zone-group.GroupState.xml'): nock.Scope {
+  static mockZoneGroupState(scope = TestHelpers.getScope(), file = 'zone-group.GroupState.xml'): nock.Scope {
     return TestHelpers.mockSoapRequestWithFile(
       '/ZoneGroupTopology/Control',
       '"urn:schemas-upnp-org:service:ZoneGroupTopology:1#GetZoneGroupState"',
@@ -111,7 +111,7 @@ export class TestHelpers {
     );
   }
 
-  static mockSoapRequestWithFile(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, bodyFileParts: string[], scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockSoapRequestWithFile(endpoint: string, action: string, requestBody: string, responseTag: string, responseService: string, bodyFileParts: string[], scope = TestHelpers.getScope()): nock.Scope {
     const responseBody = fs.readFileSync(path.join(__dirname, ...bodyFileParts)).toString()
     return TestHelpers.mockRequest(
       endpoint,
@@ -124,7 +124,7 @@ export class TestHelpers {
     );
   }
 
-  static mockDeviceDesription(scope: nock.Scope = TestHelpers.getScope()): nock.Scope {
+  static mockDeviceDesription(scope = TestHelpers.getScope()): nock.Scope {
     const responseBody = fs.readFileSync(path.join(__dirname, 'services', 'responses', 'device_description.xml')).toString()
     return scope
       .get('/xml/device_description.xml')

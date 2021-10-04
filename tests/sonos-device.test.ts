@@ -468,10 +468,10 @@ describe('SonosDevice', () => {
 
   describe('MusicServicesClient(...)', () => {
     it('returns Spotify client', async () => {
-      const randomDeviceId = Guid.create().toString();
-      const randomAccountKey = Guid.create().toString();
-      const randomAccountToken = Guid.create().toString();
-      const randomHouseHoldId = Guid.create().toString();
+      const randomDeviceId: string = Guid.create().toString();
+      const randomAccountKey: string = Guid.create().toString();
+      const randomAccountToken:string = Guid.create().toString();
+      const randomHouseHoldId:string = Guid.create().toString();
       const port = 1405;
       const scope = TestHelpers.getScope(port);
       TestHelpers.mockRequest('/SystemProperties/Control',

@@ -27,7 +27,7 @@ export class AlarmClockService extends AlarmClockServiceBase {
       return [];
     }
     const parsedList = XmlHelper.DecodeAndParseXml(alarmList.CurrentAlarmList, '');
-    const alarms = ArrayHelper.ForceArray<any>(parsedList.Alarms.Alarm);
+    const alarms = ArrayHelper.ForceArray<any>((parsedList as any).Alarms.Alarm);
     const results: Array<Alarm> = [];
     alarms.forEach((alarm: any) => {
       if (alarm.ID !== undefined) {

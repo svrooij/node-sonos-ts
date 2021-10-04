@@ -1,6 +1,5 @@
 const readline = require('readline');
 const SonosDevice = require('../lib').SonosDevice
-const SmapiClient = require('../lib').SmapiClient
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 
@@ -40,7 +39,7 @@ sonos.MusicServicesService.ListAndParseAvailableServices(true).then(async servic
       console.log('And enter this linkcode: %s', deviceLink.linkCode)
     }
     
-    const authAnswer = await askQuestion('Did you login and see a page that you can close the page and continue in the sonos app?\r\nPress enter to continue or CTRL+C to cancel');
+    await askQuestion('Did you login and see a page that you can close the page and continue in the sonos app?\r\nPress enter to continue or CTRL+C to cancel');
     const deviceAuthCode = await client.GetDeviceAuthToken(deviceLink.linkCode);
     console.log('Authentication data for %s\r\n%s', service.Name, JSON.stringify(deviceAuthCode, null, 2));
 

@@ -44,7 +44,7 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): any {
+  static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
     const decoded = XmlHelper.DecodeXml(encodedXml);
     if (typeof decoded === 'undefined') return undefined;
     return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
@@ -58,7 +58,7 @@ export default class XmlHelper {
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
-  static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): any {
+  static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
     const decoded = XmlHelper.DecodeXml(encodedXml);
     return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
   }

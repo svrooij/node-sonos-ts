@@ -1,4 +1,4 @@
-import { expect }  from 'chai'
+import { assert, expect }  from 'chai'
 import nock from 'nock'
 import SonosDevice from '../src/sonos-device'
 import { TestHelpers } from './test-helpers';
@@ -11,7 +11,8 @@ describe('SonosDevice - Notifications', () => {
   describe('PlayNotification(...)', () => {
     afterEach(async (done) => {
       await SonosEventListener.DefaultInstance.StopListener();
-      setTimeout(done, 30);
+      setTimeout(() => done(), 30);
+
     })
     it('executes right requests', async (done) => {
 
@@ -372,7 +373,7 @@ describe('SonosDevice - Notifications', () => {
   describe('PlayTTS(...)', () => {
     afterEach(async (done) => {
       await SonosEventListener.DefaultInstance.StopListener();
-      setTimeout(done, 30);
+      setTimeout(() => done(), 30);
     });
 
     it('return false when not playing', async (done) => {
@@ -453,7 +454,7 @@ describe('SonosDevice - Notifications', () => {
 describe('PlayNotificationTwo(...) Queue Tests', () => {
   afterEach(async (done) => {
     await SonosEventListener.DefaultInstance.StopListener();
-    setTimeout(done, 30);
+    setTimeout(() => done(), 30);
   });
 
   it('returns false when timeout triggers', async (done) => {
@@ -846,7 +847,8 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
         return;
       }
       // expect(device.jestDebug.join('\n')).to.be.eq("");
-      expect("First promise got wrongly resolved (" + result + ") before 2nd").to.be.eq("");
+      assert(false, `First promise got wrongly resolved (${result}) before 2nd`);
+      // expect("First promise got wrongly resolved (" + result + ") before 2nd").to.be.eq("");
       done();
     });
 
@@ -874,7 +876,8 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       if(secondNotificationFinished) {
         return;
       }
-      expect("3rd promise got wrongly resolved before 2nd").to.be.eq("");
+      assert(false, '3rd promise got wrongly resolved before 2nd');
+      // expect("3rd promise got wrongly resolved before 2nd").to.be.eq("");
       done();
     });
   });

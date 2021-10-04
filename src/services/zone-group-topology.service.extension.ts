@@ -21,7 +21,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     const groupStateResponse = await this.GetZoneGroupState();
     if (typeof groupStateResponse.ZoneGroupState === 'string') {
       const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '');
-      const groups = ArrayHelper.ForceArray(decodedGroupState.ZoneGroupState.ZoneGroups.ZoneGroup);
+      const groups = ArrayHelper.ForceArray((decodedGroupState as any).ZoneGroupState.ZoneGroups.ZoneGroup);
       return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
     }
     return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
@@ -82,8 +82,8 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     };
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
-    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type);
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
+    const parsedValue = super.ResolveEventPropertyValue(name, originalValue, type) as any;
     if (name === 'ZoneGroupState') {
       const groups = ArrayHelper.ForceArray(parsedValue.ZoneGroupState.ZoneGroups.ZoneGroup);
       return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));

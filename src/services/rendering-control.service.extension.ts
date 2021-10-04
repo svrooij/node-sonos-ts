@@ -2,7 +2,7 @@ import { ChannelValue } from '../models';
 import { RenderingControlServiceBase } from './rendering-control.service';
 
 export class RenderingControlService extends RenderingControlServiceBase {
-  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
     if (name === 'Mute') {
       const output = {} as ChannelValue<boolean>;
       (originalValue as Array<any>).forEach((v) => {

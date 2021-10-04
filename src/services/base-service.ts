@@ -520,7 +520,7 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
     if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
       if (name.endsWith('MetaData')) {
         return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);

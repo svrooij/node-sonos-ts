@@ -1,6 +1,5 @@
 const readline = require('readline');
 const SonosDevice = require('../lib').SonosDevice
-const SmapiClient = require('../lib').SmapiClient
 
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 
