@@ -12,7 +12,7 @@ const debug = require('debug')('sonos:helpers')
  * Helper class
  * @class Helpers
  */
-var Helpers = {}
+let Helpers = {}
 
 /**
  * Wrap in UPnP Envelope

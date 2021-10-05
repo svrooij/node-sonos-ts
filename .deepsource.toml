@@ -7,7 +7,7 @@ test_patterns = [
 
 exclude_patterns = [
   "tests/test-helpers.ts",
-  "tests/helpers/legacy-helper.js",
+  "tests/helpers/legacy-helpers.js",
   "docs/**",
   "examples/**",
   "jest.config.js",

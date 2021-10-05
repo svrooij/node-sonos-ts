@@ -19,7 +19,7 @@ sonos.MusicServicesService.ListAndParseAvailableServices(true).then(async servic
   const filteredServices = services.filter(s => s.Policy.Auth === 'AppLink' || s.Policy.Auth === 'DeviceLink');
   filteredServices.forEach(s => {
 
-    var cap = parseInt(s.Capabilities)
+    const cap = parseInt(s.Capabilities)
     console.log('%s  %s\t%s\t%s\t%s', s.Id.toString().padStart(3, ' '), s.Name.padEnd(20, ' '), s.Policy.Auth.padEnd(9, ' '), s.Capabilities.toString().padStart(9, ' '), cap.toString(2).padStart(25, ' '))
   })
   const answer = await askQuestion('Which service do you want to login to?\r\nName or ID: ');

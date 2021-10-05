@@ -74,7 +74,7 @@ describe('SonosDevice', () => {
 
       const device = new SonosDevice(TestHelpers.testHost, 1400)
 
-      var result = await device.AddUriToQueue(track);
+      const result = await device.AddUriToQueue(track);
       expect(result).to.have.nested.property('FirstTrackNumberEnqueued', 1);
       expect(result).to.have.nested.property('NewQueueLength', 1);
       expect(result).to.have.nested.property('NumTracksAdded', 1);
@@ -119,7 +119,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('Play');
+      const result = await device.ExecuteCommand('Play');
       expect(result).to.be.eq(true);
     });
 
@@ -132,7 +132,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('LoadUuid', true);
+      const result = await device.ExecuteCommand('LoadUuid', true);
       expect(result).to.be.eq('RINCON_00FFFFFFFFBC01400');
     });
 
@@ -146,7 +146,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('AlarmclockService.Getformat');
+      const result = await device.ExecuteCommand('AlarmclockService.Getformat');
 
       expect(result).to.have.property('CurrentTimeFormat', '24H');
       expect(result).to.have.property('CurrentDateFormat', 'DMY');
@@ -171,7 +171,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const options = JSON.stringify({ InstanceID: 0, NewSleepTimerDuration: '00:03:05' });
-      var result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
+      const result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
       expect(result).to.be.eq(true);
     });
 
@@ -184,7 +184,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('AVTransportService.Next');
+      const result = await device.ExecuteCommand('AVTransportService.Next');
       expect(result).to.be.eq(true);
     });
 
@@ -318,7 +318,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('zonegrouptopologyservice.getzonegroupAttributes');
+      const result = await device.ExecuteCommand('zonegrouptopologyservice.getzonegroupAttributes');
 
       expect(result).to.have.property('CurrentZoneGroupName', 'Kantoor');
       expect(result).to.have.property('CurrentZoneGroupID', 'fakeID');
@@ -572,7 +572,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.SetAVTransportURI(track);
+      const result = await device.SetAVTransportURI(track);
       expect(result).to.be.true;
     });
     it('accepts radio:s78122', async () => {
@@ -1021,7 +1021,7 @@ describe('SonosDevice', () => {
         'AVTransport');
       const device = new SonosDevice(TestHelpers.testHost, 1400, deviceID);
 
-      var result = await device.SwitchToTV();
+      const result = await device.SwitchToTV();
       expect(result).to.be.eq(true);
     });
   });

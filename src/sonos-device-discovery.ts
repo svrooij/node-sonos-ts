@@ -21,7 +21,7 @@ export default class SonosDeviceDiscovery {
     this.debug = debug('sonos:devicediscovery');
     this.socket = createSocket('udp4', (buffer, rinfo) => {
       const msg = buffer.toString();
-      if (/.Sonos.+/.exec(msg)) {
+      if (/.Sonos.+/.test(msg)) {
         const modelCheck = /SERVER.*\((.*)\)/.exec(msg);
         const model = (modelCheck && modelCheck.length > 1 ? modelCheck[1] : undefined);
         const addr = rinfo.address;

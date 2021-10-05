@@ -143,7 +143,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<unknown>}
    * @memberof SonosDevice
    */
-  public async ExecuteCommand(command: string, options?: string | unknown | number): Promise<unknown> {
+  public ExecuteCommand(command: string, options?: string | unknown | number): Promise<unknown> {
     let service = '';
     let correctCommand = command;
     if (command.indexOf('.') > -1) {
@@ -1288,7 +1288,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return await this.playNextQueueItem(originalState);
   }
 
-  private async resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
+  private resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
     if (currentItem.resolveAfterRevert === false) {
       if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() > 0) {
         clearTimeout(currentItem.generalTimeout.timeout);
