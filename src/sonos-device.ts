@@ -4,7 +4,7 @@ import fetch from 'node-fetch';
 import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
-  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
+  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData, GetMediaInfoResponse, GetPositionInfoResponse,
 } from './services';
 import {
   PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
@@ -1170,7 +1170,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Notification Queue
-  private async playQueue(originalState: TransportState): Promise<boolean> {
+  private async playQueue(originalState?: TransportState): Promise<boolean> {
     this.debug('playQueue: Called, current Queue length: %d', this.notificationQueue.queue.length);
     if (this.notificationQueue.queue.length === 0) {
       throw new Error('Queue is already empty');
@@ -1302,7 +1302,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return true;
   }
 
-  private async playNextQueueItem(originalState: TransportState) {
+  private async playNextQueueItem(originalState?: TransportState) {
     this.notificationQueue.queue.shift();
 
     if (this.notificationQueue.queue.length > 0) {
@@ -1350,7 +1350,13 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   private async startQueue(options: PlayNotificationOptions): Promise<boolean> {
-    const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
+    let originalState: TransportState | undefined;
+    await this.AVTransportService.GetTransportInfo()
+      .then((info) => {
+        originalState = info.CurrentTransportState as TransportState;
+      }).catch((err) => {
+        this.debug('Error retrieving volume, but this shouldn\'t stop the queue:  %o', err);
+      });
     this.debug('Current state is %s', originalState);
 
     if (!(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
@@ -1378,9 +1384,27 @@ export default class SonosDevice extends SonosDeviceBase {
     }
 
     // Original data to revert to
-    const originalVolume = (await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })).CurrentVolume;
-    const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
-    const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
+    let originalVolume = -1;
+    let originalMediaInfo: GetMediaInfoResponse | undefined;
+    let originalPositionInfo: GetPositionInfoResponse | undefined;
+    await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })
+      .then((info) => {
+        originalVolume = info.CurrentVolume;
+      }).catch((err) => {
+        this.debug('Error retrieving volume, but this shouldn\'t stop the queue:  %o', err);
+      });
+    await this.AVTransportService.GetMediaInfo()
+      .then((info) => {
+        originalMediaInfo = info;
+      }).catch((err) => {
+        this.debug('Error retrieving initial Media info, but this shouldn\'t stop playing the queue:  %o', err);
+      });
+    await this.AVTransportService.GetPositionInfo()
+      .then((info) => {
+        originalPositionInfo = info;
+      }).catch((err) => {
+        this.debug('Error retrieving initial position info, but this shouldn\'t stop the queue:  %o', err);
+      });
 
     this.debug('Starting Notification Queue');
     // this.jestDebug.push(`${(new Date()).getTime()}: Start Queue playing`);
@@ -1391,53 +1415,64 @@ export default class SonosDevice extends SonosDeviceBase {
       // Revert everything back
       this.debug('Reverting everything back to normal');
       let isBroadcast = false;
-      if (
-        // TODO: Analyze under which circumstances CurrentURIMetaData is undefined
-        originalMediaInfo.CurrentURIMetaData !== undefined
+      if (originalMediaInfo?.CurrentURIMetaData !== undefined
         && typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
         && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast' // This UpnpClass should for sure be skipped.
       ) {
         isBroadcast = true;
       }
 
-      if (originalVolume !== undefined && this.notificationQueue.volumeChanged === true) {
+      if (originalVolume !== undefined && this.notificationQueue.volumeChanged) {
         this.debug('This Queue changed the volume so revert it');
-        await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
+        await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume })
+          .catch((err) => {
+            this.debug('Error restoring the volume, but this shouldn\'t stop the queue:  %o', err);
+          });
         if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
         this.notificationQueue.volumeChanged = false;
       }
 
-      await this.AVTransportService.SetAVTransportURI(
-        {
-          InstanceID: 0,
-          CurrentURI: originalMediaInfo.CurrentURI,
-          CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData,
-        },
-      ).catch((err) => {
-        this.debug('Error settingAVTransportURI, but this shouldn\'t stop the queue:  %o', err);
-      });
-      if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
-
-      if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
-        this.debug('Selecting track %d', originalPositionInfo.Track);
-        await this.SeekTrack(originalPositionInfo.Track)
+      if (originalMediaInfo !== undefined) {
+        await this.AVTransportService.SetAVTransportURI(
+          {
+            InstanceID: 0,
+            CurrentURI: originalMediaInfo.CurrentURI,
+            CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData,
+          },
+        )
           .catch((err) => {
-            this.debug('Error selecting track, happens with some music services %o', err);
+            this.debug('Error settingAVTransportURI, but this shouldn\'t stop the queue:  %o', err);
           });
-      }
+        if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
 
-      if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00' && !isBroadcast) {
-        this.debug('Setting back time to %s', originalPositionInfo.RelTime);
-        await this.SeekPosition(originalPositionInfo.RelTime)
-          .catch((err) => {
-            this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
-          });
-      }
+        if (originalPositionInfo) {
+          if (originalPositionInfo.Track > 1
+            && originalMediaInfo.NrTracks > 1) {
+            this.debug('Selecting track %d', originalPositionInfo.Track);
+            await this.SeekTrack(originalPositionInfo.Track)
+              .catch((err) => {
+                this.debug('Error selecting track, happens with some music services %o', err);
+              });
+          }
 
-      if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-        await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => {
-          this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
-        });
+          if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00' && !isBroadcast) {
+            this.debug('Setting back time to %s', originalPositionInfo.RelTime);
+            await this.SeekPosition(originalPositionInfo.RelTime)
+              .catch((err) => {
+                this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
+              });
+          }
+        }
+
+        if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
+          await this.AVTransportService.Play({
+            InstanceID: 0,
+            Speed: '1',
+          })
+            .catch((err) => {
+              this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
+            });
+        }
       }
     }
 
