@@ -224,7 +224,16 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private async handleRequest(request: Request, action: string): Promise<boolean> {
-    const response = await fetch(request);
+    let response: Response | undefined;
+    let reason: string | undefined;
+    await fetch(request)
+      .then((r) => { response = r; })
+      .catch((err) => { reason = err; });
+    if (response === undefined) {
+      throw new Error(
+        `Error handlingRequest to "${request.url}" Method:"${request.method}" \nReason: ${reason ?? 'Unkown reason'}`,
+      );
+    }
     if (response.ok) {
       return true;
     }

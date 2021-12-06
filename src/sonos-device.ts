@@ -1272,14 +1272,14 @@ export default class SonosDevice extends SonosDeviceBase {
     if (currentItem.individualTimeout === undefined) {
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
       this.debug('Playing notification("%s") finished successfully', currentName);
-      await this.resolvePlayingQueueItem(currentItem, true);
+      this.resolvePlayingQueueItem(currentItem, true);
       return await this.playNextQueueItem(originalState);
     }
 
     const timeLeft = currentItem.individualTimeout.timeLeft();
     if (timeLeft > 0) {
       clearTimeout(currentItem.individualTimeout.timeout);
-      await this.resolvePlayingQueueItem(currentItem, true);
+      this.resolvePlayingQueueItem(currentItem, true);
     }
 
     if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
@@ -1289,7 +1289,7 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   private resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
-    if (currentItem.resolveAfterRevert === false) {
+    if (!currentItem.resolveAfterRevert) {
       if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() > 0) {
         clearTimeout(currentItem.generalTimeout.timeout);
       }
@@ -1408,7 +1408,17 @@ export default class SonosDevice extends SonosDeviceBase {
 
     this.debug('Starting Notification Queue');
     // this.jestDebug.push(`${(new Date()).getTime()}: Start Queue playing`);
-    await this.playQueue(originalState);
+    try {
+      await this.playQueue(originalState);
+    } catch (e) {
+      this.debug('Error playing the notification queue:  %o', e);
+      if (!options.catchQueueErrors) {
+        throw e;
+      } else if (this.notificationQueue.queue.length > 0) {
+        // We should remove the failed item, to prevent infinite loop;
+        this.notificationQueue.queue.shift();
+      }
+    }
     this.debug('Notification Queue finished');
 
     if (this.notificationQueue.anythingPlayed) {
@@ -1433,6 +1443,7 @@ export default class SonosDevice extends SonosDeviceBase {
       }
 
       if (originalMediaInfo !== undefined) {
+        this.debug('We have original Media Info --> Restoring now');
         await this.AVTransportService.SetAVTransportURI(
           {
             InstanceID: 0,
@@ -1465,6 +1476,7 @@ export default class SonosDevice extends SonosDeviceBase {
         }
 
         if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
+          this.debug('Before Queue Sonos was playing --> Resume');
           await this.AVTransportService.Play({
             InstanceID: 0,
             Speed: '1',

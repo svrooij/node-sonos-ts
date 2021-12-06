@@ -60,6 +60,12 @@ export interface PlayNotificationOptionsBase {
    */
   specificTimeout?: number;
 
+  /**
+   * If an error occurs playing a notification queue, this flag would prevent the error from bubbling to your main application.
+   *
+   * @deprecated Experimental feature, please dont depend on this
+   */
+  catchQueueErrors?: boolean;
 }
 
 export interface PlayNotificationOptions extends PlayNotificationOptionsBase {
