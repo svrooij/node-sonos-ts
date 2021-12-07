@@ -1222,7 +1222,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
     // Start the notification
     const setTransportUrlResult = await AsyncHelper.catchEm<boolean>(
-      this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: currentOptions.trackUri, CurrentURIMetaData: currentOptions.metadata ?? '' })
+      this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: currentOptions.trackUri, CurrentURIMetaData: currentOptions.metadata ?? '' }),
     );
     if (setTransportUrlResult.data === null || setTransportUrlResult.reason) {
       this.debug('Failed to set Transport URL for next notification. %o', setTransportUrlResult.reason);
@@ -1233,7 +1233,7 @@ export default class SonosDevice extends SonosDeviceBase {
       this.notificationQueue.volumeChanged = true;
       this.debug('playQueue: Changing Volume to %o', currentOptions.volume);
       const setVolumeResult = await AsyncHelper.catchEm<boolean>(
-        this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: currentOptions.volume })
+        this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: currentOptions.volume }),
       );
       if (setVolumeResult.data === null || setVolumeResult.reason) {
         this.debug('Error, while setting desired volume for notification. %o', setVolumeResult.reason);

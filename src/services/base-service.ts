@@ -15,7 +15,7 @@ import { EventsError, EventsErrorCode } from '../models/event-errors';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
-import AsyncHelper from "../helpers/async-helper";
+import AsyncHelper from '../helpers/async-helper';
 
 /**
  * Base Service class will handle all the requests to the sonos device.

@@ -47,13 +47,13 @@ export default class AsyncHelper {
     await new Promise((resolve) => setTimeout(() => resolve(undefined), ms));
   }
 
-  static async catchEm<T>(promise: Promise<T>): Promise<{reason: any, data: T | null}> {
+  static async catchEm<T>(promise: Promise<T>): Promise<{reason: Error | null, data: T | null}> {
     return promise
       .then((data: T) => ({
         reason: null,
         data,
       }))
-      .catch((reason: any) => ({
+      .catch((reason: Error) => ({
         reason,
         data: null,
       }));
