@@ -15,6 +15,7 @@ import { EventsError, EventsErrorCode } from '../models/event-errors';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
+import AsyncHelper from "../helpers/async-helper";
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -224,20 +225,16 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private async handleRequest(request: Request, action: string): Promise<boolean> {
-    let response: Response | undefined;
-    let reason: string | undefined;
-    await fetch(request)
-      .then((r) => { response = r; })
-      .catch((err) => { reason = err; });
-    if (response === undefined) {
+    const fetchResult = await AsyncHelper.catchEm<Response>(fetch(request));
+    if (fetchResult.data === null) {
       throw new Error(
-        `Error handlingRequest to "${request.url}" Method:"${request.method}" \nReason: ${reason ?? 'Unkown reason'}`,
+        `Error handlingRequest to "${request.url}" Method:"${request.method}" \nReason: ${fetchResult.reason ?? 'Unkown reason'}`,
       );
     }
-    if (response.ok) {
+    if (fetchResult.data.ok) {
       return true;
     }
-    return await this.handleErrorResponse<boolean>(action, response);
+    return await this.handleErrorResponse<boolean>(action, fetchResult.data);
   }
 
   /**

@@ -46,4 +46,16 @@ export default class AsyncHelper {
   static async Delay(ms: number): Promise<void> {
     await new Promise((resolve) => setTimeout(() => resolve(undefined), ms));
   }
+
+  static async catchEm<T>(promise: Promise<T>): Promise<{reason: any, data: T | null}> {
+    return promise
+      .then((data: T) => ({
+        reason: null,
+        data,
+      }))
+      .catch((reason: any) => ({
+        reason,
+        data: null,
+      }));
+  }
 }
