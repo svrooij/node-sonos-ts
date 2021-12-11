@@ -1356,8 +1356,10 @@ export default class SonosDevice extends SonosDeviceBase {
 
     if (!this.notificationQueue.playing) {
       this.notificationQueue.playing = true;
-      setTimeout(() => {
-        this.startQueue(options);
+      setTimeout(async () => {
+        await this.startQueue(options).catch((reason) => {
+          reject(reason);
+        });
       });
     }
   }
@@ -1518,12 +1520,16 @@ export default class SonosDevice extends SonosDeviceBase {
     this.notificationQueue.anythingPlayed = false;
     this.notificationQueue.promisesToResolve = [];
     if (this.notificationQueue.queue.length > 0) {
-      setTimeout(() => {
-        this.startQueue(options);
+      const promise = new Promise<boolean>((resolve, reject) => {
+        setTimeout(async () => {
+          await this.startQueue(options).catch((reason) => reject(reason));
+          resolve(true);
+        });
       });
-    } else {
-      this.notificationQueue.playing = false;
+      return promise;
     }
+
+    this.notificationQueue.playing = false;
     return true;
   }
   // #endregion
