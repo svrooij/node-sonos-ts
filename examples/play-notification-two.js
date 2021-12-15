@@ -11,14 +11,15 @@
 
 const SonosDevice = require('../lib').SonosDevice
 
-const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+// const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.178.41')
 
 // Pre-start listening for events for more efficient handling.
 sonos.Events.on('currentTrack', (track) => {
   console.log('TrackChanged %o', track);
 });
 
-function playNotification(trackUri, durationInMs) {
+function playNotification(trackUri, durationInMs, resolveCB) {
   const specificTimeout = Math.ceil(durationInMs / 1000) + 5;
   const options = {
     catchQueueErrors: true,
@@ -27,23 +28,47 @@ function playNotification(trackUri, durationInMs) {
     onlyWhenPlaying: false,
     resolveAfterRevert: false,
     volume: 40,
-    specificTimeout: specificTimeout,
-    notificationFired: (played) => {
-     console.log(
-          `Sonos Notification ("${trackUri}") was${played ? '' : "n't"} played (duration: "${specificTimeout}")`,
-      );
-    },
+    specificTimeout: specificTimeout
   };
-  sonos.PlayNotificationTwo(options);
+  sonos.PlayNotificationTwo(options).then((played) => {resolveCB(played);});
 }
 
-playNotification('https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', 2000);
-playNotification('https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', 2500);
+playNotification(
+    'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3',
+    2000,
+    (played) => {
+      console.log(
+          `Notification 1 was${played ? '' : "n't"} played`,
+      );
+    }
+);
+playNotification(
+    'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3',
+    2500,
+    (played) => {
+      console.log(
+          `Notification 2 was${played ? '' : "n't"} played`,
+      );
+    });
 setTimeout(() => {
-  playNotification('https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', 2000);
+  playNotification(
+      'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3',
+      2000,
+      (played) => {
+        console.log(
+            `Notification 3 was${played ? '' : "n't"} played`,
+        );
+      });
 }, 1000);
 setTimeout(() => {
-  playNotification('https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', 2500);
+  playNotification(
+      'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3',
+      2500,
+      (played) => {
+        console.log(
+            `Notification 4 was${played ? '' : "n't"} played`,
+        );
+      });
 }, 2500);
 setTimeout(() => {
   process.exit();
