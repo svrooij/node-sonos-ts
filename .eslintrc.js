@@ -17,7 +17,6 @@ module.exports =  {
     'max-classes-per-file':'off',
     'max-len':'off',
     'no-return-await': 'off',
-    'no-undef-init': 'off',
     'linebreak-style': 'off'
   },
   overrides: [

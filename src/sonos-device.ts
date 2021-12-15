@@ -1365,7 +1365,7 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   private async startQueue(options: PlayNotificationOptions): Promise<boolean> {
-    let originalState: TransportState | undefined = undefined;
+    let originalState: TransportState | undefined;
     await this.AVTransportService.GetTransportInfo()
       .then((result) => {
         originalState = result.CurrentTransportState as TransportState;
@@ -1400,7 +1400,7 @@ export default class SonosDevice extends SonosDeviceBase {
       }
     }
 
-    let originalVolume: number | undefined = undefined;
+    let originalVolume: number | undefined;
     await this.RenderingControlService.GetVolume({
       InstanceID: 0,
       Channel: 'Master',
