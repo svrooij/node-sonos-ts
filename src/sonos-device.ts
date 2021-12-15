@@ -18,7 +18,9 @@ import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
 import DeviceDescription from './models/device-description';
 import { SonosState } from './models/sonos-state';
-import { NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem, PlayNotificationTwoOptions, PlayTtsTwoOptions } from './models/notificationQueue';
+import {
+  NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem, PlayNotificationTwoOptions, PlayTtsTwoOptions,
+} from './models/notificationQueue';
 
 /**
  * Main class to control a single sonos device.
@@ -606,7 +608,7 @@ export default class SonosDevice extends SonosDeviceBase {
       catchQueueErrors: options.catchQueueErrors,
       resolveAfterRevert: options.resolveAfterRevert,
       defaultTimeout: options.defaultTimeout,
-      specificTimeout: options.specificTimeout
+      specificTimeout: options.specificTimeout,
     });
   }
 

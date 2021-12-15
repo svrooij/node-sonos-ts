@@ -1,27 +1,27 @@
-import { PlayNotificationOptions, PlayTtsOptions } from "./requests";
+import { PlayNotificationOptions, PlayTtsOptions } from './requests';
 
 export interface PlayNotificationTwoOptions extends PlayNotificationOptions {
-  
+
   /**
    *
    */
-   resolveAfterRevert?: boolean;
+  resolveAfterRevert?: boolean;
 
-   /**
+  /**
     * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
     */
-   defaultTimeout?: number;
- 
-   /**
+  defaultTimeout?: number;
+
+  /**
     * This timeout starts as soon as this item is played next in the queue.
     * Thus in case of an error resolving the PlayNotificationCall with false.
     */
-   specificTimeout?: number;
- 
-   /**
+  specificTimeout?: number;
+
+  /**
     * If an error occurs playing a notification queue, this flag would prevent the error from bubbling to your main application.
     */
-   catchQueueErrors?: boolean;
+  catchQueueErrors?: boolean;
 }
 
 export interface PlayTtsTwoOptions extends PlayTtsOptions {
@@ -29,24 +29,24 @@ export interface PlayTtsTwoOptions extends PlayTtsOptions {
  *
  * @deprecated Experimental feature, please dont depend on this
  */
-   resolveAfterRevert?: boolean;
+  resolveAfterRevert?: boolean;
 
-   /**
+  /**
     * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
     */
-   defaultTimeout?: number;
- 
-   /**
+  defaultTimeout?: number;
+
+  /**
     * This timeout starts as soon as this item is played next in the queue.
     * Thus in case of an error resolving the PlayNotificationCall with false.
     */
-   specificTimeout?: number;
- 
-   /**
+  specificTimeout?: number;
+
+  /**
     * If an error occurs playing a notification queue, this flag would prevent the error from bubbling to your main application.
     *
     */
-   catchQueueErrors?: boolean;
+  catchQueueErrors?: boolean;
 }
 
 export interface NotificationQueueItem {
