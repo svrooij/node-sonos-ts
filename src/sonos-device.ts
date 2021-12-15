@@ -18,7 +18,7 @@ import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
 import DeviceDescription from './models/device-description';
 import { SonosState } from './models/sonos-state';
-import { NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem } from './models/notificationQueue';
+import { NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem, PlayNotificationTwoOptions, PlayTtsTwoOptions } from './models/notificationQueue';
 
 /**
  * Main class to control a single sonos device.
@@ -553,11 +553,15 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
    * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @param {boolean} [options.resolveAfterRevert]
+   * @param {number} [options.defaultTimeout]
+   * @param {number} [options.specificTimeout]
+   * @param {boolean} [options.catchQueueErrors]
    *
    * @deprecated This is experimental, do not depend on this. (missing the jsdocs experimental descriptor)
    * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
    */
-  public async PlayNotificationTwo(options: PlayNotificationOptions): Promise<boolean> {
+  public async PlayNotificationTwo(options: PlayNotificationTwoOptions): Promise<boolean> {
     const resolveAfterRevert = options.resolveAfterRevert === undefined ? true : options.resolveAfterRevert;
 
     this.debug('PlayNotificationTwo(%o)', options);
@@ -584,16 +588,26 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
    * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @param {boolean} [options.resolveAfterRevert]
+   * @param {number} [options.defaultTimeout]
+   * @param {number} [options.specificTimeout]
+   * @param {boolean} [options.catchQueueErrors]
    * @deprecated TTS using experimental notification feature
    * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
    * @memberof SonosDevice
    */
-  public async PlayTTSTwo(options: PlayTtsOptions): Promise<boolean> {
+  public async PlayTTSTwo(options: PlayTtsTwoOptions): Promise<boolean> {
     this.debug('PlayTTSTwo(%o)', options);
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
-    return await this.PlayNotificationTwo(notificationOptions);
+    return await this.PlayNotificationTwo({
+      ...notificationOptions,
+      catchQueueErrors: options.catchQueueErrors,
+      resolveAfterRevert: options.resolveAfterRevert,
+      defaultTimeout: options.defaultTimeout,
+      specificTimeout: options.specificTimeout
+    });
   }
 
   /**
@@ -1364,7 +1378,7 @@ export default class SonosDevice extends SonosDeviceBase {
     }
   }
 
-  private async startQueue(options: PlayNotificationOptions): Promise<boolean> {
+  private async startQueue(options: PlayNotificationTwoOptions): Promise<boolean> {
     let originalState: TransportState | undefined;
     await this.AVTransportService.GetTransportInfo()
       .then((result) => {

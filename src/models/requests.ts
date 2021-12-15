@@ -40,32 +40,6 @@ export interface PlayNotificationOptionsBase {
    */
   volume?: number;
 
-  /**
-   *
-   * @deprecated Experimental feature, please dont depend on this
-   */
-  resolveAfterRevert?: boolean;
-
-  /**
-   * In case no other timeout given this will result in 30 Minutes Default Timeout for Playing time only
-   * @deprecated Experimental feature, please dont depend on this
-   */
-  defaultTimeout?: number;
-
-  /**
-   * This timeout starts as soon as this item is played next in the queue.
-   * Thus in case of an error resolving the PlayNotificationCall with false.
-   *
-   * @deprecated Experimental feature, please dont depend on this
-   */
-  specificTimeout?: number;
-
-  /**
-   * If an error occurs playing a notification queue, this flag would prevent the error from bubbling to your main application.
-   *
-   * @deprecated Experimental feature, please dont depend on this
-   */
-  catchQueueErrors?: boolean;
 }
 
 export interface PlayNotificationOptions extends PlayNotificationOptionsBase {
