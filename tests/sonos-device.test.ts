@@ -346,12 +346,13 @@ describe('SonosDevice', () => {
       expect(result.roomName).to.be.equal('TV');
     });
     it('throws error on http error', async () => {
-      TestHelpers.getScope(1410).get('/xml/devce_description.xml').reply(400, 'Bad Request');
+      TestHelpers.getScope(1410).get('/xml/device_description.xml').reply(400, 'Bad Request');
       const device = new SonosDevice(TestHelpers.testHost, 1410);
       try {
         const result = await device.GetDeviceDescription();
       } catch(err) {
         expect(err).to.not.be.null;
+        expect(err).to.have.property('message', 'Loading device description failed 400 Bad Request');
         return;
       }
       expect(false).to.be.true; // Should never be reached

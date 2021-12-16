@@ -1,6 +1,7 @@
 import nock from 'nock'
 import fs from 'fs'
 import path from 'path'
+import { createSocket } from 'dgram';
 import SoapHelper from '../src/helpers/soap-helper'
 
 /**
@@ -129,5 +130,38 @@ export class TestHelpers {
     return scope
       .get('/xml/device_description.xml')
       .reply(200, responseBody);
+  }
+ 
+  static async emitSsdpMessage(address = 'localhost', playerModel = 'ZPS1', ip = '127.16.0.1', uuid = 'RINCON_AABBAABBAABBA1400', householdId = 'Sonos_b520c167832c49388331eb1930'): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const smartSpeakerId = '90cefea176704568af4d'
+      const socket = createSocket({ type: 'udp4', reuseAddr: true });
+      socket.on('error', (err) => {
+        reject(err);
+      })
+      const buffer = Buffer.from([
+        'NOTIFY * HTTP/1.1',
+        'HOST: 239.255.255.250:1900',
+        'CACHE-CONTROL: max-age = 1800',
+        `LOCATION: http://${ip}:1400/xml/device_description.xml`,
+        `NT: uuid:${uuid}`,
+        'NTS: ssdp:alive',
+        `SERVER: Linux UPnP/1.0 Sonos/57.9-23290 (${playerModel})`,
+        `USN: uuid:${uuid}`,
+        `X-RINCON-HOUSEHOLD: ${householdId}`,
+        'X-RINCON-BOOTSEQ: 110',
+        'X-RINCON-WIFIMODE: 0',
+        'X-RINCON-VARIANT: 0',
+        `HOUSEHOLD.SMARTSPEAKER.AUDIO: ${householdId}.${smartSpeakerId}`
+      ].join('\r\n'));
+      socket.send(buffer, 1900, address, (err, bytes) => {
+        if(err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
+    })
+    
   }
 }
