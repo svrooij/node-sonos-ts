@@ -5,7 +5,7 @@ const manager = new SonosManager()
 
 // Switch on one of the following lines
 // Do device discovery
-// manager.InitializeWithDiscovery(10)
+// manager.InitializeWithDiscovery(120)
 // Connect known device
 manager.InitializeFromDevice(process.env.SONOS_HOST || '192.168.96.56')
   .then(console.log)

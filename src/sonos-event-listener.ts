@@ -237,13 +237,15 @@ export default class SonosEventListener {
    *
    * @remarks The event listener is started automatically, so you probably don't need to start it yourself.
    */
-  public StartListener(): void {
+  public StartListener(cb: (() => void) | undefined = undefined): void {
     if (!this.isListening) {
       this.debug('Starting event listener on port %d', this.port);
       this.listenerStarted = true;
       this.listeningSince = new Date();
-      if (!this.server.listening) {
-        this.server.listen(this.port);
+      if (!this.server.listening && !process.env.SONOS_DISABLE_LISTENER) {
+        this.server.listen(this.port, cb);
+      } else if (cb !== undefined) {
+        cb();
       }
     }
   }
@@ -253,7 +255,7 @@ export default class SonosEventListener {
    */
   public async StopListener(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.isListening !== true && this.server.listening !== true) {
+      if (process.env.SONOS_DISABLE_LISTENER || (this.isListening !== true && this.server.listening !== true)) {
         Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
         resolve();
         return;
