@@ -182,7 +182,7 @@ export default abstract class BaseService <TServiceEvent> {
           'Content-type': 'text/xml; charset=utf8',
         },
         body: this.generateRequestBody<TBody>(action, body),
-        timeout: 5000,
+        timeout: 30000,
       },
     );
   }
