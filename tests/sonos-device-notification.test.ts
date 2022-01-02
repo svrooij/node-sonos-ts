@@ -10,12 +10,18 @@ import AsyncHelper from '../src/helpers/async-helper';
 describe('SonosDevice - Notifications', () => {
   describe('PlayNotification(...)', () => {
     afterEach(async (done) => {
-      await SonosEventListener.DefaultInstance.StopListener();
-      setTimeout(() => done(), 30);
+      await SonosEventListener.DefaultInstance.StopListener().catch(err => {});
+      setTimeout(() => done(), 100);
 
     })
+    // beforeAll(() => {
+    //   process.env.SONOS_DISABLE_EVENTS = 'true';
+    // })
+    // afterAll(() => {
+    //   delete process.env.SONOS_DISABLE_EVENTS;
+    // })
     it('executes right requests', async (done) => {
-
+      process.env.SONOS_DISABLE_LISTENER = 'disable';
       const currentVolume = 6;
       const notificationVolume = 10;
       const port = 1401;
@@ -155,7 +161,8 @@ describe('SonosDevice - Notifications', () => {
       expect(result).to.be.eq(true);
 
       const nockResult = scope.isDone();
-      expect(result).to.be.true;
+      expect(nockResult).to.be.true;
+      delete process.env.SONOS_DISABLE_EVENTS;
       done();
     });
 
@@ -215,6 +222,66 @@ describe('SonosDevice - Notifications', () => {
       expect(result).to.be.false;
       done();
     });
+
+    it('executes notification callback', async (done) => {
+      // GetTransportInfo
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
+        '<u:GetTransportInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportInfo>',
+        'GetTransportInfoResponse',
+        'AVTransport',
+        '<CurrentTransportState>STOPPED</CurrentTransportState>'
+      );
+
+      // Get Volume
+      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
+        '"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume"',
+        '<u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetVolume>',
+        'GetVolumeResponse',
+        'RenderingControl',
+        `<CurrentVolume>10</CurrentVolume>`,
+        scope
+      );
+
+      // Get Mute
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control','RenderingControl', 'GetMute',
+        '<InstanceID>0</InstanceID><Channel>Master</Channel>', '<CurrentMute>0</CurrentMute>', scope);
+    
+      // GetMediaInfo
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetMediaInfo"',
+        '<u:GetMediaInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetMediaInfo>',
+        'GetMediaInfoResponse',
+        'AVTransport',
+        '<NrTracks>51</NrTracks><MediaDuration>NOT_IMPLEMENTED</MediaDuration><CurrentURI>x-rincon-queue:RINCON_000FFFFFFFFF01400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData><NextURI></NextURI><NextURIMetaData></NextURIMetaData><PlayMedium>NETWORK</PlayMedium><RecordMedium>NOT_IMPLEMENTED</RecordMedium><WriteStatus>NOT_IMPLEMENTED</WriteStatus>',
+        scope
+      );
+    
+      // GetPositionInfo
+      TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetPositionInfo"',
+        '<u:GetPositionInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetPositionInfo>',
+        'GetPositionInfoResponse',
+        'AVTransport',
+        '<Track>26</Track><TrackDuration>0:03:58</TrackDuration><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;-1&quot; parentID=&quot;-1&quot; restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot; duration=&quot;0:03:58&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1PWV26P0WRrRpKWj3Z7KVy?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;r:streamContent&gt;&lt;/r:streamContent&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1PWV26P0WRrRpKWj3Z7KVy%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;200 Dreams&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Noisecontrollers&lt;/dc:creator&gt;&lt;upnp:album&gt;200 Dreams EP&lt;/upnp:album&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData><TrackURI>x-sonos-spotify:spotify%3atrack%3a1PWV26P0WRrRpKWj3Z7KVy?sid=9&amp;flags=8224&amp;sn=7</TrackURI><RelTime>0:02:18</RelTime><AbsTime>NOT_IMPLEMENTED</AbsTime><RelCount>2147483647</RelCount><AbsCount>2147483647</AbsCount>',
+        scope
+      );
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.PlayNotification({
+        delayMs: 10,
+        onlyWhenPlaying: true,
+        timeout: 1,
+        trackUri: 'spotify:artist:3b9xTm2eiaCRTGqUEWuzxc',
+        volume: 10,
+        notificationFired: (played) => {
+          expect(played).to.be.false;
+          done();
+        }
+      });
+      
+    }, 2000);
 
     it('plays two notifications', async (done) => {
       const currentVolume = 6;

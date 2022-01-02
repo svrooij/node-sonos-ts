@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { createSocket, Socket } from 'dgram';
+import { createSocket, Socket, RemoteInfo } from 'dgram';
 import debug, { Debugger } from 'debug';
 
 export default class SonosDeviceDiscovery {
@@ -15,17 +15,21 @@ export default class SonosDeviceDiscovery {
 
   private searchTimeout: NodeJS.Timeout | undefined;
 
-  public readonly DeviceAvailable = 'DeviceAvailable';
+  private isBound = false;
+
+  private readonly DeviceAvailable = 'DeviceAvailable';
 
   constructor() {
-    this.debug = debug('sonos:devicediscovery');
-    this.socket = createSocket('udp4', (buffer, rinfo) => {
+    this.debug = debug('sonos:device-discovery');
+    this.socket = createSocket({ type: 'udp4', reuseAddr: true });
+    this.socket.on('message', (buffer: Buffer, rinfo: RemoteInfo) => {
       const msg = buffer.toString();
+      this.debug('SSDP message\r\n%s', msg);
       if (/.Sonos.+/.test(msg)) {
-        const modelCheck = /SERVER.*\((.*)\)/.exec(msg);
+        const modelCheck = /SERVER.{0,200}\((.{2,50})\)/.exec(msg);
         const model = (modelCheck && modelCheck.length > 1 ? modelCheck[1] : undefined);
         const addr = rinfo.address;
-        if (this.devices.findIndex((d) => d.host === addr) === -1) {
+        if (model && !this.devices.some((d) => d.host === addr)) {
           this.debug('Found %s on %s', model, addr);
           const player: Player = { host: addr, port: 1400, model };
           this.devices.push(player);
@@ -33,7 +37,15 @@ export default class SonosDeviceDiscovery {
         }
       }
     });
-    this.socket.bind(() => {
+    this.socket.on('listening', () => {
+      this.debug('UDP socket started listening');
+    });
+    this.socket.on('error', (err) => {
+      this.debug('Error with socket', err);
+    });
+    this.socket.bind({ port: 1900, exclusive: false }, () => {
+      this.debug('Bound to port 1900');
+      this.isBound = true;
       this.socket.setBroadcast(true);
     });
     this.debug('Device discovery created');
@@ -42,17 +54,31 @@ export default class SonosDeviceDiscovery {
   private readonly SEARCH_STRING = Buffer.from(['M-SEARCH * HTTP/1.1',
     'HOST: 239.255.255.250:1900',
     'MAN: ssdp:discover',
-    'MX: 1',
-    'ST: urn:schemas-upnp-org:device:ZonePlayer:1'].join('\r\n'));
+    'MX: 3',
+    'ST: urn:schemas-upnp-org:device:ZonePlayer:1',
+  ].join('\r\n'));
 
   private sendBroadcast(): void {
-    this.debug('Sending broadcast');
-    ['239.255.255.250', '255.255.255.255'].map((a) => this.sendBroadcastToAddress(a));
-    this.pollTimeout = setTimeout(() => this.sendBroadcast, 8000);
+    this.debug('sendBroadcast()');
+    if (this.isBound !== true) {
+      this.debug('UDP port not bound, waiting 100ms');
+      this.pollTimeout = setTimeout(() => {
+        this.sendBroadcast();
+      }, 100);
+      return;
+    }
+
+    this.sendBroadcastToAddress('239.255.255.250');
+    this.sendBroadcastToAddress('255.255.255.255');
+    this.pollTimeout = setTimeout(() => {
+      this.sendBroadcast();
+    }, 6000);
   }
 
   private sendBroadcastToAddress(addr: string): void {
-    this.socket.send(this.SEARCH_STRING, 0, this.SEARCH_STRING.length, 1900, addr);
+    // this.debug('sendBroadcastToAddress(\'%s\')', addr);
+    const buff = this.SEARCH_STRING;
+    this.socket.send(buff, 0, buff.length, 1900, addr);
   }
 
   private setCancelTimeout(timeoutSeconds: number): void {
