@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 import { createSocket } from 'dgram';
 import SoapHelper from '../src/helpers/soap-helper'
+import { expect } from 'chai';
 
 /**
  * Some helpers to setup mocked sonos http requests
@@ -54,10 +55,10 @@ export class TestHelpers {
    * @param responseBody the soap response body, or ''
    * @param scope (optional) use this scope instead of creating a new scope
    */
-  static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string, responseBody: string | undefined, scope = TestHelpers.getScope()): nock.Scope {
+  static mockRequestToService(endpoint: string, service: string, action: string, requestBody: string | undefined, responseBody: string = '', scope = TestHelpers.getScope()): nock.Scope {
     return TestHelpers.mockRequest(endpoint,
       `"urn:schemas-upnp-org:service:${service}:1#${action}"`,
-      `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${service}:1">${requestBody}</u:${action}>`,
+      `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${service}:1">${requestBody ?? ''}</u:${action}>`,
       `${action}Response`,
       service,
       responseBody,
@@ -163,5 +164,21 @@ export class TestHelpers {
       });
     })
     
+  }
+
+  static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
+    let error = undefined;
+    try {
+      await method();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).to.be.an('Error')
+    if (errorMessage) {
+      expect(error.message).to.equal(errorMessage)
+    }
+    if (upnpErrorDescription) {
+      expect(error).to.have.nested.property('UpnpErrorDescription', upnpErrorDescription);
+    }
   }
 }
