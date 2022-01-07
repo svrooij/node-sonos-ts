@@ -38,23 +38,25 @@ export default class SonosDeviceDiscovery {
       }
     });
     this.socket.on('listening', () => {
+      this.socket.addMembership('239.255.255.250')
+      this.socket.setMulticastTTL(128)
       this.debug('UDP socket started listening');
     });
     this.socket.on('error', (err) => {
       this.debug('Error with socket', err);
     });
-    this.socket.bind({ port: 1900, exclusive: false }, () => {
-      this.debug('Bound to port 1900');
+    this.socket.bind(() => {
+      this.debug('Bound to port %d', this.socket.address().port);
       this.isBound = true;
-      this.socket.setBroadcast(true);
+      //this.socket.setBroadcast(true);
     });
     this.debug('Device discovery created');
   }
 
   private readonly SEARCH_STRING = Buffer.from(['M-SEARCH * HTTP/1.1',
     'HOST: 239.255.255.250:1900',
-    'MAN: ssdp:discover',
-    'MX: 3',
+    'MAN: "ssdp:discover"',
+    'MX: 1',
     'ST: urn:schemas-upnp-org:device:ZonePlayer:1',
   ].join('\r\n'));
 
