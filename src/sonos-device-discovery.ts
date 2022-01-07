@@ -2,6 +2,12 @@ import { EventEmitter } from 'events';
 import { createSocket, Socket, RemoteInfo } from 'dgram';
 import debug, { Debugger } from 'debug';
 
+class SonosDiscoveryError extends Error {
+  constructor() {
+    super('No players found');
+  }
+}
+
 export default class SonosDeviceDiscovery {
   private readonly debug: Debugger;
 
@@ -18,6 +24,10 @@ export default class SonosDeviceDiscovery {
   private isBound = false;
 
   private readonly DeviceAvailable = 'DeviceAvailable';
+
+  public get port() : number | undefined {
+    return this.socket?.address().port;
+  }
 
   constructor() {
     this.debug = debug('sonos:device-discovery');
@@ -38,23 +48,24 @@ export default class SonosDeviceDiscovery {
       }
     });
     this.socket.on('listening', () => {
+      this.socket.addMembership('239.255.255.250');
+      this.socket.setMulticastTTL(128);
       this.debug('UDP socket started listening');
     });
-    this.socket.on('error', (err) => {
-      this.debug('Error with socket', err);
-    });
-    this.socket.bind({ port: 1900, exclusive: false }, () => {
-      this.debug('Bound to port 1900');
+    // this.socket.on('error', (err) => {
+    //   this.debug('Error with socket', err);
+    // });
+    this.socket.bind(() => {
+      this.debug('Bound to port %d', this.socket.address().port);
       this.isBound = true;
-      this.socket.setBroadcast(true);
     });
     this.debug('Device discovery created');
   }
 
   private readonly SEARCH_STRING = Buffer.from(['M-SEARCH * HTTP/1.1',
     'HOST: 239.255.255.250:1900',
-    'MAN: ssdp:discover',
-    'MX: 3',
+    'MAN: "ssdp:discover"',
+    'MX: 1',
     'ST: urn:schemas-upnp-org:device:ZonePlayer:1',
   ].join('\r\n'));
 
@@ -72,7 +83,7 @@ export default class SonosDeviceDiscovery {
     this.sendBroadcastToAddress('255.255.255.255');
     this.pollTimeout = setTimeout(() => {
       this.sendBroadcast();
-    }, 6000);
+    }, 3000);
   }
 
   private sendBroadcastToAddress(addr: string): void {
@@ -97,7 +108,7 @@ export default class SonosDeviceDiscovery {
         resolve(player);
       });
       this.events.once('timeout', () => {
-        reject(new Error('No players found'));
+        reject(new SonosDiscoveryError());
       });
       this.setCancelTimeout(timeoutSeconds);
       this.sendBroadcast();
@@ -111,7 +122,7 @@ export default class SonosDeviceDiscovery {
         if (this.devices.length > 0) {
           resolve(this.devices);
         } else {
-          reject(new Error('No players found'));
+          reject(new SonosDiscoveryError());
         }
       });
       this.setCancelTimeout(timeoutSeconds);
