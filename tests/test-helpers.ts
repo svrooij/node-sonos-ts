@@ -17,8 +17,8 @@ export class TestHelpers {
    * @param port The port the nock scope should be for.
    * @param options Extra nock options
    */
-  static getScope(port = 1400, options: nock.Options | undefined = undefined): nock.Scope {
-    return nock(`http://${TestHelpers.testHost}:${port}`, options);
+  static getScope(port = 1400, options: nock.Options | undefined = undefined, host = TestHelpers.testHost): nock.Scope {
+    return nock(`http://${host}:${port}`, options);
   }
 
   private static generateResponse (responseTag: string, serviceName: string, responseBody: string | undefined) {
