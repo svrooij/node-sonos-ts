@@ -132,7 +132,7 @@ export class TestHelpers {
       .reply(200, responseBody);
   }
  
-  static async emitSsdpMessage(address = 'localhost', playerModel = 'ZPS1', ip = '127.16.0.1', uuid = 'RINCON_AABBAABBAABBA1400', householdId = 'Sonos_b520c167832c49388331eb1930'): Promise<void> {
+  static async emitSsdpMessage(port?: number, address = 'localhost', playerModel = 'ZPS1', ip = '127.16.0.1', uuid = 'RINCON_AABBAABBAABBA1400', householdId = 'Sonos_b520c167832c49388331eb1930'): Promise<void> {
     return new Promise((resolve, reject) => {
       const smartSpeakerId = '90cefea176704568af4d'
       const socket = createSocket({ type: 'udp4', reuseAddr: true });
@@ -154,7 +154,7 @@ export class TestHelpers {
         'X-RINCON-VARIANT: 0',
         `HOUSEHOLD.SMARTSPEAKER.AUDIO: ${householdId}.${smartSpeakerId}`
       ].join('\r\n'));
-      socket.send(buffer, 1900, address, (err, bytes) => {
+      socket.send(buffer, port, address, (err, bytes) => {
         if(err) {
           reject(err);
         } else {
