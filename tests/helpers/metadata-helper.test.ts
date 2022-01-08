@@ -107,6 +107,11 @@ describe('MetadataHelper', () => {
       expect(track).to.have.property('TrackUri', 'x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204');
       expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack');
     });
+
+    it('returns undefined for apple:unknown-type:1121931512', () => {
+      const track = MetadataHelper.GuessTrack('apple:unknown-type:1121931512');
+      expect(track).to.be.undefined;
+    });
   });
 
   describe('GuessTrack -> Deezer', () => {
@@ -151,6 +156,11 @@ describe('MetadataHelper', () => {
       const track = MetadataHelper.GuessTrack('x-sonos-http:tr%3a1121931512.mp3?sid=2&amp;flags=8224&amp;sn=23');
       expect(track).to.have.property('TrackUri', 'x-sonos-http:tr:1121931512.mp3?sid=2&flags=8224&sn=23');
       expect(track).to.have.property('UpnpClass', 'object.item.audioItem.musicTrack.#DEFAULT');
+    });
+
+    it('returns undefined for deezer:unknown-type:1121931512', () => {
+      const track = MetadataHelper.GuessTrack('deezer:unknown-type:1121931512');
+      expect(track).to.be.undefined;
     });
   });
 
