@@ -8,10 +8,10 @@ import HttpError from '../models/http-error';
 export default class TtsHelper {
   private static debug = debug('sonos:tts');
 
-  // TODO Automaticly get from pacakge on build
+  // TODO Automatically get from package on build
   private static pack = { version: '1.1.5', homepage: 'https://github.com/svrooij/node-sonos-ts' };
 
-  static async GetTtsUriFromEndpoint(endpoint: string, text: string, language: string, gender?: string, name?: string): Promise<string> {
+  static async GetTtsUriFromEndpoint(endpoint: string, text: string, language: string, gender?: string, name?: string, engine?: 'standard' | 'neural'): Promise<string> {
     TtsHelper.debug('Getting tts uri from server %s', endpoint);
     const request = new Request(
       endpoint,
@@ -23,7 +23,7 @@ export default class TtsHelper {
 
         },
         body: JSON.stringify({
-          text, lang: language, gender, name,
+          text, lang: language, gender, name, engine,
         }),
       },
     );
@@ -52,12 +52,14 @@ export default class TtsHelper {
       throw new Error('TTS text is required, duh!');
     }
 
-    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender, options.name);
+    const engine = options.engine || process.env.SONOS_TTS_ENGINE as 'standard' | 'neural' | undefined
+
+    const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender, options.name, engine);
 
     // Typescript way to convert objects, someone got a better way?
     const notificationOptions: PlayNotificationOptions = options as PlayNotificationOptionsBase as PlayNotificationOptions;
     notificationOptions.trackUri = uri;
-    notificationOptions.timeout = notificationOptions.timeout ?? 120;
+    notificationOptions.timeout = notificationOptions.timeout ?? 60;
 
     return notificationOptions;
   }

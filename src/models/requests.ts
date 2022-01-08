@@ -96,6 +96,10 @@ export interface PlayTtsOptions extends PlayNotificationOptionsBase {
    * @memberof PlayTtsOptions
    */
   name?: string;
+  /**
+   * What engine should be used (some engines have both) 
+   */
+  engine?: 'standard' | 'neural'
 }
 
 export interface TtsResponse {
