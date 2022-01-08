@@ -34,6 +34,21 @@ describe('RenderingControlService', () => {
     })
   })
 
+  describe('GetLoudness()', () => {
+    it('works', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetLoudness', '<InstanceID>0</InstanceID><Channel>Master</Channel>',
+        '<CurrentLoudness>0</CurrentLoudness>');
+      
+      const result = await service.GetLoudness({ InstanceID:0, Channel: 'Master'});
+      expect(result.CurrentLoudness).to.be.false;
+    });
+  });
+
+  
+
+
   describe('GetMute', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
@@ -48,21 +63,81 @@ describe('RenderingControlService', () => {
       const response = await service.GetMute({InstanceID: 0, Channel: 'Master'});
       expect(response.CurrentMute).to.be.true
     })
-  })
+  });
+
+  describe('GetOutputFixed()', () => {
+    it('works', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetOutputFixed', '<InstanceID>0</InstanceID>',
+        '<CurrentFixed>0</CurrentFixed>');
+      
+      const result = await service.GetOutputFixed({ InstanceID:0 });
+      expect(result.CurrentFixed).to.be.false;
+    });
+  });
+
+  describe('GetRoomCalibrationStatus()', () => {
+    it('works', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetRoomCalibrationStatus', '<InstanceID>0</InstanceID>',
+        '<RoomCalibrationAvailable>0</RoomCalibrationAvailable></u:GetRoomCalibrationStatusResponse>');
+      
+      const result = await service.GetRoomCalibrationStatus({ InstanceID:0 });
+      expect(result.RoomCalibrationAvailable).to.be.false;
+    });
+  });
+
+  describe('GetOutputFixed()', () => {
+    it('works', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetSupportsOutputFixed', '<InstanceID>0</InstanceID>',
+        '<CurrentSupportsFixed>0</CurrentSupportsFixed>');
+      
+      const result = await service.GetSupportsOutputFixed({ InstanceID:0 });
+      expect(result.CurrentSupportsFixed).to.be.false;
+    });
+  });
+
+  describe('GetTreble()', () => {
+    it('works', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetTreble', '<InstanceID>0</InstanceID>',
+        '<CurrentTreble>0</CurrentTreble>');
+      
+      const result = await service.GetTreble({ InstanceID:0 });
+      expect(result.CurrentTreble).to.be.equal(0);
+    });
+  });
 
   describe('GetVolume', () => {
     it('works', async () => {
-      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
-        '"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume"',
-        '<u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetVolume>',
-        'GetVolumeResponse',
-        'RenderingControl',
-        '<CurrentVolume>15</CurrentVolume>'
-      );
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetVolume', '<InstanceID>0</InstanceID><Channel>Master</Channel>',
+        '<CurrentVolume>15</CurrentVolume>');
       const service = new RenderingControlService(TestHelpers.testHost, 1400);
 
       const response = await service.GetVolume({InstanceID: 0, Channel: 'Master'});
       expect(response.CurrentVolume).to.be.eq(15);
+    })
+  })
+
+  describe('ResetBasicEQ', () => {
+    it('works', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'ResetBasicEQ', '<InstanceID>0</InstanceID>',
+        '<Bass>0</Bass><Treble>0</Treble><Loudness>1</Loudness><LeftVolume>100</LeftVolume><RightVolume>100</RightVolume>');
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+
+      const response = await service.ResetBasicEQ({ InstanceID: 0 });
+      expect(response.Bass).to.be.eq(0);
+      expect(response.Treble).to.be.eq(0);
+      expect(response.Loudness).to.be.true;
+      expect(response.LeftVolume).to.be.eq(100);
+      expect(response.RightVolume).to.be.eq(100);
     })
   })
 

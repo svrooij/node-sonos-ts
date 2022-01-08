@@ -47,10 +47,9 @@ export default class SonosManager {
    * @returns {Promise<boolean>}
    * @memberof SonosManager
    */
-  public async InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
+  public async InitializeWithDiscovery(timeoutInSeconds = 10, discovery = new SonosDeviceDiscovery()): Promise<boolean> {
     this.debug('InitializeWithDiscovery timeout: %d', timeoutInSeconds);
-    const deviceDiscovery = new SonosDeviceDiscovery();
-    const player = await deviceDiscovery.SearchOne(timeoutInSeconds);
+    const player = await discovery.SearchOne(timeoutInSeconds);
     this.debug('Discovery found player with ip: %s', player.host);
     this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
     return await this.Initialize();

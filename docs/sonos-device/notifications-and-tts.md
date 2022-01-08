@@ -51,8 +51,9 @@ The text-to-speech method executes the following:
 This way you don't have to worry about encoding the text so sonos understands it. Sonos will just get a regular url to the mp3 file with the spoken text.
 
 You can also set the endpoint with the `SONOS_TTS_ENDPOINT` environment variable, so you don't have to supply it every time. The default language can be set with the environment variable `SONOS_TTS_LANG`.
+We have support for **neural** language engines. Pick a voice that supports it and set the `engine` to `neural` or set the `SONOS_TTS_ENGINE` environment variable to `neural`.
 
-The server I've build is based on Amazon Polly, but I invite everybody to build their own if you want to support an other tts service.
+The server I've build is based on Amazon Polly, but I invite everybody to build their own if you want to support another tts service.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

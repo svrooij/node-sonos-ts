@@ -24,7 +24,9 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       const groups = ArrayHelper.ForceArray((decodedGroupState as any).ZoneGroupState.ZoneGroups.ZoneGroup);
       return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
     }
-    return groupStateResponse.ZoneGroupState; // This should never happen, because it always is a string.
+    // This should never happen, because it always is a string.
+    /* istanbul ignore next */
+    return groupStateResponse.ZoneGroupState;
   }
 
   private static ParseChannelMapSet(channelMapSet: unknown): ChannelMapSet | undefined {

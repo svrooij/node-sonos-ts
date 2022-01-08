@@ -46,6 +46,56 @@ describe('AlarmClockService', () => {
     })
   })
 
+  describe('GetDailyIndexRefreshTime()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetDailyIndexRefreshTime', undefined,
+        '<CurrentDailyIndexRefreshTime>06:00:00</CurrentDailyIndexRefreshTime>');
+      
+      const result = await service.GetDailyIndexRefreshTime();
+      expect(result).to.have.nested.property('CurrentDailyIndexRefreshTime', '06:00:00');
+    });
+  });
+
+  
+  describe('GetFormat()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetFormat', undefined,
+        '<CurrentTimeFormat>24H</CurrentTimeFormat><CurrentDateFormat>DMY</CurrentDateFormat>');
+      
+      const result = await service.GetFormat();
+      expect(result).to.have.nested.property('CurrentTimeFormat', '24H');
+      expect(result).to.have.nested.property('CurrentDateFormat', 'DMY');
+    });
+  });
+
+  describe('GetTimeNow()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetTimeNow', undefined,
+        '<CurrentUTCTime>2022-01-07 12:19:33</CurrentUTCTime><CurrentLocalTime>2022-01-07 13:19:33</CurrentLocalTime><CurrentTimeZone>ffc40a000503000003000502ffc4</CurrentTimeZone><CurrentTimeGeneration>30</CurrentTimeGeneration>');
+      
+      const result = await service.GetTimeNow();
+      expect(result).to.have.nested.property('CurrentUTCTime', '2022-01-07 12:19:33');
+    });
+  });
+
+  describe('GetTimeServer()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetTimeServer', undefined,
+        '<CurrentTimeServer>0.sonostime.pool.ntp.org,1.sonostime.pool.ntp.org,2.sonostime.pool.ntp.org,3.sonostime.pool.ntp.org</CurrentTimeServer>');
+      
+      const result = await service.GetTimeServer();
+      expect(result).to.have.nested.property('CurrentTimeServer', '0.sonostime.pool.ntp.org,1.sonostime.pool.ntp.org,2.sonostime.pool.ntp.org,3.sonostime.pool.ntp.org');
+    });
+  });
+
   describe('GetTimeZone()', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/AlarmClock/Control',
@@ -62,6 +112,45 @@ describe('AlarmClockService', () => {
       expect(result).to.have.nested.property('Index', 27);
     });
   });
+
+  describe('GetTimeZoneAndRule()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetTimeZoneAndRule', undefined,
+        '<Index>27</Index><AutoAdjustDst>1</AutoAdjustDst><CurrentTimeZone>ffc40a000503000003000502ffc4</CurrentTimeZone>');
+      
+      const result = await service.GetTimeZoneAndRule();
+      expect(result).to.have.nested.property('CurrentTimeZone', 'ffc40a000503000003000502ffc4');
+      expect(result).to.have.nested.property('AutoAdjustDst', true);
+    });
+  });
+
+  describe('GetTimeZoneRule()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'GetTimeZoneRule', '<Index>27</Index>',
+        '<TimeZone>ffc40a000503000003000502ffc4</TimeZone>');
+      
+      const result = await service.GetTimeZoneRule({ Index: 27 });
+      expect(result).to.have.nested.property('TimeZone', 'ffc40a000503000003000502ffc4');
+    });
+  });
+
+  
+  describe('SetDailyIndexRefreshTime()', () => {
+    it('works', async () => {
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AlarmClock/Control', 'AlarmClock',
+        'SetDailyIndexRefreshTime', '<DesiredDailyIndexRefreshTime>05:55:00</DesiredDailyIndexRefreshTime>');
+      
+      const result = await service.SetDailyIndexRefreshTime({ DesiredDailyIndexRefreshTime: '05:55:00'});
+      expect(result).to.be.true;
+    });
+  });
+
+
 
   describe('ListAndParseAlarms()', () => {
     (process.env.SONOS_HOST ? it : it.skip)('actual device', async () => {
