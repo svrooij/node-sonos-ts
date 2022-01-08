@@ -52,7 +52,7 @@ export default class TtsHelper {
       throw new Error('TTS text is required, duh!');
     }
 
-    const engine = options.engine || process.env.SONOS_TTS_ENGINE as 'standard' | 'neural' | undefined
+    const engine = options.engine || process.env.SONOS_TTS_ENGINE as 'standard' | 'neural' | undefined;
 
     const uri = await TtsHelper.GetTtsUriFromEndpoint(endpoint, options.text, lang, options.gender, options.name, engine);
 

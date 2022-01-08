@@ -97,7 +97,7 @@ export interface PlayTtsOptions extends PlayNotificationOptionsBase {
    */
   name?: string;
   /**
-   * What engine should be used (some engines have both) 
+   * What engine should be used (some engines have both)
    */
   engine?: 'standard' | 'neural'
 }
