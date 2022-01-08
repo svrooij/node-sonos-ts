@@ -6,7 +6,6 @@ import SonosEventListener from '../src/sonos-event-listener';
 import AsyncHelper from '../src/helpers/async-helper';
 
 
-
 describe('SonosDevice - Notifications', () => {
   describe('PlayNotification(...)', () => {
     afterEach(async (done) => {
@@ -688,7 +687,7 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
     done();
   });
 
-  it('Notification Queue, "resolveAfterRevert" Option (Recieve 2nd promise prior to first or third)', async (done) => {
+  it('Notification Queue, "resolveAfterRevert" Option (Receive 2nd promise prior to first or third)', async (done) => {
 
     const currentVolume = 6;
     const notificationVolume = 10;
@@ -949,7 +948,7 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
     });
   });
 
-  it('Notification Queue, Recieve both  promised resolved', async (done) => {
+  it('Notification Queue, Receive both  promised resolved', async (done) => {
 
     const currentVolume = 6;
     const notificationVolume = 10;

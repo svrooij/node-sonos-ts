@@ -355,7 +355,7 @@ export default class SonosDevice extends SonosDeviceBase {
       muted: this.Muted === true,
       positionInfo: await this.AVTransportService.GetPositionInfo(),
       transportState: this.CurrentTransportStateSimple ?? (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState,
-      volume: this.Volume ?? 15,
+      volume: this.volume,
     };
   }
 
@@ -1025,12 +1025,12 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
-   * GetZoneGroupState() shortcut to .ZoneGroupTopologyService.GetZoneGroupState()
+   * GetZoneGroupState() shortcut to .ZoneGroupTopologyService.GetParsedZoneGroupState()
    *
-   * @returns {Promise<GetZoneGroupStateResponse>}
+   * @returns {Promise<ZoneGroup[]>}
    * @memberof SonosDevice
    */
-  public async GetZoneGroupState(): Promise<GetZoneGroupStateResponse> { return await this.ZoneGroupTopologyService.GetZoneGroupState(); }
+  public async GetZoneGroupState(): Promise<ZoneGroup[]> { return await this.ZoneGroupTopologyService.GetParsedZoneGroupState(); }
 
   /**
    * GetZoneInfo shortcut to .DevicePropertiesService.GetZoneInfo()
