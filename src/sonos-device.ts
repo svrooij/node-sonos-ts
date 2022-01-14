@@ -467,7 +467,9 @@ export default class SonosDevice extends SonosDeviceBase {
       // Revert everything back
       this.debug('Reverting everything back to normal');
 
-      await this.RestoreState(state, options.delayMs);
+      await this.RestoreState(state, options.delayMs).catch((reason) => {
+        this.debug('Restoring state failed %s', reason);
+      });
     }
 
     this.playingNotification = undefined;
@@ -500,12 +502,11 @@ export default class SonosDevice extends SonosDeviceBase {
 
   private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
     let result = havePlayed === true;
-    if (this.notifications.length === 0) {
+    // Remove and returns first item from queue
+    const notification = this.notifications.shift();
+    if (notification === undefined) {
       return Promise.resolve(result);
     }
-
-    // Start the notification
-    const notification = this.notifications[0];
 
     if (notification.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Skip notification, because of not playing %s', notification.trackUri);
@@ -515,12 +516,17 @@ export default class SonosDevice extends SonosDeviceBase {
     } else {
       result = true;
       this.debug('Start notification playback uri %s', notification.trackUri);
-      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' });
+      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' })
+        .catch((reason) => { this.debug('SetAVTransportURI failed', reason); });
+
       if (notification.volume !== undefined && notification.volume !== this.volume) {
-        await this.SetVolume(notification.volume);
+        await this.SetVolume(notification.volume)
+          .catch((reason) => { this.debug('Setting volume failed', reason); });
+
         if (notification.delayMs !== undefined) await AsyncHelper.Delay(notification.delayMs);
       }
-      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
+      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' })
+        .catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
 
       // Wait for event (or timeout)
       await AsyncHelper.AsyncEvent<unknown>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
@@ -530,8 +536,6 @@ export default class SonosDevice extends SonosDeviceBase {
       }
     }
 
-    // Remove first item from queue.
-    this.notifications.shift();
     return this.PlayNextNotification(originalState, result);
   }
 
