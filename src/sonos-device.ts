@@ -14,6 +14,7 @@ import { EventsError } from './models/event-errors';
 import AsyncHelper from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
+import IpHelper from './helpers/ip-helper';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
 import DeviceDescription from './models/device-description';
@@ -58,6 +59,10 @@ export default class SonosDevice extends SonosDeviceBase {
       if (uuid) {
         groupConfig.managerEvents.on(uuid, this.boundHandleGroupUpdate);
       }
+    }
+
+    if (IpHelper.IsIpv4(this.host) === false) {
+      this.debug('Sonos devices don\'t like hostnames, resolve once is faster IpHelper.ResolveHostname(host)');
     }
   }
 

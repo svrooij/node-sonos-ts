@@ -1,3 +1,4 @@
+import IpHelper from './helpers/ip-helper';
 import MetaDataHelper from './helpers/metadata-helper';
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
@@ -8,6 +9,7 @@ import SonosEventListener from './sonos-event-listener';
 import { SmapiClient } from './musicservices/smapi-client';
 
 export {
+  IpHelper,
   MetaDataHelper,
   ServiceEvents,
   SmapiClient,
