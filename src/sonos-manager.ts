@@ -5,6 +5,7 @@ import { ZoneGroupTopologyService, ZoneGroupTopologyServiceEvent } from './servi
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
+import IpHelper from './helpers/ip-helper';
 import TtsHelper from './helpers/tts-helper';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
@@ -36,7 +37,8 @@ export default class SonosManager {
    */
   public async InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
     this.debug('InitializeFromDevice %s', host);
-    this.zoneService = new ZoneGroupTopologyService(host, port);
+    const ip = IpHelper.IsIpv4(host) ? host : await IpHelper.ResolveHostname(host);
+    this.zoneService = new ZoneGroupTopologyService(ip, port);
     return await this.Initialize();
   }
 

@@ -27,7 +27,7 @@ repository: svrooij/node-sonos-ts
 
 # Build settings
 markdown: kramdown
-remote_theme: svrooij/just-the-docs@relative-everything
+remote_theme: svrooij/just-the-docs@plausible
 plugins:
   - jekyll-feed
   - jemoji
@@ -55,7 +55,7 @@ aux_links:
     - "//github.com/sponsors/svrooij/"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2021 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
+footer_content: "Copyright &copy; 2022 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
 
 toc:
   max_levels: 2
@@ -67,5 +67,4 @@ gh_edit_repository: "https://github.com/svrooij/node-sonos-ts" # the github URL 
 gh_edit_branch: "master/docs" # the branch that your docs is served from
 gh_edit_view_mode: "tree" # "tree" or "edit" if you want the user to jump into the editor immediately
 
-ga_tracking: UA-172036806-1
-ga_tracking_anonymize_ip: true
+plausible_domain: "sonos.svrooij.io"

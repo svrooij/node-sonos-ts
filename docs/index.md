@@ -46,12 +46,13 @@ See **[Documentation](https://svrooij.github.io/node-sonos-ts/getting-started.ht
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
 [![Join us on Discord][badge_discord]][link_discord]
 
-## Packages using node-sonos-ts
+## Packages using sonos-ts
 
 |Name|Maintainer|Description|
 |----|----------|----------|
 |[sonos2mqtt](https://svrooij.github.io/sonos2mqtt)|[@svrooij](//github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
 |[sonos-cli](//github.com/svrooij/sonos-cli)|[@svrooij](//github.com/svrooij)|An experimental command line interface for your sonos devices.|
+|[node-red-contrib-sonos-plus](https://www.npmjs.com/package/node-red-contrib-sonos-plus)|[@hklages](//github.com/hklages)|Node red library for sonos|
 
 Also using this library, but not in the list? Send a PR.
 
