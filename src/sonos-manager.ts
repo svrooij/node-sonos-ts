@@ -108,7 +108,7 @@ export default class SonosManager {
           .forEach((m) => {
             const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events });
             this.devices.push(newDevice);
-            this.events.emit('NewDevice', coordinator);
+            this.events.emit('NewDevice', newDevice);
           });
 
         g.members.forEach((m) => {
