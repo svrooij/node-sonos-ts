@@ -7,7 +7,7 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
+  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import { EventsError } from './models/event-errors';
@@ -782,6 +782,10 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.EnqueuedTransportUri, this.enqueuedTransportUri ?? '');
       if (data.EnqueuedTransportURIMetaData !== undefined && typeof data.EnqueuedTransportURIMetaData !== 'string') this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData);
     }
+
+    if (data.CurrentPlayMode) {
+      this.currentPlayMode = data.CurrentPlayMode;
+    }
   }
 
   private boundHandleRenderingControlEvent = this.handleRenderingControlEvent.bind(this);
@@ -870,6 +874,19 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Properties
+  private currentPlayMode?: PlayMode;
+
+  /**
+   * Current play mode, only set when subscribed to events.
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
+  public get CurrentPlayMode(): PlayMode | undefined {
+    return this.currentPlayMode;
+  }
+
   private currentTrackUri?: string;
 
   /**
