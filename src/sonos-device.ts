@@ -874,7 +874,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Properties
-  private currentPlayMode?: PlayMode
+  private currentPlayMode?: PlayMode;
 
   /**
    * Current play mode, only set when subscribed to events.
