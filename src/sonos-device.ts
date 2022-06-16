@@ -4,21 +4,25 @@ import fetch from 'node-fetch';
 import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
-  GetZoneInfoResponse, GetZoneAttributesResponse, GetZoneGroupStateResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
+  GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember,
+  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import { EventsError } from './models/event-errors';
 import AsyncHelper from './helpers/async-helper';
 import MetadataHelper from './helpers/metadata-helper';
 import { SmapiClient } from './musicservices/smapi-client';
+import IpHelper from './helpers/ip-helper';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
 import DeviceDescription from './models/device-description';
 import { SonosState } from './models/sonos-state';
-import { NotificationQueue, NotificationQueueItem, NotificationQueueTimeoutItem } from './models/notificationQueue';
+import {
+  PlayNotificationTwoOptions, PlayTtsTwoOptions,
+} from './models/notificationQueue';
+import SonosDeviceNotifications from './sonos-notification-two';
 
 /**
  * Main class to control a single sonos device.
@@ -33,17 +37,6 @@ export default class SonosDevice extends SonosDeviceBase {
   private groupName: string | undefined;
 
   private coordinator: SonosDevice | undefined;
-
-  private notificationQueue: NotificationQueue = new NotificationQueue();
-
-  /*  TH 01.01.2021:
-   *  For debugging purposes in jest uncomment this line
-   *  and add "this.jestDebug.push(`${(new Date()).getTime()}: ...`);"
-   *  whereever needed. Additionally you may replace all "// this.jestDebug" with "this.jestDebug"
-   *  within Jest simply add "expect(device.jestDebug.join('\n')).to.be.eq("");" in desired test.
-   *  This will give you all messages split by newline Chars, allowing you to proper spot reasons for failing test.
-   */
-  // public jestDebug: string[] = [];
 
   /**
    * Creates an instance of SonosDevice.
@@ -61,10 +54,15 @@ export default class SonosDevice extends SonosDeviceBase {
       this.groupName = groupConfig.name;
       if (groupConfig.coordinator !== undefined && uuid !== groupConfig.coordinator.uuid) {
         this.coordinator = groupConfig.coordinator;
+        this.handleCoordinatorSimpleStateEvent(this.coordinator.currentTransportState === TransportState.Playing ? TransportState.Playing : TransportState.Stopped);
       }
       if (uuid) {
         groupConfig.managerEvents.on(uuid, this.boundHandleGroupUpdate);
       }
+    }
+
+    if (IpHelper.IsIpv4(this.host) === false) {
+      this.debug('Sonos devices don\'t like hostnames, resolve once is faster IpHelper.ResolveHostname(host)');
     }
   }
 
@@ -138,11 +136,11 @@ export default class SonosDevice extends SonosDeviceBase {
    * Execute any sonos command by name, see examples/commands.js
    *
    * @param {string} command Command you wish to execute, like 'Play' or 'AVTransportService.Pause'. CASE SENSITIVE!!!
-   * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automaticly parsed to an object (if possible).
-   * @returns {Promise<any>}
+   * @param {(string | unknown | number | undefined)} options If the function requires options specify them here. A json string is automatically parsed to an object (if possible).
+   * @returns {Promise<unknown>}
    * @memberof SonosDevice
    */
-  public async ExecuteCommand(command: string, options?: string | unknown | number): Promise<any> {
+  public ExecuteCommand(command: string, options?: string | unknown | number): Promise<unknown> {
     let service = '';
     let correctCommand = command;
     if (command.indexOf('.') > -1) {
@@ -159,7 +157,7 @@ export default class SonosDevice extends SonosDeviceBase {
     const baseProto = Object.getPrototypeOf(proto);
     const basePropertyDescriptions = Object.getOwnPropertyDescriptors(baseProto);
     const allKeys = [...Object.keys(propertyDescriptions), ...Object.keys(basePropertyDescriptions)];
-    const functionToCall = allKeys.find((key) => (key as string).toLowerCase() === correctCommand.toLowerCase());
+    const functionToCall = allKeys.find((key) => key.toLowerCase() === correctCommand.toLowerCase());
 
     if (typeof functionToCall === 'string' && typeof (objectToCallOn[functionToCall]) === 'function') {
       if (options === undefined) {
@@ -286,8 +284,8 @@ export default class SonosDevice extends SonosDeviceBase {
 
   public async LoadUuid(force = false): Promise<string> {
     if (!this.uuid.startsWith('RINCON') || force) {
-      const attrinutes = await this.DevicePropertiesService.GetZoneInfo();
-      this.uuid = `RINCON_${attrinutes.MACAddress.replace(/:/g, '')}0${this.port}`;
+      const attributes = await this.DevicePropertiesService.GetZoneInfo();
+      this.uuid = `RINCON_${attributes.MACAddress.replace(/:/g, '')}0${this.port}`;
     }
     return this.uuid;
   }
@@ -295,7 +293,7 @@ export default class SonosDevice extends SonosDeviceBase {
   private deviceId?: string;
 
   /**
-   * Create a client for a specific music serivce
+   * Create a client for a specific music service
    *
    * @param {number} id The id of the music service, see MusicServicesList
    * @param {string} options.key Cached authentication key
@@ -326,8 +324,9 @@ export default class SonosDevice extends SonosDeviceBase {
       householdId: service.Policy.Auth === 'AppLink' || service.Policy.Auth === 'DeviceLink' ? (await this.DevicePropertiesService.GetHouseholdID()).CurrentHouseholdID : undefined,
       authToken: accountData?.AuthToken ?? options.authToken,
       key: accountData?.Key ?? options.key,
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      saveNewAccount: async (serviceName, key, token) => this.SystemPropertiesService.SaveAccount(serviceName, key, token),
+      saveNewAccount: async (serviceName, key, token) => {
+        await this.SystemPropertiesService.SaveAccount(serviceName, key, token);
+      },
     });
   }
 
@@ -361,7 +360,7 @@ export default class SonosDevice extends SonosDeviceBase {
       muted: this.Muted === true,
       positionInfo: await this.AVTransportService.GetPositionInfo(),
       transportState: this.CurrentTransportStateSimple ?? (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState,
-      volume: this.Volume ?? 15,
+      volume: this.volume,
     };
   }
 
@@ -418,7 +417,7 @@ export default class SonosDevice extends SonosDeviceBase {
   private playingNotification?: boolean;
 
   /**
-   * Play some url, and revert back to what was playing before. Very usefull for playing a notification or TTS sound.
+   * Play some url, and revert back to what was playing before. Very useful for playing a notification or TTS sound.
    *
    * @param {PlayNotificationOptions} options The options
    * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
@@ -427,7 +426,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {callback} [options.notificationFired] Specify a callback that is called when this notification has played.
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    * @returns {Promise<true>} Returns when added to queue or (for the first) when all notifications have played.
    * @remarks The first notification will return when all notifications have played, notifications send in between will return when added to the queue.
    * Use 'notificationFired' in the request if you want to know when your specific notification has played.
@@ -473,7 +472,9 @@ export default class SonosDevice extends SonosDeviceBase {
       // Revert everything back
       this.debug('Reverting everything back to normal');
 
-      await this.RestoreState(state, options.delayMs);
+      await this.RestoreState(state, options.delayMs).catch((reason) => {
+        this.debug('Restoring state failed %s', reason);
+      });
     }
 
     this.playingNotification = undefined;
@@ -492,7 +493,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
    * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
    * @memberof SonosDevice
    */
@@ -506,12 +507,11 @@ export default class SonosDevice extends SonosDeviceBase {
 
   private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
     let result = havePlayed === true;
-    if (this.notifications.length === 0) {
+    // Remove and returns first item from queue
+    const notification = this.notifications.shift();
+    if (notification === undefined) {
       return Promise.resolve(result);
     }
-
-    // Start the notification
-    const notification = this.notifications[0];
 
     if (notification.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
       this.debug('Skip notification, because of not playing %s', notification.trackUri);
@@ -521,25 +521,31 @@ export default class SonosDevice extends SonosDeviceBase {
     } else {
       result = true;
       this.debug('Start notification playback uri %s', notification.trackUri);
-      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' });
+      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: notification.trackUri, CurrentURIMetaData: notification.metadata ?? '' })
+        .catch((reason) => { this.debug('SetAVTransportURI failed', reason); });
+
       if (notification.volume !== undefined && notification.volume !== this.volume) {
-        await this.SetVolume(notification.volume);
+        await this.SetVolume(notification.volume)
+          .catch((reason) => { this.debug('Setting volume failed', reason); });
+
         if (notification.delayMs !== undefined) await AsyncHelper.Delay(notification.delayMs);
       }
-      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' }).catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
+      await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' })
+        .catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
 
       // Wait for event (or timeout)
-      await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
+      await AsyncHelper.AsyncEvent<unknown>(this.Events, SonosEvents.PlaybackStopped, notification.timeout).catch((err) => this.debug(err));
 
       if (notification.notificationFired !== undefined) {
         notification.notificationFired(true);
       }
     }
 
-    // Remove first item from queue.
-    this.notifications.shift();
     return this.PlayNextNotification(originalState, result);
   }
+
+  // #region Notifications two
+  private notificationsTwo?: SonosDeviceNotifications;
 
   /**
    * A second implementation of PlayNotification.
@@ -550,23 +556,20 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {number} [options.delayMs] Delay in ms between commands, for better notification playback stability. Use 100 to 800 for best results
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
-   * @param {number} [options.volume] Change the volume for the notication and revert afterwards.
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @param {boolean} [options.resolveAfterRevert]
+   * @param {number} [options.defaultTimeout]
+   * @param {number} [options.specificTimeout]
+   * @param {boolean} [options.catchQueueErrors]
    *
    * @deprecated This is experimental, do not depend on this. (missing the jsdocs experimental descriptor)
    * @remarks This is just added to be able to test the two implementations next to each other. This will probably be removed in feature.
    */
-  public async PlayNotificationTwo(options: PlayNotificationOptions): Promise<boolean> {
-    const resolveAfterRevert = options.resolveAfterRevert === undefined ? true : options.resolveAfterRevert;
-
-    this.debug('PlayNotificationTwo(%o)', options);
-
-    if (options.delayMs !== undefined && (options.delayMs < 1 || options.delayMs > 4000)) {
-      throw new Error('Delay (if specified) should be between 1 and 4000');
+  public async PlayNotificationTwo(options: PlayNotificationTwoOptions): Promise<boolean> {
+    if (this.notificationsTwo === undefined) {
+      this.notificationsTwo = new SonosDeviceNotifications(this.AVTransportService, this.RenderingControlService, this.Events);
     }
-    const promise = new Promise<boolean>((resolve, reject) => {
-      this.addToNotificationQueue(options, resolve, reject, resolveAfterRevert);
-    });
-    return promise;
+    return this.notificationsTwo.PlayNotificationTwo(options);
   }
 
   /**
@@ -582,17 +585,29 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
    * @param {number} [options.timeout] Number of seconds the notification should play, as a fallback if the event doesn't come through.
    * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @param {boolean} [options.resolveAfterRevert]
+   * @param {number} [options.defaultTimeout]
+   * @param {number} [options.specificTimeout]
+   * @param {boolean} [options.catchQueueErrors]
    * @deprecated TTS using experimental notification feature
    * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
    * @memberof SonosDevice
    */
-  public async PlayTTSTwo(options: PlayTtsOptions): Promise<boolean> {
+  public async PlayTTSTwo(options: PlayTtsTwoOptions): Promise<boolean> {
     this.debug('PlayTTSTwo(%o)', options);
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
-    return await this.PlayNotificationTwo(notificationOptions);
+    return await this.PlayNotificationTwo({
+      ...notificationOptions,
+      catchQueueErrors: options.catchQueueErrors,
+      resolveAfterRevert: options.resolveAfterRevert,
+      defaultTimeout: options.defaultTimeout,
+      specificTimeout: options.specificTimeout,
+    });
   }
+
+  // #endregion
 
   /**
    * Switch the playback to this url.
@@ -691,7 +706,8 @@ export default class SonosDevice extends SonosDeviceBase {
       return this.events;
     }
 
-    this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>;
+    // this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>; incorrect according to DeepSource
+    this.events = new EventEmitter();
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;
@@ -701,6 +717,7 @@ export default class SonosDevice extends SonosDeviceBase {
         this.AVTransportService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.removeListener(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
         this.RenderingControlService.Events.removeListener(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
+        this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
         this.isSubscribed = false;
       }
     });
@@ -713,6 +730,10 @@ export default class SonosDevice extends SonosDeviceBase {
         this.AVTransportService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleAvTransportEvent);
         this.RenderingControlService.Events.on(ServiceEvents.SubscriptionError, this.boundHandleEventErrorEvent);
         this.RenderingControlService.Events.on(ServiceEvents.ServiceEvent, this.boundHandleRenderingControlEvent);
+        if (this.coordinator !== undefined) {
+          this.coordinator?.Events.on('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
+          this.boundHandleCoordinatorSimpleStateEvent(this.coordinator.CurrentTransportStateSimple);
+        }
       }
     });
     return this.events;
@@ -730,7 +751,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
   private handleAvTransportEvent(data: AVTransportServiceEvent): void {
     this.Events.emit(SonosEvents.AVTransport, data);
-    if (data.TransportState !== undefined) {
+    if (data.TransportState !== undefined && this.coordinator === undefined) {
       const newState = data.TransportState as TransportState;
       const newSimpleState = newState === TransportState.Paused || newState === TransportState.Stopped ? TransportState.Stopped : TransportState.Playing;
       this.debug('Received TransportState new State "%s" newSimpleState "%s"', newState, newSimpleState);
@@ -761,6 +782,10 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.EnqueuedTransportUri, this.enqueuedTransportUri ?? '');
       if (data.EnqueuedTransportURIMetaData !== undefined && typeof data.EnqueuedTransportURIMetaData !== 'string') this.Events.emit(SonosEvents.EnqueuedTransportMetadata, data.EnqueuedTransportURIMetaData);
     }
+
+    if (data.CurrentPlayMode) {
+      this.currentPlayMode = data.CurrentPlayMode;
+    }
   }
 
   private boundHandleRenderingControlEvent = this.handleRenderingControlEvent.bind(this);
@@ -773,10 +798,18 @@ export default class SonosDevice extends SonosDeviceBase {
       this.Events.emit(SonosEvents.Volume, this.volume ?? 0);
     }
 
-    if (data.Mute && typeof data.Mute.Master === 'boolean' && this.muted !== data.Mute.Master) {
+    if (data.Mute && this.muted !== data.Mute.Master) {
       this.muted = data.Mute.Master;
       this.Events.emit(SonosEvents.Mute, this.muted);
     }
+  }
+
+  private boundHandleCoordinatorSimpleStateEvent = this.handleCoordinatorSimpleStateEvent.bind(this);
+
+  private handleCoordinatorSimpleStateEvent(state: TransportState | undefined): void {
+    const newState = state === TransportState.Playing ? GroupTransportState.GroupPlaying : GroupTransportState.GroupStopped;
+    this.events?.emit('transportState', newState);
+    this.currentTransportState = newState;
   }
   // #endregion
 
@@ -784,18 +817,28 @@ export default class SonosDevice extends SonosDeviceBase {
   private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
   private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string}): void {
-    if (data.coordinator && data.coordinator.uuid !== this.uuid && (!this.coordinator || this.coordinator.uuid !== data.coordinator.uuid)) {
+    if (data.coordinator && data.coordinator?.uuid !== this.Uuid && (!this.coordinator || this.coordinator?.Uuid !== data.coordinator?.Uuid)) {
       this.debug('Coordinator changed for %s', this.uuid);
+      this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
       this.coordinator = data.coordinator;
       if (this.events !== undefined) {
+        // this.boundHandleCoordinatorSimpleStateEvent(this.coordinator.CurrentTransportStateSimple);
         this.events.emit(SonosEvents.Coordinator, this.coordinator.uuid);
+        this.coordinator?.Events.on('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
+        setTimeout(() => {
+          this.boundHandleCoordinatorSimpleStateEvent(this.coordinator?.CurrentTransportStateSimple);
+        }, 50);
       }
     }
     if (this.coordinator && (data.coordinator === undefined || data.coordinator.uuid === this.uuid)) {
       this.debug('Coordinator removed for %s', this.uuid);
+      this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
       this.coordinator = undefined;
       if (this.events !== undefined) {
         this.events.emit(SonosEvents.Coordinator, this.uuid);
+        this.currentTransportState = undefined;
+        this.events.emit(SonosEvents.CurrentTransportState, TransportState.Stopped);
+        this.events.emit(SonosEvents.CurrentTransportStateSimple, TransportState.Stopped);
       }
     }
     if (data.name && data.name !== this.groupName) {
@@ -831,6 +874,19 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Properties
+  private currentPlayMode?: PlayMode;
+
+  /**
+   * Current play mode, only set when subscribed to events.
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
+  public get CurrentPlayMode(): PlayMode | undefined {
+    return this.currentPlayMode;
+  }
+
   private currentTrackUri?: string;
 
   /**
@@ -870,7 +926,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.nextTrackUri;
   }
 
-  private currentTransportState?: TransportState;
+  private currentTransportState?: ExtendedTransportState;
 
   /**
    * Current transport state, only set when listening for events
@@ -879,7 +935,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @type {(TransportState | undefined)}
    * @memberof SonosDevice
    */
-  public get CurrentTransportState(): TransportState | undefined {
+  public get CurrentTransportState(): ExtendedTransportState | undefined {
     return this.currentTransportState;
   }
 
@@ -891,8 +947,10 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public get CurrentTransportStateSimple(): TransportState | undefined {
-    if (this.currentTransportState !== undefined) {
-      return this.currentTransportState === TransportState.Playing || this.currentTransportState === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
+    const state = this.coordinator?.currentTransportState ?? this.currentTransportState;
+
+    if (state !== undefined) {
+      return state === TransportState.Playing || state === TransportState.Transitioning ? TransportState.Playing : TransportState.Stopped;
     }
     return undefined;
   }
@@ -993,12 +1051,12 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
-   * GetZoneGroupState() shortcut to .ZoneGroupTopologyService.GetZoneGroupState()
+   * GetZoneGroupState() shortcut to .ZoneGroupTopologyService.GetParsedZoneGroupState()
    *
-   * @returns {Promise<GetZoneGroupStateResponse>}
+   * @returns {Promise<ZoneGroup[]>}
    * @memberof SonosDevice
    */
-  public async GetZoneGroupState(): Promise<GetZoneGroupStateResponse> { return await this.ZoneGroupTopologyService.GetZoneGroupState(); }
+  public async GetZoneGroupState(): Promise<ZoneGroup[]> { return await this.ZoneGroupTopologyService.GetParsedZoneGroupState(); }
 
   /**
    * GetZoneInfo shortcut to .DevicePropertiesService.GetZoneInfo()
@@ -1139,293 +1197,5 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async Stop(): Promise<boolean> { return await this.Coordinator.AVTransportService.Stop(); }
-  // #endregion
-
-  // #region Notification Queue
-  private async playQueue(originalState: TransportState): Promise<boolean> {
-    this.debug('playQueue: Called, current Queue length: %d', this.notificationQueue.queue.length);
-    if (this.notificationQueue.queue.length === 0) {
-      throw new Error('Queue is already empty');
-    }
-
-    const currentItem = this.notificationQueue.queue[0];
-    const currentName = currentItem.options.trackUri;
-
-    if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
-      this.debug('General timeout for Notification ("%s") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.generalTimeout.fireTime);
-      // The Timeout already fired so play next item
-      return await this.playNextQueueItem(originalState);
-    }
-
-    const currentOptions = currentItem.options;
-    if (currentOptions.onlyWhenPlaying === true && !(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
-      this.debug('playQueue: Notification ("%s") cancelled, player not playing', currentName);
-
-      await this.resolvePlayingQueueItem(currentItem, false);
-
-      return await this.playNextQueueItem(originalState);
-    }
-
-    if (currentItem.options.specificTimeout) {
-      const fireTime = (new Date()).getTime() + currentItem.options.specificTimeout * 1000;
-      this.debug('Play notification ("%s") timeout will fire at %o', currentName, fireTime);
-      const timeout = setTimeout(() => {
-        if (currentItem.generalTimeout) {
-          clearTimeout(currentItem.generalTimeout.timeout);
-        }
-        this.debug('Specific timeout for Notification ("%s") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.individualTimeout?.fireTime);
-
-        this.resolvePlayingQueueItem(currentItem, false);
-      }, currentItem.options.specificTimeout * 1000);
-      currentItem.individualTimeout = new NotificationQueueTimeoutItem(timeout, fireTime);
-    }
-
-    this.debug('playQueue: Going to play next notification ("")', currentName);
-    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Set next Transport URL, Queue Length: ${this.notificationQueue.queue.length}`);
-
-    // Generate metadata if needed
-    if (currentOptions.metadata === undefined) {
-      const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(currentOptions.trackUri);
-      currentOptions.metadata = guessedMetaData.metadata;
-      currentOptions.trackUri = guessedMetaData.trackUri;
-    }
-
-    this.notificationQueue.anythingPlayed = true;
-
-    // Start the notification
-    await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: currentOptions.trackUri, CurrentURIMetaData: currentOptions.metadata ?? '' });
-    if (currentOptions.volume !== undefined) {
-      this.notificationQueue.volumeChanged = true;
-      this.debug('playQueue: Changing Volume to %o', currentOptions.volume);
-      await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: currentOptions.volume });
-      if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
-    }
-
-    if (currentItem.individualTimeout !== undefined && currentItem.individualTimeout.timeLeft() < 0) {
-      this.debug('Specific timeout for Notification ("") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.individualTimeout?.fireTime);
-      return await this.playNextQueueItem(originalState);
-    }
-
-    if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
-      // The Timeout already fired so play next item
-      if (currentItem.individualTimeout) {
-        clearTimeout(currentItem.individualTimeout.timeout);
-      }
-      this.debug('General timeout for Notification ("%s") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.individualTimeout?.fireTime);
-      return await this.playNextQueueItem(originalState);
-    }
-
-    this.debug('playQueue: Initiating notification playing for current Queue Item ("%s").', currentName);
-    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Execute Play, Queue Length: ${this.notificationQueue.queue.length}`);
-    await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' })
-      .catch((err) => { this.debug('Play threw error, wrong url? %o', err); });
-
-    // Wait for event (or timeout)
-    // this.jestDebug.push(`${(new Date()).getTime()}: playQueue: Wait for PlaybackStopped Event, Queue Length: ${this.notificationQueue.queue.length}`);
-    let remainingTime: number = currentItem.options.defaultTimeout === undefined
-      ? 1800
-      : currentItem.options.defaultTimeout; // 30 Minutes Default Timeout
-
-    if (currentItem.generalTimeout) {
-      remainingTime = Math.max(remainingTime, currentItem.generalTimeout.timeLeft() / 1000);
-    }
-
-    if (currentItem.individualTimeout) {
-      remainingTime = Math.min(remainingTime, currentItem.individualTimeout.timeLeft() / 1000);
-    }
-
-    this.debug('playQueue: Notification("%s") --> Maximum wait time for PlayBackStopped Event %d s.', currentName, remainingTime);
-
-    // Timeout + 1 to ensure the timeout action fired already
-    await AsyncHelper.AsyncEvent<any>(this.Events, SonosEvents.PlaybackStopped, remainingTime + 5).catch((err) => this.debug(err));
-
-    this.debug('Recieved Playback Stop Event or Timeout for current PlayNotification("%s")', currentName);
-
-    if (currentItem.individualTimeout === undefined) {
-      if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
-      this.debug('Playing notification("%s") finished sucessfully', currentName);
-      await this.resolvePlayingQueueItem(currentItem, true);
-      return await this.playNextQueueItem(originalState);
-    }
-
-    const timeLeft = currentItem.individualTimeout.timeLeft();
-    if (timeLeft > 0) {
-      clearTimeout(currentItem.individualTimeout.timeout);
-      await this.resolvePlayingQueueItem(currentItem, true);
-    }
-
-    if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
-    this.debug('Playing notification("%s") finished with %d ms left on specific timeout', currentName, timeLeft);
-
-    return await this.playNextQueueItem(originalState);
-  }
-
-  private async resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
-    if (currentItem.resolveAfterRevert === false) {
-      if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() > 0) {
-        clearTimeout(currentItem.generalTimeout.timeout);
-      }
-      currentItem.resolve(resolveValue);
-    } else {
-      this.notificationQueue.promisesToResolve.push(
-        { promise: currentItem.resolve, value: resolveValue, timeout: currentItem.generalTimeout },
-      );
-    }
-    return true;
-  }
-
-  private async playNextQueueItem(originalState: TransportState) {
-    this.notificationQueue.queue.shift();
-
-    if (this.notificationQueue.queue.length > 0) {
-      this.debug('There are some items left in the queue --> play them');
-      return await this.playQueue(originalState);
-    }
-
-    this.debug('There are no items left in the queue --> Resolve Play Queue promise');
-    return true;
-  }
-
-  private addToNotificationQueue(
-    options: PlayNotificationOptions,
-    resolve: (resolve: boolean | PromiseLike<boolean>) => void,
-    reject: (reject: boolean | PromiseLike<boolean>) => void,
-    resolveAfterRevert: boolean,
-  ): void {
-    const queueItem: NotificationQueueItem = {
-      options,
-      resolve,
-      reject,
-      resolveAfterRevert,
-    };
-
-    if (options.timeout) {
-      const fireTime = (new Date()).getTime() + options.timeout * 1000;
-      this.debug('Play notification timeout will fire at %d', fireTime);
-      const timeout = setTimeout(() => {
-        this.debug('Notification timeout fired --> resolve(false)');
-        // this.jestDebug.push(`Notification timeout fired (Firetime: ${fireTime})`);
-        resolve(false);
-      }, options.timeout * 1000);
-
-      queueItem.generalTimeout = new NotificationQueueTimeoutItem(timeout, fireTime);
-    }
-
-    this.notificationQueue.queue.push(queueItem);
-
-    if (!this.notificationQueue.playing) {
-      this.notificationQueue.playing = true;
-      setTimeout(() => {
-        this.startQueue(options);
-      });
-    }
-  }
-
-  private async startQueue(options: PlayNotificationOptions): Promise<boolean> {
-    const originalState = (await this.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
-    this.debug('Current state is %s', originalState);
-
-    if (!(originalState === TransportState.Playing || originalState === TransportState.Transitioning)) {
-      // TH 01.01.2021 Check if we only got items in queue which should only play, currently playing
-      let onlyItemsWithOnlyWhenPlaying = true;
-      this.notificationQueue.queue.forEach((element) => {
-        if (!onlyItemsWithOnlyWhenPlaying || element.options.onlyWhenPlaying === true) {
-          return;
-        }
-        onlyItemsWithOnlyWhenPlaying = false;
-      });
-
-      if (onlyItemsWithOnlyWhenPlaying) {
-        /*
-         * TH 01.01.2021: We have only items in the queue which are only to be played if any items in queue
-         *                --> directly resolve and exit
-         */
-        this.notificationQueue.queue.forEach((element) => {
-          element.resolve(false);
-        });
-        this.notificationQueue.queue = [];
-        this.notificationQueue.playing = false;
-        return false;
-      }
-    }
-
-    // Original data to revert to
-    const originalVolume = (await this.RenderingControlService.GetVolume({ InstanceID: 0, Channel: 'Master' })).CurrentVolume;
-    const originalMediaInfo = await this.AVTransportService.GetMediaInfo();
-    const originalPositionInfo = await this.AVTransportService.GetPositionInfo();
-
-    this.debug('Starting Notification Queue');
-    // this.jestDebug.push(`${(new Date()).getTime()}: Start Queue playing`);
-    await this.playQueue(originalState);
-    this.debug('Notification Queue finished');
-
-    if (this.notificationQueue.anythingPlayed) {
-      // Revert everything back
-      this.debug('Reverting everything back to normal');
-      let isBroadcast = false;
-      if (
-        // TODO: Analyze under which circumstances CurrentURIMetaData is undefined
-        originalMediaInfo.CurrentURIMetaData !== undefined
-        && typeof originalMediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
-        && originalMediaInfo.CurrentURIMetaData.UpnpClass === 'object.item.audioItem.audioBroadcast' // This UpnpClass should for sure be skipped.
-      ) {
-        isBroadcast = true;
-      }
-
-      if (originalVolume !== undefined && this.notificationQueue.volumeChanged === true) {
-        this.debug('This Queue changed the volume so revert it');
-        await this.RenderingControlService.SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: originalVolume });
-        if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
-        this.notificationQueue.volumeChanged = false;
-      }
-
-      await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: originalMediaInfo.CurrentURI, CurrentURIMetaData: originalMediaInfo.CurrentURIMetaData });
-      if (options.delayMs !== undefined) await AsyncHelper.Delay(options.delayMs);
-
-      if (originalPositionInfo.Track > 1 && originalMediaInfo.NrTracks > 1) {
-        this.debug('Selecting track %d', originalPositionInfo.Track);
-        await this.SeekTrack(originalPositionInfo.Track)
-          .catch((err) => {
-            this.debug('Error selecting track, happens with some music services %o', err);
-          });
-      }
-
-      if (originalPositionInfo.RelTime && originalMediaInfo.MediaDuration !== '0:00:00' && !isBroadcast) {
-        this.debug('Setting back time to %s', originalPositionInfo.RelTime);
-        await this.SeekPosition(originalPositionInfo.RelTime)
-          .catch((err) => {
-            this.debug('Reverting back track time failed, happens for some music services (radio or stream). %o', err);
-          });
-      }
-
-      if (originalState === TransportState.Playing || originalState === TransportState.Transitioning) {
-        await this.AVTransportService.Play({ InstanceID: 0, Speed: '1' });
-      }
-    }
-
-    // this.jestDebug.push(`${(new Date()).getTime()}: Resolve all remaining promises`);
-    this.notificationQueue.promisesToResolve.forEach((element) => {
-      if (element.timeout === undefined) {
-        element.promise(element.value);
-        return;
-      }
-
-      if (element.timeout.timeLeft() > 0) {
-        clearTimeout(element.timeout.timeout);
-        element.promise(element.value);
-      }
-    });
-
-    this.notificationQueue.anythingPlayed = false;
-    this.notificationQueue.promisesToResolve = [];
-    if (this.notificationQueue.queue.length > 0) {
-      setTimeout(() => {
-        this.startQueue(options);
-      });
-    } else {
-      this.notificationQueue.playing = false;
-    }
-    return true;
-  }
   // #endregion
 }

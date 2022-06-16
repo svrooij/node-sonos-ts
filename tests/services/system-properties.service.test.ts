@@ -100,8 +100,8 @@ describe('SystemPropertiesService', () => {
           undefined,
           scope
         );
-        const key = Guid.create().toString();
-        const token = Guid.create().toString();
+        const key: string = Guid.create().toString();
+        const token:string = Guid.create().toString();
         TestHelpers.mockRequest('/SystemProperties/Control',
           '"urn:schemas-upnp-org:service:SystemProperties:1#SetString"',
           `<u:SetString xmlns:u="urn:schemas-upnp-org:service:SystemProperties:1"><VariableName>sonos-ts-300-key</VariableName><StringValue>${key}</StringValue></u:SetString>`,
@@ -145,8 +145,8 @@ describe('SystemPropertiesService', () => {
           undefined,
           scope
         );
-        const key = Guid.create().toString();
-        const token = Guid.create().toString();
+        const key: string = Guid.create().toString();
+        const token: string = Guid.create().toString();
         TestHelpers.mockRequest('/SystemProperties/Control',
           '"urn:schemas-upnp-org:service:SystemProperties:1#SetString"',
           `<u:SetString xmlns:u="urn:schemas-upnp-org:service:SystemProperties:1"><VariableName>sonos-ts-300-key</VariableName><StringValue>${key}</StringValue></u:SetString>`,
@@ -182,8 +182,8 @@ describe('SystemPropertiesService', () => {
           `<StringValue>300</StringValue>`,
           scope
         );
-        const key = Guid.create().toString();
-        const token = Guid.create().toString();
+        const key: string = Guid.create().toString();
+        const token: string = Guid.create().toString();
         TestHelpers.mockRequest('/SystemProperties/Control',
           '"urn:schemas-upnp-org:service:SystemProperties:1#SetString"',
           `<u:SetString xmlns:u="urn:schemas-upnp-org:service:SystemProperties:1"><VariableName>sonos-ts-300-key</VariableName><StringValue>${key}</StringValue></u:SetString>`,

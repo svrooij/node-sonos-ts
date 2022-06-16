@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "jest": "jest --forceExit",
+    "generate": "npx @svrooij/sonos-docs combine && npx @svrooij/sonos-docs generate ./.generator/ts/ ./",
     "lint-fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
     "prepack": "npm run build",
@@ -23,17 +24,18 @@
     "real-time",
     "home-automation"
   ],
-  "author": "Stephan van Rooij <github@svrooij.nl> (https://svrooij.nl)",
+  "author": "Stephan van Rooij <sonos@svrooij.io> (https://svrooij.io)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/svrooij/node-sonos-ts/issues"
   },
-  "homepage": "https://github.com/svrooij/node-sonos-ts#readme",
+  "homepage": "https://svrooij.io/node-sonos-ts/",
   "devDependencies": {
     "@types/chai": "^4.2.16",
     "@types/debug": "^4.1.5",
     "@types/jest": "^26.0.15",
     "@types/node-fetch": "^2.5.10",
+    "@types/node": "^16.11.7",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "chai": "^4.3.4",

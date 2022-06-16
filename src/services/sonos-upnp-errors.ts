@@ -21,7 +21,7 @@ export default class SonosUpnpErrors {
     { code: 602, description: 'Optional action not implemented' },
     { code: 603, description: 'Out of memory' },
     { code: 604, description: 'Human intervention required' },
-    { code: 605, description: 'Sring argument too long' },
+    { code: 605, description: 'String argument too long' },
     { code: 606, description: 'Action not authorized' },
     { code: 607, description: 'Signature failure' },
     { code: 608, description: 'Signature missing' },

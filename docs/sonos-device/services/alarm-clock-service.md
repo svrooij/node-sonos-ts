@@ -1,15 +1,15 @@
 ---
 layout: default
-title: AlarmClockService
+title: AlarmClock
 parent: Services
 grand_parent: Sonos device
 ---
-# AlarmClockService
+# AlarmClock service
 {: .no_toc }
 
-Control the sonos alarms
+Control the sonos alarms and times
 
-The AlarmClockService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The AlarmClock service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -36,8 +36,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **StartLocalTime** | `string` | The start time as hh:mm:ss |
-| **Duration** | `string` | The duration as hh:mm:ss |
+| **StartLocalTime** | `string` | The start time as `hh:mm:ss` |
+| **Duration** | `string` | The duration as `hh:mm:ss` |
 | **Recurrence** | `string` | Repeat this alarm on Allowed values: `ONCE` / `WEEKDAYS` / `WEEKENDS` / `DAILY` |
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |
@@ -51,7 +51,7 @@ Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **AssignedID** | `number` |  |
+| **AssignedID** | `number` | The ID of the new alarm |
 
 ### DestroyAlarm
 
@@ -196,7 +196,7 @@ Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **CurrentAlarmList** | `string` |  |
+| **CurrentAlarmList** | `string` | xml string, see remarks |
 | **CurrentAlarmListVersion** | `string` |  |
 
 **Remarks** Some libraries also provide a ListAndParseAlarms where the alarm list xml is parsed
@@ -286,9 +286,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ID** | `number` | The ID of the alarm see ListAndParseAlarms |
-| **StartLocalTime** | `string` | The start time as hh:mm:ss |
-| **Duration** | `string` | The duration as hh:mm:ss |
+| **ID** | `number` | The ID of the alarm see ListAlarms |
+| **StartLocalTime** | `string` | The start time as `hh:mm:ss` |
+| **Duration** | `string` | The duration as `hh:mm:ss` |
 | **Recurrence** | `string` | Repeat this alarm on Allowed values: `ONCE` / `WEEKDAYS` / `WEEKENDS` / `DAILY` |
 | **Enabled** | `boolean` | Alarm enabled after creation |
 | **RoomUUID** | `string` | The UUID of the speaker you want this alarm for |

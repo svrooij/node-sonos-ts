@@ -1,15 +1,15 @@
 ---
 layout: default
-title: QueueService
+title: Queue
 parent: Services
 grand_parent: Sonos device
 ---
-# QueueService
+# Queue service
 {: .no_toc }
 
 Modify and browse queues
 
-The QueueService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The Queue service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

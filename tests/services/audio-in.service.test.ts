@@ -3,7 +3,34 @@ import { TestHelpers } from '../test-helpers';
 import { AudioInService } from '../../src/services/audio-in.service';
 
 describe('AudioInService', () => {
-    describe('Event parsing', () => {
+  describe('GetAudioInputAttributes()', () => {
+    it('works', async () => {
+      const service = new AudioInService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AudioIn/Control', 'AudioIn',
+        'GetAudioInputAttributes', undefined,
+        '<CurrentName>Audio Component</CurrentName><CurrentIcon>AudioComponent</CurrentIcon>');
+      
+      const result = await service.GetAudioInputAttributes();
+      expect(result).to.have.nested.property('CurrentName', 'Audio Component');
+      expect(result).to.have.nested.property('CurrentIcon', 'AudioComponent');
+    });
+  });
+
+  describe('GetLineInLevel()', () => {
+    it('works', async () => {
+      const service = new AudioInService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/AudioIn/Control', 'AudioIn',
+        'GetLineInLevel', undefined,
+        '<CurrentLeftLineInLevel>1</CurrentLeftLineInLevel><CurrentRightLineInLevel>1</CurrentRightLineInLevel>');
+      
+      const result = await service.GetLineInLevel();
+      expect(result).to.have.nested.property('CurrentLeftLineInLevel', 1);
+      expect(result).to.have.nested.property('CurrentRightLineInLevel', 1);
+    });
+  });
+
+
+  describe('Event parsing', () => {
     it('works', (done) => {
       process.env.SONOS_DISABLE_EVENTS = 'true'
       const service = new AudioInService(TestHelpers.testHost, 1400);

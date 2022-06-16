@@ -33,14 +33,14 @@ export default class MetadataHelper {
       ProtocolInfo: undefined,
     };
     if (didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
-      const streamContent = (didlItem['r:streamContent'] as string).split('-');
+      const streamContent = didlItem['r:streamContent'].split('-');
       if (streamContent.length === 2) {
         track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
         track.Title = XmlHelper.DecodeHtml(streamContent[1].trim());
       } else {
         track.Artist = XmlHelper.DecodeHtml(streamContent[0].trim());
         if (didlItem['r:radioShowMd'] && typeof didlItem['r:radioShowMd'] === 'string') {
-          const radioShowMd = (didlItem['r:radioShowMd'] as string).split(',');
+          const radioShowMd = didlItem['r:radioShowMd'].split(',');
           track.Title = XmlHelper.DecodeHtml(radioShowMd[0].trim());
         }
       }
@@ -179,17 +179,17 @@ export default class MetadataHelper {
       }
     }
 
-    const appleAlbumItem = trackUri.match(/x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)(?:\?|$)/);
+    const appleAlbumItem = /x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (appleAlbumItem) { // Apple Music Album
       return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2]);
     }
 
-    const applePlaylistItem = trackUri.match(/x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)(?:\?|$)/);
+    const applePlaylistItem = /x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (applePlaylistItem) { // Apple Music Playlist
       return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2]);
     }
 
-    const appleTrackItem = trackUri.match(/x-sonos-http:(librarytrack|song):([.\d\w]+)\.mp4\?.*sid=204/);
+    const appleTrackItem = /x-sonos-http:(librarytrack|song):([.\d\w]+)\.mp4\?.*sid=204/.exec(trackUri);
     if (appleTrackItem) { // Apple Music Track
       return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2]);
     }

@@ -1,5 +1,5 @@
 /**
- * Sonos QueueService
+ * Sonos Queue service
  *
  * Stephan van Rooij
  * https://svrooij.io

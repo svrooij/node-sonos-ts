@@ -17,22 +17,22 @@ Every sonos speaker has several soap services. Each service has one or more acti
 
 | Service | Description |
 |:--------|:------------|
-| [**AlarmClock**](alarm-clock-service.html) | Control the sonos alarms |
-| [**AudioIn**](audio-in-service.html) |  |
-| [**AVTransport**](av-transport-service.html) | Service that controls stuff related to transport (play/pause/next/special urls) |
-| [**ConnectionManager**](connection-manager-service.html) |  |
-| [**ContentDirectory**](content-directory-service.html) | Browse for local content |
-| [**DeviceProperties**](device-properties-service.html) | Modify device properties, like led status and stereo pairs |
-| [**GroupManagement**](group-management-service.html) |  |
-| [**GroupRenderingControl**](group-rendering-control-service.html) | Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players. |
-| [**HTControl**](ht-control-service.html) |  |
-| [**MusicServices**](music-services-service.html) | External music services |
-| [**QPlay**](q-play-service.html) |  |
-| [**Queue**](queue-service.html) | Modify and browse queues |
-| [**RenderingControl**](rendering-control-service.html) | Volume related controls |
-| [**SystemProperties**](system-properties-service.html) | Manage system-wide settings, mainly account stuff. |
-| [**VirtualLineIn**](virtual-line-in-service.html) |  |
-| [**ZoneGroupTopology**](zone-group-topology-service.html) | Zone config stuff, eg getting all the configured sonos zones. |
+| [**AlarmClock service**](alarm-clock-service.html) | Control the sonos alarms and times |
+| [**AudioIn service**](audio-in-service.html) | Control line in |
+| [**AVTransport service**](av-transport-service.html) | Service that controls stuff related to transport (play/pause/next/special urls) |
+| [**ConnectionManager service**](connection-manager-service.html) | Services related to connections and protocols |
+| [**ContentDirectory service**](content-directory-service.html) | Browse for local content |
+| [**DeviceProperties service**](device-properties-service.html) | Modify device properties, like LED status and stereo pairs |
+| [**GroupManagement service**](group-management-service.html) | Services related to groups |
+| [**GroupRenderingControl service**](group-rendering-control-service.html) | Volume related controls for groups |
+| [**HTControl service**](ht-control-service.html) | Service related to the TV remote control |
+| [**MusicServices service**](music-services-service.html) | Access to external music services, like Spotify or Youtube Music |
+| [**QPlay service**](q-play-service.html) | Services related to Chinese Tencent Qplay service |
+| [**Queue service**](queue-service.html) | Modify and browse queues |
+| [**RenderingControl service**](rendering-control-service.html) | Volume related controls |
+| [**SystemProperties service**](system-properties-service.html) | Manage system-wide settings, mainly account stuff |
+| [**VirtualLineIn service**](virtual-line-in-service.html) |  |
+| [**ZoneGroupTopology service**](zone-group-topology-service.html) | Zone config stuff, eg getting all the configured sonos zones |
 
 ---
 

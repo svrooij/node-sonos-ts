@@ -10,8 +10,8 @@ module.exports = {
   coverageReporters: ['text', 'text-summary', 'lcov', 'html'],
   collectCoverageFrom: [
     'src/*.ts',
-    'src/helpers/**/*.ts',
-    'src/models/**/*.ts',
-    'src/services/**/*.ts'
+    'src/helpers/*.ts',
+    'src/models/*.ts',
+    'src/services/*.ts'
   ]
 }

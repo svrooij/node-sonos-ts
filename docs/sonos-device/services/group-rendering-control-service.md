@@ -1,15 +1,15 @@
 ---
 layout: default
-title: GroupRenderingControlService
+title: GroupRenderingControl
 parent: Services
 grand_parent: Sonos device
 ---
-# GroupRenderingControlService
+# GroupRenderingControl service
 {: .no_toc }
 
-Volume related controls for groups. Group volume is the average volume of all players. Snapshot stores the volume ratio between players.
+Volume related controls for groups
 
-The GroupRenderingControlService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The GroupRenderingControl service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -26,7 +26,7 @@ All actions that require input expect an object with the specified parameters, e
 
 ### GetGroupMute
 
-Whether or not the group is muted.
+Get the group mute state.
 
 ```js
 const result = await sonos.GroupRenderingControlService.GetGroupMute({ InstanceID:... });
@@ -36,7 +36,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -44,7 +44,7 @@ Output object:
 |:----------|:-----|:------------|
 | **CurrentMute** | `boolean` |  |
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ### GetGroupVolume
 
@@ -58,7 +58,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -66,7 +66,7 @@ Output object:
 |:----------|:-----|:------------|
 | **CurrentVolume** | `number` |  |
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ### SetGroupMute
 
@@ -80,12 +80,12 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **DesiredMute** | `boolean` | True for mute, false for un-mute |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **DesiredMute** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ### SetGroupVolume
 
@@ -99,12 +99,12 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **DesiredVolume** | `number` | New volume between 0 and 100 |
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ### SetRelativeGroupVolume
 
@@ -118,7 +118,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Adjustment** | `number` | Number between -100 and +100 |
 
 Output object:
@@ -127,7 +127,7 @@ Output object:
 |:----------|:-----|:------------|
 | **NewVolume** | `number` |  |
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ### SnapshotGroupVolume
 
@@ -141,11 +141,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** Sould be send to coordinator only
+**Remarks** Should be send to coordinator only
 
 ## GroupRenderingControlService event
 

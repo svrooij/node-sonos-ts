@@ -13,7 +13,7 @@ describe('QueueService', () => {
         'Queue');
 
       const service = new QueueService(TestHelpers.testHost, 1400);
-      // var service = new AlarmClockService('192.168.96.56', 1400)
+      // const service = new AlarmClockService('192.168.96.56', 1400)
 
       const result = await service.Backup();
       expect(result).to.be.eq(true);

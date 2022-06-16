@@ -1,15 +1,15 @@
 ---
 layout: default
-title: SystemPropertiesService
+title: SystemProperties
 parent: Services
 grand_parent: Sonos device
 ---
-# SystemPropertiesService
+# SystemProperties service
 {: .no_toc }
 
-Manage system-wide settings, mainly account stuff.
+Manage system-wide settings, mainly account stuff
 
-The SystemPropertiesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The SystemProperties service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -156,7 +156,7 @@ Output object:
 |:----------|:-----|:------------|
 | **StringValue** | `string` |  |
 
-**Remarks** Strings are saved in the system with SetString, every speaker should send the same data. Will error when not existing
+**Remarks** Strings are saved in the system with SetString, every speaker should return the same data. Will error when not existing
 
 ### GetWebCode
 
@@ -230,7 +230,7 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** Not sure what happens if you call this with a VariableName that doesn&#x27;t exists.
+**Remarks** Not sure what happens if you call this with a VariableName that doesn't exists.
 
 ### RemoveAccount
 

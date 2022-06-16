@@ -1,5 +1,5 @@
 /**
- * Sonos VirtualLineInService
+ * Sonos VirtualLineIn service
  *
  * Stephan van Rooij
  * https://svrooij.io

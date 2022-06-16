@@ -1,13 +1,15 @@
 ---
 layout: default
-title: QPlayService
+title: QPlay
 parent: Services
 grand_parent: Sonos device
 ---
-# QPlayService
+# QPlay service
 {: .no_toc }
 
-The QPlayService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+Services related to Chinese Tencent Qplay service
+
+The QPlay service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

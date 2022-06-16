@@ -10,5 +10,5 @@ export * from './requests';
 export { ServiceEvent, ServiceEvents } from './service-event';
 export { SonosDeviceDescription } from './sonos-device-description';
 export { Track } from './track';
-export { TransportState } from './transport-state';
+export { TransportState, GroupTransportState, ExtendedTransportState } from './transport-state';
 export { ZoneGroup, ZoneMember } from './zone-group';

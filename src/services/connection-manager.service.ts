@@ -1,5 +1,5 @@
 /**
- * Sonos ConnectionManagerService
+ * Sonos ConnectionManager service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -10,6 +10,13 @@ import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
 import SonosUpnpErrors from './sonos-upnp-errors';
 
+/**
+ * Services related to connections and protocols
+ *
+ * @export
+ * @class ConnectionManagerService
+ * @extends {BaseService}
+ */
 export class ConnectionManagerService extends BaseService<ConnectionManagerServiceEvent> {
   readonly serviceNane: string = 'ConnectionManager';
 

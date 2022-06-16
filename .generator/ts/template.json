@@ -1,0 +1,85 @@
+{
+  "$schema": "https://svrooij.io/sonos-api-docs/schema/template.json",
+  "name": "Sonos Typescript",
+  "slug": "ts",
+  "repository": "https://github.com/svrooij/node-sonos-ts/",
+  "author": {
+    "name": "svrooij",
+    "link": "https://svrooij.io"
+  },
+  "files": [
+    {
+      "file": "docs-service.hbs",
+      "outputFile": "docs/sonos-device/services/{snService}-service.md",
+      "usage":"service"
+    },
+    {
+      "file": "docs-index.hbs",
+      "outputFile": "docs/sonos-device/services/services.md",
+      "usage":"index"
+    },
+    {
+      "file": "sonos-upnp-errors.hbs",
+      "outputFile": "src/services/sonos-upnp-errors.ts",
+      "usage":"index"
+    },
+    {
+      "file": "service.hbs",
+      "outputFile": "src/services/{snService}.service.ts",
+      "usage":"service"
+    },
+    {
+      "file": "service-export.hbs",
+      "outputFile": "src/services/index.ts",
+      "usage":"index"
+    },
+    {
+      "file": "sonos-base.hbs",
+      "outputFile": "src/sonos-device-base.ts",
+      "usage":"index"
+    }
+  ],
+  "dataTypes": {
+    "ui4": "number",
+    "i4": "number",
+    "ui2": "number",
+    "i2": "number",
+    "MetaData": "Track | string",
+    "PlayMode": "PlayMode",
+    "ZoneGroupState": "Array<ZoneGroup> | string"
+  },
+  "serviceData": {
+    "AlarmClockService": {
+      "extended": true,
+      "imports": ["PlayMode", "Track"]
+    },
+    "AVTransportService": {
+      "imports": ["PlayMode", "Track"]
+    },
+    "ContentDirectoryService": {
+      "extended": true,
+      "imports": ["BrowseResponse"]
+    },
+    "MusicServicesService": {
+      "extended": true
+    },
+    "QueueService": {
+      "imports": ["BrowseResponse", "Track"]
+    },
+    "RenderingControlService": {
+      "extended": true,
+      "imports": ["ChannelValue"]
+    },
+    "SystemPropertiesService": {
+      "extended": true
+    },
+    "VirtualLineInService": {
+      "imports":["Track"]
+    },
+    "ZoneGroupTopologyService": {
+      "extended": true,
+      "imports":["ZoneGroup"]
+    }
+  },
+  "license": "MIT"
+}

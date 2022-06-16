@@ -12,7 +12,7 @@ const debug = require('debug')('sonos:helpers')
  * Helper class
  * @class Helpers
  */
-var Helpers = {}
+let Helpers = {}
 
 /**
  * Wrap in UPnP Envelope
@@ -206,7 +206,7 @@ Helpers.GenerateMetadata = function (uri, title = '', region = '3079') {
         .replace('##PARENTID##', 'parentID="10052064' + parentId + '" ')
     }
   } else if (uri.startsWith('x-rincon-cpcontainer:1006206ccatalog')) { // Amazon prime container
-    const [id] = uri.match(/^x-rincon-cpcontainer:(.*)\?.*/).splice(1)
+    const [id] = /^x-rincon-cpcontainer:(.*)\?.*/.exec(uri).splice(1)
 
     return {
       uri: String(uri).replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"'),

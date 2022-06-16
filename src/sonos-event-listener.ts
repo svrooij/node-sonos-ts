@@ -133,7 +133,7 @@ export default class SonosEventListener {
     SonosEventListener.WriteJson(resp, this.GetStatus());
   }
 
-  private static WriteJson(resp: ServerResponse, data: any): void {
+  private static WriteJson(resp: ServerResponse, data: unknown): void {
     resp.statusCode = 200;
     resp.setHeader('Content-Type', 'application/json');
     resp.write(JSON.stringify(data));
@@ -141,7 +141,8 @@ export default class SonosEventListener {
   }
 
   private handleSonosRequest(req: IncomingMessage, resp: ServerResponse): void {
-    const sid = req.rawHeaders[req.rawHeaders.findIndex((v) => v === 'SID') + 1];
+    const index = req.rawHeaders.findIndex((v) => v === 'SID') as number + 1;
+    const sid = req.rawHeaders[index];
     this.debug('Got event on %s SID: %s', req.url, sid);
     const service = this.subscriptions[sid];
     if (service === undefined) {
@@ -152,7 +153,7 @@ export default class SonosEventListener {
     }
     const body: any[] = [];
     req
-      .on('data', (chunk: any) => { body.push(chunk); })
+      .on('data', (chunk: unknown) => { body.push(chunk); })
       .on('end', () => {
         const bodyString = Buffer.concat(body).toString();
         resp.statusCode = 200;
@@ -215,7 +216,7 @@ export default class SonosEventListener {
    *
    * @remarks Even though this is public, it should not be called by external applications.
    */
-  public RegisterSubscription(sid: string, service: BaseService<any>): void {
+  public RegisterSubscription(sid: string, service: BaseService<unknown>): void {
     this.StartListener();
     this.subscriptions[sid] = service;
   }
@@ -236,13 +237,15 @@ export default class SonosEventListener {
    *
    * @remarks The event listener is started automatically, so you probably don't need to start it yourself.
    */
-  public StartListener(): void {
+  public StartListener(cb: (() => void) | undefined = undefined): void {
     if (!this.isListening) {
       this.debug('Starting event listener on port %d', this.port);
       this.listenerStarted = true;
       this.listeningSince = new Date();
-      if (!this.server.listening) {
-        this.server.listen(this.port);
+      if (!this.server.listening && !process.env.SONOS_DISABLE_LISTENER) {
+        this.server.listen(this.port, cb);
+      } else if (cb !== undefined) {
+        cb();
       }
     }
   }
@@ -252,7 +255,7 @@ export default class SonosEventListener {
    */
   public async StopListener(): Promise<void> {
     return new Promise((resolve, reject) => {
-      if (this.isListening !== true && this.server.listening !== true) {
+      if (process.env.SONOS_DISABLE_LISTENER || (this.isListening !== true && this.server.listening !== true)) {
         Object.keys(this.subscriptions).forEach((sid) => this.UnregisterSubscription(sid));
         resolve();
         return;

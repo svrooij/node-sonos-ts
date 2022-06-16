@@ -1,0 +1,17 @@
+/**
+ * SonosUpnpErrors
+ *
+ * Stephan van Rooij
+ * https://svrooij.io
+ *
+ * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ */
+import { SonosUpnpError } from '../models/sonos-upnp-error';
+
+export default class SonosUpnpErrors {
+  public static defaultErrors: SonosUpnpError[] = [
+  {{#each errors}}
+    { code: {{code}}, description: '{{description}}' },
+  {{/each}}  
+  ];
+}

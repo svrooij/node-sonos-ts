@@ -5,6 +5,7 @@ import { ZoneGroupTopologyService, ZoneGroupTopologyServiceEvent } from './servi
 import SonosDevice from './sonos-device';
 import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
+import IpHelper from './helpers/ip-helper';
 import TtsHelper from './helpers/tts-helper';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
@@ -27,7 +28,7 @@ export default class SonosManager {
   }
 
   /**
-   * Initialize the manager with one known device. Usefull in special network environments.
+   * Initialize the manager with one known device. Useful in special network environments.
    *
    * @param {string} host
    * @param {number} [port=1400]
@@ -36,7 +37,8 @@ export default class SonosManager {
    */
   public async InitializeFromDevice(host: string, port = 1400): Promise<boolean> {
     this.debug('InitializeFromDevice %s', host);
-    this.zoneService = new ZoneGroupTopologyService(host, port);
+    const ip = IpHelper.IsIpv4(host) ? host : await IpHelper.ResolveHostname(host);
+    this.zoneService = new ZoneGroupTopologyService(ip, port);
     return await this.Initialize();
   }
 
@@ -47,10 +49,9 @@ export default class SonosManager {
    * @returns {Promise<boolean>}
    * @memberof SonosManager
    */
-  public async InitializeWithDiscovery(timeoutInSeconds = 10): Promise<boolean> {
+  public async InitializeWithDiscovery(timeoutInSeconds = 10, discovery = new SonosDeviceDiscovery()): Promise<boolean> {
     this.debug('InitializeWithDiscovery timeout: %d', timeoutInSeconds);
-    const deviceDiscovery = new SonosDeviceDiscovery();
-    const player = await deviceDiscovery.SearchOne(timeoutInSeconds);
+    const player = await discovery.SearchOne(timeoutInSeconds);
     this.debug('Discovery found player with ip: %s', player.host);
     this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
     return await this.Initialize();
@@ -84,7 +85,7 @@ export default class SonosManager {
 
   private SubscribeForGroupEvents(success: boolean): boolean {
     if (success && this.zoneService) {
-      this.zoneService.Events.on(ServiceEvents.Data, this.zoneEventSubscription);
+      this.zoneService.Events.on(ServiceEvents.ServiceEvent, this.zoneEventSubscription);
     }
     return success;
   }
@@ -107,7 +108,7 @@ export default class SonosManager {
           .forEach((m) => {
             const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events });
             this.devices.push(newDevice);
-            this.events.emit('NewDevice', coordinator);
+            this.events.emit('NewDevice', newDevice);
           });
 
         g.members.forEach((m) => {

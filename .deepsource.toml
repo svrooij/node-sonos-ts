@@ -1,0 +1,23 @@
+version = 1
+
+test_patterns = [
+  "tests/**/*.test.ts",
+  "tests/*.test.ts"
+]
+
+exclude_patterns = [
+  "tests/test-helpers.ts",
+  "tests/helpers/legacy-helpers.js",
+  "docs/**",
+  "examples/**",
+  "jest.config.js",
+  ".eslintrc.js"
+]
+
+[[analyzers]]
+name = "secrets"
+enabled = true
+
+[[analyzers]]
+name = "javascript"
+enabled = true

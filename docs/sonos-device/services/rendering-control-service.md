@@ -1,15 +1,15 @@
 ---
 layout: default
-title: RenderingControlService
+title: RenderingControl
 parent: Services
 grand_parent: Sonos device
 ---
-# RenderingControlService
+# RenderingControl service
 {: .no_toc }
 
 Volume related controls
 
-The RenderingControlService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The RenderingControl service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -36,7 +36,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -46,7 +46,7 @@ Output object:
 
 ### GetEQ
 
-Get EQ value (see SetEQ) for different EQTypes
+Get equalizer value
 
 ```js
 const result = await sonos.RenderingControlService.GetEQ({ InstanceID:..., EQType:... });
@@ -56,16 +56,16 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **EQType** | `string` | EQ type such as DialogLevel, NightMode, SubGain |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient) |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **CurrentValue** | `number` |  |
+| **CurrentValue** | `number` | Booleans return `1` / `0`, rest number as specified |
 
-**Remarks** Not supported by all speakers, TV related
+**Remarks** Not all EQ types are available on every speaker
 
 ### GetHeadphoneConnected
 
@@ -77,7 +77,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -97,8 +97,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output object:
 
@@ -116,7 +116,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 
 Output object:
@@ -135,7 +135,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -153,7 +153,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -172,7 +172,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -182,7 +182,7 @@ Output object:
 
 ### GetTreble
 
-Get treble, between -10 and 10
+Get treble
 
 ```js
 const result = await sonos.RenderingControlService.GetTreble({ InstanceID:... });
@@ -192,17 +192,17 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **CurrentTreble** | `number` |  |
+| **CurrentTreble** | `number` | Number between -10 and 10 |
 
 ### GetVolume
 
-Get volume, between 0 and 100
+Get volume
 
 ```js
 const result = await sonos.RenderingControlService.GetVolume({ InstanceID:..., Channel:... });
@@ -212,14 +212,14 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **Channel** | `string` | Master Allowed values: `Master` / `LF` / `RF` |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **CurrentVolume** | `number` |  |
+| **CurrentVolume** | `number` | Number between 0 and 100 |
 
 ### GetVolumeDB
 
@@ -231,7 +231,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output object:
@@ -250,7 +250,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output object:
@@ -270,7 +270,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **RampType** | `string` |  Allowed values: `SLEEP_TIMER_RAMP_TYPE` / `ALARM_RAMP_TYPE` / `AUTOPLAY_RAMP_TYPE` |
 | **DesiredVolume** | `number` |  |
@@ -293,7 +293,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -315,7 +315,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **EQType** | `string` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -330,14 +330,14 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
 ### SetBass
 
-Set bass level
+Set bass level, between -10 and 10
 
 ```js
 const result = await sonos.RenderingControlService.SetBass({ InstanceID:..., DesiredBass:... });
@@ -347,8 +347,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **DesiredBass** | `number` | between -10 and 10 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **DesiredBass** | `number` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -362,14 +362,14 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **ChannelMap** | `string` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
 ### SetEQ
 
-Set EQ value for different types
+Set equalizer value for different types
 
 ```js
 const result = await sonos.RenderingControlService.SetEQ({ InstanceID:..., EQType:..., DesiredValue:... });
@@ -379,9 +379,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **EQType** | `string` | DialogLevel, NightMode, SubGain |
-| **DesiredValue** | `number` | DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient) |
+| **DesiredValue** | `number` | Booleans required `1` for true or `0` for false, rest number as specified |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -399,9 +399,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
-| **DesiredLoudness** | `boolean` | true for on |
+| **DesiredLoudness** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -415,7 +415,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
 | **DesiredMute** | `boolean` |  |
 
@@ -431,7 +431,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **DesiredFixed** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -446,7 +446,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **Adjustment** | `number` |  |
 
@@ -466,7 +466,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **RoomCalibrationEnabled** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -481,7 +481,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **CalibrationID** | `string` |  |
 | **Coefficients** | `string` |  |
 | **CalibrationMode** | `string` |  |
@@ -500,7 +500,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **DesiredTreble** | `number` | between -10 and 10 |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -515,7 +515,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
 
@@ -531,7 +531,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredVolume** | `number` |  |
 

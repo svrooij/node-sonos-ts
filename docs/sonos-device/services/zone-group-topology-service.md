@@ -1,15 +1,15 @@
 ---
 layout: default
-title: ZoneGroupTopologyService
+title: ZoneGroupTopology
 parent: Services
 grand_parent: Sonos device
 ---
-# ZoneGroupTopologyService
+# ZoneGroupTopology service
 {: .no_toc }
 
-Zone config stuff, eg getting all the configured sonos zones.
+Zone config stuff, eg getting all the configured sonos zones
 
-The ZoneGroupTopologyService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The ZoneGroupTopology service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -89,7 +89,7 @@ Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ZoneGroupState** | `Array<ZoneGroup> | string` |  |
+| **ZoneGroupState** | `Array<ZoneGroup> | string` | xml string, see remarks |
 
 **Remarks** Some libraries also support GetParsedZoneGroupState that parses the xml for you.
 

@@ -1,5 +1,5 @@
 /**
- * Sonos ContentDirectoryService
+ * Sonos ContentDirectory service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -54,21 +54,21 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
     { code: 716, description: 'Transfer busy' },
     { code: 717, description: 'No such file transfer' },
     { code: 718, description: 'No such destination resource' },
-    { code: 719, description: 'Destinaton resource access denied' },
+    { code: 719, description: 'Destination resource access denied' },
     { code: 720, description: 'Cannot process the request' },
   ];
 
   // #region actions
   /**
-   * Browse for content.
+   * Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
    *
-   * @param {string} input.ObjectID - The search query, ['A:ARTIST','A:ALBUMARTIST','A:ALBUM','A:GENRE','A:COMPOSER','A:TRACKS','A:PLAYLISTS'] with optionally ':search+query' behind it.
+   * @param {string} input.ObjectID - The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `S:` / `SQ:` / `FV:2` / `R:0/0` / `R:0/1`) with optionally `:search+query` behind it.
    * @param {string} input.BrowseFlag - How to browse [ 'BrowseMetadata' / 'BrowseDirectChildren' ]
-   * @param {string} input.Filter - Which fields should be returned '*' for all.
-   * @param {number} input.StartingIndex - Paging, where to start
-   * @param {number} input.RequestedCount - Paging, number of items
-   * @param {string} input.SortCriteria - Sort the results based on metadata fields. '+upnp:artist,+dc:title' for sorting on artist then on title.
-   * @remarks Some libraries support a BrowseAndParse, so you don't have to parse the xml.
+   * @param {string} input.Filter - Which fields should be returned `*` for all.
+   * @param {number} input.StartingIndex - Paging, where to start, usually 0
+   * @param {number} input.RequestedCount - Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned.
+   * @param {string} input.SortCriteria - Sort the results based on metadata fields. `+upnp:artist,+dc:title` for sorting on artist then on title.
+   * @remarks (1) If the title contains an apostrophe the returned uri will contain a `&apos;`. (2) Some libraries support a BrowseAndParse, so you don't have to parse the xml.
    */
   async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
   Promise<BrowseResponse> { return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }

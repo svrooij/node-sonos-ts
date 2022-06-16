@@ -15,7 +15,7 @@ If you subscribed to events of one service, or on the sonos device events. A sma
 
 ## Configuration
 
-The **SonosEventListener** has some configuration options, which you'll need in specific network environments or docker sitiuations. You can configure the following environment variables.
+The **SonosEventListener** has some configuration options, which you'll need in specific network environments or docker situations. You can configure the following environment variables.
 
 If you have multiple (virtual) network interfaces in your system, use `SONOS_LISTENER_INTERFACE` to set the name of the interface where it should pick the first non-loopback IP address in the subscription request to the sonos speaker. This interface should be reachable from the sonos speakers, since the sonos speaker will do an http request to this host.
 
@@ -67,6 +67,8 @@ sonosDevice.RenderingControlService.Events.on(ServiceEvents.Data, data => {
   console.log('RenderingControl data %s', JSON.stringify(data, null, 2))
 })
 ```
+
+If you used the manager (to automatically monitor group updates), all players in a group that are not the coordinator, will emit a new `TransportState` namely `GROUP_STOPPED` or `GROUP_PLAYING`. These will reflect the status of the coordinator, because member players always report playing when in a group.
 
 ## How it works
 

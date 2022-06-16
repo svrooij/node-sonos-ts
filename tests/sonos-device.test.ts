@@ -5,6 +5,7 @@ import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
 import { SmapiClient } from '../src/musicservices/smapi-client';
+import { TransportState } from '../src/models';
 
 (process.env.SONOS_HOST ? describe : describe.skip)('SonosDevice - local', () => {
 
@@ -20,29 +21,7 @@ describe('SonosDevice', () => {
   describe('LoadDeviceData()', () => {
     it('works', async () => {
       
-      const scope = TestHelpers.mockRequest('/DeviceProperties/Control',
-        '"urn:schemas-upnp-org:service:DeviceProperties:1#GetZoneAttributes"',
-        '<u:GetZoneAttributes xmlns:u="urn:schemas-upnp-org:service:DeviceProperties:1"></u:GetZoneAttributes>',
-        'GetZoneAttributesResponse',
-        'DeviceProperties',
-        '<CurrentZoneName>Kantoor</CurrentZoneName><CurrentIcon>x-rincon-roomicon:office</CurrentIcon><CurrentConfiguration>1</CurrentConfiguration>'
-      );
-      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
-        '"urn:schemas-upnp-org:service:RenderingControl:1#GetMute"',
-        '<u:GetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetMute>',
-        'GetMuteResponse',
-        'RenderingControl',
-        '<CurrentMute>0</CurrentMute>',
-        scope
-      );
-      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
-        '"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume"',
-        '<u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetVolume>',
-        'GetVolumeResponse',
-        'RenderingControl',
-        '<CurrentVolume>6</CurrentVolume>',
-        scope
-      );
+      TestHelpers.mockSonosLoadDeviceData();
       const device = new SonosDevice(TestHelpers.testHost, 1400)
       const result = await device.LoadDeviceData();
       expect(result).to.be.true;
@@ -63,18 +42,9 @@ describe('SonosDevice', () => {
         '<FirstTrackNumberEnqueued>1</FirstTrackNumberEnqueued><NewQueueLength>1</NewQueueLength><NumTracksAdded>1</NumTracksAdded>'
       );
 
-      TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
-        '"urn:schemas-upnp-org:service:RenderingControl:1#GetVolume"',
-        '<u:GetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetVolume>',
-        'GetVolumeResponse',
-        'RenderingControl',
-        '<CurrentVolume>15</CurrentVolume>',
-        scope
-      );
-
       const device = new SonosDevice(TestHelpers.testHost, 1400)
 
-      var result = await device.AddUriToQueue(track);
+      const result = await device.AddUriToQueue(track);
       expect(result).to.have.nested.property('FirstTrackNumberEnqueued', 1);
       expect(result).to.have.nested.property('NewQueueLength', 1);
       expect(result).to.have.nested.property('NumTracksAdded', 1);
@@ -109,6 +79,41 @@ describe('SonosDevice', () => {
     });
   });
 
+  describe('CurrentTrackUri', () => {
+    it('returns value from private field', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const trackUri = 'fake:track:uri';
+      device['currentTrackUri'] = trackUri;
+      expect(device.CurrentTrackUri).to.be.equal(trackUri);
+    })
+  })
+
+  describe('CurrentTransportState', () => {
+    it('returns value from private field', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      device['currentTransportState'] = TransportState.Transitioning;
+      expect(device.CurrentTransportState).to.be.equal(TransportState.Transitioning);
+    })
+  })
+
+  describe('CurrentTransportStateSimple', () => {
+    it('returns value from coordinator if defined', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      device['coordinator'] = new SonosDevice(TestHelpers.testHost, 1500);
+      device['coordinator']['currentTransportState'] = TransportState.Transitioning;
+      expect(device.CurrentTransportStateSimple).to.be.equal(TransportState.Playing);
+    })
+  })
+
+  describe('EnqueuedTransportUri', () => {
+    it('returns value from private field', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const trackUri = 'fake:track:uri';
+      device['enqueuedTransportUri'] = trackUri;
+      expect(device.EnqueuedTransportUri).to.be.equal(trackUri);
+    })
+  })
+
   describe('ExecuteCommand()', () => {
     it('executes \'Play\'', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
@@ -119,7 +124,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('Play');
+      const result = await device.ExecuteCommand('Play');
       expect(result).to.be.eq(true);
     });
 
@@ -132,7 +137,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('LoadUuid', true);
+      const result = await device.ExecuteCommand('LoadUuid', true);
       expect(result).to.be.eq('RINCON_00FFFFFFFFBC01400');
     });
 
@@ -146,7 +151,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('AlarmclockService.Getformat');
+      const result = await device.ExecuteCommand('AlarmclockService.Getformat');
 
       expect(result).to.have.property('CurrentTimeFormat', '24H');
       expect(result).to.have.property('CurrentDateFormat', 'DMY');
@@ -171,7 +176,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
       const options = JSON.stringify({ InstanceID: 0, NewSleepTimerDuration: '00:03:05' });
-      var result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
+      const result = await device.ExecuteCommand('AVTransportService.ConfigureSleepTimer', options);
       expect(result).to.be.eq(true);
     });
 
@@ -184,7 +189,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('AVTransportService.Next');
+      const result = await device.ExecuteCommand('AVTransportService.Next');
       expect(result).to.be.eq(true);
     });
 
@@ -318,7 +323,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.ExecuteCommand('zonegrouptopologyservice.getzonegroupAttributes');
+      const result = await device.ExecuteCommand('zonegrouptopologyservice.getzonegroupAttributes');
 
       expect(result).to.have.property('CurrentZoneGroupName', 'Kantoor');
       expect(result).to.have.property('CurrentZoneGroupID', 'fakeID');
@@ -346,12 +351,13 @@ describe('SonosDevice', () => {
       expect(result.roomName).to.be.equal('TV');
     });
     it('throws error on http error', async () => {
-      TestHelpers.getScope(1410).get('/xml/devce_description.xml').reply(400, 'Bad Request');
+      TestHelpers.getScope(1410).get('/xml/device_description.xml').reply(400, 'Bad Request');
       const device = new SonosDevice(TestHelpers.testHost, 1410);
       try {
         const result = await device.GetDeviceDescription();
       } catch(err) {
         expect(err).to.not.be.null;
+        expect(err).to.have.property('message', 'Loading device description failed 400 Bad Request');
         return;
       }
       expect(false).to.be.true; // Should never be reached
@@ -397,6 +403,21 @@ describe('SonosDevice', () => {
     });
   });
 
+  describe('GetFavorites()', () => {
+    it('works', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaServer/ContentDirectory/Control', 'ContentDirectory',
+        'Browse', '<ObjectID>FV:2</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex>0</StartingIndex><RequestedCount>0</RequestedCount><SortCriteria></SortCriteria>',
+        '<Result>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;FV:2/21&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;Bottoms Up&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;0&lt;/r:ordinal&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7nDoBWDvf02SyD8kEQuuPO?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;https://i.scdn.co/image/f8eb3c2a6921b2a71f5a4a4de7eecc6fc8cf5021&lt;/upnp:albumArtURI&gt;&lt;r:type&gt;instantPlay&lt;/r:type&gt;&lt;r:description&gt;Door Brantley Gilbert&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;10032020spotify%3atrack%3a7nDoBWDvf02SyD8kEQuuPO&amp;quot; parentID=&amp;quot;100e206cspotify%3aartistTopTracks%3a5q8HGNo0BjLWaTAhRtbwxa&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;Bottoms Up&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.item.audioItem.musicTrack&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON2311_X_#Svc2311-0-Token&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;item id=&quot;FV:2/22&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;Je bibliotheek&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;1&lt;/r:ordinal&gt;&lt;res&gt;&lt;/res&gt;&lt;upnp:albumArtURI&gt;http://spotify-static-resources.s3.amazonaws.com/imgstub/your_music_v4_legacy.png&lt;/upnp:albumArtURI&gt;&lt;r:type&gt;shortcut&lt;/r:type&gt;&lt;r:description&gt;Van Spotify&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;10fe2064yourmusic_root&amp;quot; parentID=&amp;quot;00080024yourmusic_root&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;Je bibliotheek&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.container&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON2311_X_#Svc2311-0-Token&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;item id=&quot;FV:2/9&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;Q-Dance Hard&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;2&lt;/r:ordinal&gt;&lt;res protocolInfo=&quot;x-sonosapi-stream:*:*:*&quot;&gt;x-sonosapi-stream:s106914?sid=254&amp;amp;flags=32&lt;/res&gt;&lt;upnp:albumArtURI&gt;http://d1i6vahw24eb07.cloudfront.net/s106914q.gif&lt;/upnp:albumArtURI&gt;&lt;r:type&gt;instantPlay&lt;/r:type&gt;&lt;r:description&gt;TuneIn station&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;F00090020s106914&amp;quot; parentID=&amp;quot;F000c0008s106914&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;Q-Dance Hard&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.item.audioItem.audioBroadcast&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON65031_&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;item id=&quot;FV:2/2&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;Q-Music&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;3&lt;/r:ordinal&gt;&lt;res protocolInfo=&quot;x-sonosapi-stream:*:*:*&quot;&gt;x-sonosapi-stream:s87683?sid=254&amp;amp;flags=32&lt;/res&gt;&lt;upnp:albumArtURI&gt;http://d1i6vahw24eb07.cloudfront.net/s87683q.gif&lt;/upnp:albumArtURI&gt;&lt;r:type&gt;instantPlay&lt;/r:type&gt;&lt;r:description&gt;TuneIn station&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;F00090020s87683&amp;quot; parentID=&amp;quot;F00020064search%3astation:mus&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;Q-Music&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.item.audioItem.audioBroadcast&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON65031_&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;item id=&quot;FV:2/24&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;Sky Radio&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;4&lt;/r:ordinal&gt;&lt;res protocolInfo=&quot;x-rincon-mp3radio:*:*:*&quot;&gt;x-sonosapi-stream:s9067?sid=254&amp;amp;flags=32&lt;/res&gt;&lt;r:type&gt;instantPlay&lt;/r:type&gt;&lt;r:description&gt;TuneIn-station&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;R:0/0/4&amp;quot; parentID=&amp;quot;R:0/0&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;Sky Radio&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.item.audioItem.audioBroadcast&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON65031_&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;item id=&quot;FV:2/13&quot; parentID=&quot;FV:2&quot; restricted=&quot;false&quot;&gt;&lt;dc:title&gt;SLAM!FM&lt;/dc:title&gt;&lt;upnp:class&gt;object.itemobject.item.sonos-favorite&lt;/upnp:class&gt;&lt;r:ordinal&gt;5&lt;/r:ordinal&gt;&lt;res protocolInfo=&quot;x-rincon-mp3radio:*:*:*&quot;&gt;x-sonosapi-stream:s67814?sid=254&amp;amp;flags=32&lt;/res&gt;&lt;r:type&gt;instantPlay&lt;/r:type&gt;&lt;r:description&gt;TuneIn station&lt;/r:description&gt;&lt;r:resMD&gt;&amp;lt;DIDL-Lite xmlns:dc=&amp;quot;http://purl.org/dc/elements/1.1/&amp;quot; xmlns:upnp=&amp;quot;urn:schemas-upnp-org:metadata-1-0/upnp/&amp;quot; xmlns:r=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot; xmlns=&amp;quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&amp;quot;&amp;gt;&amp;lt;item id=&amp;quot;R:0/0/11&amp;quot; parentID=&amp;quot;R:0/0&amp;quot; restricted=&amp;quot;true&amp;quot;&amp;gt;&amp;lt;dc:title&amp;gt;SLAM!FM&amp;lt;/dc:title&amp;gt;&amp;lt;upnp:class&amp;gt;object.item.audioItem.audioBroadcast&amp;lt;/upnp:class&amp;gt;&amp;lt;desc id=&amp;quot;cdudn&amp;quot; nameSpace=&amp;quot;urn:schemas-rinconnetworks-com:metadata-1-0/&amp;quot;&amp;gt;SA_RINCON65031_&amp;lt;/desc&amp;gt;&amp;lt;/item&amp;gt;&amp;lt;/DIDL-Lite&amp;gt;&lt;/r:resMD&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</Result><NumberReturned>6</NumberReturned><TotalMatches>6</TotalMatches><UpdateID>3</UpdateID>');
+      
+      const result = await device.GetFavorites();
+      expect(result).to.be.an('object');
+      expect(result).to.have.property('NumberReturned', 6);
+      expect(result).to.have.property('TotalMatches', 6);
+      expect(result).to.have.property('UpdateID', 3);
+    });
+  });
+
   describe('GetNightMode()', () => {
     it('executes correct command', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
@@ -426,6 +447,71 @@ describe('SonosDevice', () => {
       expect(result).to.be.false;
     });
   });
+
+  describe('GetState()', () => {
+    it('returns preloaded mute, state and volume', async () => {
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      // Set private fields, normally set by events
+      device['muted'] = true;
+      device['volume'] = 6;
+      device['currentTransportState'] = TransportState.Paused;
+
+      expect(device['muted']).to.be.true;
+      expect(device['volume']).to.be.equal(6);
+
+      const scope = TestHelpers.mockAvTransportGetMediaInfo();
+      TestHelpers.mockAvTransportGetPositionInfo(scope);
+
+      const state = await device.GetState();
+      expect(state.muted).to.be.true;
+      expect(state.volume).to.be.equal(6);
+      expect(state.transportState).to.be.equal(TransportState.Stopped)
+
+    });
+  })
+
+  describe('GetQueue()', () => {
+    it('works', async () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToServiceWithFileResponse('/MediaServer/ContentDirectory/Control', 'ContentDirectory',
+        'Browse', '<ObjectID>Q:0</ObjectID><BrowseFlag>BrowseDirectChildren</BrowseFlag><Filter>*</Filter><StartingIndex>0</StartingIndex><RequestedCount>0</RequestedCount><SortCriteria></SortCriteria>',
+        ['services','responses','contentdirectory.browse-queue.xml']);
+      
+      const result = await device.GetQueue();
+      expect(result).to.be.an('object');
+      expect(result).to.have.property('NumberReturned', 70);
+      expect(result).to.have.property('TotalMatches', 70);
+      expect(result).to.have.property('UpdateID', 2);
+      expect(result.Result).to.have.lengthOf(70);
+    });
+  });
+
+  describe('GetZoneGroupState()', () => {
+    it('works', async () => {
+      TestHelpers.mockZoneGroupState();
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.GetZoneGroupState();
+      expect(result).to.have.lengthOf(1);
+      expect(result[0].members).to.have.lengthOf(3);
+    });
+  })
+
+  describe('GetZoneInfo()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequestToService('/DeviceProperties/Control', 'DeviceProperties',
+      'GetZoneInfo','',
+      '<SerialNumber>00-FF-FF-FF-FF-BC:A</SerialNumber><SoftwareVersion>56.0-76060</SoftwareVersion><DisplaySoftwareVersion>11.1</DisplaySoftwareVersion><HardwareVersion>1.16.4.1-2</HardwareVersion><IPAddress>192.168.2.30</IPAddress><MACAddress>00:FF:FF:FF:FF:BC</MACAddress><CopyrightInfo>© 2003-2019, Sonos, Inc. All rights reserved.</CopyrightInfo><ExtraInfo>OTP: 1.1.1(1-16-4-zp5s-0.5)</ExtraInfo><HTAudioIn>0</HTAudioIn><Flags>1</Flags>')
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.GetZoneInfo();
+      expect(result.MACAddress).to.be.eq('00:FF:FF:FF:FF:BC');
+      expect(result.SerialNumber).to.be.eq('00-FF-FF-FF-FF-BC:A');
+    });
+  })
 
   describe('JoinGroup(...)', () => {
     it('Joins known group', async () => {
@@ -468,10 +554,10 @@ describe('SonosDevice', () => {
 
   describe('MusicServicesClient(...)', () => {
     it('returns Spotify client', async () => {
-      const randomDeviceId = Guid.create().toString();
-      const randomAccountKey = Guid.create().toString();
-      const randomAccountToken = Guid.create().toString();
-      const randomHouseHoldId = Guid.create().toString();
+      const randomDeviceId: string = Guid.create().toString();
+      const randomAccountKey: string = Guid.create().toString();
+      const randomAccountToken:string = Guid.create().toString();
+      const randomHouseHoldId:string = Guid.create().toString();
       const port = 1405;
       const scope = TestHelpers.getScope(port);
       TestHelpers.mockRequest('/SystemProperties/Control',
@@ -561,6 +647,59 @@ describe('SonosDevice', () => {
     });
   });
 
+  describe('Name', () => {
+    it('returns name from zone attributes', async () => {
+      TestHelpers.mockSonosLoadDeviceData();
+      const device = new SonosDevice(TestHelpers.testHost, 1400)
+      const result = await device.LoadDeviceData();
+      expect(result).to.be.true;
+      device['name'] = undefined;
+      expect(device.Name).to.be.equal('Kantoor');
+    });
+    it('throws when zone attributes not loaded', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400)
+      expect(() => device.Name).to.throw();
+    })
+  })
+
+  describe('Next()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control', 'AVTransport','Next','<InstanceID>0</InstanceID>')
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.Next();
+      expect(result).to.be.true;
+    });
+  })
+
+  describe('NextTrackUri', () => {
+    it('returns value from private field', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const trackUri = 'fake:track:uri';
+      device['nextTrackUri'] = trackUri;
+      expect(device.NextTrackUri).to.be.equal(trackUri);
+    })
+  })
+
+  describe('Port', () => {
+    it('returns port number', () => {
+      const device = new SonosDevice(TestHelpers.testHost, 1500);
+      expect(device.Port).to.be.equal(1500);
+    })
+  })
+
+  describe('Previous()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control', 'AVTransport','Previous','<InstanceID>0</InstanceID>')
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.Previous();
+      expect(result).to.be.true;
+    });
+  })
+
   describe('SetAVTransportURI(...)', () => {
     it('accepts x-sonosapi-stream:...', async () => {
       const track = 'x-sonosapi-stream:s78122?sid=254&flags=8224&sn=0'
@@ -572,7 +711,7 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost, 1400);
 
-      var result = await device.SetAVTransportURI(track);
+      const result = await device.SetAVTransportURI(track);
       expect(result).to.be.true;
     });
     it('accepts radio:s78122', async () => {
@@ -968,6 +1107,17 @@ describe('SonosDevice', () => {
 
   });
 
+  describe('Stop()', () => {
+    it('works', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control', 'AVTransport','Stop','<InstanceID>0</InstanceID>')
+
+      const device = new SonosDevice(TestHelpers.testHost, 1400);
+
+      const result = await device.Stop();
+      expect(result).to.be.true;
+    });
+  })
+
   describe('SwitchTo..', () => {
     it('SwitchToLineIn() sends correct command', async () => {
       TestHelpers.mockRequest('/DeviceProperties/Control',
@@ -1021,7 +1171,7 @@ describe('SonosDevice', () => {
         'AVTransport');
       const device = new SonosDevice(TestHelpers.testHost, 1400, deviceID);
 
-      var result = await device.SwitchToTV();
+      const result = await device.SwitchToTV();
       expect(result).to.be.eq(true);
     });
   });

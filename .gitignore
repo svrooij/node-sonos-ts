@@ -70,3 +70,9 @@ docs-automatic/
 docs/_site/
 docs/.sass-cache/
 docs/vendor/
+
+# Exclude Webstorm
+.idea/
+
+# Generator temp files
+.cache/combined.json

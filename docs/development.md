@@ -51,7 +51,7 @@ Before you can use this library is has to be compiled.
 
 ## Run the tests
 
-After changing somehting you should run the tests (as they are automatically run before your PR is accepted). Important code should be covered by tests, and is uploaded to [Coveralls.io](https://coveralls.io/github/svrooij/node-sonos-ts)
+After changing something you should run the tests (as they are automatically run before your PR is accepted). Important code should be covered by tests, and is uploaded to [Coveralls.io](https://coveralls.io/github/svrooij/node-sonos-ts)
 
 `npm run test`
 
@@ -61,9 +61,16 @@ or (to test against your actual device)
 
 ## Debugging
 
-This library has several VSCode tasks defined, be sure to change your sonos host in the `.vscode/launch.json` file. If you open an example file and press **F5** the example is run and you can set breakpoints in the sample code and in the TypeScript code.
+This library has several VSCode tasks defined, be sure to create a `.env` file which is used in `.vscode/launch.json` file. If you open an example file and press **F5** the example is run and you can set breakpoints in the sample code and in the TypeScript code.
 
-You can also debug the service generator of the tests.
+```bash
+DEBUG=sonos:*
+SONOS_HOST=192.168.x.x
+SONOS_TTS_ENDPOINT=http://your-tts-host/api/generate
+SONOS_TTS_LANG=nl-NL
+```
+
+You can also debug the tests.
 
 This library makes use of [node debug](https://www.npmjs.com/package/debug), if you want to see debug logs you can set the `DEBUG` environment variable to one of the following values.
 If you run the examples with the VSCode debug task, this variable is set to `sonos:*` so you should see all the logs.
@@ -82,11 +89,11 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **docs/** These documentations
 - **examples/** Several examples on how to use this library.
 - **img/** Some static images used in the library
-- **src/helpers/** Some usefull typesscript class, used everywhere in the library.
+- **src/helpers/** Some useful typescript class, used everywhere in the library.
 - **src/helpers/metadata-helper.ts** This class will generate (actually guess) the needed metadata. Easily extended.
 - **src/models/** Hand-crafted models used by the library.
 - **src/services/** All automatic generated services.
-- **src/services/base-service.ts** Base service class, where all the generated services depend opon. This is where most of the magic happens.
+- **src/services/base-service.ts** Base service class, where all the generated services depend upon. This is where most of the magic happens.
 - **src/index.ts** Just an index to expose all classes that need to be exposed.
 - **src/sonos-device-base.ts** Generated SonosDeviceBase, to expose all the services in the derived class.
 - **src/sonos-device-discovery.ts** Async device discovery (by using SSDP, multicast)
@@ -94,6 +101,18 @@ If you run the examples with the VSCode debug task, this variable is set to `son
 - **src/sonos-event-listener.ts** Event listener, used for logical devices and for all sonos events.
 - **src/sonos-manager.ts** SonosManager class, logical devices.
 - **tests/..** - All the tests, using the Jest framework.
+
+## Regenerate files
+
+A lot of files in this library are generated, you can use the [@svrooij/sonos-docs](https://github.com/svrooij/sonos-api-docs/tree/main/generator/sonos-docs) generator,
+with the template in the [./.generator/ts/](https://github.com/svrooij/node-sonos-ts/tree/master/.generator/ts) folder.
+
+This will load the latest version of the manual documentation, and the latest version of the generated services. And at last regenerate the documentation and the services.
+
+```bash
+# Regenerate all services and documentation files.
+npm run generate
+```
 
 ## Contributors ✨
 

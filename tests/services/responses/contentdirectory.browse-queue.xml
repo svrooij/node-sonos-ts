@@ -1,0 +1,353 @@
+<Result>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot;
+  xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot;
+  xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;
+  xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;Q:0/1&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:51&quot;&gt;x-sonos-spotify:spotify%3atrack%3a69uxus0d23ZnTHXi1dVldS?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a69uxus0d23ZnTHXi1dVldS%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;In
+  My
+  Head&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Quintino&lt;/dc:creator&gt;&lt;upnp:album&gt;In
+  My Head&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/2&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:36&quot;&gt;x-sonos-spotify:spotify%3atrack%3a67LE3pbU8ZZxBJmLhEFupM?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a67LE3pbU8ZZxBJmLhEFupM%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Where
+  Do You Think You Are
+  Going&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Yves
+  V&lt;/dc:creator&gt;&lt;upnp:album&gt;Where Do You Think You Are Going&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/3&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:19&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0YwlHzRYRU2LV2gtWklmD5?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0YwlHzRYRU2LV2gtWklmD5%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Boom&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Mike
+  Candys&lt;/dc:creator&gt;&lt;upnp:album&gt;Boom&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/4&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:45&quot;&gt;x-sonos-spotify:spotify%3atrack%3a5yo9aAVvgiINP2lowSXP5Y?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a5yo9aAVvgiINP2lowSXP5Y%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Forget
+  You&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Yves
+  V&lt;/dc:creator&gt;&lt;upnp:album&gt;Forget You&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/5&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:16&quot;&gt;x-sonos-spotify:spotify%3atrack%3a6kvxoUQy6cKZvc8DFc4Smb?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a6kvxoUQy6cKZvc8DFc4Smb%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;The
+  Portrait (Ooh La La) (with Gabry
+  Ponte)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;R3HAB&lt;/dc:creator&gt;&lt;upnp:album&gt;The
+  Portrait (Ooh La La) (with Gabry Ponte)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/6&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:11&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4W8uqSbhmHgVoTJz6CsBEB?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4W8uqSbhmHgVoTJz6CsBEB%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Red
+  Light, Green
+  Light&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Squid
+  Kids&lt;/dc:creator&gt;&lt;upnp:album&gt;Red Light, Green Light&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/7&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:19&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0SxQ285CrPeOtaF0BYxzS0?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0SxQ285CrPeOtaF0BYxzS0%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Dancing
+  In The
+  Dark&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Ilkay
+  Sencan&lt;/dc:creator&gt;&lt;upnp:album&gt;Dancing In The Dark&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/8&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:21&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0F3dDjUap1EI7YtAFQ9UZu?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0F3dDjUap1EI7YtAFQ9UZu%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Best
+  Kinda Love&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Kim
+  Kaey&lt;/dc:creator&gt;&lt;upnp:album&gt;Best Kinda Love&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/9&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:28&quot;&gt;x-sonos-spotify:spotify%3atrack%3a3uUuGVFu1V7jTQL60S1r8z?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a3uUuGVFu1V7jTQL60S1r8z%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Where
+  Are You
+  Now&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Lost
+  Frequencies&lt;/dc:creator&gt;&lt;upnp:album&gt;Where Are You Now&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/10&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:58&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1tZC1ktebdhQSlhnFSetLk?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1tZC1ktebdhQSlhnFSetLk%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Last
+  Thought (feat.
+  MKLA)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Sonny
+  Fodera&lt;/dc:creator&gt;&lt;upnp:album&gt;Last Thought (feat. MKLA)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/11&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:04&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1V7bZ9gEIwFQpm8yGxRHNA?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1V7bZ9gEIwFQpm8yGxRHNA%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;If
+  You Really Love Me (How Will I
+  Know)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;David
+  Guetta&lt;/dc:creator&gt;&lt;upnp:album&gt;If You Really Love Me (How Will I
+  Know)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/12&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:42&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0SyxZC4wlqAwf20cHE6Xon?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0SyxZC4wlqAwf20cHE6Xon%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Bulletproof&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;La
+  Roux&lt;/dc:creator&gt;&lt;upnp:album&gt;Bulletproof&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/13&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:38&quot;&gt;x-sonos-spotify:spotify%3atrack%3a45qQ4VQkG5MVbFJZXOMSs6?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a45qQ4VQkG5MVbFJZXOMSs6%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Reunion
+  (Free Fire 4th Anniversary Theme Song) [with Alok &amp;amp;
+  Zafrir]&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Dimitri
+  Vegas &amp;amp; Like Mike&lt;/dc:creator&gt;&lt;upnp:album&gt;ALL WE HAVE IS
+  N:OW&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/14&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:20&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7LZQAYj5NmW7Db2y8k7dXm?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7LZQAYj5NmW7Db2y8k7dXm%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Trompetisto&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Sjaak&lt;/dc:creator&gt;&lt;upnp:album&gt;Trompetisto&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/15&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:41&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4SYbdrmyDpCvWkoC4skk5z?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4SYbdrmyDpCvWkoC4skk5z%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;I
+  Got A Feeling - James Hype
+  Remix&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Felix
+  Jaehn&lt;/dc:creator&gt;&lt;upnp:album&gt;I Got A Feeling (James Hype Remix)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/16&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:23&quot;&gt;x-sonos-spotify:spotify%3atrack%3a3g36KmRGI8hmnCcTFak4Wn?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a3g36KmRGI8hmnCcTFak4Wn%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Oohla
+  Oohla&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Tiësto&lt;/dc:creator&gt;&lt;upnp:album&gt;Oohla
+  Oohla&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/17&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:46&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1aFyrATZgmxWeqJ083HDNk?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1aFyrATZgmxWeqJ083HDNk%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Wicked
+  Lullaby&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;LUNAX&lt;/dc:creator&gt;&lt;upnp:album&gt;Wicked
+  Lullaby&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/18&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:28&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0C0LsZeUyAG50xJKEIpBgY?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0C0LsZeUyAG50xJKEIpBgY%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Catch
+  My
+  Love&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Noizu&lt;/dc:creator&gt;&lt;upnp:album&gt;Catch
+  My Love&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/19&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:42&quot;&gt;x-sonos-spotify:spotify%3atrack%3a6Dy1jexKYriXAVG6evyUTJ?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a6Dy1jexKYriXAVG6evyUTJ%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;OUT
+  OUT (feat. Charli XCX &amp;amp;
+  Saweetie)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Joel
+  Corry&lt;/dc:creator&gt;&lt;upnp:album&gt;OUT OUT (feat. Charli XCX &amp;amp;
+  Saweetie)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/20&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:04:01&quot;&gt;x-sonos-spotify:spotify%3atrack%3a6OufwUcCqo81guU2jAlDVP?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a6OufwUcCqo81guU2jAlDVP%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Love
+  Tonight -
+  Edit&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Shouse&lt;/dc:creator&gt;&lt;upnp:album&gt;Love
+  Tonight&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/21&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:22&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1evX3NUBE7QujnSmky2ox4?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1evX3NUBE7QujnSmky2ox4%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Eyes
+  On
+  You&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;HUGEL&lt;/dc:creator&gt;&lt;upnp:album&gt;Eyes
+  On You&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/22&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:08&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0yHP5chOwBC6BUWXPIxQcc?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0yHP5chOwBC6BUWXPIxQcc%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Million
+  Dreams&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Ummet
+  Ozcan&lt;/dc:creator&gt;&lt;upnp:album&gt;Million Dreams&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/23&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:40&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0X8PiJHcTFmmUwsGpvtFik?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0X8PiJHcTFmmUwsGpvtFik%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Bassman&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Blasterjaxx&lt;/dc:creator&gt;&lt;upnp:album&gt;Bassman&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/24&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:12&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4h4c2nt7wTFLn0OYVDWOHC?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4h4c2nt7wTFLn0OYVDWOHC%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Feel
+  Your
+  Love&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Dimitri
+  Vegas &amp;amp; Like Mike&lt;/dc:creator&gt;&lt;upnp:album&gt;Feel Your Love&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/25&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:12&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0d1ujEcFwTqA4kWliTSJim?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0d1ujEcFwTqA4kWliTSJim%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Don&amp;apos;t
+  You Hold Me
+  Down&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Alan
+  Walker&lt;/dc:creator&gt;&lt;upnp:album&gt;Don&amp;apos;t You Hold Me Down&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/26&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:49&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7kbZ3hEGrOvxLJK6pZ8Mp6?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7kbZ3hEGrOvxLJK6pZ8Mp6%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Never
+  Going
+  Home&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Kungs&lt;/dc:creator&gt;&lt;upnp:album&gt;Never
+  Going Home (Extended Mix)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/27&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:32&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4QF7JJPQUM046PsBZQkJFa?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4QF7JJPQUM046PsBZQkJFa%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Bad
+  Boy&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Jebroer&lt;/dc:creator&gt;&lt;upnp:album&gt;Bad
+  Boy&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/28&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:54&quot;&gt;x-sonos-spotify:spotify%3atrack%3a3XuPfjiRkqobQb3st2nfT8?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a3XuPfjiRkqobQb3st2nfT8%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Zonder&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Zonderling&lt;/dc:creator&gt;&lt;upnp:album&gt;Zonder&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/29&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:40&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2USlegnFJLrVLpoVfPimKB?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2USlegnFJLrVLpoVfPimKB%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Thunder&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Gabry
+  Ponte&lt;/dc:creator&gt;&lt;upnp:album&gt;Thunder&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/30&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:28&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4xMbBESczlHPUO8QeYi56p?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4xMbBESczlHPUO8QeYi56p%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;My
+  Heart Goes (La Di Da) (feat.
+  Topic)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Becky
+  Hill&lt;/dc:creator&gt;&lt;upnp:album&gt;My Heart Goes (La Di Da) (feat.
+  Topic)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/31&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:39&quot;&gt;x-sonos-spotify:spotify%3atrack%3a32aKImKoiukzUxnWENXJXb?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a32aKImKoiukzUxnWENXJXb%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;This
+  Is Our
+  Legacy&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;W&amp;amp;W&lt;/dc:creator&gt;&lt;upnp:album&gt;This
+  Is Our Legacy&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/32&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:06&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4mrAArfFEIqpH6myouJb03?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4mrAArfFEIqpH6myouJb03%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Paper
+  Planes&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Lucas
+  &amp;amp; Steve&lt;/dc:creator&gt;&lt;upnp:album&gt;Paper Planes&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/33&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:30&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0CQctRjgAceCvmtQ1CCY22?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0CQctRjgAceCvmtQ1CCY22%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Hide
+  Away&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;VINAI&lt;/dc:creator&gt;&lt;upnp:album&gt;Hide
+  Away&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/34&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:15&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2OvqYU6lo9GA6hO2jVttKm?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2OvqYU6lo9GA6hO2jVttKm%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Flexin&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Mike
+  Candys&lt;/dc:creator&gt;&lt;upnp:album&gt;Flexin&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/35&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:18&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0ymH3Qwwzkl802WD3yy0oY?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0ymH3Qwwzkl802WD3yy0oY%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Marble&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Neptunica&lt;/dc:creator&gt;&lt;upnp:album&gt;Marble&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/36&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:04:14&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2zJ5nuyOQi4jBvToG3HHys?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2zJ5nuyOQi4jBvToG3HHys%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Another
+  Chance&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Roger
+  Sanchez&lt;/dc:creator&gt;&lt;upnp:album&gt;Another Chance&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/37&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:49&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1vUOJpWc091SBYULNvz9mp?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1vUOJpWc091SBYULNvz9mp%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Alright
+  (feat.
+  KIDDO)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Alle
+  Farben&lt;/dc:creator&gt;&lt;upnp:album&gt;Alright (feat. KIDDO)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/38&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:09&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0vR2rIVORmgeKiGIgNT0fV?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0vR2rIVORmgeKiGIgNT0fV%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;By
+  Your Side (feat. Tom
+  Grennan)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Calvin
+  Harris&lt;/dc:creator&gt;&lt;upnp:album&gt;By Your Side (feat. Tom Grennan)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/39&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:22&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2wf2KMhjoHSZXKVHNBoTMg?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2wf2KMhjoHSZXKVHNBoTMg%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Sun
+  Came Up&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Sofi
+  Tukker&lt;/dc:creator&gt;&lt;upnp:album&gt;Sun Came Up&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/40&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:04:47&quot;&gt;x-sonos-spotify:spotify%3atrack%3a5fwSHlTEWpluwOM0Sxnh5k?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a5fwSHlTEWpluwOM0Sxnh5k%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Pepas&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Farruko&lt;/dc:creator&gt;&lt;upnp:album&gt;Pepas&lt;/upnp:album&gt;&lt;r:tags&gt;1&lt;/r:tags&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/41&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:20&quot;&gt;x-sonos-spotify:spotify%3atrack%3a6hgIDN5RsdT3ujELVkZKGO?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a6hgIDN5RsdT3ujELVkZKGO%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Safe
+  &amp;amp; Sound - Radio
+  Edit&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Curbi&lt;/dc:creator&gt;&lt;upnp:album&gt;Safe
+  &amp;amp; Sound&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/42&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:48&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7u6EvUNJUmycM4IHEiHasm?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7u6EvUNJUmycM4IHEiHasm%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Losing
+  My Religion (feat.
+  MKLA)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Steve
+  Aoki&lt;/dc:creator&gt;&lt;upnp:album&gt;Losing My Religion (feat. MKLA)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/43&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:38&quot;&gt;x-sonos-spotify:spotify%3atrack%3a5MxKAr6Ui5hQ9TtjdnlmrR?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a5MxKAr6Ui5hQ9TtjdnlmrR%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Anywhere
+  With
+  You&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Afrojack&lt;/dc:creator&gt;&lt;upnp:album&gt;Anywhere
+  With You&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/44&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:20&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0bI7K9Becu2dtXK1Q3cZNB?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0bI7K9Becu2dtXK1Q3cZNB%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Don&amp;apos;t
+  Be
+  Shy&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Tiësto&lt;/dc:creator&gt;&lt;upnp:album&gt;Don&amp;apos;t
+  Be Shy&lt;/upnp:album&gt;&lt;r:tags&gt;1&lt;/r:tags&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/45&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:42&quot;&gt;x-sonos-spotify:spotify%3atrack%3a5pqm3ulg0pXHgJ53dHpP23?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a5pqm3ulg0pXHgJ53dHpP23%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Bring
+  It Back To
+  Me&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Robbie
+  Mendez&lt;/dc:creator&gt;&lt;upnp:album&gt;Bring It Back To Me&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/46&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:10&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4UGvqi9PIjHesEpPOO7Hl8?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4UGvqi9PIjHesEpPOO7Hl8%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Written
+  In The
+  Stars&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Tungevaag&lt;/dc:creator&gt;&lt;upnp:album&gt;Written
+  In The Stars&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/47&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:31&quot;&gt;x-sonos-spotify:spotify%3atrack%3a76OOmMnaTR0ofp52ZhUSyT?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a76OOmMnaTR0ofp52ZhUSyT%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Staring
+  At The
+  Bottle&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Jerome&lt;/dc:creator&gt;&lt;upnp:album&gt;Staring
+  At The Bottle&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/48&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:25&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4TA48C6sa3lRrr2hHFbePR?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4TA48C6sa3lRrr2hHFbePR%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Diamonds&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Martin
+  Garrix&lt;/dc:creator&gt;&lt;upnp:album&gt;Diamonds&lt;/upnp:album&gt;&lt;r:tags&gt;1&lt;/r:tags&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/49&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:00&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2M2P3sbarzko7EWUtdaANf?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2M2P3sbarzko7EWUtdaANf%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Anita&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Armin
+  van Buuren&lt;/dc:creator&gt;&lt;upnp:album&gt;Anita&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/50&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:12&quot;&gt;x-sonos-spotify:spotify%3atrack%3a3pxqZmJ0G4qHFU3ilQqjuj?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a3pxqZmJ0G4qHFU3ilQqjuj%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Sandstorm&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;MATTN&lt;/dc:creator&gt;&lt;upnp:album&gt;Sandstorm&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/51&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:14&quot;&gt;x-sonos-spotify:spotify%3atrack%3a12N23tQKmfGcEO0z8ObwtM?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a12N23tQKmfGcEO0z8ObwtM%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Bad
+  Habits - MEDUZA
+  Remix&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Ed
+  Sheeran&lt;/dc:creator&gt;&lt;upnp:album&gt;Bad Habits (MEDUZA Remix)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/52&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:53&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2H1kgOxpXNjore1nTsCXgz?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2H1kgOxpXNjore1nTsCXgz%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;This
+  Life (feat. Sydnee
+  Carter)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Needs
+  No Sleep&lt;/dc:creator&gt;&lt;upnp:album&gt;This Life (feat. Sydnee Carter)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/53&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:38&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1TepyN2GXukyc6wo3kTFMO?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1TepyN2GXukyc6wo3kTFMO%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Domino
+  (feat.
+  Oxia)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Alok&lt;/dc:creator&gt;&lt;upnp:album&gt;Domino
+  (feat. Oxia)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/54&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:04:27&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2mL37yB3f3Lfy4iiXV02Qf?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2mL37yB3f3Lfy4iiXV02Qf%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;El
+  Incomprendido&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Farruko&lt;/dc:creator&gt;&lt;upnp:album&gt;La
+  167&lt;/upnp:album&gt;&lt;r:tags&gt;1&lt;/r:tags&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/55&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:24&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7hdy8UqbRmEyOcsF1DcfhJ?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7hdy8UqbRmEyOcsF1DcfhJ%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Tightrope&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;MAXAM&lt;/dc:creator&gt;&lt;upnp:album&gt;Tightrope&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/56&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:19&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2Lm5JYv2QaaPx204pMB4Qy?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2Lm5JYv2QaaPx204pMB4Qy%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Gatluak
+  - Bakermat
+  Remix&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Kronan&lt;/dc:creator&gt;&lt;upnp:album&gt;Gatluak
+  (Bakermat Remix)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/57&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:36&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7hSqDio508Z7R2hZ7klFrv?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7hSqDio508Z7R2hZ7klFrv%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Dopamine
+  (feat.
+  Eyelar)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Purple
+  Disco Machine&lt;/dc:creator&gt;&lt;upnp:album&gt;Dopamine (feat. Eyelar)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/58&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:40&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1MF9LIpWa5nEbe3uLuhwfz?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1MF9LIpWa5nEbe3uLuhwfz%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Trust&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Voost&lt;/dc:creator&gt;&lt;upnp:album&gt;Trust&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/59&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:18&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0uIwEMEjZDGrZ3NvxK3T9F?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0uIwEMEjZDGrZ3NvxK3T9F%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Sweet
+  Dreams&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Alan
+  Walker&lt;/dc:creator&gt;&lt;upnp:album&gt;Sweet Dreams&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/60&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:11&quot;&gt;x-sonos-spotify:spotify%3atrack%3a63aj87TQG6F3RVO5nbG2VQ?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a63aj87TQG6F3RVO5nbG2VQ%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;In
+  Da Getto&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;J
+  Balvin&lt;/dc:creator&gt;&lt;upnp:album&gt;In Da Getto&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/61&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:50&quot;&gt;x-sonos-spotify:spotify%3atrack%3a74CkeJ0vYYTdQImnaLy759?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a74CkeJ0vYYTdQImnaLy759%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Ride
+  With Me (feat. Kid Ink) - Brennan Heart
+  Remix&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Tungevaag&lt;/dc:creator&gt;&lt;upnp:album&gt;Ride
+  With Me (feat. Kid Ink) [Brennan Heart Remix]&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/62&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:06&quot;&gt;x-sonos-spotify:spotify%3atrack%3a7dDLAQ1y0qOq3E4DhNh8FS?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a7dDLAQ1y0qOq3E4DhNh8FS%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Talamanca&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;BURNS&lt;/dc:creator&gt;&lt;upnp:album&gt;Talamanca&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/63&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:37&quot;&gt;x-sonos-spotify:spotify%3atrack%3a20on25jryn53hWghthWWW3?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a20on25jryn53hWghthWWW3%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Do
+  It To
+  It&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;ACRAZE&lt;/dc:creator&gt;&lt;upnp:album&gt;Do
+  It To It&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/64&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:36&quot;&gt;x-sonos-spotify:spotify%3atrack%3a16875gBT6JDTkstpu22ESZ?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a16875gBT6JDTkstpu22ESZ%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Keep
+  On Rising (feat. Michelle Shellers) - ManyFew &amp;amp; Joe Stone
+  Remix&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Ian
+  Carey&lt;/dc:creator&gt;&lt;upnp:album&gt;Keep On Rising (feat. Michelle Shellers) [ManyFew &amp;amp; Joe Stone
+  Remix]&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/65&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:46&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2k9kWgFLCiAeRBTmwlGbAv?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2k9kWgFLCiAeRBTmwlGbAv%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;What
+  You&amp;apos;ve Done To Me (feat.
+  Bemendé)&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;KREAM&lt;/dc:creator&gt;&lt;upnp:album&gt;What
+  You&amp;apos;ve Done To Me (feat. Bemendé)&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/66&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:41&quot;&gt;x-sonos-spotify:spotify%3atrack%3a1olCzMxaeiQKNO64ssWVGr?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a1olCzMxaeiQKNO64ssWVGr%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Talk
+  About&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Rain
+  Radio&lt;/dc:creator&gt;&lt;upnp:album&gt;Talk About&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/67&quot;
+  parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:21&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2cbcV1K8PD1bNlfhFEaGLK?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2cbcV1K8PD1bNlfhFEaGLK%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;I
+  Got The
+  Feeling&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Groovenatics&lt;/dc:creator&gt;&lt;upnp:album&gt;I
+  Got The Feeling&lt;/upnp:album&gt;&lt;/item&gt;&lt;item id=&quot;Q:0/68&quot; parentID=&quot;Q:0&quot;
+  restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:23&quot;&gt;x-sonos-spotify:spotify%3atrack%3a4SR46lHTitWMTzRTwsFIa6?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a4SR46lHTitWMTzRTwsFIa6%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Irrenhaus&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Harris
+  &amp;amp; Ford&lt;/dc:creator&gt;&lt;upnp:album&gt;Irrenhaus&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/69&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:02:45&quot;&gt;x-sonos-spotify:spotify%3atrack%3a2bm9eBd8hXPxEdgizCcEWX?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a2bm9eBd8hXPxEdgizCcEWX%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Passion&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;twocolors&lt;/dc:creator&gt;&lt;upnp:album&gt;Passion&lt;/upnp:album&gt;&lt;/item&gt;&lt;item
+  id=&quot;Q:0/70&quot; parentID=&quot;Q:0&quot; restricted=&quot;true&quot;&gt;&lt;res
+  protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot;
+  duration=&quot;0:03:15&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0ha2skoePlU0BDDySj8qf2?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0ha2skoePlU0BDDySj8qf2%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;We&amp;apos;re
+  Still
+  Young&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Nicky
+  Romero&lt;/dc:creator&gt;&lt;upnp:album&gt;We&amp;apos;re Still
+  Young&lt;/upnp:album&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</Result>
+<NumberReturned>70</NumberReturned>
+<TotalMatches>70</TotalMatches>
+<UpdateID>2</UpdateID>

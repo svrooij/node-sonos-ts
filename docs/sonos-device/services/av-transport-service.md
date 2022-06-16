@@ -1,15 +1,15 @@
 ---
 layout: default
-title: AVTransportService
+title: AVTransport
 parent: Services
 grand_parent: Sonos device
 ---
-# AVTransportService
+# AVTransport service
 {: .no_toc }
 
 Service that controls stuff related to transport (play/pause/next/special urls)
 
-The AVTransportService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The AVTransport service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -34,7 +34,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **UpdateID** | `number` |  |
 | **NumberOfURIs** | `number` |  |
 | **EnqueuedURIs** | `string` |  |
@@ -55,6 +55,8 @@ Output object:
 
 ### AddURIToQueue
 
+Adds songs to the SONOS queue
+
 ```js
 const result = await sonos.AVTransportService.AddURIToQueue({ InstanceID:..., EnqueuedURI:..., EnqueuedURIMetaData:..., DesiredFirstTrackNumberEnqueued:..., EnqueueAsNext:... });
 ```
@@ -63,10 +65,10 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `Track | string` |  |
-| **DesiredFirstTrackNumberEnqueued** | `number` |  |
+| **DesiredFirstTrackNumberEnqueued** | `number` | use `0` to add at the end or `1` to insert at the beginning |
 | **EnqueueAsNext** | `boolean` |  |
 
 Output object:
@@ -76,6 +78,8 @@ Output object:
 | **FirstTrackNumberEnqueued** | `number` |  |
 | **NumTracksAdded** | `number` |  |
 | **NewQueueLength** | `number` |  |
+
+**Remarks** In NORMAL play mode the songs are added prior to the specified `DesiredFirstTrackNumberEnqueued`.
 
 ### AddURIToSavedQueue
 
@@ -87,7 +91,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **EnqueuedURI** | `string` |  |
@@ -112,7 +116,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -128,7 +132,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -147,7 +151,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -172,7 +176,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **CurrentCoordinator** | `string` |  |
 | **CurrentGroupID** | `string` |  |
 | **OtherMembers** | `string` |  |
@@ -198,7 +202,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **CurrentCoordinator** | `string` |  |
 | **NewCoordinator** | `string` |  |
 | **NewTransportSettings** | `string` |  |
@@ -216,7 +220,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **NewTransportSettings** | `string` |  |
 | **CurrentAVTransportURI** | `string` |  |
 
@@ -224,7 +228,7 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### ConfigureSleepTimer
 
-Stop playing after set sleep timer
+Stop playing after set sleep timer or cancel
 
 ```js
 const result = await sonos.AVTransportService.ConfigureSleepTimer({ InstanceID:..., NewSleepTimerDuration:... });
@@ -234,8 +238,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **NewSleepTimerDuration** | `string` | Time to stop after, as hh:mm:ss |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **NewSleepTimerDuration** | `string` | Time to stop after, as `hh:mm:ss` or empty string to cancel |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -251,7 +255,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Title** | `string` |  |
 | **EnqueuedURI** | `string` |  |
 | **EnqueuedURIMetaData** | `Track | string` |  |
@@ -277,7 +281,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **NewCoordinator** | `string` | uuid of the new coordinator - must be in same group |
 | **RejoinGroup** | `boolean` | Should former coordinator rejoin the group? |
 
@@ -295,13 +299,13 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
 ### GetCrossfadeMode
 
-Get crossfade mode, 1 for on, 0 for off
+Get crossfade mode
 
 ```js
 const result = await sonos.AVTransportService.GetCrossfadeMode({ InstanceID:... });
@@ -311,7 +315,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -333,7 +337,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -341,7 +345,7 @@ Output object:
 |:----------|:-----|:------------|
 | **Actions** | `string` |  |
 
-**Remarks** Send to non-coordinator always returns Stop, Play
+**Remarks** Send to non-coordinator returns only `Start` and `Stop` since it cannot control the stream.
 
 ### GetDeviceCapabilities
 
@@ -353,7 +357,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -375,7 +379,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -388,7 +392,7 @@ Output object:
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `Track | string` |  |
 | **PlayMedium** | `string` |  Possible values: `NONE` / `NETWORK` |
-| **RecordMedium** | `string` |  Possible values:  |
+| **RecordMedium** | `string` |  Possible values: `NONE` |
 | **WriteStatus** | `string` |  |
 
 ### GetPositionInfo
@@ -403,7 +407,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -420,7 +424,7 @@ Output object:
 
 ### GetRemainingSleepTimerDuration
 
-Get time left on sleeptimer or empty string
+Get time left on sleeptimer.
 
 ```js
 const result = await sonos.AVTransportService.GetRemainingSleepTimerDuration({ InstanceID:... });
@@ -430,13 +434,13 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **RemainingSleepTimerDuration** | `string` |  |
+| **RemainingSleepTimerDuration** | `string` | Format hh:mm:ss or empty string if not set |
 | **CurrentSleepTimerGeneration** | `number` |  |
 
 **Remarks** Send to non-coordinator returns error code 800
@@ -451,7 +455,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -473,7 +477,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -481,7 +485,7 @@ Output object:
 |:----------|:-----|:------------|
 | **CurrentTransportState** | `string` |  Possible values: `STOPPED` / `PLAYING` / `PAUSED_PLAYBACK` / `TRANSITIONING` |
 | **CurrentTransportStatus** | `string` |  |
-| **CurrentSpeed** | `string` |  Possible values:  |
+| **CurrentSpeed** | `string` |  Possible values: `1` |
 
 **Remarks** Send to non-coordinator always returns PLAYING
 
@@ -497,7 +501,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 Output object:
 
@@ -506,11 +510,11 @@ Output object:
 | **PlayMode** | `PlayMode` |  Possible values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 | **RecQualityMode** | `string` |  |
 
-**Remarks** Send to non-coordinator returns the settings of it&#x27;s queue
+**Remarks** Send to non-coordinator returns the settings of it's queue
 
 ### Next
 
-Go to next song, not always supported - see GetCurrentTransportActions
+Go to next song
 
 ```js
 const result = await sonos.AVTransportService.Next({ InstanceID:... });
@@ -520,9 +524,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Possibly not supported at the moment see GetCurrentTransportActions
 
 ### NotifyDeletedURI
 
@@ -534,7 +540,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **DeletedURI** | `string` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -551,7 +557,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -567,14 +573,14 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **Speed** | `string` | Play speed usually 1, can be a fraction of 1 Allowed values:  |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **Speed** | `string` | Play speed usually 1, can be a fraction of 1 Allowed values: `1` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
 ### Previous
 
-Go to previous song, not always supported - GetCurrentTransportActions
+Go to previous song
 
 ```js
 const result = await sonos.AVTransportService.Previous({ InstanceID:... });
@@ -584,13 +590,15 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
+**Remarks** Possibly not supported at the moment see GetCurrentTransportActions
+
 ### RemoveAllTracksFromQueue
 
-Flushes the SONOS queue. If queue is already empty it throw error 804
+Flushes the SONOS queue.
 
 ```js
 const result = await sonos.AVTransportService.RemoveAllTracksFromQueue({ InstanceID:... });
@@ -600,11 +608,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** Send to non-coordinator returns error code 800.
+**Remarks** If queue is already empty it throw error 804. Send to non-coordinator returns error code 800.
 
 ### RemoveTrackFromQueue
 
@@ -616,13 +624,15 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
 ### RemoveTrackRangeFromQueue
+
+Removes the specified range of songs from the SONOS queue.
 
 ```js
 const result = await sonos.AVTransportService.RemoveTrackRangeFromQueue({ InstanceID:..., UpdateID:..., StartingIndex:..., NumberOfTracks:... });
@@ -632,9 +642,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **UpdateID** | `number` |  |
-| **StartingIndex** | `number` |  |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **UpdateID** | `number` | Leave blank |
+| **StartingIndex** | `number` | between 1 and queue-length |
 | **NumberOfTracks** | `number` |  |
 
 Output object:
@@ -653,7 +663,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **StartingIndex** | `number` |  |
 | **NumberOfTracks** | `number` |  |
 | **InsertBefore** | `number` |  |
@@ -671,7 +681,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **ObjectID** | `string` |  |
 | **UpdateID** | `number` |  |
 | **TrackList** | `string` |  |
@@ -695,7 +705,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **AlarmID** | `number` |  |
 | **LoggedStartTime** | `string` |  |
 | **Duration** | `string` |  |
@@ -719,9 +729,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Title** | `string` | SONOS playlist title |
-| **ObjectID** | `string` |  |
+| **ObjectID** | `string` | Leave blank |
 
 Output object:
 
@@ -733,7 +743,7 @@ Output object:
 
 ### Seek
 
-Seek track in queue, time delta or absolute time in song, not always supported - see GetCurrentTransportActions
+Seek track in queue, time delta or absolute time in song
 
 ```js
 const result = await sonos.AVTransportService.Seek({ InstanceID:..., Unit:..., Target:... });
@@ -743,9 +753,9 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **Unit** | `string` | What to seek Allowed values: `TRACK_NR` / `REL_TIME` / `TIME_DELTA` |
-| **Target** | `string` | Position of track in queue (start at 1) or hh:mm:ss for REL_TIME or +/-hh:mm:ss for TIME_DELTA |
+| **Target** | `string` | Position of track in queue (start at 1) or `hh:mm:ss` for `REL_TIME` or `+/-hh:mm:ss` for `TIME_DELTA` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -763,7 +773,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **CurrentURI** | `string` | The new TransportURI - its a special SONOS format |
 | **CurrentURIMetaData** | `Track | string` | Track Metadata, see MetadataHelper.GuessTrack to guess based on track uri |
 
@@ -773,7 +783,7 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### SetCrossfadeMode
 
-Set crossfade mode off
+Set crossfade mode
 
 ```js
 const result = await sonos.AVTransportService.SetCrossfadeMode({ InstanceID:..., CrossfadeMode:... });
@@ -783,8 +793,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **CrossfadeMode** | `boolean` | true for on, false for off |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **CrossfadeMode** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -800,7 +810,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **NextURI** | `string` |  |
 | **NextURIMetaData** | `Track | string` |  |
 
@@ -818,7 +828,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **NewPlayMode** | `PlayMode` | New playmode Allowed values: `NORMAL` / `REPEAT_ALL` / `REPEAT_ONE` / `SHUFFLE_NOREPEAT` / `SHUFFLE` / `SHUFFLE_REPEAT_ONE` |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -837,8 +847,8 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
-| **Duration** | `string` | Snooze time as hh:mm:ss, 10 minutes = 00:10:00 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
+| **Duration** | `string` | Snooze time as `hh:mm:ss`, 10 minutes = 00:10:00 |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -852,7 +862,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 | **ProgramURI** | `string` |  |
 | **ProgramMetaData** | `Track | string` |  |
 | **Volume** | `number` |  |
@@ -873,7 +883,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **InstanceID** | `number` | InstanceID should always be 0 |
+| **InstanceID** | `number` | InstanceID should always be `0` |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -927,7 +937,7 @@ The **AVTransportService** emits events with these properties. Not all propertie
 | **PossibleRecordStorageMedia** | `string` |  | 
 | **QueueUpdateID** | `number` |  | 
 | **RecordMediumWriteStatus** | `string` |  | 
-| **RecordStorageMedium** | `string` |  | 
+| **RecordStorageMedium** | `string` | `NONE` | 
 | **RelativeCounterPosition** | `number` |  | 
 | **RelativeTimePosition** | `string` |  | 
 | **RestartPending** | `boolean` |  | 
@@ -937,7 +947,7 @@ The **AVTransportService** emits events with these properties. Not all propertie
 | **TransportErrorHttpCode** | `string` |  | 
 | **TransportErrorHttpHeaders** | `string` |  | 
 | **TransportErrorURI** | `string` |  | 
-| **TransportPlaySpeed** | `string` |  | 
+| **TransportPlaySpeed** | `string` | `1` | 
 | **TransportState** | `string` | `STOPPED` / `PLAYING` / `PAUSED_PLAYBACK` / `TRANSITIONING` | 
 | **TransportStatus** | `string` |  | 
 

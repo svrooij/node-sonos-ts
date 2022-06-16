@@ -1,5 +1,5 @@
 /**
- * Sonos RenderingControlService
+ * Sonos RenderingControl service
  *
  * Stephan van Rooij
  * https://svrooij.io
@@ -35,17 +35,17 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   /**
    * Get bass level between -10 and 10
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetBassResponse> { return await this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
 
   /**
-   * Get EQ value (see SetEQ) for different EQTypes
+   * Get equalizer value
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.EQType - EQ type such as DialogLevel, NightMode, SubGain
-   * @remarks Not supported by all speakers, TV related
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @remarks Not all EQ types are available on every speaker
    */
   async GetEQ(input: { InstanceID: number; EQType: string }):
   Promise<GetEQResponse> { return await this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
@@ -56,8 +56,8 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   /**
    * Whether or not Loudness is on
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.Channel - Master [ 'Master' / 'LF' / 'RF' ]
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
    */
   async GetLoudness(input: { InstanceID: number; Channel: string }):
   Promise<GetLoudnessResponse> { return await this.SoapRequestWithBody<typeof input, GetLoudnessResponse>('GetLoudness', input); }
@@ -75,18 +75,18 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<GetSupportsOutputFixedResponse> { return await this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
 
   /**
-   * Get treble, between -10 and 10
+   * Get treble
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    */
   async GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTrebleResponse> { return await this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
 
   /**
-   * Get volume, between 0 and 100
+   * Get volume
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.Channel - Master [ 'Master' / 'LF' / 'RF' ]
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
    */
   async GetVolume(input: { InstanceID: number; Channel: string }):
   Promise<GetVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetVolumeResponse>('GetVolume', input); }
@@ -110,10 +110,10 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RestoreVolumePriorToRamp', input); }
 
   /**
-   * Set bass level
+   * Set bass level, between -10 and 10
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {number} input.DesiredBass - between -10 and 10
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {number} input.DesiredBass
    */
   async SetBass(input: { InstanceID: number; DesiredBass: number }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBass', input); }
@@ -122,11 +122,11 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
 
   /**
-   * Set EQ value for different types
+   * Set equalizer value for different types
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
-   * @param {string} input.EQType - DialogLevel, NightMode, SubGain
-   * @param {number} input.DesiredValue - DialogLevel and NightMode: 0 for off, 1 for on. SubGain between -10 and 10
+   * @param {number} input.InstanceID - InstanceID should always be `0`
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @param {number} input.DesiredValue - Booleans required `1` for true or `0` for false, rest number as specified
    * @remarks Not supported by all speakers, TV related
    */
   async SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
@@ -135,9 +135,9 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   /**
    * Set loudness on / off
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
-   * @param {boolean} input.DesiredLoudness - true for on
+   * @param {boolean} input.DesiredLoudness
    */
   async SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLoudness', input); }
@@ -160,7 +160,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   /**
    * Set treble level
    *
-   * @param {number} input.InstanceID - InstanceID should always be 0
+   * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {number} input.DesiredTreble - between -10 and 10
    */
   async SetTreble(input: { InstanceID: number; DesiredTreble: number }):

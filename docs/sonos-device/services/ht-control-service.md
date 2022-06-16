@@ -1,13 +1,15 @@
 ---
 layout: default
-title: HTControlService
+title: HTControl
 parent: Services
 grand_parent: Sonos device
 ---
-# HTControlService
+# HTControl service
 {: .no_toc }
 
-The HTControlService is available on these models: `v1-S9`.
+Service related to the TV remote control
+
+The HTControl service is available on these models: `v1-S9` / `v2-S14`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

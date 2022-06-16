@@ -5,6 +5,7 @@ import { Guid } from 'guid-typescript';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
 import TypedEmitter from 'typed-emitter';
+import IpHelper from '../helpers/ip-helper';
 import SoapHelper from '../helpers/soap-helper';
 import XmlHelper from '../helpers/xml-helper';
 import { Track } from '../models/track';
@@ -30,6 +31,8 @@ export default abstract class BaseService <TServiceEvent> {
   protected readonly port: number;
 
   private debugger?: Debugger;
+
+  private resolvedIp?: string;
 
   protected get debug(): Debugger {
     if (this.debugger === undefined) this.debugger = debug(`sonos:service:${this.serviceNane.toLowerCase()}:${this.host}`);
@@ -85,7 +88,7 @@ export default abstract class BaseService <TServiceEvent> {
 
   /**
    * Creates an instance of the implemented service.
-   * @param {string} host The ip or the domainname of the sonos speaker
+   * @param {string} host The ip (or hostname) of the sonos speaker
    * @param {number} [port=1400] The port of the sonos speaker (defaults to 1400)
    * @param {string} [uuid=Guid.create().toString()] The uuid of the speaker, used for grouping and events.
    * @memberof BaseService
@@ -103,6 +106,12 @@ export default abstract class BaseService <TServiceEvent> {
     return this.uuid;
   }
 
+  private async ResolveHostname(): Promise<void> {
+    if (this.resolvedIp === undefined) {
+      this.resolvedIp = IpHelper.IsIpv4(this.host) ? this.host : await IpHelper.ResolveHostname(this.host);
+    }
+  }
+
   // #region Protected requests handlers
   /**
    * SoapRequest will do a request that expects a Response
@@ -115,6 +124,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   protected async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
+    await this.ResolveHostname();
     return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
@@ -131,6 +141,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   protected async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
+    await this.ResolveHostname();
     return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
   }
 
@@ -144,6 +155,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   protected async SoapRequestNoResponse(action: string): Promise<boolean> {
     this.debug('%s()', action);
+    await this.ResolveHostname();
     return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
   }
 
@@ -159,13 +171,14 @@ export default abstract class BaseService <TServiceEvent> {
    */
   protected async SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
     this.debug('%s(%o)', action, body);
+    await this.ResolveHostname();
     return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
   }
   // #endregion
 
   // #region Request builders
   private getUrl(): string {
-    return `http://${this.host}:${this.port}${this.controlUrl}`;
+    return `http://${this.resolvedIp ?? this.host}:${this.port}${this.controlUrl}`;
   }
 
   private messageAction(action: string): string {
@@ -182,7 +195,7 @@ export default abstract class BaseService <TServiceEvent> {
           'Content-type': 'text/xml; charset=utf8',
         },
         body: this.generateRequestBody<TBody>(action, body),
-        timeout: 5000,
+        timeout: 30000,
       },
     );
   }
@@ -384,8 +397,9 @@ export default abstract class BaseService <TServiceEvent> {
   private async subscribeForEvents(): Promise<boolean> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
     this.debug('Creating event subscription with callback: %s', callback);
+    await this.ResolveHostname();
     const resp = await fetch(new Request(
-      `http://${this.host}:${this.port}${this.eventSubUrl}`,
+      `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
         headers: {
@@ -393,7 +407,7 @@ export default abstract class BaseService <TServiceEvent> {
           NT: 'upnp:event',
           Timeout: 'Second-3600',
         },
-        timeout: 5000,
+        timeout: 15000,
       },
     ));
     const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
@@ -423,16 +437,17 @@ export default abstract class BaseService <TServiceEvent> {
    */
   private async renewEventSubscription(): Promise<boolean> {
     this.debug('Renewing event subscription');
+    await this.ResolveHostname();
     if (typeof this.sid === 'string' && this.sid !== '') {
       const resp = await fetch(new Request(
-        `http://${this.host}:${this.port}${this.eventSubUrl}`,
+        `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'SUBSCRIBE',
           headers: {
             SID: this.sid,
             Timeout: 'Second-3600',
           },
-          timeout: 5000,
+          timeout: 15000,
         },
       ));
       if (resp.ok) {
@@ -460,13 +475,13 @@ export default abstract class BaseService <TServiceEvent> {
 
     if (this.sid !== undefined) {
       const resp = await fetch(new Request(
-        `http://${this.host}:${this.port}${this.eventSubUrl}`,
+        `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'UNSUBSCRIBE',
           headers: {
             SID: this.sid,
           },
-          timeout: 5000,
+          timeout: 15000,
         },
       ));
       SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
@@ -520,7 +535,7 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): any {
+  protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
     if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
       if (name.endsWith('MetaData')) {
         return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);

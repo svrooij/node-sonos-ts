@@ -34,7 +34,7 @@ export interface SmapiClientOptions {
   saveNewAccount?: SaveNemAccountHandler;
 }
 
-declare type SaveNemAccountHandler = (serviceId: number, key: string, token: string) => void;
+declare type SaveNemAccountHandler = (serviceId: number, key: string, token: string) => Promise<void>;
 
 export interface MediaList {
   index: number;
@@ -281,7 +281,7 @@ export class SmapiClient {
         // this.debug('New authToken: %s', this.authToken);
         // this.debug('New private key: %s', this.key);
         if (this.options.saveNewAccount !== undefined && this.key && this.authToken) {
-          this.options.saveNewAccount(this.options.serviceId, this.key, this.authToken);
+          await this.options.saveNewAccount(this.options.serviceId, this.key, this.authToken);
         }
       }
       this.debug('Soap error %s %o', action, fault);

@@ -1,15 +1,15 @@
 ---
 layout: default
-title: MusicServicesService
+title: MusicServices
 parent: Services
 grand_parent: Sonos device
 ---
-# MusicServicesService
+# MusicServices service
 {: .no_toc }
 
-External music services
+Access to external music services, like Spotify or Youtube Music
 
-The MusicServicesService is available on these models: `v1-S1` / `v1-S5` / `v1-S9`.
+The MusicServices service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
