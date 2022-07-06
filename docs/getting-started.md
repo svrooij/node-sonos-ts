@@ -79,3 +79,25 @@ All logging information might be a bit overkill, it you set `DEBUG` to `sonos:ev
 | `sonos:service:{serviceName}:{ip}` | All messages for a specific service for a specific speaker. |
 
 Check out the debug library for more configuration options. You can also combine several instructions with a `,` or just remove a specif event with `-` in front.
+
+## Music services regions
+
+This library guesses the required metadata from some music services. A few services need a mandatory region, which we use a sensible default for, but you should override if required.
+
+## Apple music region
+
+Environment variable: `SONOS_REGION_APPLE`
+
+Value: `52231` (default)
+
+### Deezer region
+
+Environment variable: `SONOS_REGION_DEEZER`
+
+Value: `519` (default)
+
+### Spotify region
+
+Environment variable: `SONOS_REGION_SPOTIFY`
+
+Values: `2311` for Europe (default), `3079` USA?

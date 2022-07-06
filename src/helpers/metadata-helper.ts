@@ -92,7 +92,7 @@ export default class MetadataHelper {
     return metadata;
   }
 
-  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion = '2311'): { trackUri: string; metadata: Track | string } {
+  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion?: string): { trackUri: string; metadata: Track | string } {
     const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
 
     return {
@@ -101,7 +101,7 @@ export default class MetadataHelper {
     };
   }
 
-  static GuessTrack(trackUri: string, spotifyRegion = '2311'): Track | undefined {
+  static GuessTrack(trackUri: string, spotifyRegion?: string): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
     // Can someone create a test for the next line.
@@ -241,7 +241,8 @@ export default class MetadataHelper {
     return undefined;
   }
 
-  private static guessSpotifyMetadata(trackUri: string, kind: string, region: string): Track | undefined {
+  private static guessSpotifyMetadata(trackUri: string, kind: string, spotifyRegion?: string): Track | undefined {
+    const region = spotifyRegion ?? process.env.SONOS_REGION_SPOTIFY ?? '2311';
     const spotifyUri = trackUri.replace(/:/g, '%3a');
     const track: Track = {
       Title: '',
@@ -293,7 +294,8 @@ export default class MetadataHelper {
     return track;
   }
 
-  private static deezerMetadata(kind: 'album' | 'artistTopTracks' | 'playlist' | 'track' | unknown, id: string, region = '519'): Track | undefined {
+  private static deezerMetadata(kind: 'album' | 'artistTopTracks' | 'playlist' | 'track' | unknown, id: string, deezerRegion?: string): Track | undefined {
+    const region = deezerRegion ?? process.env.SONOS_REGION_DEEZER ?? '519';
     const track: Track = {
       CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
     };
@@ -325,7 +327,8 @@ export default class MetadataHelper {
   }
 
   private static appleMetadata(kind: 'album' | 'libraryalbum' | 'track' | 'librarytrack' | 'song' | 'playlist' | 'libraryplaylist' | unknown,
-    id: string, region = '52231'): Track | undefined {
+    id: string, appleRegion?: string): Track | undefined {
+    const region = appleRegion ?? process.env.SONOS_REGION_APPLE ?? '52231';
     const track: Track = {
       Title: '',
       CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
