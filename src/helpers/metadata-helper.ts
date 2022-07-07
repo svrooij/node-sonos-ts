@@ -92,8 +92,8 @@ export default class MetadataHelper {
     return metadata;
   }
 
-  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion?: string): { trackUri: string; metadata: Track | string } {
-    const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
+  static GuessMetaDataAndTrackUri(trackUri: string, musicServiceRegion?: string): { trackUri: string; metadata: Track | string } {
+    const metadata = MetadataHelper.GuessTrack(trackUri, musicServiceRegion);
 
     return {
       trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri) ?? '',
@@ -101,7 +101,7 @@ export default class MetadataHelper {
     };
   }
 
-  static GuessTrack(trackUri: string, spotifyRegion?: string): Track | undefined {
+  static GuessTrack(trackUri: string, musicServiceRegion?: string): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
     // Can someone create a test for the next line.
@@ -181,51 +181,51 @@ export default class MetadataHelper {
 
     const appleAlbumItem = /x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (appleAlbumItem) { // Apple Music Album
-      return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2]);
+      return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2], musicServiceRegion);
     }
 
     const applePlaylistItem = /x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (applePlaylistItem) { // Apple Music Playlist
-      return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2]);
+      return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2], musicServiceRegion);
     }
 
     const appleTrackItem = /x-sonos-http:(librarytrack|song):([.\d\w]+)\.mp4\?.*sid=204/.exec(trackUri);
     if (appleTrackItem) { // Apple Music Track
-      return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2]);
+      return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2], musicServiceRegion);
     }
 
     if (trackUri.startsWith('x-rincon-cpcontainer:10fe206ctracks-artist-')) { // Deezer Artists Top Tracks
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
-        return MetadataHelper.deezerMetadata('artistTopTracks', numbers[2]);
+        return MetadataHelper.deezerMetadata('artistTopTracks', numbers[2], musicServiceRegion);
       }
     }
 
     if (trackUri.startsWith('x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-')) { // Deezer Playlist
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
-        return MetadataHelper.deezerMetadata('playlist', numbers[2]);
+        return MetadataHelper.deezerMetadata('playlist', numbers[2], musicServiceRegion);
       }
     }
 
     if (trackUri.startsWith('x-sonos-http:tr%3a') && trackUri.includes('sid=2')) { // Deezer Track
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 2) {
-        return MetadataHelper.deezerMetadata('track', numbers[1]);
+        return MetadataHelper.deezerMetadata('track', numbers[1], musicServiceRegion);
       }
     }
 
     const parts = trackUri.split(':');
     if ((parts.length === 3 || parts.length === 5) && parts[0] === 'spotify') {
-      return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
+      return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], musicServiceRegion);
     }
 
     if (parts.length === 3 && parts[0] === 'deezer') {
-      return MetadataHelper.deezerMetadata(parts[1], parts[2]);
+      return MetadataHelper.deezerMetadata(parts[1], parts[2], musicServiceRegion);
     }
 
     if (parts.length === 3 && parts[0] === 'apple') {
-      return MetadataHelper.appleMetadata(parts[1], parts[2]);
+      return MetadataHelper.appleMetadata(parts[1], parts[2], musicServiceRegion);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
