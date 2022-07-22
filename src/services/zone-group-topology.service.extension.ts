@@ -56,7 +56,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       port: parseInt(uri.port, 10),
       ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet ?? member.HTSatChanMapSet),
       Satellites: member.Satellite
-        ? ArrayHelper.ForceArray(member.Satellite).map((s: any) => ZoneGroupTopologyService.ParseMember(s))
+        ? ArrayHelper.ForceArray(member.Satellite).map((s: unknown) => ZoneGroupTopologyService.ParseMember(s))
         : undefined,
       Icon: member.Icon,
       // This code looks strange, but have a look at https://github.com/svrooij/node-sonos-ts/issues/125
