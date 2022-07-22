@@ -35,10 +35,11 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
     }
     const channels = channelMapSet.split(';');
     return channels.map((channel) => {
-      const [uuid, channelId] = channel.split(',');
+      const [uuid, channelIds] = channel.split(':');
+      const splitChannelIds = channelIds.split(',');
       return {
-        uuid: uuid.split(':')[0],
-        channelId,
+        uuid,
+        channelId: splitChannelIds.every((id) => id === splitChannelIds[0]) ? splitChannelIds[0] : channelIds,
       };
     }).reduce<ChannelMapSet>((previousChannels, channel) => ({
       ...previousChannels,
@@ -53,7 +54,10 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
       uuid: member.UUID,
       host: uri.hostname,
       port: parseInt(uri.port, 10),
-      ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet),
+      ChannelMapSet: ZoneGroupTopologyService.ParseChannelMapSet(member.ChannelMapSet ?? member.HTSatChanMapSet),
+      Satellites: member.Satellite
+        ? ArrayHelper.ForceArray(member.Satellite).map((s: any) => ZoneGroupTopologyService.ParseMember(s))
+        : undefined,
       Icon: member.Icon,
       // This code looks strange, but have a look at https://github.com/svrooij/node-sonos-ts/issues/125
       MicEnabled: member.MicEnabled === 1 || member.MicEnabled === '1',

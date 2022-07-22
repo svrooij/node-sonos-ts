@@ -15,6 +15,7 @@ export interface ZoneMember {
   uuid: string;
   name: string;
   ChannelMapSet?: ChannelMapSet;
+  Satellites?: ZoneMember[];
   Icon: string;
   MicEnabled: boolean;
   Invisible: boolean;
