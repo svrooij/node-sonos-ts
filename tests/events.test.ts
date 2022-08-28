@@ -86,13 +86,13 @@ describe('SonosDevice - Events', () => {
     const randomUuid = Guid.create().toString();
     const device = new SonosDevice(TestHelpers.testHost, port, randomUuid);
     device.Events.on('currentTrack', (track) => {});
-    await AsyncHelper.Delay(20); // Delay is needed because the subscription is registered out-of-band.
+    await AsyncHelper.Delay(500); // Delay is needed because the subscription is registered out-of-band.
 
     const statusBefore = SonosEventListener.DefaultInstance.GetStatus();
     expect(statusBefore.currentSubscriptions).to.be.an('array').that.has.lengthOf(2);
 
     device.Events.removeAllListeners('currentTrack');
-    await AsyncHelper.Delay(20); // Delay is needed because the subscription is registered out-of-band.
+    await AsyncHelper.Delay(500); // Delay is needed because the subscription is registered out-of-band.
 
     const statusAfter = SonosEventListener.DefaultInstance.GetStatus();
     expect(statusAfter.currentSubscriptions).to.be.an('array').that.has.lengthOf(0);
