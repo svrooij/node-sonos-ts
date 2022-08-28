@@ -10,3 +10,9 @@ export enum PlayMode {
    */
   SuffleRepeatOne = 'SHUFFLE_REPEAT_ONE'
 }
+
+export enum Repeat {
+  Off = 'Off',
+  RepeatAll = 'RepeatAll',
+  RepeatOne = 'RepeatOne'
+}

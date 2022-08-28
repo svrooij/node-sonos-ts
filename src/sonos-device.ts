@@ -7,7 +7,7 @@ import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode,
+  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode, Repeat,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import { EventsError } from './models/event-errors';
@@ -17,6 +17,7 @@ import { SmapiClient } from './musicservices/smapi-client';
 import IpHelper from './helpers/ip-helper';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
+import PlayModeHelper from './helpers/playmode-helper';
 import DeviceDescription from './models/device-description';
 import { SonosState } from './models/sonos-state';
 import {
@@ -1030,6 +1031,30 @@ export default class SonosDevice extends SonosDeviceBase {
   }
 
   /**
+   * Get repeat setting
+   * @returns {Repeat} Repeat part of PlayMode
+   */
+  public async GetRepeat(): Promise<Repeat> {
+    if (this.currentPlayMode === undefined) {
+      this.currentPlayMode = (await this.AVTransportService.GetTransportSettings()).PlayMode;
+    }
+
+    return PlayModeHelper.ComputeRepeat(this.currentPlayMode);
+  }
+
+  /**
+   * Get shuffle setting
+   * @returns Shuffle part of PlayMode
+   */
+  public async GetShuffle(): Promise<boolean> {
+    if (this.currentPlayMode === undefined) {
+      this.currentPlayMode = (await this.AVTransportService.GetTransportSettings()).PlayMode;
+    }
+
+    return PlayModeHelper.ComputeShuffle(this.currentPlayMode);
+  }
+
+  /**
    * Get Speech Enhancement status of playbar
    *
    * @returns {Promise<boolean>}
@@ -1155,6 +1180,30 @@ export default class SonosDevice extends SonosDeviceBase {
         this.volume = response.NewVolume;
         return response.NewVolume;
       });
+  }
+
+  /**
+   * Set PlayMode based on repeat only
+   * @param repeat New Repeat setting
+   */
+  public async SetRepeat(repeat: Repeat): Promise<void> {
+    const shuffle = await this.GetShuffle();
+    await this.setPlayMode(shuffle, repeat);
+  }
+
+  /**
+   * Set PlayMode based on shuffle only
+   * @param shuffle Shuffle on or off
+   */
+  public async SetShuffle(shuffle: boolean): Promise<void> {
+    const repeat = await this.GetRepeat();
+    await this.setPlayMode(shuffle, repeat);
+  }
+
+  private async setPlayMode(shuffle: boolean, repeat: Repeat): Promise<void> {
+    const newPlayMode = PlayModeHelper.ComputePlayMode(shuffle, repeat);
+    await this.AVTransportService.SetPlayMode({ InstanceID: 0, NewPlayMode: newPlayMode });
+    this.currentPlayMode = newPlayMode;
   }
 
   /**
