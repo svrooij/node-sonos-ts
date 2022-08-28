@@ -5,7 +5,7 @@ import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
 import { Guid } from 'guid-typescript';
 import { SmapiClient } from '../src/musicservices/smapi-client';
-import { TransportState } from '../src/models';
+import { PlayMode, Repeat, TransportState } from '../src/models';
 
 (process.env.SONOS_HOST ? describe : describe.skip)('SonosDevice - local', () => {
 
@@ -808,6 +808,52 @@ describe('SonosDevice', () => {
       await device.SetRelativeVolume(40);
     });
   });
+
+  describe('SetRepeat()', () => {
+    it('loads TransportSettings', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
+        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        'GetTransportSettingsResponse',
+        'AVTransport',
+        '<PlayMode>NORMAL</PlayMode><RecQualityMode>xxx</RecQualityMode>'
+      );
+      TestHelpers.mockAvTransportSetPlayMode(PlayMode.RepeatAll, scope);
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetRepeat(Repeat.RepeatAll);
+
+    });
+
+    it('uses pre-loaded TransportSettings', async () => {
+      TestHelpers.mockAvTransportSetPlayMode(PlayMode.Shuffle);
+      const device = new SonosDevice(TestHelpers.testHost);
+      device['currentPlayMode'] = PlayMode.ShuffleNoRepeat;
+      await device.SetRepeat(Repeat.RepeatAll)
+    });
+  })
+
+  describe('SetShuffle()', () => {
+    it('loads TransportSettings', async () => {
+      const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
+        '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
+        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        'GetTransportSettingsResponse',
+        'AVTransport',
+        '<PlayMode>REPEAT_ALL</PlayMode><RecQualityMode>xxx</RecQualityMode>'
+      );
+      TestHelpers.mockAvTransportSetPlayMode(PlayMode.Shuffle, scope);
+      const device = new SonosDevice(TestHelpers.testHost);
+      await device.SetShuffle(true);
+
+    });
+
+    it('uses pre-loaded TransportSettings', async () => {
+      TestHelpers.mockAvTransportSetPlayMode(PlayMode.Normal);
+      const device = new SonosDevice(TestHelpers.testHost);
+      device['currentPlayMode'] = PlayMode.ShuffleNoRepeat;
+      await device.SetShuffle(false);
+    });
+  })
 
   describe('SetVolume()', () => {
     it('throws error when invalid volume', async (done) => {

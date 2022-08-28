@@ -4,6 +4,7 @@ import fs from 'fs'
 import path from 'path'
 import { createSocket } from 'dgram';
 import SoapHelper from '../src/helpers/soap-helper'
+import { PlayMode } from '../src/models';
 
 /**
  * Some helpers to setup mocked sonos http requests
@@ -194,6 +195,16 @@ export class TestHelpers {
       'GetPositionInfo',
       '<InstanceID>0</InstanceID>',
       '<Track>18</Track><TrackDuration>0:02:28</TrackDuration><TrackMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;-1&quot; parentID=&quot;-1&quot; restricted=&quot;true&quot;&gt;&lt;res protocolInfo=&quot;sonos.com-spotify:*:audio/x-spotify:*&quot; duration=&quot;0:02:28&quot;&gt;x-sonos-spotify:spotify%3atrack%3a0C0LsZeUyAG50xJKEIpBgY?sid=9&amp;amp;flags=8224&amp;amp;sn=7&lt;/res&gt;&lt;r:streamContent&gt;&lt;/r:streamContent&gt;&lt;upnp:albumArtURI&gt;/getaa?s=1&amp;amp;u=x-sonos-spotify%3aspotify%253atrack%253a0C0LsZeUyAG50xJKEIpBgY%3fsid%3d9%26flags%3d8224%26sn%3d7&lt;/upnp:albumArtURI&gt;&lt;dc:title&gt;Catch My Love&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.musicTrack&lt;/upnp:class&gt;&lt;dc:creator&gt;Noizu&lt;/dc:creator&gt;&lt;upnp:album&gt;Catch My Love&lt;/upnp:album&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</TrackMetaData><TrackURI>x-sonos-spotify:spotify%3atrack%3a0C0LsZeUyAG50xJKEIpBgY?sid=9&amp;flags=8224&amp;sn=7</TrackURI><RelTime>0:00:48</RelTime><AbsTime>NOT_IMPLEMENTED</AbsTime><RelCount>2147483647</RelCount><AbsCount>2147483647</AbsCount>',
+      scope
+    );
+  }
+
+  static mockAvTransportSetPlayMode(playMode: PlayMode, scope = TestHelpers.getScope()): nock.Scope {
+    return TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+      'AVTransport',
+      'SetPlayMode',
+      `<InstanceID>0</InstanceID><NewPlayMode>${playMode}</NewPlayMode>`,
+      '',
       scope
     );
   }

@@ -85,7 +85,7 @@ import SonosDeviceDiscovery from '../src/sonos-device-discovery';
     const interval = setInterval(async () => {
       await TestHelpers.emitSsdpMessage(discovery.port).catch((err) => {});
     }, 800);
-    await manager.InitializeWithDiscovery(1, discovery);
+    await manager.InitializeWithDiscovery(3, discovery);
     manager.CancelSubscription();
     clearInterval(interval);
     delete process.env.SONOS_DISABLE_EVENTS;
