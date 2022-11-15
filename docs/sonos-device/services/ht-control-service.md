@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Service related to the TV remote control
 
-The HTControl service is available on these models: `v1-S9` / `v2-S14`.
+The HTControl service is available on these models: `v2-S14` / `v2-S9`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

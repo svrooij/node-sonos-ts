@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Modify device properties, like LED status and stereo pairs
 
-The DeviceProperties service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
+The DeviceProperties service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -195,6 +195,18 @@ Output object:
 |:----------|:-----|:------------|
 | **CurrentHouseholdID** | `string` |  |
 
+### GetHTForwardState
+
+```js
+const result = await sonos.DevicePropertiesService.GetHTForwardState();
+```
+
+Output object:
+
+| property | type | description |
+|:----------|:-----|:------------|
+| **IsHTForwardEnabled** | `boolean` |  |
+
 ### GetLEDState
 
 Get the current LED state
@@ -240,6 +252,7 @@ Output object:
 | **CurrentZoneName** | `string` |  |
 | **CurrentIcon** | `string` |  |
 | **CurrentConfiguration** | `string` |  |
+| **CurrentTargetRoomName** | `string` |  |
 
 ### GetZoneInfo
 
@@ -296,7 +309,7 @@ This actions returns a boolean whether or not the requests succeeded.
 ### RoomDetectionStartChirping
 
 ```js
-const result = await sonos.DevicePropertiesService.RoomDetectionStartChirping({ Channel:..., DurationMilliseconds:... });
+const result = await sonos.DevicePropertiesService.RoomDetectionStartChirping({ Channel:..., DurationMilliseconds:..., ChirpIfPlayingSwappableAudio:... });
 ```
 
 Input object:
@@ -305,13 +318,13 @@ Input object:
 |:----------|:-----|:------------|
 | **Channel** | `number` |  |
 | **DurationMilliseconds** | `number` |  |
+| **ChirpIfPlayingSwappableAudio** | `boolean` |  |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
 | **PlayId** | `number` |  |
-| **ChirpIfPlayingSwappableAudio** | `boolean` |  |
 
 ### RoomDetectionStopChirping
 
@@ -440,7 +453,7 @@ This actions returns a boolean whether or not the requests succeeded.
 ### SetZoneAttributes
 
 ```js
-const result = await sonos.DevicePropertiesService.SetZoneAttributes({ DesiredZoneName:..., DesiredIcon:..., DesiredConfiguration:... });
+const result = await sonos.DevicePropertiesService.SetZoneAttributes({ DesiredZoneName:..., DesiredIcon:..., DesiredConfiguration:..., DesiredTargetRoomName:... });
 ```
 
 Input object:
@@ -450,6 +463,7 @@ Input object:
 | **DesiredZoneName** | `string` |  |
 | **DesiredIcon** | `string` |  |
 | **DesiredConfiguration** | `string` |  |
+| **DesiredTargetRoomName** | `string` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -482,6 +496,7 @@ The **DevicePropertiesService** emits events with these properties. Not all prop
 | **Configuration** | `string` |  | 
 | **CopyrightInfo** | `string` |  | 
 | **DisplaySoftwareVersion** | `string` |  | 
+| **EthLink** | `boolean` |  | 
 | **ExtraInfo** | `string` |  | 
 | **Flags** | `number` |  | 
 | **HardwareVersion** | `string` |  | 
@@ -490,6 +505,7 @@ The **DevicePropertiesService** emits events with these properties. Not all prop
 | **HouseholdID** | `string` |  | 
 | **HTAudioIn** | `number` |  | 
 | **HTBondedZoneCommitState** | `number` |  | 
+| **HTForwardEnabled** | `boolean` |  | 
 | **HTFreq** | `number` |  | 
 | **HTSatChanMapSet** | `string` |  | 
 | **Icon** | `string` |  | 
