@@ -66,7 +66,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
    * @param {string} input.BrowseFlag - How to browse [ 'BrowseMetadata' / 'BrowseDirectChildren' ]
    * @param {string} input.Filter - Which fields should be returned `*` for all.
    * @param {number} input.StartingIndex - Paging, where to start, usually 0
-   * @param {number} input.RequestedCount - Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned. 
+   * @param {number} input.RequestedCount - Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned.
    * @param {string} input.SortCriteria - Sort the results based on metadata fields. `+upnp:artist,+dc:title` for sorting on artist then on title.
    * @remarks (1) If the title contains an apostrophe the returned uri will contain a `&apos;`. (2) Some libraries support a BrowseAndParse, so you don't have to parse the xml.
    */
