@@ -558,6 +558,7 @@ The **RenderingControlService** emits events with these properties. Not all prop
 | **DialogLevel** | `string` |  | 
 | **EQValue** | `number` |  | 
 | **HeadphoneConnected** | `boolean` |  | 
+| **HeightChannelLevel** | `number` |  | 
 | **LastChange** | `string` |  | 
 | **Loudness** | `boolean` |  | 
 | **MusicSurroundLevel** | `string` |  | 

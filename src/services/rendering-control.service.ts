@@ -208,6 +208,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
       DialogLevel: 'string',
       EQValue: 'number',
       HeadphoneConnected: 'boolean',
+      HeightChannelLevel: 'number',
       LastChange: 'string',
       Loudness: 'boolean',
       MusicSurroundLevel: 'string',
@@ -312,6 +313,7 @@ export interface RenderingControlServiceEvent {
   DialogLevel?: string;
   EQValue?: number;
   HeadphoneConnected?: boolean;
+  HeightChannelLevel?: number;
   LastChange?: string;
   Loudness?: boolean;
   MusicSurroundLevel?: string;
