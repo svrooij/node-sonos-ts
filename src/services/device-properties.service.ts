@@ -71,6 +71,9 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async GetHouseholdID():
   Promise<GetHouseholdIDResponse> { return await this.SoapRequest<GetHouseholdIDResponse>('GetHouseholdID'); }
 
+  async GetHTForwardState():
+  Promise<GetHTForwardStateResponse> { return await this.SoapRequest<GetHTForwardStateResponse>('GetHTForwardState'); }
+
   /**
    * Get the current LED state
    */
@@ -95,7 +98,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async RemoveHTSatellite(input: { SatRoomUUID: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
-  async RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number }):
+  async RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number; ChirpIfPlayingSwappableAudio: boolean }):
   Promise<RoomDetectionStartChirpingResponse> { return await this.SoapRequestWithBody<typeof input, RoomDetectionStartChirpingResponse>('RoomDetectionStartChirping', input); }
 
   async RoomDetectionStopChirping(input: { PlayId: number }):
@@ -138,7 +141,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   async SetUseAutoplayVolume(input: { UseVolume: boolean; Source: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetUseAutoplayVolume', input); }
 
-  async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string }):
+  async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string; DesiredTargetRoomName: string }):
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
 
@@ -150,11 +153,13 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       CurrentVolume: 'number',
       CurrentButtonLockState: 'string',
       CurrentHouseholdID: 'string',
+      IsHTForwardEnabled: 'boolean',
       CurrentLEDState: 'string',
       UseVolume: 'boolean',
       CurrentZoneName: 'string',
       CurrentIcon: 'string',
       CurrentConfiguration: 'string',
+      CurrentTargetRoomName: 'string',
       SerialNumber: 'string',
       SoftwareVersion: 'string',
       DisplaySoftwareVersion: 'string',
@@ -166,7 +171,6 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       HTAudioIn: 'number',
       Flags: 'number',
       PlayId: 'number',
-      ChirpIfPlayingSwappableAudio: 'boolean',
     };
   }
 
@@ -188,6 +192,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       Configuration: 'string',
       CopyrightInfo: 'string',
       DisplaySoftwareVersion: 'string',
+      EthLink: 'boolean',
       ExtraInfo: 'string',
       Flags: 'number',
       HardwareVersion: 'string',
@@ -196,6 +201,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       HouseholdID: 'string',
       HTAudioIn: 'number',
       HTBondedZoneCommitState: 'number',
+      HTForwardEnabled: 'boolean',
       HTFreq: 'number',
       HTSatChanMapSet: 'string',
       Icon: 'string',
@@ -258,6 +264,10 @@ export interface GetHouseholdIDResponse {
   CurrentHouseholdID: string;
 }
 
+export interface GetHTForwardStateResponse {
+  IsHTForwardEnabled: boolean;
+}
+
 export interface GetLEDStateResponse {
   CurrentLEDState: string;
 }
@@ -270,6 +280,7 @@ export interface GetZoneAttributesResponse {
   CurrentZoneName: string;
   CurrentIcon: string;
   CurrentConfiguration: string;
+  CurrentTargetRoomName: string;
 }
 
 export interface GetZoneInfoResponse {
@@ -287,7 +298,6 @@ export interface GetZoneInfoResponse {
 
 export interface RoomDetectionStartChirpingResponse {
   PlayId: number;
-  ChirpIfPlayingSwappableAudio: boolean;
 }
 
 // Strong type event
@@ -307,6 +317,7 @@ export interface DevicePropertiesServiceEvent {
   Configuration?: string;
   CopyrightInfo?: string;
   DisplaySoftwareVersion?: string;
+  EthLink?: boolean;
   ExtraInfo?: string;
   Flags?: number;
   HardwareVersion?: string;
@@ -315,6 +326,7 @@ export interface DevicePropertiesServiceEvent {
   HouseholdID?: string;
   HTAudioIn?: number;
   HTBondedZoneCommitState?: number;
+  HTForwardEnabled?: boolean;
   HTFreq?: number;
   HTSatChanMapSet?: string;
   Icon?: string;

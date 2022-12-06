@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Control line in
 
-The AudioIn service is available on these models: `v1-S5` / `v2-S6`.
+The AudioIn service is available on these models: `v2-S6`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice

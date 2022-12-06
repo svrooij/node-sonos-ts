@@ -44,7 +44,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * Get equalizer value
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
-   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10)
    * @remarks Not all EQ types are available on every speaker
    */
   async GetEQ(input: { InstanceID: number; EQType: string }):
@@ -125,7 +125,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * Set equalizer value for different types
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
-   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10)
    * @param {number} input.DesiredValue - Booleans required `1` for true or `0` for false, rest number as specified
    * @remarks Not supported by all speakers, TV related
    */
@@ -208,6 +208,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
       DialogLevel: 'string',
       EQValue: 'number',
       HeadphoneConnected: 'boolean',
+      HeightChannelLevel: 'number',
       LastChange: 'string',
       Loudness: 'boolean',
       MusicSurroundLevel: 'string',
@@ -312,6 +313,7 @@ export interface RenderingControlServiceEvent {
   DialogLevel?: string;
   EQValue?: number;
   HeadphoneConnected?: boolean;
+  HeightChannelLevel?: number;
   LastChange?: string;
   Loudness?: boolean;
   MusicSurroundLevel?: string;

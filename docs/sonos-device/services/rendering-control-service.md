@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Volume related controls
 
-The RenderingControl service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
+The RenderingControl service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -57,7 +57,7 @@ Input object:
 | property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be `0` |
-| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient) |
+| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10) |
 
 Output object:
 
@@ -117,7 +117,7 @@ Input object:
 | property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be `0` |
-| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 
 Output object:
 
@@ -380,7 +380,7 @@ Input object:
 | property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be `0` |
-| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient) |
+| **EQType** | `string` | Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10) |
 | **DesiredValue** | `number` | Booleans required `1` for true or `0` for false, rest number as specified |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -416,7 +416,7 @@ Input object:
 | property | type | description |
 |:----------|:-----|:------------|
 | **InstanceID** | `number` | InstanceID should always be `0` |
-| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` / `SpeakerOnly` |
+| **Channel** | `string` |  Allowed values: `Master` / `LF` / `RF` |
 | **DesiredMute** | `boolean` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
@@ -558,6 +558,7 @@ The **RenderingControlService** emits events with these properties. Not all prop
 | **DialogLevel** | `string` |  | 
 | **EQValue** | `number` |  | 
 | **HeadphoneConnected** | `boolean` |  | 
+| **HeightChannelLevel** | `number` |  | 
 | **LastChange** | `string` |  | 
 | **Loudness** | `boolean` |  | 
 | **MusicSurroundLevel** | `string` |  | 
