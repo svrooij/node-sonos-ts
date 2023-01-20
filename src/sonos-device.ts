@@ -81,6 +81,13 @@ export default class SonosDevice extends SonosDeviceBase {
     return true;
   }
 
+  /**
+   * Returns true if this device has no coordinator, meaning it's the group coordinator.
+   */
+  public get IsCoordinator(): boolean {
+    return this.coordinator === undefined;
+  }
+
   // #region Added functionality
   /**
    * Add One track to the queue

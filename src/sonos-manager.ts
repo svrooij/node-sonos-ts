@@ -166,8 +166,8 @@ export default class SonosManager {
     this.debug('PlayNotification(%o)', options);
 
     const commands = this.Devices
-      .filter((d) => d.Coordinator.Uuid === d.Uuid)
-      .map((d) => d.PlayNotification(options));
+      .filter((d) => d.IsCoordinator)
+      .map((d) => d.PlayNotification(options).catch(() => false));
     return Promise
       .all(commands)
       .then((values) => values.some((v) => v));
@@ -207,6 +207,6 @@ export default class SonosManager {
    */
   public async CheckAllEventSubscriptions(): Promise<void> {
     await this.zoneService?.CheckEventListener();
-    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions()));
+    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions().catch()));
   }
 }
