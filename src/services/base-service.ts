@@ -281,7 +281,7 @@ export default abstract class BaseService <TServiceEvent> {
     const responseText = await response.text();
     if (responseText !== '') {
       const errorResponse = parse(responseText);
-      if (typeof errorResponse['s:Envelope']['s:Body']['s:Fault'] !== 'undefined') {
+      if (errorResponse['s:Envelope'] && errorResponse['s:Envelope']['s:Body'] && errorResponse['s:Envelope']['s:Body']['s:Fault'] !== undefined) {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
         const upnpErrorCode = error.detail?.UPnPError?.errorCode as number | undefined;
@@ -289,7 +289,7 @@ export default abstract class BaseService <TServiceEvent> {
         throw new SonosError(action, error.faultcode, error.faultstring, upnpErrorCode, upnpError?.description);
       }
     }
-    this.debug('handleRequest error %d %s', response.status, response.statusText);
+    this.debug('handleRequest error %d %s %s', response.status, response.statusText, responseText);
     throw new HttpError(action, response.status, response.statusText);
   }
 

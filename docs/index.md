@@ -14,14 +14,16 @@ permalink: /
 [![Sonos2mqtt][badge_sonos-mqtt]][link_sonos-mqtt]
 [![Sonos cli][badge_sonos-cli]][link_sonos-cli]
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
+
 [![Join us on Discord][badge_discord]][link_discord]
 [![Support me on Github][badge_sponsor]][link_sponsor]
+[![Follow on Twitter][badge_twitter]][link_twitter]
 
 [![npm][badge_npm]][link_npm]
 [![Run tests and publish][badge_build]][link_build]
 [![github issues][badge_issues]][link_issues]
-[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](//github.com/semantic-release/semantic-release)
+[![Coverage Status][badge_coverage]](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=for-the-badge)](//github.com/semantic-release/semantic-release)
 
 Typescript library to control your sonos speakers. Can be used in other typescript (or node) apps.
 
@@ -65,7 +67,7 @@ Also using this library, but not in the list? Send a PR.
 ## Contributors ✨
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors][badge_contrib]](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
@@ -90,15 +92,18 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors)
 specification. Contributions of any kind welcome!
 
-[badge_build]: https://github.com/svrooij/node-sonos-ts/workflows/Run%20tests%20and%20publish/badge.svg
-[badge_discord]: https://img.shields.io/discord/782374564054564875?style=flat-square
-[badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=flat-square
-[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=flat-square
-[badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=flat-square
-[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=flat-square
-[badge_sonos-mqtt]: https://img.shields.io/badge/sonos-mqtt-blue?style=flat-square
-[badge_sonos-typescript]: https://img.shields.io/badge/sonos-typescript-blue?style=flat-square
-[badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red?style=flat-square
+[badge_build]: https://img.shields.io/github/actions/workflow/status/svrooij/node-sonos-ts/test-and-release.yml?branch=beta&style=for-the-badge
+[badge_contrib]: https://img.shields.io/github/all-contributors/svrooij/node-sonos-ts?style=for-the-badge
+[badge_coverage]: https://img.shields.io/coverallsCoverage/github/svrooij/node-sonos-ts?style=for-the-badge&branch=beta
+[badge_discord]: https://img.shields.io/discord/782374564054564875?style=for-the-badge
+[badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=for-the-badge
+[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=for-the-badge
+[badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=for-the-badge
+[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=for-the-badge
+[badge_sonos-mqtt]: https://img.shields.io/badge/sonos-mqtt-blue?style=for-the-badge
+[badge_sonos-typescript]: https://img.shields.io/badge/sonos-typescript-blue?style=for-the-badge
+[badge_sponsor]: https://img.shields.io/github/sponsors/svrooij?style=for-the-badge&logo=github
+[badge_twitter]: https://img.shields.io/twitter/follow/svrooij?logo=twitter&style=for-the-badge
 
 [link_build]: https://github.com/svrooij/node-sonos-ts/actions
 [link_discord]: https://discord.gg/VMtG6Ft36J
@@ -109,3 +114,4 @@ specification. Contributions of any kind welcome!
 [link_sonos-mqtt]: https://svrooij.io/sonos2mqtt
 [link_sonos-typescript]: https://svrooij.io/node-sonos-ts
 [link_sponsor]: https://github.com/sponsors/svrooij
+[link_twitter]: https://twitter.com/svrooij
