@@ -37,6 +37,7 @@
     "@types/jest": "^26.0.15",
     "@types/node": "^16.11.7",
     "@types/node-fetch": "^2.5.10",
+    "@types/ws": "^8.5.4",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "chai": "^4.3.4",
@@ -57,7 +58,8 @@
     "guid-typescript": "^1.0.9",
     "html-entities": "^2.3.2",
     "node-fetch": "^2.6.1",
-    "typed-emitter": "^1.3.1"
+    "typed-emitter": "^1.3.1",
+    "ws": "^8.12.1"
   },
   "files": [
     "README.md",

@@ -55,7 +55,7 @@ aux_links:
     - "//github.com/sponsors/svrooij/"
 
 # Footer content appears at the bottom of every page's main content
-footer_content: "Copyright &copy; 2022 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
+footer_content: "Copyright &copy; 2023 Stephan van Rooij. Distributed by an <a href=\"https://github.com/svrooij/node-sonos-ts/tree/master/LICENSE\">MIT license.</a>"
 
 toc:
   max_levels: 2
