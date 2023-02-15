@@ -2,6 +2,7 @@ import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
 import { parse } from 'fast-xml-parser';
+import WebSocket from 'ws';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
@@ -617,6 +618,85 @@ export default class SonosDevice extends SonosDeviceBase {
 
   // #endregion
 
+  // #region Notification AudioClip
+  /**
+   * Play an audio clip through the native (local) AudioClip command
+   *
+   * @param {PlayNotificationOptions} options The options
+   * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @returns {Promise<true>} Returns true when the AudioClip is send to the speaker, false when stopped and onlyWhenPlaying === true
+   * @remarks This is only supported on S2 speakers, see: https://developer.sonos.com/reference/control-api/audioclip/
+   * @experimental This is experimental, do not depend on this.
+   * @memberof SonosDevice
+   */
+  public async PlayNotificationAudioClip(options: PlayNotificationOptions): Promise<boolean> {
+    this.debug('PlayNotificationAudioClip(%o)', options);
+    if (options.onlyWhenPlaying === true && this.CurrentTransportStateSimple === TransportState.Stopped) {
+      return false;
+    }
+
+    if (options.volume !== undefined && (options.volume < 1 || options.volume > 100)) {
+      throw new Error('Volume needs to be between 1 and 100');
+    }
+
+    if (!this.uuid.startsWith('RINCON')) {
+      await this.LoadUuid(true);
+    }
+
+    // Have no idea if this should be public
+    // https://github.com/bencevans/node-sonos/issues/530#issuecomment-1430039043
+    const apiKey = '123e4567-e89b-12d3-a456-426655440000';
+    return new Promise<boolean>((resolve, reject) => {
+      const ws = new WebSocket(`wss://${this.host}:1443/websocket/api`, 'v1.api.smartspeaker.audio', {
+        headers: {
+          'X-Sonos-Api-Key': apiKey,
+        },
+        // Ignore certificate errors
+        rejectUnauthorized: false,
+      });
+      ws.on('error', (err) => {
+        reject(err);
+      });
+      // On socket opened send a message, and close the socket
+      ws.on('open', () => {
+        ws.send(`[{"namespace":"audioClip:1","command":"loadAudioClip","playerId":"${this.uuid}","sessionId":null,"cmdId":null},{"name": "Sonos TS Notification", "appId": "io.svrooij.sonos-ts", "streamUrl": "${options.trackUri}", "volume": ${options.volume ?? this.volume ?? 25} }]`, (err) => {
+          ws.close();
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(true);
+        });
+      });
+    });
+  }
+
+  /**
+   * PlayTTS, but with (experimental) local AudioClip method
+   *
+   * @param {PlayTtsOptions} options
+   * @param {string} options.text Text to request a TTS file for.
+   * @param {string} options.lang Language to request tts file for.
+   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
+   * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
+   * @experimental This is experimental, do not depend on this.
+   * @memberof SonosDevice
+   */
+  public async PlayTTSAudioClip(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTSAudioClip(%o)', options);
+
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+
+    return await this.PlayNotificationAudioClip(notificationOptions);
+  }
+
+  // #endregion
   /**
    * Switch the playback to this url.
    *
