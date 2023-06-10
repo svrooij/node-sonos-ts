@@ -1,7 +1,7 @@
 import fetch, { Request } from 'node-fetch';
-import { parse } from 'fast-xml-parser';
 import debug, { Debugger } from 'debug';
 
+import { XMLParser } from 'fast-xml-parser';
 import SmapiError from './smapi-error';
 import ArrayHelper from '../helpers/array-helper';
 
@@ -107,6 +107,8 @@ export class SmapiClient {
   private key?: string;
 
   private authToken?: string;
+
+  private readonly parser: XMLParser = new XMLParser();
 
   protected get debug(): Debugger {
     if (this.debugger === undefined) this.debugger = debug(`sonos:smapi:${this.options.name}`);
@@ -265,7 +267,7 @@ export class SmapiClient {
     //   throw new Error(`Http status ${response.status} (${response.statusText})`);
     // }
 
-    const result = parse(await response.text(), { ignoreNameSpace: true });
+    const result = this.parser.parse(await response.text());
     if (!result || !result.Envelope || !result.Envelope.Body) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);

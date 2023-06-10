@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
-import { parse } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
@@ -33,6 +33,8 @@ import SonosDeviceNotifications from './sonos-notification-two';
  */
 export default class SonosDevice extends SonosDeviceBase {
   private name: string | undefined;
+
+  private readonly parser: XMLParser = new XMLParser();
 
   private groupName: string | undefined;
 
@@ -192,7 +194,7 @@ export default class SonosDevice extends SonosDeviceBase {
         }
         throw new Error(`Loading device description failed ${response.status} ${response.statusText}`);
       });
-    const { root: { device } } = parse(resp);
+    const { root: { device } } = this.parser.parse(resp);
     return {
       manufacturer: device.manufacturer,
       modelNumber: device.modelNumber,

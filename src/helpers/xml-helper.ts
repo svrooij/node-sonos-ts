@@ -1,5 +1,5 @@
-import { parse } from 'fast-xml-parser';
 import { encode, decode } from 'html-entities';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 
 export default class XmlHelper {
   /**
@@ -41,13 +41,18 @@ export default class XmlHelper {
    *
    * @static
    * @param {string} encodedXml Encoded Xml string
+   * @param attributeNamePrefix
    * @returns {*} a parsed Object of the XML string
    * @memberof XmlHelper
    */
   static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix });
+    if (typeof encodedXml === 'string' && encodedXml !== '' && XMLValidator.validate(encodedXml)) {
+      return parser.parse(encodedXml as string);
+    }
     const decoded = XmlHelper.DecodeXml(encodedXml);
     if (typeof decoded === 'undefined') return undefined;
-    return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
+    return parser.parse(decoded);
   }
 
   /**
@@ -59,8 +64,12 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix });
+    if (typeof encodedXml === 'string' && encodedXml !== '' && XMLValidator.validate(encodedXml)) {
+      return parser.parse(encodedXml as string);
+    }
     const decoded = XmlHelper.DecodeXml(encodedXml);
-    return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
+    return decoded ? parser.parse(decoded) : undefined;
   }
 
   /**
