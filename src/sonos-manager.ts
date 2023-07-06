@@ -7,6 +7,8 @@ import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
 import IpHelper from './helpers/ip-helper';
 import TtsHelper from './helpers/tts-helper';
+import AsyncHelper from './helpers/async-helper';
+import SonosError from './models/sonos-error';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
@@ -59,14 +61,37 @@ export default class SonosManager {
 
   private async Initialize(): Promise<boolean> {
     this.debug('Initialize()');
-    const groups = await this.LoadAllGroups();
+    const groups = await this
+      .LoadAllGroups()
+      .catch((err) => {
+        this.debug('Error loading groups with pull %o', err);
+        if (err instanceof SonosError && err.UpnpErrorCode === 501) {
+          // This happens with big systems, try loading with events
+          return this.LoadAllGroupsWithEvent();
+        }
+        throw err;
+      });
     const success = this.InitializeWithGroups(groups);
     return this.SubscribeForGroupEvents(success);
   }
 
   private async LoadAllGroups(): Promise<ZoneGroup[]> {
+    this.debug('LoadAllGroups()');
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
     return await this.zoneService.GetParsedZoneGroupState();
+  }
+
+  private async LoadAllGroupsWithEvent(): Promise<ZoneGroup[]> {
+    this.debug('LoadAllGroupsWithEvent()');
+    if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
+    return await AsyncHelper
+      .AsyncEvent<ZoneGroupTopologyServiceEvent>(this.zoneService.Events, ServiceEvents.ServiceEvent, 5)
+      .then((data) => {
+        if (!Array.isArray(data.ZoneGroupState)) {
+          throw new Error('No groups in event');
+        }
+        return data.ZoneGroupState;
+      });
   }
 
   private InitializeWithGroups(groups: ZoneGroup[]): boolean {

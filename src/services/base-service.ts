@@ -16,6 +16,7 @@ import { EventsError, EventsErrorCode } from '../models/event-errors';
 import SonosError from '../models/sonos-error';
 import HttpError from '../models/http-error';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
+import AsyncHelper from '../helpers/async-helper';
 
 /**
  * Base Service class will handle all the requests to the sonos device.
@@ -356,6 +357,12 @@ export default abstract class BaseService <TServiceEvent> {
       this.events = new EventEmitter();
       this.events.on('removeListener', async (eventName: string | symbol) => {
         this.debug('Listener removed for %s', eventName);
+        // The ZoneGroupTopology service might resubscribe really soon after unsubscribing.
+        // Because we don't want it to cancel the subscription we wait 100 ms just to make sure there aren't any new subscriptions before unsubscribing
+        if (this.serviceNane === 'ZoneGroupTopology') {
+          this.debug('Waiting 100ms before unsubscribing');
+          await AsyncHelper.Delay(100);
+        }
 
         const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== ServiceEvents.SubscriptionError);
         if (this.sid !== undefined && events?.length === 0) {
@@ -368,12 +375,13 @@ export default abstract class BaseService <TServiceEvent> {
       });
       this.events.on('newListener', async (eventName: string | symbol) => {
         if (eventName === ServiceEvents.SubscriptionError) return;
-        this.debug('Listener added for %s  (sid: \'%s\', SONOS_DISABLE_EVENTS: %o)', eventName, this.sid, (typeof process.env.SONOS_DISABLE_EVENTS === 'undefined'));
-        if (this.sid === undefined && process.env.SONOS_DISABLE_EVENTS === undefined) {
+        const eventsEnabled = (process.env.SONOS_DISABLE_EVENTS === undefined || process.env.SONOS_DISABLE_EVENTS !== 'true');
+        this.debug('Listener added for %s  (sid: \'%s\', SONOS_DISABLE_EVENTS: %o)', eventName, this.sid, !eventsEnabled);
+        if (this.sid === undefined && eventsEnabled) {
           this.debug('Subscribing to events');
           await this.subscribeForEvents()
             .catch((err: Error) => {
-              this.debug('Subscriping for events failed', err);
+              this.debug('Subscribing for events failed', err);
               this.emitEventsError(new EventsError(EventsErrorCode.SubscribeFailed, err));
             });
         }
