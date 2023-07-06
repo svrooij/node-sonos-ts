@@ -359,11 +359,11 @@ export default abstract class BaseService <TServiceEvent> {
         this.debug('Listener removed for %s', eventName);
         // The ZoneGroupTopology service might resubscribe really soon after unsubscribing.
         // Because we don't want it to cancel the subscription we wait 100 ms just to make sure there aren't any new subscriptions before unsubscribing
-        if(this.serviceNane === 'ZoneGroupTopology') {
+        if (this.serviceNane === 'ZoneGroupTopology') {
           this.debug('Waiting 100ms before unsubscribing');
           await AsyncHelper.Delay(100);
         }
-        
+
         const events = this.events?.eventNames().filter((e) => e !== 'removeListener' && e !== 'newListener' && e !== ServiceEvents.SubscriptionError);
         if (this.sid !== undefined && events?.length === 0) {
           await this.cancelSubscription()

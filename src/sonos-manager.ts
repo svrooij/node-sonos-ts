@@ -71,26 +71,26 @@ export default class SonosManager {
         }
         throw err;
       });
-    let success = this.InitializeWithGroups(groups);
+    const success = this.InitializeWithGroups(groups);
     return this.SubscribeForGroupEvents(success);
   }
 
   private async LoadAllGroups(): Promise<ZoneGroup[]> {
-    this.debug('LoadAllGroups()')
+    this.debug('LoadAllGroups()');
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
     return await this.zoneService.GetParsedZoneGroupState();
   }
 
   private async LoadAllGroupsWithEvent(): Promise<ZoneGroup[]> {
-    this.debug('LoadAllGroupsWithEvent()')
+    this.debug('LoadAllGroupsWithEvent()');
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
     return await AsyncHelper
       .AsyncEvent<ZoneGroupTopologyServiceEvent>(this.zoneService.Events, ServiceEvents.ServiceEvent, 5)
       .then((data) => {
         if (!Array.isArray(data.ZoneGroupState)) {
-          throw new Error("No groups in event")
+          throw new Error('No groups in event');
         }
-        return data.ZoneGroupState
+        return data.ZoneGroupState;
       });
   }
 
