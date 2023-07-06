@@ -60,5 +60,5 @@ process.on('SIGINT', () => {
   manager.CancelSubscription()
   setTimeout(() => {
     process.exit(0)
-  }, 200)
+  }, 300)
 })
