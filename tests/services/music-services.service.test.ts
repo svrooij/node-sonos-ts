@@ -13,7 +13,7 @@ describe('MusicServicesService', () => {
         '<u:GetSessionId xmlns:u="urn:schemas-upnp-org:service:MusicServices:1"><ServiceId>10</ServiceId><Username>testuser</Username></u:GetSessionId>',
         'GetSessionIdResponse',
         'MusicServices',
-        '<SessionId>38</SessionsId>');
+        '<SessionId>38</SessionId>');
 
       const service = new MusicServicesService(TestHelpers.testHost, 1400);
 
@@ -119,6 +119,6 @@ describe('MusicServicesService', () => {
       })
       service.ParseEvent('<e:propertyset xmlns:e="urn:schemas-upnp-org:event-1-0"><e:property><ServiceListVersion>RINCON_xxx01400:990</ServiceListVersion></e:property></e:propertyset>');
       delete process.env.SONOS_DISABLE_EVENTS
-    }, 1)
+    }, 1000)
   })
 });

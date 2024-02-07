@@ -11,7 +11,7 @@ describe('AlarmClockService', () => {
         '<u:CreateAlarm xmlns:u="urn:schemas-upnp-org:service:AlarmClock:1"><StartLocalTime>09:00:00</StartLocalTime><Duration>00:08:00</Duration><Recurrence>ONCE</Recurrence><Enabled>1</Enabled><RoomUUID>fake_uuid</RoomUUID><ProgramURI>http://livingears.com/music/SceneNotHeard/091909/Do%20You%20Mind%20Kyla.mp3</ProgramURI><ProgramMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;100&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Do you mind&lt;/dc:title&gt;&lt;dc:creator&gt;Kyla &amp; the gang&lt;/dc:creator&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;RINCON_AssociatedZPUDN&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</ProgramMetaData><PlayMode>SHUFFLE</PlayMode><Volume>10</Volume><IncludeLinkedZones>0</IncludeLinkedZones></u:CreateAlarm>',
         'CreateAlarmResponse',
         'AlarmClock',
-        '<AssignedID>100</AutoAdjustDst>');
+        '<AssignedID>100</AssignedID>');
 
       const service = new AlarmClockService(TestHelpers.testHost);
 
