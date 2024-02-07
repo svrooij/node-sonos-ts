@@ -243,14 +243,14 @@ export class TestHelpers {
   }
 
   static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
-    let error = undefined;
+    let error: any = undefined;
     try {
       await method();
     } catch (err) {
       error = err;
     }
     expect(error).to.be.an('Error')
-    if (errorMessage) {
+    if (errorMessage && error) {
       expect(error.message).to.equal(errorMessage)
     }
     if (upnpErrorDescription) {

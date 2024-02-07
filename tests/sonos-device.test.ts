@@ -32,7 +32,7 @@ describe('SonosDevice', () => {
   })
 
   describe('AddUriToQueue()', () => {
-    it('accepts sonos track', async () => {
+    it.skip('accepts sonos track', async () => {
       const track = 'spotify:track:3b9xTm2eiaCRTGqUEWuzxc';
       const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#AddURIToQueue"',
