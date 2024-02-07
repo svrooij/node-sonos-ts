@@ -1,4 +1,4 @@
-import fetch, { Request, Response } from 'node-fetch';
+import fetch from 'node-fetch';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
 import { randomUUID } from 'crypto';
@@ -124,7 +124,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequestAndParseResponse<TResponse, object>(action, undefined);
   }
 
   /**
@@ -141,7 +141,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequestAndParseResponse<TResponse, TBody>(action, body);
   }
 
   /**
@@ -155,7 +155,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestNoResponse(action: string): Promise<boolean> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequest(action, undefined);
   }
 
   /**
@@ -171,7 +171,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequest(action, body);
   }
   // #endregion
 
@@ -184,21 +184,6 @@ export default abstract class BaseService <TServiceEvent> {
     return `"urn:schemas-upnp-org:service:${this.serviceNane}:1#${action}"`;
   }
 
-  private generateRequest<TBody>(action: string, body: TBody): Request {
-    return new Request(
-      this.getUrl(),
-      {
-        method: 'POST',
-        headers: {
-          SOAPAction: this.messageAction(action),
-          'Content-type': 'text/xml; charset=utf8',
-        },
-        body: this.generateRequestBody<TBody>(action, body),
-        timeout: 30000,
-      },
-    );
-  }
-
   /**
    * generateRequestBody will generate the request body, and to conversion from 'Track' to xml if needed
    *
@@ -209,13 +194,13 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {string}
    * @memberof BaseService
    */
-  private generateRequestBody<TBody>(action: string, body: TBody): string {
+  private generateRequestBody<TBody>(action: string, body?: TBody): string {
     let messageBody = `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${this.serviceNane}:1">`;
     if (body) {
       Object.entries(body).forEach((v) => {
         // Deconstruct v into key and value.
         const [key, value] = v;
-        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
+        if (!!value && typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
         else messageBody += `<${key}>${value ?? ''}</${key}>`;
@@ -235,12 +220,19 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<boolean>} boolean returns true if command is send succesfull and sonos responded with ok
    * @memberof BaseService
    */
-  private async handleRequest(request: Request, action: string): Promise<boolean> {
-    const response = await fetch(request);
+  private async handleRequest<TBody>(action: string, body?: TBody): Promise<boolean> {
+    const response = await fetch(this.getUrl(), {
+      method: 'POST',
+      headers: {
+        SOAPAction: this.messageAction(action),
+        'Content-type': 'text/xml; charset=utf8',
+      },
+      body: this.generateRequestBody<TBody>(action, body),
+    });
     if (response.ok) {
       return true;
     }
-    return await this.handleErrorResponse<boolean>(action, response);
+    return this.handleErrorResponse<boolean>(action, response);
   }
 
   /**
@@ -253,8 +245,15 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>} a promise with the requested result
    * @memberof BaseService
    */
-  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
-    const response = await fetch(request);
+  private async handleRequestAndParseResponse<TResponse, TBody>(action: string, body?: TBody): Promise<TResponse> {
+    const response = await fetch(this.getUrl(), {
+      method: 'POST',
+      headers: {
+        SOAPAction: this.messageAction(action),
+        'Content-type': 'text/xml; charset=utf8',
+      },
+      body: this.generateRequestBody<TBody>(action, body),
+    });
     const responseText = response.ok === true
       ? await response.text()
       : await this.handleErrorResponse<string>(action, response);
@@ -276,7 +275,9 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>}
    * @memberof BaseService
    */
-  private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse> {
+  private async handleErrorResponse<TResponse>(action: string, resp: unknown): Promise<TResponse> {
+    
+    const response = resp as any;
     const responseText = await response.text();
     if (responseText !== '') {
       const errorResponse = XmlHelper.ParseXml(responseText) as any;
@@ -292,7 +293,7 @@ export default abstract class BaseService <TServiceEvent> {
     throw new HttpError(action, response.status, response.statusText);
   }
 
-  protected abstract responseProperties(): {[key: string]: string};
+  protected abstract responseProperties(): { [key: string]: string };
 
   /**
    * parseEmbeddedXml will parse the value of some response properties
@@ -304,7 +305,7 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
-    const output: {[key: string]: any } = {};
+    const output: { [key: string]: any } = {};
     const keys = Object.keys(input);
     keys.forEach((k) => {
       output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
@@ -402,7 +403,7 @@ export default abstract class BaseService <TServiceEvent> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
     this.debug('Creating event subscription with callback: %s', callback);
     await this.ResolveHostname();
-    const resp = await fetch(new Request(
+    const resp = await fetch(
       `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
@@ -411,9 +412,8 @@ export default abstract class BaseService <TServiceEvent> {
           NT: 'upnp:event',
           Timeout: 'Second-3600',
         },
-        timeout: 15000,
       },
-    ));
+    );
     const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
     if (sid === undefined || sid === '') {
       throw new Error('No subscription id received');
@@ -443,7 +443,7 @@ export default abstract class BaseService <TServiceEvent> {
     this.debug('Renewing event subscription');
     await this.ResolveHostname();
     if (typeof this.sid === 'string' && this.sid !== '') {
-      const resp = await fetch(new Request(
+      const resp = await fetch(
         `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'SUBSCRIBE',
@@ -451,9 +451,8 @@ export default abstract class BaseService <TServiceEvent> {
             SID: this.sid,
             Timeout: 'Second-3600',
           },
-          timeout: 15000,
         },
-      ));
+      );
       if (resp.ok) {
         this.debug('Renewed event subscription');
         return true;
@@ -478,16 +477,15 @@ export default abstract class BaseService <TServiceEvent> {
     }
 
     if (this.sid !== undefined) {
-      const resp = await fetch(new Request(
+      const resp = await fetch(
         `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'UNSUBSCRIBE',
           headers: {
             SID: this.sid,
           },
-          timeout: 15000,
         },
-      ));
+      );
       SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
       this.sid = undefined;
       this.debug('Cancelled event subscription success %o', resp.ok);
@@ -506,7 +504,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public async CheckEventListener(): Promise<boolean> {
     if (this.sid !== undefined) {
-      return await this.renewEventSubscription();
+      return this.renewEventSubscription();
     }
     return false;
   }
@@ -564,11 +562,11 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected abstract eventProperties(): {[key: string]: string};
+  protected abstract eventProperties(): { [key: string]: string };
 
   private cleanEventLastChange(inputRaw: any): TServiceEvent {
     const input = Array.isArray(inputRaw) ? inputRaw[0] : inputRaw;
-    const output: {[key: string]: any} = {};
+    const output: { [key: string]: any } = {};
 
     const inKeys = Object.keys(input).filter((k) => k !== 'val');
     const properties = this.eventProperties();
@@ -593,7 +591,7 @@ export default abstract class BaseService <TServiceEvent> {
 
   private cleanEventBody(input: any[]): TServiceEvent {
     // const output: {[key: string]: any} = {};
-    const temp: {[key: string]: string} = {};
+    const temp: { [key: string]: string } = {};
     input.forEach((v) => {
       Object.keys(v)
         .forEach((k) => {

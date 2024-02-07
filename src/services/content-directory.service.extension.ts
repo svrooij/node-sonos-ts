@@ -28,7 +28,7 @@ export class ContentDirectoryService extends ContentDirectoryServiceBase {
   async BrowseParsed(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }): Promise<BrowseResponse> {
     const resp = await this.Browse(input);
     if (typeof resp.Result === 'string' && resp.NumberReturned > 0) {
-      const parsedData = (XmlHelper.DecodeAndParseXml(resp.Result) as {[key: string]: any})['DIDL-Lite'];
+      const parsedData = (XmlHelper.DecodeAndParseXml(resp.Result) as { [key: string]: any })['DIDL-Lite'];
       const itemObject = parsedData.item || parsedData.container;
       const items = ArrayHelper.ForceArray(itemObject);
       resp.Result = items

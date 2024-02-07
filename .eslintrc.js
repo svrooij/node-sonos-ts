@@ -17,7 +17,9 @@ module.exports =  {
     'max-classes-per-file':'off',
     'max-len':'off',
     'no-return-await': 'off',
-    'linebreak-style': 'off'
+    'linebreak-style': 'off',
+    'import/extensions': 'off',
+    'import/no-extraneous-dependencies': 'off',
   },
   overrides: [
     {
@@ -48,6 +50,12 @@ module.exports =  {
       files: ['src/sonos-event-listener.ts', 'src/services/base-service.ts'],
       rules: {
         'import/no-cycle': 'off',
+      }
+    },
+    {
+      files: ['src/models/playmode.ts', 'src/models/service-event.ts'],
+      rules: {
+        '@typescript-eslint/no-duplicate-enum-values': 'off',
       }
     }
   ]

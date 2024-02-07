@@ -1,4 +1,4 @@
-import fetch, { Request } from 'node-fetch';
+import fetch from 'node-fetch';
 import debug, { Debugger } from 'debug';
 import SmapiError from './smapi-error';
 import ArrayHelper from '../helpers/array-helper';
@@ -88,7 +88,7 @@ export interface DeviceAuthResponse {
 }
 
 export enum SmapiClientErrors {
-  TokenRefreshRequiredError = 'tokenRefreshRequired'
+  TokenRefreshRequiredError = 'tokenRefreshRequired',
 }
 
 /**
@@ -203,7 +203,7 @@ export class SmapiClient {
     return await this.SoapRequestWithBody('getMediaURI', input);
   }
 
-  public async Search(input: {id: string; term: string; index: number; count: number}): Promise<MediaList> {
+  public async Search(input: { id: string; term: string; index: number; count: number }): Promise<MediaList> {
     return await this.SoapRequestWithBody<any, any>('search', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
@@ -236,7 +236,7 @@ export class SmapiClient {
   private async SoapRequest<TResponse>(action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
     this.debug('%s()', action);
     try {
-      return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+      return await this.handleRequestAndParseResponse<object, TResponse>(undefined, action);
     } catch (err) {
       if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequest<TResponse>(action, true);
@@ -248,7 +248,7 @@ export class SmapiClient {
   private async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody, isRetryWithNewCredentials = false): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     try {
-      return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+      return await this.handleRequestAndParseResponse<TBody, TResponse>(body, action);
     } catch (err) {
       if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
@@ -257,8 +257,18 @@ export class SmapiClient {
     }
   }
 
-  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
-    const response = await fetch(request);
+  private async handleRequestAndParseResponse<TBody, TResponse>(requestBody: TBody | undefined, action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
+    const response = await fetch(this.options.url, {
+      method: 'POST',
+      headers: {
+        SOAPAction: this.messageAction(action),
+        'Content-type': 'text/xml; charset=utf-8',
+        'Accept-Language': 'en-US',
+        'Accept-Encoding': 'gzip, deflate',
+        'User-Agent': 'Linux UPnP/1.0 Sonos/29.3-87071 (ICRU_iPhone7,1); iOS/Version 8.2 (Build 12D508)',
+      },
+      body: this.generateRequestBody<TBody>(action, requestBody),
+    });
     // if (!response.ok) {
     //   this.debug('handleRequest error %d %s', response.status, response.statusText);
     //   throw new Error(`Http status ${response.status} (${response.statusText})`);
@@ -295,30 +305,13 @@ export class SmapiClient {
     return `"http://www.sonos.com/Services/1.1#${action}"`;
   }
 
-  private generateRequest<TBody>(action: string, body: TBody): Request {
-    return new Request(
-      this.options.url,
-      {
-        method: 'POST',
-        headers: {
-          SOAPAction: this.messageAction(action),
-          'Content-type': 'text/xml; charset=utf-8',
-          'Accept-Language': 'en-US',
-          'Accept-Encoding': 'gzip, deflate',
-          'User-Agent': 'Linux UPnP/1.0 Sonos/29.3-87071 (ICRU_iPhone7,1); iOS/Version 8.2 (Build 12D508)',
-        },
-        body: this.generateRequestBody<TBody>(action, body),
-      },
-    );
-  }
-
-  private generateRequestBody<TBody>(action: string, body: TBody): string {
+  private generateRequestBody<TBody>(action: string, body?: TBody): string {
     const soapHeader = this.generateSoapHeader();
     const soapBody = this.generateSoapBody<TBody>(action, body);
     return this.generateSoapEnvelope([soapHeader, soapBody]);
   }
 
-  private generateSoapBody<TBody>(action: string, body: TBody): string {
+  private generateSoapBody<TBody>(action: string, body?: TBody): string {
     let messageBody = `<soap:Body>\r\n<s:${action}>`;
     if (body) {
       Object.entries(body).forEach((v) => {
@@ -339,7 +332,7 @@ export class SmapiClient {
     return this.options.householdId;
   }
 
-  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string;} = {}): string {
+  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string; } = {}): string {
     let header = '  <s:credentials>\r\n';
 
     if (options.deviceId !== undefined) {
