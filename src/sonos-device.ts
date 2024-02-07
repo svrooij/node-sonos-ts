@@ -49,7 +49,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {({coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined)} [groupConfig=undefined] groupConfig is used by the SonosManager to setup group change events.
    * @memberof SonosDevice
    */
-  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: {coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined = undefined) {
+  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: { coordinator?: SonosDevice; name: string; managerEvents: EventEmitter } | undefined = undefined) {
     super(host, port, uuid);
     this.name = name;
     if (groupConfig) {
@@ -158,7 +158,7 @@ export default class SonosDevice extends SonosDeviceBase {
     }
     const foundService = this.GetServiceByName(service);
     const objectToCallOn = typeof foundService !== 'undefined'
-      ? foundService as unknown as {[key: string]: any}
+      ? foundService as unknown as { [key: string]: any }
       : this.executeCommandGetFunctions();
 
     const proto = Object.getPrototypeOf(objectToCallOn);
@@ -182,9 +182,9 @@ export default class SonosDevice extends SonosDeviceBase {
     throw new Error(`Command ${correctCommand} isn't a function`);
   }
 
-  private executeCommandGetFunctions(): {[key: string]: any} {
+  private executeCommandGetFunctions(): { [key: string]: any } {
     // This code looks weird, but is required to convince TypeScript this is actually what we want.
-    return this as unknown as {[key: string]: any};
+    return this as unknown as { [key: string]: any };
   }
 
   /**
@@ -904,7 +904,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #region Group stuff
   private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
-  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string}): void {
+  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string }): void {
     if (data.coordinator && data.coordinator?.uuid !== this.Uuid && (!this.coordinator || this.coordinator?.Uuid !== data.coordinator?.Uuid)) {
       this.debug('Coordinator changed for %s', this.uuid);
       this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);

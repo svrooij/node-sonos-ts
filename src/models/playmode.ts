@@ -8,11 +8,11 @@ export enum PlayMode {
   /**
    * @deprecated Typ-o replaced by ShuffleRepeatOne
    */
-  SuffleRepeatOne = 'SHUFFLE_REPEAT_ONE'
+  SuffleRepeatOne = 'SHUFFLE_REPEAT_ONE',
 }
 
 export enum Repeat {
   Off = 'Off',
   RepeatAll = 'RepeatAll',
-  RepeatOne = 'RepeatOne'
+  RepeatOne = 'RepeatOne',
 }

@@ -125,7 +125,7 @@ export default class XmlHelper {
         }
       }
 
-      input.children.forEach((child: XmlElement | XmlText | XmlCdata | XmlComment | XmlProcessingInstruction| XmlDeclaration | XmlDocumentType) => {
+      input.children.forEach((child: XmlElement | XmlText | XmlCdata | XmlComment | XmlProcessingInstruction | XmlDeclaration | XmlDocumentType) => {
       // for (const child of input.children) {
         if (child instanceof XmlElement) {
           const value = this.NormalizeXml(child, removeNamespace);

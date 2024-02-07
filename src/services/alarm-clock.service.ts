@@ -132,7 +132,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       AssignedID: 'number',
       CurrentDailyIndexRefreshTime: 'string',
@@ -153,7 +153,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AlarmListVersion: 'string',
       DailyIndexRefreshTime: 'string',

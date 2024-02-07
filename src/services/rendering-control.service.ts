@@ -173,7 +173,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentBass: 'number',
       CurrentValue: 'number',
@@ -199,7 +199,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AudioDelay: 'string',
       AudioDelayLeftRear: 'string',

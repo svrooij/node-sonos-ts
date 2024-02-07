@@ -345,7 +345,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       FirstTrackNumberEnqueued: 'number',
       NumTracksAdded: 'number',
@@ -391,7 +391,7 @@ export class AVTransportService extends BaseService<AVTransportServiceEvent> {
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AbsoluteCounterPosition: 'number',
       AbsoluteTimePosition: 'string',

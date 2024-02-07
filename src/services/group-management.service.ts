@@ -42,7 +42,7 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentTransportSettings: 'string',
       CurrentURI: 'string',
@@ -53,7 +53,7 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       GroupCoordinatorIsLocal: 'boolean',
       LocalGroupUUID: 'string',

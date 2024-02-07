@@ -19,5 +19,5 @@ export enum ServiceEvents {
   LastChange = 'serviceEvent',
   ServiceEvent = 'serviceEvent',
   SubscriptionError = 'subscriptionError',
-  Unprocessed = 'rawEvent'
+  Unprocessed = 'rawEvent',
 }

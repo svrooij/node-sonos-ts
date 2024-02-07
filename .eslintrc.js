@@ -13,6 +13,7 @@ module.exports =  {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/return-await': 'off',
     'class-methods-use-this':'off',
     'max-classes-per-file':'off',
     'max-len':'off',

@@ -23,7 +23,7 @@ export default class PlayModeHelper {
     }
   }
 
-  private static repeatMap: { [key in PlayMode]: Repeat} = {
+  private static repeatMap: { [key in PlayMode]: Repeat } = {
     [PlayMode.RepeatAll]: Repeat.RepeatAll,
     [PlayMode.Shuffle]: Repeat.RepeatAll,
     [PlayMode.RepeatOne]: Repeat.RepeatOne,
