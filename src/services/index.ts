@@ -2,7 +2,7 @@
  * All sonos services exported as one file for easy access.
  *
  * Stephan van Rooij
- * https://svrooij.io/sonos-api-docs
+ * https://sonos.svrooij.io/
  *
  * This file is generated, do not edit manually.
  */

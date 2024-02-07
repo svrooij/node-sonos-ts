@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,26 +29,26 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async GetAudioInputAttributes():
-  Promise<GetAudioInputAttributesResponse> { return await this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
+  GetAudioInputAttributes():
+  Promise<GetAudioInputAttributesResponse> { return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
 
-  async GetLineInLevel():
-  Promise<GetLineInLevelResponse> { return await this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
+  GetLineInLevel():
+  Promise<GetLineInLevelResponse> { return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
 
-  async SelectAudio(input: { ObjectID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
+  SelectAudio(input: { ObjectID: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
 
-  async SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
+  SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
 
-  async SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
+  SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
 
-  async StartTransmissionToGroup(input: { CoordinatorID: string }):
-  Promise<StartTransmissionToGroupResponse> { return await this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
+  StartTransmissionToGroup(input: { CoordinatorID: string }):
+  Promise<StartTransmissionToGroupResponse> { return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
 
-  async StopTransmissionToGroup(input: { CoordinatorID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
+  StopTransmissionToGroup(input: { CoordinatorID: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {

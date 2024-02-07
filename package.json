@@ -6,7 +6,9 @@
   "types": "lib/index.d.js",
   "scripts": {
     "build": "tsc",
-    "generate": "npx @svrooij/sonos-docs combine && npx @svrooij/sonos-docs generate ./.generator/ts/ ./",
+    "generate": "npm run generate:prepare && npm run generate:combine",
+    "generate:prepare": "npx @svrooij/sonos-docs combine",
+    "generate:files": "npx @svrooij/sonos-docs generate ./.generator/ts/ ./",
     "lint": "eslint ./src/*.ts ./src/**/*.ts",
     "lint:fix": "eslint ./src/*.ts ./src/**/*.ts --fix",
     "prepack": "npm run build",

@@ -7,7 +7,7 @@ grand_parent: Sonos device
 # VirtualLineIn service
 {: .no_toc }
 
-The VirtualLineIn service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-S9` / `v2-Sub`.
+The VirtualLineIn service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S33` / `v2-S38` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
