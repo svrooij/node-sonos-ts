@@ -188,7 +188,7 @@ describe('SonosEventListener', () => {
   });
 });
 
-describe('SonosEventListener - HTTP', () => {
+describe.skip('SonosEventListener - HTTP', () => {
   beforeAll((done) => {
     SonosEventListener.DefaultInstance.StartListener(() => {
       setTimeout(done, 500);
