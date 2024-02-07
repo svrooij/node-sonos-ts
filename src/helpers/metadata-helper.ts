@@ -27,8 +27,8 @@ export default class MetadataHelper {
       Title: XmlHelper.DecodeHtml(didlItem['dc:title']),
       UpnpClass: didlItem['upnp:class'],
       Duration: undefined,
-      ItemId: didlItem._id,
-      ParentId: didlItem._parentID,
+      ItemId: didlItem.id ?? didlItem._id, // the previous xml parser was prefixing all attributes with _
+      ParentId: didlItem.parentID ?? didlItem.parentID,
       TrackUri: undefined,
       ProtocolInfo: undefined,
     };
@@ -54,9 +54,10 @@ export default class MetadataHelper {
     }
 
     if (didlItem.res) {
-      track.Duration = didlItem.res._duration;
+      // the previous xml parser was prefixing all attributes with _
+      track.Duration = didlItem.res.duration ?? didlItem.res._duration;
       track.TrackUri = XmlHelper.DecodeTrackUri(didlItem.res['#text']);
-      track.ProtocolInfo = didlItem.res._protocolInfo;
+      track.ProtocolInfo = didlItem.res.protocolInfo ?? didlItem.res._protocolInfo;
     }
 
     return track;

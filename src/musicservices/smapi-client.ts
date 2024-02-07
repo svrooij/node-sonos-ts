@@ -1,9 +1,8 @@
 import fetch, { Request } from 'node-fetch';
-import { parse } from 'fast-xml-parser';
 import debug, { Debugger } from 'debug';
-
 import SmapiError from './smapi-error';
 import ArrayHelper from '../helpers/array-helper';
+import XmlHelper from '../helpers/xml-helper';
 
 /**
  * Options to create a sonos music api client.
@@ -265,7 +264,7 @@ export class SmapiClient {
     //   throw new Error(`Http status ${response.status} (${response.statusText})`);
     // }
 
-    const result = parse(await response.text(), { ignoreNameSpace: true });
+    const result = XmlHelper.ParseXml(await response.text(), true) as any;
     if (!result || !result.Envelope || !result.Envelope.Body) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);

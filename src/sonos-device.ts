@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
-import { parse } from 'fast-xml-parser';
 import WebSocket from 'ws';
 import SonosDeviceBase from './sonos-device-base';
 import {
@@ -25,6 +24,7 @@ import {
   PlayNotificationTwoOptions, PlayTtsTwoOptions,
 } from './models/notificationQueue';
 import SonosDeviceNotifications from './sonos-notification-two';
+import XmlHelper from './helpers/xml-helper';
 
 /**
  * Main class to control a single sonos device.
@@ -201,7 +201,7 @@ export default class SonosDevice extends SonosDeviceBase {
         }
         throw new Error(`Loading device description failed ${response.status} ${response.statusText}`);
       });
-    const { root: { device } } = parse(resp);
+    const { root: { device } } = XmlHelper.ParseXml(resp) as { root: { device: any } };
     return {
       manufacturer: device.manufacturer,
       modelNumber: device.modelNumber,
@@ -795,7 +795,7 @@ export default class SonosDevice extends SonosDeviceBase {
     }
 
     // this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>; incorrect according to DeepSource
-    this.events = new EventEmitter();
+    this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>;
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;

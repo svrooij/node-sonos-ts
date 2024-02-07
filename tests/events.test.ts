@@ -1,8 +1,8 @@
 import { expect }  from 'chai'
+import { randomUUID } from 'crypto';
 import SonosDevice from '../src/sonos-device'
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../src/sonos-event-listener';
-import { Guid } from 'guid-typescript';
 import AsyncHelper from '../src/helpers/async-helper';
 import fetch from 'node-fetch';
 
@@ -23,21 +23,21 @@ describe('SonosDevice - Events', () => {
 
     // Required to catch event subscription
     //process.env.SONOS_LISTENER_HOST = 'localhost-events'
-    const renderingControlSid = Guid.create().toString();
+    const renderingControlSid = randomUUID().toString();
     scope
       .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
       .reply(200, '', {
         sid: renderingControlSid
       });
 
-    const avtransportSid = Guid.create().toString();
+    const avtransportSid = randomUUID().toString();
     scope
       .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
       .reply(200, '', {
         sid: avtransportSid
       });
 
-    const randomUuid = Guid.create().toString();
+    const randomUuid = randomUUID().toString();
     const device = new SonosDevice(TestHelpers.testHost, port, randomUuid);
     const statusBefore = SonosEventListener.DefaultInstance.GetStatus();
     expect(statusBefore.isListening).to.be.false;
@@ -61,14 +61,14 @@ describe('SonosDevice - Events', () => {
 
     // Required to catch event subscription
     //process.env.SONOS_LISTENER_HOST = 'localhost-events'
-    const renderingControlSid = Guid.create().toString();
+    const renderingControlSid = randomUUID().toString();
     scope
       .intercept('/MediaRenderer/RenderingControl/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
       .reply(200, '', {
         sid: renderingControlSid
       });
 
-    const avtransportSid = Guid.create().toString();
+    const avtransportSid = randomUUID().toString();
     scope
       .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
       .reply(200, '', {
@@ -83,7 +83,7 @@ describe('SonosDevice - Events', () => {
       .intercept('/MediaRenderer/AVTransport/Event', 'UNSUBSCRIBE', undefined, { reqheaders: { sid: avtransportSid }})
       .reply(204, '');
 
-    const randomUuid = Guid.create().toString();
+    const randomUuid = randomUUID().toString();
     const device = new SonosDevice(TestHelpers.testHost, port, randomUuid);
     device.Events.on('currentTrack', (track) => {});
     await AsyncHelper.Delay(500); // Delay is needed because the subscription is registered out-of-band.
@@ -104,8 +104,8 @@ describe('SonosDevice - Events', () => {
     process.env.DEBUG = 'sonos:*';
     const port = 2000;
     const scope = TestHelpers.getScope(port);
-    const renderingControlSid = Guid.create().toString();
-    const avtransportSid = Guid.create().toString();
+    const renderingControlSid = randomUUID().toString();
+    const avtransportSid = randomUUID().toString();
 
     scope
     .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
@@ -142,7 +142,7 @@ describe('SonosDevice - Events', () => {
     const port = 2001;
     const scope = TestHelpers.getScope(port);
 
-    const avtransportSid = Guid.create().toString();
+    const avtransportSid = randomUUID().toString();
     scope
       .intercept('/MediaRenderer/AVTransport/Event', 'SUBSCRIBE', undefined, { reqheaders: { nt: 'upnp:event' }})
       .reply(200, '', {

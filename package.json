@@ -45,7 +45,7 @@
     "eslint-config-airbnb-typescript": "^9.0.0",
     "eslint-plugin-import": "^2.22.1",
     "glob": "^7.1.6",
-    "handlebars": "^4.7.7",
+    "handlebars": "^4.7.8",
     "jest": "^26.6.3",
     "nock": "^13.0.11",
     "ts-jest": "^26.5.5",
@@ -53,12 +53,11 @@
     "typescript": "^3.8.5"
   },
   "dependencies": {
-    "debug": "4.3.1",
-    "fast-xml-parser": "3.19.0",
-    "guid-typescript": "^1.0.9",
-    "html-entities": "^2.3.2",
+    "@rgrove/parse-xml": "^4.1.0",
+    "debug": "4.3.4",
+    "html-entities": "^2.4.0",
     "node-fetch": "^2.6.1",
-    "typed-emitter": "^1.3.1",
+    "typed-emitter": "^2.1.0",
     "ws": "^8.12.1"
   },
   "files": [

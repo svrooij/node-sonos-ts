@@ -1,9 +1,7 @@
 import fetch, { Request, Response } from 'node-fetch';
-
-import { parse } from 'fast-xml-parser';
-import { Guid } from 'guid-typescript';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
+import { randomUUID } from 'crypto';
 import TypedEmitter from 'typed-emitter';
 import IpHelper from '../helpers/ip-helper';
 import SoapHelper from '../helpers/soap-helper';
@@ -91,10 +89,10 @@ export default abstract class BaseService <TServiceEvent> {
    * Creates an instance of the implemented service.
    * @param {string} host The ip (or hostname) of the sonos speaker
    * @param {number} [port=1400] The port of the sonos speaker (defaults to 1400)
-   * @param {string} [uuid=Guid.create().toString()] The uuid of the speaker, used for grouping and events.
+   * @param {string} [uuid=crypto.randomUUID().toString()] The uuid of the speaker, used for grouping and events.
    * @memberof BaseService
    */
-  constructor(host: string, port = 1400, private uuid: string = Guid.create().toString()) {
+  constructor(host: string, port = 1400, private uuid: string = randomUUID().toString()) {
     this.host = host;
     this.port = port;
   }
@@ -261,7 +259,7 @@ export default abstract class BaseService <TServiceEvent> {
       ? await response.text()
       : await this.handleErrorResponse<string>(action, response);
 
-    const result = parse(responseText);
+    const result = XmlHelper.ParseXml(responseText) as any;
     if (!result || !result['s:Envelope']) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);
@@ -281,7 +279,7 @@ export default abstract class BaseService <TServiceEvent> {
   private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse> {
     const responseText = await response.text();
     if (responseText !== '') {
-      const errorResponse = parse(responseText);
+      const errorResponse = XmlHelper.ParseXml(responseText) as any;
       if (errorResponse['s:Envelope'] && errorResponse['s:Envelope']['s:Body'] && errorResponse['s:Envelope']['s:Body']['s:Fault'] !== undefined) {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
@@ -316,14 +314,12 @@ export default abstract class BaseService <TServiceEvent> {
 
   protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
     if (expectedType === 'Track | string' && typeof input === 'string') {
-      if (input.startsWith('&lt;')) {
-        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(input), this.host, this.port);
-      }
-      return undefined; // undefined is more appropriate, but that would be a breaking change.
+      const trackObject = XmlHelper.DecodeAndParseXml(input);
+      return MetadataHelper.ParseDIDLTrack(trackObject, this.host, this.port);
     }
 
     if (name.indexOf('URI') > -1 && typeof input === 'string') {
-      return input === '' ? undefined : XmlHelper.DecodeTrackUri(input);
+      return input === '' ? undefined : input; // XmlHelper.DecodeTrackUri(input);
     }
 
     switch (expectedType) {
@@ -354,7 +350,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public get Events(): TypedEmitter<ServiceEvent<TServiceEvent>> {
     if (this.events === undefined) {
-      this.events = new EventEmitter();
+      this.events = new EventEmitter() as TypedEmitter<ServiceEvent<TServiceEvent>>;
       this.events.on('removeListener', async (eventName: string | symbol) => {
         this.debug('Listener removed for %s', eventName);
         // The ZoneGroupTopology service might resubscribe really soon after unsubscribing.
@@ -524,10 +520,17 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public ParseEvent(xml: string): void {
     this.debug('Got event');
-    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
+    // const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
+    const parsed = XmlHelper.ParseXml(xml, true) as any;
+    if (parsed === undefined || typeof parsed === 'string') {
+      this.debug('Invalid event %o', parsed);
+      return;
+    }
+
+    const rawBody = parsed.propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if (rawBody.LastChange) {
-      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '') as any;
+      const rawEventWrapper = XmlHelper.ParseXml(rawBody.LastChange) as any;
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
@@ -544,11 +547,11 @@ export default abstract class BaseService <TServiceEvent> {
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
-    if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
+    if (typeof originalValue === 'string' && (originalValue.startsWith('&lt;') || originalValue.startsWith('<'))) {
       if (name.endsWith('MetaData')) {
         return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
       }
-      return XmlHelper.DecodeAndParseXml(originalValue, '');
+      return XmlHelper.DecodeAndParseXml(originalValue);
     }
 
     switch (type) {
@@ -573,7 +576,8 @@ export default abstract class BaseService <TServiceEvent> {
 
     keys.forEach((k) => {
       const originalValue = input[k].val ?? input[k];
-      if (originalValue === undefined || originalValue === '') return;
+      // validate that originalValue is not undefined or empty or is not an empty object
+      if (originalValue === undefined || originalValue === '' || (typeof originalValue === 'object' && Object.keys(originalValue).length === 0)) return;
       output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
     });
 

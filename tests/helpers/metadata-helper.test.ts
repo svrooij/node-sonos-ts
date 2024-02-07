@@ -4,7 +4,7 @@ import MetadataHelper from '../../src/helpers/metadata-helper';
 const { GenerateMetadata } = require('./legacy-helpers');
 
 const spotifyTrack = 'spotify:track:6sYJuVcEu4gFHmeTLdHzRz';
-const completeTrackUri = 'x-sonos-spotify:spotify:track:6sYJuVcEu4gFHmeTLdHzRz?sid=9&flags=8224&sn=7';
+const completeTrackUri = 'x-sonos-spotify:spotify:track:6sYJuVcEu4gFHmeTLdHzRz?sid=9&amp;flags=8224&amp;sn=7';
 
 describe('MetadataHelper', () => {
   describe('GuessMetaDataAndTrackUri', () => {
