@@ -78,14 +78,24 @@ describe('RenderingControlService', () => {
   });
 
   describe('GetRoomCalibrationStatus()', () => {
-    it('works', async () => {
+    it('returns false for 0', async () => {
       const service = new RenderingControlService(TestHelpers.testHost, 1400);
       TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
         'GetRoomCalibrationStatus', '<InstanceID>0</InstanceID>',
-        '<RoomCalibrationAvailable>0</RoomCalibrationAvailable></u:GetRoomCalibrationStatusResponse>');
+        '<RoomCalibrationAvailable>0</RoomCalibrationAvailable>');
       
       const result = await service.GetRoomCalibrationStatus({ InstanceID:0 });
       expect(result.RoomCalibrationAvailable).to.be.false;
+    });
+
+    it('returns true for 1', async () => {
+      const service = new RenderingControlService(TestHelpers.testHost, 1400);
+      TestHelpers.mockRequestToService('/MediaRenderer/RenderingControl/Control', 'RenderingControl',
+        'GetRoomCalibrationStatus', '<InstanceID>0</InstanceID>',
+        '<RoomCalibrationAvailable>1</RoomCalibrationAvailable>');
+      
+      const result = await service.GetRoomCalibrationStatus({ InstanceID:0 });
+      expect(result.RoomCalibrationAvailable).to.be.true;
     });
   });
 

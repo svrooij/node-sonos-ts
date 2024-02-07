@@ -1,9 +1,7 @@
-import fetch, { Request, Response } from 'node-fetch';
-
-import { parse } from 'fast-xml-parser';
-import { Guid } from 'guid-typescript';
+import fetch from 'node-fetch';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
+import { randomUUID } from 'crypto';
 import TypedEmitter from 'typed-emitter';
 import IpHelper from '../helpers/ip-helper';
 import SoapHelper from '../helpers/soap-helper';
@@ -91,10 +89,10 @@ export default abstract class BaseService <TServiceEvent> {
    * Creates an instance of the implemented service.
    * @param {string} host The ip (or hostname) of the sonos speaker
    * @param {number} [port=1400] The port of the sonos speaker (defaults to 1400)
-   * @param {string} [uuid=Guid.create().toString()] The uuid of the speaker, used for grouping and events.
+   * @param {string} [uuid=crypto.randomUUID().toString()] The uuid of the speaker, used for grouping and events.
    * @memberof BaseService
    */
-  constructor(host: string, port = 1400, private uuid: string = Guid.create().toString()) {
+  constructor(host: string, port = 1400, private uuid: string = randomUUID().toString()) {
     this.host = host;
     this.port = port;
   }
@@ -126,7 +124,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequestAndParseResponse<TResponse, object>(action, undefined);
   }
 
   /**
@@ -143,7 +141,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequestAndParseResponse<TResponse, TBody>(action, body);
   }
 
   /**
@@ -157,7 +155,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestNoResponse(action: string): Promise<boolean> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequest(action, undefined);
   }
 
   /**
@@ -173,7 +171,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequest(action, body);
   }
   // #endregion
 
@@ -186,21 +184,6 @@ export default abstract class BaseService <TServiceEvent> {
     return `"urn:schemas-upnp-org:service:${this.serviceNane}:1#${action}"`;
   }
 
-  private generateRequest<TBody>(action: string, body: TBody): Request {
-    return new Request(
-      this.getUrl(),
-      {
-        method: 'POST',
-        headers: {
-          SOAPAction: this.messageAction(action),
-          'Content-type': 'text/xml; charset=utf8',
-        },
-        body: this.generateRequestBody<TBody>(action, body),
-        timeout: 30000,
-      },
-    );
-  }
-
   /**
    * generateRequestBody will generate the request body, and to conversion from 'Track' to xml if needed
    *
@@ -211,13 +194,13 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {string}
    * @memberof BaseService
    */
-  private generateRequestBody<TBody>(action: string, body: TBody): string {
+  private generateRequestBody<TBody>(action: string, body?: TBody): string {
     let messageBody = `<u:${action} xmlns:u="urn:schemas-upnp-org:service:${this.serviceNane}:1">`;
     if (body) {
       Object.entries(body).forEach((v) => {
         // Deconstruct v into key and value.
         const [key, value] = v;
-        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
+        if (!!value && typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
         else messageBody += `<${key}>${value ?? ''}</${key}>`;
@@ -237,12 +220,19 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<boolean>} boolean returns true if command is send succesfull and sonos responded with ok
    * @memberof BaseService
    */
-  private async handleRequest(request: Request, action: string): Promise<boolean> {
-    const response = await fetch(request);
+  private async handleRequest<TBody>(action: string, body?: TBody): Promise<boolean> {
+    const response = await fetch(this.getUrl(), {
+      method: 'POST',
+      headers: {
+        SOAPAction: this.messageAction(action),
+        'Content-type': 'text/xml; charset=utf8',
+      },
+      body: this.generateRequestBody<TBody>(action, body),
+    });
     if (response.ok) {
       return true;
     }
-    return await this.handleErrorResponse<boolean>(action, response);
+    return this.handleErrorResponse<boolean>(action, response);
   }
 
   /**
@@ -255,13 +245,20 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>} a promise with the requested result
    * @memberof BaseService
    */
-  private async handleRequestAndParseResponse<TResponse>(request: Request, action: string): Promise<TResponse> {
-    const response = await fetch(request);
+  private async handleRequestAndParseResponse<TResponse, TBody>(action: string, body?: TBody): Promise<TResponse> {
+    const response = await fetch(this.getUrl(), {
+      method: 'POST',
+      headers: {
+        SOAPAction: this.messageAction(action),
+        'Content-type': 'text/xml; charset=utf8',
+      },
+      body: this.generateRequestBody<TBody>(action, body),
+    });
     const responseText = response.ok === true
       ? await response.text()
       : await this.handleErrorResponse<string>(action, response);
 
-    const result = parse(responseText);
+    const result = XmlHelper.ParseXml(responseText) as any;
     if (!result || !result['s:Envelope']) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);
@@ -278,10 +275,12 @@ export default abstract class BaseService <TServiceEvent> {
    * @returns {Promise<TResponse>}
    * @memberof BaseService
    */
-  private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse> {
+  private async handleErrorResponse<TResponse>(action: string, resp: unknown): Promise<TResponse> {
+    
+    const response = resp as any;
     const responseText = await response.text();
     if (responseText !== '') {
-      const errorResponse = parse(responseText);
+      const errorResponse = XmlHelper.ParseXml(responseText) as any;
       if (errorResponse['s:Envelope'] && errorResponse['s:Envelope']['s:Body'] && errorResponse['s:Envelope']['s:Body']['s:Fault'] !== undefined) {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
@@ -294,7 +293,7 @@ export default abstract class BaseService <TServiceEvent> {
     throw new HttpError(action, response.status, response.statusText);
   }
 
-  protected abstract responseProperties(): {[key: string]: string};
+  protected abstract responseProperties(): { [key: string]: string };
 
   /**
    * parseEmbeddedXml will parse the value of some response properties
@@ -306,7 +305,7 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
-    const output: {[key: string]: any } = {};
+    const output: { [key: string]: any } = {};
     const keys = Object.keys(input);
     keys.forEach((k) => {
       output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
@@ -316,14 +315,12 @@ export default abstract class BaseService <TServiceEvent> {
 
   protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
     if (expectedType === 'Track | string' && typeof input === 'string') {
-      if (input.startsWith('&lt;')) {
-        return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(input), this.host, this.port);
-      }
-      return undefined; // undefined is more appropriate, but that would be a breaking change.
+      const trackObject = XmlHelper.DecodeAndParseXml(input);
+      return MetadataHelper.ParseDIDLTrack(trackObject, this.host, this.port);
     }
 
     if (name.indexOf('URI') > -1 && typeof input === 'string') {
-      return input === '' ? undefined : XmlHelper.DecodeTrackUri(input);
+      return input === '' ? undefined : input; // XmlHelper.DecodeTrackUri(input);
     }
 
     switch (expectedType) {
@@ -354,7 +351,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public get Events(): TypedEmitter<ServiceEvent<TServiceEvent>> {
     if (this.events === undefined) {
-      this.events = new EventEmitter();
+      this.events = new EventEmitter() as TypedEmitter<ServiceEvent<TServiceEvent>>;
       this.events.on('removeListener', async (eventName: string | symbol) => {
         this.debug('Listener removed for %s', eventName);
         // The ZoneGroupTopology service might resubscribe really soon after unsubscribing.
@@ -406,7 +403,7 @@ export default abstract class BaseService <TServiceEvent> {
     const callback = SonosEventListener.DefaultInstance.GetEndpoint(this.uuid, this.serviceNane);
     this.debug('Creating event subscription with callback: %s', callback);
     await this.ResolveHostname();
-    const resp = await fetch(new Request(
+    const resp = await fetch(
       `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
       {
         method: 'SUBSCRIBE',
@@ -415,9 +412,8 @@ export default abstract class BaseService <TServiceEvent> {
           NT: 'upnp:event',
           Timeout: 'Second-3600',
         },
-        timeout: 15000,
       },
-    ));
+    );
     const sid = resp.ok ? resp.headers.get('sid') as string : undefined;
     if (sid === undefined || sid === '') {
       throw new Error('No subscription id received');
@@ -447,7 +443,7 @@ export default abstract class BaseService <TServiceEvent> {
     this.debug('Renewing event subscription');
     await this.ResolveHostname();
     if (typeof this.sid === 'string' && this.sid !== '') {
-      const resp = await fetch(new Request(
+      const resp = await fetch(
         `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'SUBSCRIBE',
@@ -455,9 +451,8 @@ export default abstract class BaseService <TServiceEvent> {
             SID: this.sid,
             Timeout: 'Second-3600',
           },
-          timeout: 15000,
         },
-      ));
+      );
       if (resp.ok) {
         this.debug('Renewed event subscription');
         return true;
@@ -482,16 +477,15 @@ export default abstract class BaseService <TServiceEvent> {
     }
 
     if (this.sid !== undefined) {
-      const resp = await fetch(new Request(
+      const resp = await fetch(
         `http://${this.resolvedIp ?? this.host}:${this.port}${this.eventSubUrl}`,
         {
           method: 'UNSUBSCRIBE',
           headers: {
             SID: this.sid,
           },
-          timeout: 15000,
         },
-      ));
+      );
       SonosEventListener.DefaultInstance.UnregisterSubscription(this.sid);
       this.sid = undefined;
       this.debug('Cancelled event subscription success %o', resp.ok);
@@ -510,7 +504,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public async CheckEventListener(): Promise<boolean> {
     if (this.sid !== undefined) {
-      return await this.renewEventSubscription();
+      return this.renewEventSubscription();
     }
     return false;
   }
@@ -524,10 +518,17 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public ParseEvent(xml: string): void {
     this.debug('Got event');
-    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
+    // const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
+    const parsed = XmlHelper.ParseXml(xml, true) as any;
+    if (parsed === undefined || typeof parsed === 'string') {
+      this.debug('Invalid event %o', parsed);
+      return;
+    }
+
+    const rawBody = parsed.propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if (rawBody.LastChange) {
-      const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '') as any;
+      const rawEventWrapper = XmlHelper.ParseXml(rawBody.LastChange) as any;
       const rawEvent = rawEventWrapper.Event.InstanceID ? rawEventWrapper.Event.InstanceID : rawEventWrapper.Event;
       const parsedEvent = this.cleanEventLastChange(rawEvent);
       // console.log(rawEvent)
@@ -544,11 +545,11 @@ export default abstract class BaseService <TServiceEvent> {
   }
 
   protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
-    if (typeof originalValue === 'string' && originalValue.startsWith('&lt;')) {
+    if (typeof originalValue === 'string' && (originalValue.startsWith('&lt;') || originalValue.startsWith('<'))) {
       if (name.endsWith('MetaData')) {
         return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(originalValue), this.host, this.port);
       }
-      return XmlHelper.DecodeAndParseXml(originalValue, '');
+      return XmlHelper.DecodeAndParseXml(originalValue);
     }
 
     switch (type) {
@@ -561,11 +562,11 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected abstract eventProperties(): {[key: string]: string};
+  protected abstract eventProperties(): { [key: string]: string };
 
   private cleanEventLastChange(inputRaw: any): TServiceEvent {
     const input = Array.isArray(inputRaw) ? inputRaw[0] : inputRaw;
-    const output: {[key: string]: any} = {};
+    const output: { [key: string]: any } = {};
 
     const inKeys = Object.keys(input).filter((k) => k !== 'val');
     const properties = this.eventProperties();
@@ -573,7 +574,8 @@ export default abstract class BaseService <TServiceEvent> {
 
     keys.forEach((k) => {
       const originalValue = input[k].val ?? input[k];
-      if (originalValue === undefined || originalValue === '') return;
+      // validate that originalValue is not undefined or empty or is not an empty object
+      if (originalValue === undefined || originalValue === '' || (typeof originalValue === 'object' && Object.keys(originalValue).length === 0)) return;
       output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
     });
 
@@ -589,7 +591,7 @@ export default abstract class BaseService <TServiceEvent> {
 
   private cleanEventBody(input: any[]): TServiceEvent {
     // const output: {[key: string]: any} = {};
-    const temp: {[key: string]: string} = {};
+    const temp: { [key: string]: string } = {};
     input.forEach((v) => {
       Object.keys(v)
         .forEach((k) => {

@@ -72,7 +72,7 @@ export default class SonosEventListener {
     return this.listenerStarted === true; // && this.server.listening;
   }
 
-  private subscriptions: {[key: string]: BaseService<unknown>} = {};
+  private subscriptions: { [key: string]: BaseService<unknown> } = {};
 
   private server: Server;
 
@@ -92,7 +92,7 @@ export default class SonosEventListener {
    * @remarks Will only change the host for new subscriptions
    * @returns Returns true is settings where changed and false if settings where not changed (already running)
    */
-  public UpdateSettings(settings: { host?: string, port?: number}): boolean {
+  public UpdateSettings(settings: { host?: string, port?: number }): boolean {
     this.debug('Updating settings host: %s, port: %d', settings.host, settings.port);
     if (settings.port !== undefined) {
       if (this.isListening) {
@@ -121,7 +121,7 @@ export default class SonosEventListener {
     }
 
     resp.statusCode = 404;
-    return resp.end();
+    resp.end();
   }
 
   private handleHealthRequest(req: IncomingMessage, resp: ServerResponse): void {

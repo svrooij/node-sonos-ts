@@ -100,7 +100,7 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       AccountUDN: 'string',
       AccountNickname: 'string',
@@ -113,7 +113,7 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       CustomerID: 'string',
       ThirdPartyHash: 'string',

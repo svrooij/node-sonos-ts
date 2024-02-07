@@ -145,7 +145,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       State: 'string',
       IncludeLinkedZones: 'boolean',
@@ -175,7 +175,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AirPlayEnabled: 'boolean',
       AutoplayIncludeLinkedZones: 'boolean',

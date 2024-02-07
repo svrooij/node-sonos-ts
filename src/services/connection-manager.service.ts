@@ -39,7 +39,7 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   Promise<GetProtocolInfoResponse> { return await this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       ConnectionIDs: 'string',
       RcsID: 'number',
@@ -55,7 +55,7 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       CurrentConnectionIDs: 'string',
       SinkProtocolInfo: 'string',

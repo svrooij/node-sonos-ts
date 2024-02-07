@@ -6,9 +6,8 @@
  *
  * This file is generated, do not edit manually.
  */
-import { Guid } from 'guid-typescript';
 import debug, { Debugger } from 'debug';
-
+import { randomUUID } from 'crypto';
 import {
   AlarmClockService,
   AudioInService,
@@ -54,10 +53,10 @@ export default class SonosDeviceBase {
    *Creates an instance of SonosDeviceBase.
    * @param {string} host The IP of the speaker
    * @param {number} [port=1400] The port, always 1400
-   * @param {string} [uuid=Guid.create().toString()] The UUID of the speaker like RINCON_macaddres01400, used in some commands.
+   * @param {string} [uuid=crypto.randomUUID().toString()] The UUID of the speaker like RINCON_macaddres01400, used in some commands.
    * @memberof SonosDeviceBase
    */
-  constructor(host: string, port = 1400, uuid: string = Guid.create().toString()) {
+  constructor(host: string, port = 1400, uuid: string = randomUUID().toString()) {
     this.host = host;
     this.port = port;
     this.uuid = uuid;

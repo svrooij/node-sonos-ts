@@ -43,7 +43,7 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   Promise<boolean> { return await this.SoapRequestNoResponse('UpdateAvailableServices'); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       SessionId: 'string',
       AvailableServiceDescriptorList: 'string',
@@ -53,7 +53,7 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       ServiceId: 'number',
       ServiceListVersion: 'string',

@@ -1,4 +1,4 @@
-import fetch, { Request } from 'node-fetch';
+import fetch from 'node-fetch';
 import debug from 'debug';
 import {
   TtsResponse, PlayTtsOptions, PlayNotificationOptions, PlayNotificationOptionsBase,
@@ -13,22 +13,16 @@ export default class TtsHelper {
 
   static async GetTtsUriFromEndpoint(endpoint: string, text: string, language: string, gender?: string, name?: string, engine?: 'standard' | 'neural'): Promise<string> {
     TtsHelper.debug('Getting tts uri from server %s', endpoint);
-    const request = new Request(
-      endpoint,
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json',
-          'User-Agent': `node-sonos-ts/${TtsHelper.pack.version} (${TtsHelper.pack.homepage})`,
-
-        },
-        body: JSON.stringify({
-          text, lang: language, gender, name, engine,
-        }),
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+        'User-Agent': `node-sonos-ts/${TtsHelper.pack.version} (${TtsHelper.pack.homepage})`,
       },
-    );
-
-    const response = await fetch(request);
+      body: JSON.stringify({
+        text, lang: language, gender, name, engine,
+      }),
+    });
     if (!response.ok) {
       this.debug('handleRequest error %d %s', response.status, response.statusText);
       throw new HttpError('GetTtsUriFromEndpoint', response.status, response.statusText);

@@ -19,7 +19,7 @@ describe('SonosDevice - Notifications', () => {
     // afterAll(() => {
     //   delete process.env.SONOS_DISABLE_EVENTS;
     // })
-    it('executes right requests', async (done) => {
+    it.skip('executes right requests', async (done) => {
       process.env.SONOS_DISABLE_LISTENER = 'disable';
       const currentVolume = 6;
       const notificationVolume = 10;

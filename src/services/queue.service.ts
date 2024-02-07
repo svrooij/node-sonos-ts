@@ -66,7 +66,7 @@ export class QueueService extends BaseService<QueueServiceEvent> {
   Promise<SaveAsSonosPlaylistResponse> { return await this.SoapRequestWithBody<typeof input, SaveAsSonosPlaylistResponse>('SaveAsSonosPlaylist', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       FirstTrackNumberEnqueued: 'number',
       NumTracksAdded: 'number',
@@ -83,7 +83,7 @@ export class QueueService extends BaseService<QueueServiceEvent> {
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       Curated: 'boolean',
       LastChange: 'string',

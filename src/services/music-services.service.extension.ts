@@ -9,7 +9,7 @@ export interface MusicService {
   Manifest: { Uri: string; Version: string };
   Name: string;
   Policy: { Auth: 'Anonymous' | 'AppLink' | 'DeviceLink' | 'UserId'; PollInterval?: number };
-  Presentation?: { Strings?: { Uri: string; Version: string }; PresentationMap?: { Uri: string; Version: string }};
+  Presentation?: { Strings?: { Uri: string; Version: string }; PresentationMap?: { Uri: string; Version: string } };
   SecureUri: string;
   Uri: string;
   Version: string;
@@ -30,7 +30,7 @@ export class MusicServicesService extends MusicServicesServiceBase {
       return this.musicServices;
     }
     const encodedResponse = await this.ListAvailableServices();
-    const raw = XmlHelper.DecodeAndParseXml(encodedResponse.AvailableServiceDescriptorList, '');
+    const raw = XmlHelper.DecodeAndParseXml(encodedResponse.AvailableServiceDescriptorList);
     const result = ArrayHelper.ForceArray((raw as any).Services.Service)
       .map((service) => MusicServicesService.ParseMusicService(service))
       .sort((a, b) => a.Name.localeCompare(b.Name));

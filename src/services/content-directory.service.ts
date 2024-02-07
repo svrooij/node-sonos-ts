@@ -119,7 +119,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       Result: 'string',
       NumberReturned: 'number',
@@ -140,7 +140,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       Browseable: 'boolean',
       ContainerUpdateIDs: 'string',

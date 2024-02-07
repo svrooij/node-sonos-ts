@@ -20,7 +20,7 @@ export class ZoneGroupTopologyService extends ZoneGroupTopologyServiceBase {
   async GetParsedZoneGroupState(): Promise<ZoneGroup[]> {
     const groupStateResponse = await this.GetZoneGroupState();
     if (typeof groupStateResponse.ZoneGroupState === 'string') {
-      const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState, '');
+      const decodedGroupState = XmlHelper.DecodeAndParseXml(groupStateResponse.ZoneGroupState);
       const groups = ArrayHelper.ForceArray((decodedGroupState as any).ZoneGroupState.ZoneGroups.ZoneGroup);
       return groups.map((g: any) => ZoneGroupTopologyService.ParseGroup(g));
     }
