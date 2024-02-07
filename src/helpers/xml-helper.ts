@@ -1,4 +1,4 @@
-import { parse } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
 import { encode, decode } from 'html-entities';
 
 export default class XmlHelper {
@@ -45,9 +45,11 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXml(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
+    // old settings { ignoreAttributes: false, attributeNamePrefix }
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix });
     const decoded = XmlHelper.DecodeXml(encodedXml);
     if (typeof decoded === 'undefined') return undefined;
-    return parse(decoded, { ignoreAttributes: false, attributeNamePrefix });
+    return parser.parse(decoded);
   }
 
   /**
@@ -59,8 +61,10 @@ export default class XmlHelper {
    * @memberof XmlHelper
    */
   static DecodeAndParseXmlNoNS(encodedXml: unknown, attributeNamePrefix = '_'): unknown {
+    // Old settings { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }
+    const parser = new XMLParser({ ignoreAttributes: false, attributeNamePrefix, removeNSPrefix: true });
     const decoded = XmlHelper.DecodeXml(encodedXml);
-    return decoded ? parse(decoded, { ignoreAttributes: false, ignoreNameSpace: true, attributeNamePrefix }) : undefined;
+    return decoded ? parser.parse(decoded) : undefined;
   }
 
   /**
@@ -98,5 +102,12 @@ export default class XmlHelper {
       return undefined;
     }
     return XmlHelper.DecodeXml(decodeURIComponent(input));
+  }
+
+  static Parse(input: unknown): unknown {
+    if (typeof input !== 'string' || input === '') {
+      return undefined;
+    }
+    return new XMLParser().parse(input);
   }
 }

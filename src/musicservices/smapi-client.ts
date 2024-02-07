@@ -1,7 +1,6 @@
 import fetch, { Request } from 'node-fetch';
-import { parse } from 'fast-xml-parser';
 import debug, { Debugger } from 'debug';
-
+import { XMLParser } from 'fast-xml-parser';
 import SmapiError from './smapi-error';
 import ArrayHelper from '../helpers/array-helper';
 
@@ -260,12 +259,14 @@ export class SmapiClient {
 
   private async handleRequestAndParseResponse<TResponse>(request: Request, action: string, isRetryWithNewCredentials = false): Promise<TResponse> {
     const response = await fetch(request);
+    // Old settings { ignoreNameSpace: true }
+    const parser = new XMLParser({ removeNSPrefix: true });
     // if (!response.ok) {
     //   this.debug('handleRequest error %d %s', response.status, response.statusText);
     //   throw new Error(`Http status ${response.status} (${response.statusText})`);
     // }
 
-    const result = parse(await response.text(), { ignoreNameSpace: true });
+    const result = parser.parse(await response.text());
     if (!result || !result.Envelope || !result.Envelope.Body) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);

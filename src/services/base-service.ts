@@ -1,10 +1,9 @@
 import fetch, { Request, Response } from 'node-fetch';
-
-import { parse } from 'fast-xml-parser';
 import { Guid } from 'guid-typescript';
 import { EventEmitter } from 'events';
 import debug, { Debugger } from 'debug';
 import TypedEmitter from 'typed-emitter';
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
 import IpHelper from '../helpers/ip-helper';
 import SoapHelper from '../helpers/soap-helper';
 import XmlHelper from '../helpers/xml-helper';
@@ -217,7 +216,7 @@ export default abstract class BaseService <TServiceEvent> {
       Object.entries(body).forEach((v) => {
         // Deconstruct v into key and value.
         const [key, value] = v;
-        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
+        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value as Track))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
         else messageBody += `<${key}>${value ?? ''}</${key}>`;
@@ -261,7 +260,7 @@ export default abstract class BaseService <TServiceEvent> {
       ? await response.text()
       : await this.handleErrorResponse<string>(action, response);
 
-    const result = parse(responseText);
+    const result = XmlHelper.Parse(responseText) as any;
     if (!result || !result['s:Envelope']) {
       this.debug('Invalid response for %s %o', action, result);
       throw new Error(`Invalid response for ${action}: ${result}`);
@@ -281,7 +280,7 @@ export default abstract class BaseService <TServiceEvent> {
   private async handleErrorResponse<TResponse>(action: string, response: Response): Promise<TResponse> {
     const responseText = await response.text();
     if (responseText !== '') {
-      const errorResponse = parse(responseText);
+      const errorResponse = XmlHelper.Parse(responseText) as any;
       if (errorResponse['s:Envelope'] && errorResponse['s:Envelope']['s:Body'] && errorResponse['s:Envelope']['s:Body']['s:Fault'] !== undefined) {
         const error = errorResponse['s:Envelope']['s:Body']['s:Fault'];
         this.debug('Sonos error on %s %o', action, error);
@@ -316,7 +315,7 @@ export default abstract class BaseService <TServiceEvent> {
 
   protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
     if (expectedType === 'Track | string' && typeof input === 'string') {
-      if (input.startsWith('&lt;')) {
+      if (input.startsWith('&lt;') || (input.startsWith('<') && XMLValidator.validate(input) === true)) {
         return MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(input), this.host, this.port);
       }
       return undefined; // undefined is more appropriate, but that would be a breaking change.
@@ -524,7 +523,9 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public ParseEvent(xml: string): void {
     this.debug('Got event');
-    const rawBody = parse(xml, { attributeNamePrefix: '', ignoreNameSpace: true }).propertyset.property;
+    // old settings  { attributeNamePrefix: '', ignoreNameSpace: true }
+    const parser = new XMLParser({ attributeNamePrefix: '', removeNSPrefix: true });
+    const rawBody = parser.parse(xml).propertyset.property;
     this.Events.emit(ServiceEvents.Unprocessed, rawBody);
     if (rawBody.LastChange) {
       const rawEventWrapper = XmlHelper.DecodeAndParseXmlNoNS(rawBody.LastChange, '') as any;

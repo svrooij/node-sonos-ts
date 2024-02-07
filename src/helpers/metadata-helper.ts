@@ -71,7 +71,8 @@ export default class MetadataHelper {
    * @memberof MetadataHelper
    */
   static TrackToMetaData(track: Track | undefined, includeResource = false, cdudn = 'RINCON_AssociatedZPUDN'): string {
-    if (track === undefined) {
+    // check if track is expected type Track
+    if (track === undefined || track === null) {
       return '';
     }
 
