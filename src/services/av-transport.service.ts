@@ -14,7 +14,7 @@ import {
 } from '../models';
 
 /**
- * Service that controls stuff related to transport (play/pause/next/special urls)
+ * Service that controls stuff related to transport (play/pause/next/special URLs)
  *
  * @export
  * @class AVTransportService
