@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
-import WebSocket from 'ws';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
@@ -640,36 +639,33 @@ export default class SonosDevice extends SonosDeviceBase {
     if (options.volume !== undefined && (options.volume < 1 || options.volume > 100)) {
       throw new Error('Volume needs to be between 1 and 100');
     }
-
-    if (!this.uuid.startsWith('RINCON')) {
-      await this.LoadUuid(true);
-    }
-
+    const previousValue = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
     // Have no idea if this should be public
     // https://github.com/bencevans/node-sonos/issues/530#issuecomment-1430039043
     const apiKey = '123e4567-e89b-12d3-a456-426655440000';
-    return new Promise<boolean>((resolve, reject) => {
-      const ws = new WebSocket(`wss://${this.host}:1443/websocket/api`, 'v1.api.smartspeaker.audio', {
-        headers: {
-          'X-Sonos-Api-Key': apiKey,
-        },
-        // Ignore certificate errors
-        rejectUnauthorized: false,
-      });
-      ws.on('error', (err) => {
-        reject(err);
-      });
-      // On socket opened send a message, and close the socket
-      ws.on('open', () => {
-        ws.send(`[{"namespace":"audioClip:1","command":"loadAudioClip","playerId":"${this.uuid}","sessionId":null,"cmdId":null},{"name": "Sonos TS Notification", "appId": "io.svrooij.sonos-ts", "streamUrl": "${options.trackUri}", "volume": ${options.volume ?? this.volume ?? 25} }]`, (err) => {
-          ws.close();
-          if (err) {
-            reject(err);
-            return;
-          }
-          resolve(true);
-        });
-      });
+    const body = {
+      name: 'Sonos TS Notification',
+      appId: 'io.svrooij.sonos-ts',
+      streamUrl: options.trackUri,
+      volume: options.volume ?? this.volume ?? 25,
+    };
+
+    return fetch(`https://${this.host}:1443/api/v1/players/local/audioClip`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Sonos-Api-Key': apiKey
+      },
+      body: JSON.stringify(body),
+    }).then((response) => {
+      if (response.ok) {
+        return true;
+      }
+      throw new Error(`Playing AudioClip failed ${response.status} ${response.statusText}`);
+    }).finally(() => {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = previousValue;
     });
   }
 
