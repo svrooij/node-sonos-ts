@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,29 +29,29 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async CommitLearnedIRCodes(input: { Name: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('CommitLearnedIRCodes', input); }
+  CommitLearnedIRCodes(input: { Name: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('CommitLearnedIRCodes', input); }
 
-  async GetIRRepeaterState():
-  Promise<GetIRRepeaterStateResponse> { return await this.SoapRequest<GetIRRepeaterStateResponse>('GetIRRepeaterState'); }
+  GetIRRepeaterState():
+  Promise<GetIRRepeaterStateResponse> { return this.SoapRequest<GetIRRepeaterStateResponse>('GetIRRepeaterState'); }
 
-  async GetLEDFeedbackState():
-  Promise<GetLEDFeedbackStateResponse> { return await this.SoapRequest<GetLEDFeedbackStateResponse>('GetLEDFeedbackState'); }
+  GetLEDFeedbackState():
+  Promise<GetLEDFeedbackStateResponse> { return this.SoapRequest<GetLEDFeedbackStateResponse>('GetLEDFeedbackState'); }
 
-  async IdentifyIRRemote(input: { Timeout: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('IdentifyIRRemote', input); }
+  IdentifyIRRemote(input: { Timeout: number }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('IdentifyIRRemote', input); }
 
-  async IsRemoteConfigured():
-  Promise<IsRemoteConfiguredResponse> { return await this.SoapRequest<IsRemoteConfiguredResponse>('IsRemoteConfigured'); }
+  IsRemoteConfigured():
+  Promise<IsRemoteConfiguredResponse> { return this.SoapRequest<IsRemoteConfiguredResponse>('IsRemoteConfigured'); }
 
-  async LearnIRCode(input: { IRCode: string; Timeout: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('LearnIRCode', input); }
+  LearnIRCode(input: { IRCode: string; Timeout: number }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('LearnIRCode', input); }
 
-  async SetIRRepeaterState(input: { DesiredIRRepeaterState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetIRRepeaterState', input); }
+  SetIRRepeaterState(input: { DesiredIRRepeaterState: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetIRRepeaterState', input); }
 
-  async SetLEDFeedbackState(input: { LEDFeedbackState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
+  SetLEDFeedbackState(input: { LEDFeedbackState: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {

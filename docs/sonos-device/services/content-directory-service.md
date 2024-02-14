@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Browse for local content
 
-The ContentDirectory service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-S9` / `v2-Sub`.
+The ContentDirectory service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S33` / `v2-S38` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -26,7 +26,7 @@ All actions that require input expect an object with the specified parameters, e
 
 ### Browse
 
-Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
+Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1), queue(Q:)). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
 
 ```js
 const result = await sonos.ContentDirectoryService.Browse({ ObjectID:..., BrowseFlag:..., Filter:..., StartingIndex:..., RequestedCount:..., SortCriteria:... });
@@ -36,11 +36,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **ObjectID** | `string` | The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `S:` / `SQ:` / `FV:2` / `R:0/0` / `R:0/1`) with optionally `:search+query` behind it. |
+| **ObjectID** | `string` | The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `FV:2` / `Q:`/ `R:0/0` / `R:0/1` / `S:` / `SQ:`) with optionally `:search+query` behind it. |
 | **BrowseFlag** | `string` | How to browse Allowed values: `BrowseMetadata` / `BrowseDirectChildren` |
 | **Filter** | `string` | Which fields should be returned `*` for all. |
 | **StartingIndex** | `number` | Paging, where to start, usually 0 |
-| **RequestedCount** | `number` | Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned.  |
+| **RequestedCount** | `number` | Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned. Using 0 is equivalent to 1,000 |
 | **SortCriteria** | `string` | Sort the results based on metadata fields. `+upnp:artist,+dc:title` for sorting on artist then on title. |
 
 Output object:
@@ -109,6 +109,8 @@ Output object:
 | **UpdateID** | `number` |  |
 
 ### GetAlbumArtistDisplayOption
+
+Get the current album art display option such as &#x60;WMP&#x60;, &#x60;ITUNES&#x60; or &#x60;NONE&#x60;
 
 ```js
 const result = await sonos.ContentDirectoryService.GetAlbumArtistDisplayOption();
@@ -214,6 +216,8 @@ Output object:
 
 ### RefreshShareIndex
 
+Updates the music library (share) index
+
 ```js
 const result = await sonos.ContentDirectoryService.RefreshShareIndex({ AlbumArtistDisplayOption:... });
 ```
@@ -222,7 +226,7 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **AlbumArtistDisplayOption** | `string` |  |
+| **AlbumArtistDisplayOption** | `string` | `WMP`, `ITUNES` or `NONE` |
 
 This actions returns a boolean whether or not the requests succeeded.
 

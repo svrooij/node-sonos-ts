@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,14 +29,14 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async GetCurrentConnectionIDs():
-  Promise<GetCurrentConnectionIDsResponse> { return await this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
+  GetCurrentConnectionIDs():
+  Promise<GetCurrentConnectionIDsResponse> { return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
 
-  async GetCurrentConnectionInfo(input: { ConnectionID: number }):
-  Promise<GetCurrentConnectionInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
+  GetCurrentConnectionInfo(input: { ConnectionID: number }):
+  Promise<GetCurrentConnectionInfoResponse> { return this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
 
-  async GetProtocolInfo():
-  Promise<GetProtocolInfoResponse> { return await this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
+  GetProtocolInfo():
+  Promise<GetProtocolInfoResponse> { return this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {

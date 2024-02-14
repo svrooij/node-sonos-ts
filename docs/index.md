@@ -15,7 +15,6 @@ permalink: /
 [![Sonos cli][badge_sonos-cli]][link_sonos-cli]
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
 
-[![Join us on Discord][badge_discord]][link_discord]
 [![Support me on Github][badge_sponsor]][link_sponsor]
 [![Follow on Twitter][badge_twitter]][link_twitter]
 
@@ -31,7 +30,7 @@ This library is in no way connected to [Sonos](//en.wikipedia.org/wiki/Sonos).
 
 ## Key features
 
-- [x] Auto generated client (supporting all features the normal app does). [Sonos api documentation and generator](https://svrooij.io/sonos-api-docs/)
+- [x] Auto generated client (supporting all features the normal app does). [Sonos api documentation and generator][link_sonos-docs]
 - [x] Auto discovery or one known device as starting point.
 - [x] Support for logical devices (grouped speakers) from the start.
 - [x] Access to all (generated) services.
@@ -43,10 +42,9 @@ This library is in no way connected to [Sonos](//en.wikipedia.org/wiki/Sonos).
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](https://github.com/svrooij/node-sonos-ts/tree/master/examples) you still need to use node (or typescript).
 
-See **[Documentation](https://svrooij.github.io/node-sonos-ts/getting-started.html)**
+See **[Documentation](https://sonos-ts.svrooij.io/getting-started.html)**
 
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
-[![Join us on Discord][badge_discord]][link_discord]
 
 ## Packages using sonos-ts
 
@@ -95,7 +93,6 @@ specification. Contributions of any kind welcome!
 [badge_build]: https://img.shields.io/github/actions/workflow/status/svrooij/node-sonos-ts/test-and-release.yml?branch=beta&style=for-the-badge
 [badge_contrib]: https://img.shields.io/github/all-contributors/svrooij/node-sonos-ts?style=for-the-badge
 [badge_coverage]: https://img.shields.io/coverallsCoverage/github/svrooij/node-sonos-ts?style=for-the-badge&branch=beta
-[badge_discord]: https://img.shields.io/discord/782374564054564875?style=for-the-badge
 [badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=for-the-badge
 [badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=for-the-badge
 [badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=for-the-badge
@@ -106,12 +103,11 @@ specification. Contributions of any kind welcome!
 [badge_twitter]: https://img.shields.io/twitter/follow/svrooij?logo=twitter&style=for-the-badge
 
 [link_build]: https://github.com/svrooij/node-sonos-ts/actions
-[link_discord]: https://discord.gg/VMtG6Ft36J
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
 [link_npm]: https://www.npmjs.com/package/@svrooij/sonos
 [link_sonos-cli]: https://github.com/svrooij/sonos-cli
-[link_sonos-docs]: https://svrooij.io/sonos-api-docs
-[link_sonos-mqtt]: https://svrooij.io/sonos2mqtt
-[link_sonos-typescript]: https://svrooij.io/node-sonos-ts
+[link_sonos-docs]: https://sonos.svrooij.io/
+[link_sonos-mqtt]: https://sonos2mqtt.svrooij.io/
+[link_sonos-typescript]: https://sonos-ts.svrooij.io/
 [link_sponsor]: https://github.com/sponsors/svrooij
 [link_twitter]: https://twitter.com/svrooij

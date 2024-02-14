@@ -1,5 +1,5 @@
 {
-  "$schema": "https://svrooij.io/sonos-api-docs/schema/template.json",
+  "$schema": "https://sonos.svrooij.io/schema/template.json",
   "name": "Sonos Typescript",
   "slug": "ts",
   "repository": "https://github.com/svrooij/node-sonos-ts/",
