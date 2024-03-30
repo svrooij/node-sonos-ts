@@ -73,6 +73,7 @@ export default class XmlHelper {
 
   static ParseEmbeddedXml(input: unknown): Record<string, unknown> | unknown {
     if (typeof input !== 'string' || input === '') return undefined;
+    if (input.indexOf('<') === -1) return input;
     const inputToParse = input.indexOf('\\"') > -1 ? input.replace('\\"', '"') : input;
 
     const xmlDocument = parseXml(inputToParse as string);
