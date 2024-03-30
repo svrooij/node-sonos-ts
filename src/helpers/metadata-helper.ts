@@ -156,7 +156,7 @@ export default class MetadataHelper {
       track.TrackUri = trackUri;
       track.ItemId = '-1';
       //track.UpnpClass = 'object.item.audioItem.audioBroadcast';
-      return track
+      return track;
     }
 
     if (trackUri.startsWith('x-rincon-cpcontainer:1006206ccatalog')) { // Amazon prime container
