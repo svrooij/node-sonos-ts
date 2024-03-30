@@ -3,9 +3,9 @@ const SonosDevice = require('../lib').SonosDevice
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 
 // Pre-start listening for events for more efficient handling.
-sonos.Events.on('currentTrack', (track) => {
-  console.log('TrackChanged %o', track);
-});
+// sonos.Events.on('currentTrack', (track) => {
+//   console.log('TrackChanged %o', track);
+// });
 
 
 // setTimeout(async () => {
@@ -25,17 +25,16 @@ sonos.Events.on('currentTrack', (track) => {
 sonos.PlayNotificationAudioClip({
   trackUri: 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', // Can be any uri sonos understands
   onlyWhenPlaying: false, // make sure that it only plays when you're listening to music. So it won't play when you're sleeping.
-  volume: 80, // Set the volume for the notification (and revert back afterwards)
+  volume: 30, // Set the volume for the notification (and revert back afterwards)
 })
   .then(queued => {
-    console.log('Queued notification %o', queued)
-    
+    console.log('Played notification %o', queued)
   })
   .catch((err) => {
     console.error(err);
   })
   .finally(() => {
-    sonos.CancelEvents();
+    //sonos.CancelEvents();
   });
 
 // If you have a TTS endpoint, you can do text-to-speech

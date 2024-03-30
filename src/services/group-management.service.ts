@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,17 +29,17 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async AddMember(input: { MemberID: string; BootSeq: number }):
-  Promise<AddMemberResponse> { return await this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
+  AddMember(input: { MemberID: string; BootSeq: number }):
+  Promise<AddMemberResponse> { return this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
 
-  async RemoveMember(input: { MemberID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
+  RemoveMember(input: { MemberID: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
 
-  async ReportTrackBufferingResult(input: { MemberID: string; ResultCode: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
+  ReportTrackBufferingResult(input: { MemberID: string; ResultCode: number }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
 
-  async SetSourceAreaIds(input: { DesiredSourceAreaIds: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
+  SetSourceAreaIds(input: { DesiredSourceAreaIds: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {

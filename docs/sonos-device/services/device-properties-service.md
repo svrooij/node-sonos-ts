@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Modify device properties, like LED status and stereo pairs
 
-The DeviceProperties service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-S9` / `v2-Sub`.
+The DeviceProperties service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S33` / `v2-S38` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -40,6 +40,8 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### AddHTSatellite
 
+Adds satellites and/or a sub woofer to a (main) player. The satellites become hidden. The main player RINCON_* is mandatory. RR: right - rear, LF: left - front, SW: subwoofer
+
 ```js
 const result = await sonos.DevicePropertiesService.AddHTSatellite({ HTSatChanMapSet:... });
 ```
@@ -48,9 +50,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **HTSatChanMapSet** | `string` |  |
+| **HTSatChanMapSet** | `string` | example: `RINCON_000PPP1400:LF,RF;RINCON_000RRR1400:RR;RINCON_000SSS1400:LR;RINCON_000QQQ1400:SW` |
 
 This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Not all speakers support satellites or sub woofer. Satellites should be of same type (e.g. Play:1)
 
 ### CreateStereoPair
 
@@ -68,7 +72,7 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** No all speakers support StereoPairs
+**Remarks** Not all speakers support StereoPairs
 
 ### EnterConfigMode
 
@@ -294,6 +298,8 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### RemoveHTSatellite
 
+Removes a satellite or a sub woofer from (main) player. The satellite becomes visible.
+
 ```js
 const result = await sonos.DevicePropertiesService.RemoveHTSatellite({ SatRoomUUID:... });
 ```
@@ -302,9 +308,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **SatRoomUUID** | `string` |  |
+| **SatRoomUUID** | `string` | example: `RINCON_000RRR1400` |
 
 This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Not all speakers support satellites or sub woofer. Multiples RINCON_* are not allowed.
 
 ### RoomDetectionStartChirping
 
@@ -356,7 +364,7 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** No all speakers support StereoPairs
+**Remarks** Not all speakers support StereoPairs
 
 ### SetAutoplayLinkedZones
 

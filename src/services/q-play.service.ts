@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,8 +29,8 @@ export class QPlayService extends BaseService<undefined> {
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async QPlayAuth(input: { Seed: string }):
-  Promise<QPlayAuthResponse> { return await this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
+  QPlayAuth(input: { Seed: string }):
+  Promise<QPlayAuthResponse> { return this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {

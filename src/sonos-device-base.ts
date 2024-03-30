@@ -2,7 +2,7 @@
  * Sonos base device with all services defined.
  *
  * Stephan van Rooij
- * https://svrooij.io/sonos-api-docs
+ * https://sonos.svrooij.io/
  *
  * This file is generated, do not edit manually.
  */
@@ -95,7 +95,7 @@ export default class SonosDeviceBase {
   private avtransportservice: AVTransportService | undefined;
 
   /**
-    * Service that controls stuff related to transport (play/pause/next/special urls)
+    * Service that controls stuff related to transport (play/pause/next/special URLs)
     * will be initialized on first use.
     *
     * @readonly

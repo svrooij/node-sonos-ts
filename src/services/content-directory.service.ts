@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -60,63 +60,71 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
 
   // #region actions
   /**
-   * Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
+   * Browse for content: Music library (A), share(S:), Sonos playlists(SQ:), Sonos favorites(FV:2), radio stations(R:0/0), radio shows(R:0/1), queue(Q:)). Recommendation: Send one request, check the &#x60;TotalMatches&#x60; and - if necessary - do additional requests with higher &#x60;StartingIndex&#x60;. In case of duplicates only the first is returned! Example: albums with same title, even if artists are different
    *
-   * @param {string} input.ObjectID - The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `S:` / `SQ:` / `FV:2` / `R:0/0` / `R:0/1`) with optionally `:search+query` behind it.
+   * @param {string} input.ObjectID - The search query, (`A:ARTIST` / `A:ALBUMARTIST` / `A:ALBUM` / `A:GENRE` / `A:COMPOSER` / `A:TRACKS` / `A:PLAYLISTS` / `FV:2` / `Q:`/ `R:0/0` / `R:0/1` / `S:` / `SQ:`) with optionally `:search+query` behind it.
    * @param {string} input.BrowseFlag - How to browse [ 'BrowseMetadata' / 'BrowseDirectChildren' ]
    * @param {string} input.Filter - Which fields should be returned `*` for all.
    * @param {number} input.StartingIndex - Paging, where to start, usually 0
-   * @param {number} input.RequestedCount - Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned.
+   * @param {number} input.RequestedCount - Paging, number of items, maximum is 1,000. This parameter does NOT restrict the number of items being searched (filter) but only the number being returned. Using 0 is equivalent to 1,000
    * @param {string} input.SortCriteria - Sort the results based on metadata fields. `+upnp:artist,+dc:title` for sorting on artist then on title.
    * @remarks (1) If the title contains an apostrophe the returned uri will contain a `&apos;`. (2) Some libraries support a BrowseAndParse, so you don't have to parse the xml.
    */
-  async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
-  Promise<BrowseResponse> { return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
+  Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
+  Promise<BrowseResponse> { return this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
 
-  async CreateObject(input: { ContainerID: string; Elements: string }):
-  Promise<CreateObjectResponse> { return await this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
+  CreateObject(input: { ContainerID: string; Elements: string }):
+  Promise<CreateObjectResponse> { return this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
 
-  async DestroyObject(input: { ObjectID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
+  DestroyObject(input: { ObjectID: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
 
-  async FindPrefix(input: { ObjectID: string; Prefix: string }):
-  Promise<FindPrefixResponse> { return await this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
+  FindPrefix(input: { ObjectID: string; Prefix: string }):
+  Promise<FindPrefixResponse> { return this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
 
-  async GetAlbumArtistDisplayOption():
-  Promise<GetAlbumArtistDisplayOptionResponse> { return await this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
+  /**
+   * Get the current album art display option such as &#x60;WMP&#x60;, &#x60;ITUNES&#x60; or &#x60;NONE&#x60;
+   */
+  GetAlbumArtistDisplayOption():
+  Promise<GetAlbumArtistDisplayOptionResponse> { return this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
 
-  async GetAllPrefixLocations(input: { ObjectID: string }):
-  Promise<GetAllPrefixLocationsResponse> { return await this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
+  GetAllPrefixLocations(input: { ObjectID: string }):
+  Promise<GetAllPrefixLocationsResponse> { return this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
 
-  async GetBrowseable():
-  Promise<GetBrowseableResponse> { return await this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
+  GetBrowseable():
+  Promise<GetBrowseableResponse> { return this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
 
-  async GetLastIndexChange():
-  Promise<GetLastIndexChangeResponse> { return await this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
+  GetLastIndexChange():
+  Promise<GetLastIndexChangeResponse> { return this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
 
-  async GetSearchCapabilities():
-  Promise<GetSearchCapabilitiesResponse> { return await this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
+  GetSearchCapabilities():
+  Promise<GetSearchCapabilitiesResponse> { return this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
 
-  async GetShareIndexInProgress():
-  Promise<GetShareIndexInProgressResponse> { return await this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
+  GetShareIndexInProgress():
+  Promise<GetShareIndexInProgressResponse> { return this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
 
-  async GetSortCapabilities():
-  Promise<GetSortCapabilitiesResponse> { return await this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
+  GetSortCapabilities():
+  Promise<GetSortCapabilitiesResponse> { return this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
 
-  async GetSystemUpdateID():
-  Promise<GetSystemUpdateIDResponse> { return await this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
+  GetSystemUpdateID():
+  Promise<GetSystemUpdateIDResponse> { return this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
 
-  async RefreshShareIndex(input: { AlbumArtistDisplayOption: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
+  /**
+   * Updates the music library (share) index
+   *
+   * @param {string} input.AlbumArtistDisplayOption - `WMP`, `ITUNES` or `NONE`
+   */
+  RefreshShareIndex(input: { AlbumArtistDisplayOption: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
 
-  async RequestResort(input: { SortOrder: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
+  RequestResort(input: { SortOrder: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
 
-  async SetBrowseable(input: { Browseable: boolean }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
+  SetBrowseable(input: { Browseable: boolean }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
 
-  async UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
+  UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   // #endregion
 
   protected responseProperties(): { [key: string]: string } {
