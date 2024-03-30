@@ -652,14 +652,14 @@ export default class SonosDevice extends SonosDeviceBase {
     };
 
     return fetch(`https://${this.host}:1443/api/v1/players/local/audioClip`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Sonos-Api-Key': apiKey
-      },
-      body: JSON.stringify(body),
-    }).then((response) => {
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Sonos-Api-Key': apiKey,
+        },
+        body: JSON.stringify(body),
+      }).then((response) => {
       if (response.ok) {
         return true;
       }
