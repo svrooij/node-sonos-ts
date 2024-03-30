@@ -314,7 +314,7 @@ export default abstract class BaseService <TServiceEvent> {
   }
 
   protected parseValue(name: string, input: unknown, expectedType: string): Track | string | boolean | number | unknown {
-    if (expectedType === 'Track | string' && typeof input === 'string') {
+    if (expectedType === 'Track | string' && typeof input === 'string' && (input.startsWith('&lt;') || input.startsWith('<'))) {
       const trackObject = XmlHelper.DecodeAndParseXml(input);
       return MetadataHelper.ParseDIDLTrack(trackObject, this.host, this.port);
     }
