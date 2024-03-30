@@ -83,6 +83,7 @@ Currently supported url's for metadata guessing:
 - `spotify:playlist:37i9dQZF1DXcx1szy2g67M` - Spotify playlist (has to be added to queue).
 - `spotify:user:spotify:playlist:37i9dQZF1DX1htCFhfVtyK` - Spotify playlist of a different user (summer rewind from user spotify in this case).
 - `radio:s113577` - Tunein radio station.
+- `x-rincon-mp3radio://https://....` - Direct stream url (mp3 or acc).
 
 This library will guess the metadata automatically for the following methods, but you can also use the **MetadataHelper**, yourself.
 
