@@ -49,8 +49,10 @@ export default class MetadataHelper {
       const uri = Array.isArray(didlItem['upnp:albumArtURI']) ? didlItem['upnp:albumArtURI'][0] : didlItem['upnp:albumArtURI'];
       // Github user @hklages discovered that the album uri sometimes doesn't work because of encoding:
       // See https://github.com/svrooij/node-sonos-ts/issues/93 if you found and album art uri that doesn't work.
-      const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
-      track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
+      if (typeof uri === 'string' && uri.length > 0) {
+        const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
+        track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
+      }
     }
 
     if (didlItem.res) {
@@ -147,6 +149,13 @@ export default class MetadataHelper {
       track.UpnpClass = 'object.item.audioItem.audioBroadcast';
       track.Title = 'Some radio station';
       track.ItemId = '10092020_xxx_xxxx'; // Add station ID from url (regex?)
+      return track;
+    }
+
+    if (trackUri.startsWith('x-rincon-mp3radio://http')) {
+      track.TrackUri = trackUri;
+      track.ItemId = '-1';
+      //track.UpnpClass = 'object.item.audioItem.audioBroadcast';
       return track;
     }
 

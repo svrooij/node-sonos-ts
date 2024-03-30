@@ -20,6 +20,7 @@ export type StrongSonosEvents = {
   volume: (volume: number) => void;
 
   coordinator: (uuid: string) => void;
+  groupid: (id: string) => void;
   groupname: (name: string) => void;
 
   subscriptionError: (error: EventsError) => void;

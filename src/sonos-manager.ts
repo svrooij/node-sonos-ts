@@ -96,12 +96,12 @@ export default class SonosManager {
 
   private InitializeWithGroups(groups: ZoneGroup[]): boolean {
     groups.forEach((g) => {
-      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events });
+      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events, groupId: g.groupId });
       if (this.devices.findIndex((v) => v.Uuid === coordinator.Uuid) === -1) this.devices.push(coordinator);
       g.members.forEach((m) => {
         // Check if device exists
         if (this.devices.findIndex((v) => v.Uuid === m.uuid) === -1) {
-          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events }));
+          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId }));
         }
       });
     });
@@ -122,7 +122,7 @@ export default class SonosManager {
       data.ZoneGroupState.forEach((g) => {
         let coordinator = this.devices.find((d) => d.Uuid === g.coordinator.uuid);
         if (coordinator === undefined) {
-          coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { coordinator: undefined, name: g.name, managerEvents: this.events });
+          coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { coordinator: undefined, name: g.name, managerEvents: this.events, groupId: g.groupId });
           this.devices.push(coordinator);
           this.events.emit('NewDevice', coordinator);
         }
@@ -131,13 +131,13 @@ export default class SonosManager {
         g.members
           .filter((m) => !this.devices.some((d) => d.Uuid === m.uuid))
           .forEach((m) => {
-            const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events });
+            const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId });
             this.devices.push(newDevice);
             this.events.emit('NewDevice', newDevice);
           });
 
         g.members.forEach((m) => {
-          this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name });
+          this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name, groupId: g.groupId });
         });
       });
     }

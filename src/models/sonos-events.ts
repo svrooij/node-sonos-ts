@@ -29,6 +29,10 @@ export enum SonosEvents {
    */
   Coordinator = 'coordinator',
   /**
+   * This event is emitted if the group id changed
+   */
+  GroupId = 'groupid',
+  /**
    * This event is emitted if the groupname changes.
    */
   GroupName = 'groupname',
