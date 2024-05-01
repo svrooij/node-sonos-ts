@@ -544,6 +544,15 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
+  /**
+   * Parse a single event property
+   *
+   * @param {string} name The name of the property
+   * @param {unknown} originalValue The original value of the property
+   * @param {string} type The expected type of the property
+   * @memberof BaseService
+   * @remarks This method can be overridden in subclasses to handle special cases, like ChannelValue for Mute and Volume
+   */
   protected ResolveEventPropertyValue(name: string, originalValue: unknown, type: string): unknown {
     if (typeof originalValue === 'string' && (originalValue.startsWith('&lt;') || originalValue.startsWith('<'))) {
       if (name.endsWith('MetaData')) {
@@ -573,10 +582,11 @@ export default abstract class BaseService <TServiceEvent> {
     const keys = Object.keys(properties).filter((k) => inKeys.indexOf(k) > -1);
 
     keys.forEach((k) => {
+      const expectedType = properties[k];
       const originalValue = input[k].val ?? input[k];
       // validate that originalValue is not undefined or empty or is not an empty object
       if (originalValue === undefined || originalValue === '' || (typeof originalValue === 'object' && Object.keys(originalValue).length === 0)) return;
-      output[k] = this.ResolveEventPropertyValue(k, originalValue, properties[k]);
+      output[k] = this.ResolveEventPropertyValue(k, originalValue, expectedType);
     });
 
     if (Object.keys(output).length === 0) {
