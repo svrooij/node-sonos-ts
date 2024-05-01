@@ -21,4 +21,48 @@ export class RenderingControlService extends RenderingControlServiceBase {
     }
     return super.ResolveEventPropertyValue(name, originalValue, type);
   }
+
+  /**
+   * Get nightmode status of playbar.
+   *
+   * @returns {Promise<boolean>}
+   * @memberof RenderingControlService
+   */
+  public async GetNightMode(): Promise<boolean> {
+    return (await this.GetEQ({ InstanceID: 0, EQType: 'NightMode' })).CurrentValue === 1;
+  }  
+  
+  /**
+   * Turn on/off night mode, on your playbar.
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: dialogLevel === true ? 1 : 0 })
+   *
+   * @param {boolean} nightmode
+   * @returns {Promise<boolean>}
+   * @memberof RenderingControlService
+   */
+  public SetNightMode(nightmode: boolean): Promise<boolean> {
+    return this.SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 });
+  }
+
+  /**
+   * Get Speech Enhancement status of playbar
+   *
+   * @returns {Promise<boolean>}
+   * @memberof RenderingControlService
+   */
+  public async GetSpeechEnhancement(): Promise<boolean> {
+    return (await this.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })).CurrentValue === 1;
+  }
+
+  /**
+   * Turn on/off speech enhancement, on your playbar,
+   * shortcut to .RenderingControlService.SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 })
+   *
+   * @param {boolean} dialogLevel
+   * @returns {Promise<boolean>}
+   * @memberof RenderingControlService
+   */
+  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return this.SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 });
+  }
 }

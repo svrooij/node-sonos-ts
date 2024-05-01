@@ -1131,8 +1131,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async GetNightMode(): Promise<boolean> {
-    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })).CurrentValue === 1;
+  public GetNightMode(): Promise<boolean> {
+    return this.RenderingControlService.GetNightMode();
   }
 
   /**
@@ -1165,8 +1165,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async GetSpeechEnhancement(): Promise<boolean> {
-    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })).CurrentValue === 1;
+  public GetSpeechEnhancement(): Promise<boolean> {
+    return this.RenderingControlService.GetSpeechEnhancement();
   }
 
   /**
@@ -1254,9 +1254,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SetNightMode(nightmode: boolean): Promise<boolean> {
-    return await this.RenderingControlService
-      .SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 });
+  public SetNightMode(nightmode: boolean): Promise<boolean> {
+    return this.RenderingControlService.SetNightMode(nightmode);
   }
 
   /**
@@ -1319,9 +1318,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
-    return await this.RenderingControlService
-      .SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 });
+  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return this.RenderingControlService.SetSpeechEnhancement(dialogLevel);
   }
 
   /**
