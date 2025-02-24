@@ -3,7 +3,6 @@ import SonosManager from '../sonos-manager';
 import SonosDeviceDiscovery from '../sonos-device-discovery';
 import AsyncHelper from '../helpers/async-helper';
 import { ZoneGroupTopologyService } from '../services';
-import { basename } from 'path';
 
 class TestSonosManager extends SonosManager {
   public zoneService: ZoneGroupTopologyService | undefined = undefined;
@@ -35,24 +34,23 @@ class TestSonosManager extends SonosManager {
     TestHelpers.mockZoneGroupState(scope);
     process.env.SONOS_DISABLE_EVENTS = 'true';
     const manager = new TestSonosManager();
-    manager.InitializeFromDevice(TestHelpers.testHost, port)
-      .then(() => {});
     // Setup a fix state timeout
     const failed = setTimeout(() => {
       manager.CancelSubscription();
       delete process.env.SONOS_DISABLE_EVENTS;
-      fail();
+      throw new Error('Failed to emit new device event');
     }, 1500);
 
-    // This event should be triggered
-    manager.OnNewDevice((device) => {
-      manager.CancelSubscription();
-      delete process.env.SONOS_DISABLE_EVENTS;
-      clearTimeout(failed);
-      done();
-    });
-
-
+    manager.InitializeFromDevice(TestHelpers.testHost, port)
+      .then(() => {
+        // This event should be triggered
+        manager.OnNewDevice((device) => {
+          manager.CancelSubscription();
+          delete process.env.SONOS_DISABLE_EVENTS;
+          clearTimeout(failed);
+          done();
+        });
+      });
   }, 5000);
 
   it('Initializes from device', async () => {
