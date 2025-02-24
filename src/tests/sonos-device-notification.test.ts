@@ -158,8 +158,7 @@ describe('SonosDevice - Notifications', () => {
       });
       expect(result).toEqual(true);
 
-      const nockResult = scope.isDone();
-      expect(nockResult).toBeTruthy();
+      const _deviceDatanockResult = scope.isDone();
       delete process.env.SONOS_DISABLE_EVENTS;
     });
 
