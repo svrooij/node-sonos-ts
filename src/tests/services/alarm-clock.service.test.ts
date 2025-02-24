@@ -180,8 +180,7 @@ describe('AlarmClockService', () => {
         });
       } catch (error) {
         expect(error).toBeDefined();
-        expect(error).toHaveProperty('message');
-        expect(error.message).toContain('500');
+        expect(error).toHaveProperty('message', 'Alarm with ID 500 not found');
         return;
       }
       expect(false).toBeTruthy(); // This should not be reached.
