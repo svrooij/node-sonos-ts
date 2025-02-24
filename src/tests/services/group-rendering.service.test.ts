@@ -34,7 +34,7 @@ describe('GroupRenderingControlService', () => {
       TestHelpers.mockSoapError('/MediaRenderer/GroupRenderingControl/Control',
         'SetGroupMute', '<u:SetGroupMute xmlns:u="urn:schemas-upnp-org:service:GroupRenderingControl:1"><InstanceID>0</InstanceID><DesiredMute>1</DesiredMute></u:SetGroupMute>',
         701);
-      await expect(async() => await service.SetGroupMute({ InstanceID: 0, DesiredMute: true})).toThrow('Player isn&#x27;t the coordinator');
+      await TestHelpers.expectThrowsAsync(() => service.SetGroupMute({ InstanceID: 0, DesiredMute: true}), undefined, 'Player isn&#x27;t the coordinator');
     })
     it('works', async () => {
       const service = new GroupRenderingControlService(TestHelpers.testHost, 1400);

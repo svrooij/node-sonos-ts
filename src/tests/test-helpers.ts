@@ -241,20 +241,20 @@ export class TestHelpers {
     });
     
   }
-
-  // static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
-  //   let error: any = undefined;
-  //   try {
-  //     await method();
-  //   } catch (err) {
-  //     error = err;
-  //   }
-  //   expect(error).toBeDefined();
-  //   if (errorMessage) {
-  //     expect(error).toHaveProperty('message', errorMessage);
-  //   }
-  //   if (upnpErrorDescription) {
-  //     expect(error).toHaveProperty('UpnpErrorDescription', upnpErrorDescription);
-  //   }
-  // }
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
+    let error: any = undefined;
+    try {
+      await method();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toBeDefined();
+    if (errorMessage) {
+      expect(error).toHaveProperty('message', errorMessage);
+    }
+    if (upnpErrorDescription) {
+      expect(error).toHaveProperty('UpnpErrorDescription', upnpErrorDescription);
+    }
+  }
 }
