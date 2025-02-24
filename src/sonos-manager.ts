@@ -22,7 +22,7 @@ export default class SonosManager {
 
   private devices: SonosDevice[] = [];
 
-  private zoneService: ZoneGroupTopologyService | undefined;
+  protected zoneService: ZoneGroupTopologyService | undefined;
 
   constructor() {
     this.events = new EventEmitter();

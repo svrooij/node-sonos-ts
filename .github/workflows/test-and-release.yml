@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [16, 18]
+        node: [22, 20, 18]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,7 +43,7 @@ jobs:
         run: npm run test:jest
 
       - name: Send data to Coveralls
-        if: always() && matrix.node == 16
+        if: always() && matrix.node == 22
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}          
@@ -57,10 +57,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Use node 18
+      - name: Use node 22
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
         run: npm ci
@@ -87,7 +87,7 @@ jobs:
         if: steps.semantic.outputs.new_release_published == 'true'
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
           registry-url: 'https://npm.pkg.github.com'
           scope: 'svrooij'
 
