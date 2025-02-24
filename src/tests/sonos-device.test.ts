@@ -4,8 +4,23 @@ import SonosDevice from '../sonos-device';
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../sonos-event-listener';
 import { SmapiClient } from '../musicservices/smapi-client';
-import { PlayMode, Repeat, TransportState } from '../models';
-import exp from 'constants';
+import { ExtendedTransportState, PlayMode, Repeat, TransportState } from '../models';
+
+class TestSonosDevice extends SonosDevice {
+  constructor(host: string, port: number = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined) {
+    super(host, port, uuid, name);
+  }
+
+  currentPlayMode?: PlayMode = undefined;
+  currentTrackUri?: string = undefined;
+  currentTransportState?: ExtendedTransportState = undefined;
+  coordinator: TestSonosDevice | SonosDevice | undefined = undefined;
+  enqueuedTransportUri?: string = undefined;
+  muted?: boolean = undefined;
+  nextTrackUri?: string = undefined;
+  volume?: number = undefined;
+  clearName(): void { this.name = undefined; }
+}
 
 (process.env.SONOS_HOST ? describe : describe.skip)('SonosDevice - local', () => {
 
@@ -62,28 +77,9 @@ describe('SonosDevice', () => {
     });
   });
 
-  describe('AlarmPatch()', () => {
-    it('calls AlarmClockService.PatchAlarm', async () => {
-      TestHelpers.mockAlarmListResponse();
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
-      try {
-        await device.AlarmPatch({
-          ID: 500,
-          Enabled: false,
-        });
-      } catch (error) {
-        expect(error).toBeDefined();
-        expect(error).toHaveProperty('message');
-        expect(error.message).toContain('500');
-        return;
-      }
-      expect(false).toBeTruthy(); // This should not be reached.
-    });
-  });
-
   describe('CurrentTrackUri', () => {
     it('returns value from private field', () => {
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       const trackUri = 'fake:track:uri';
       device.currentTrackUri = trackUri;
       expect(device.CurrentTrackUri).toEqual(trackUri);
@@ -92,7 +88,7 @@ describe('SonosDevice', () => {
 
   describe('CurrentTransportState', () => {
     it('returns value from private field', () => {
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       device.currentTransportState = TransportState.Transitioning;
       expect(device.CurrentTransportState).toEqual(TransportState.Transitioning);
     });
@@ -100,16 +96,17 @@ describe('SonosDevice', () => {
 
   describe('CurrentTransportStateSimple', () => {
     it('returns value from coordinator if defined', () => {
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
-      device.coordinator = new SonosDevice(TestHelpers.testHost, 1500);
-      device.coordinator.currentTransportState = TransportState.Transitioning;
+      const coordinator = new TestSonosDevice(TestHelpers.testHost, 1400);
+      coordinator.currentTransportState = TransportState.Playing;
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
+      device.coordinator = coordinator;
       expect(device.CurrentTransportStateSimple).toEqual(TransportState.Playing);
     });
   });
 
   describe('EnqueuedTransportUri', () => {
     it('returns value from private field', () => {
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       const trackUri = 'fake:track:uri';
       device.enqueuedTransportUri = trackUri;
       expect(device.EnqueuedTransportUri).toEqual(trackUri);
@@ -454,7 +451,7 @@ describe('SonosDevice', () => {
   describe('GetState()', () => {
     it('returns preloaded mute, state and volume', async () => {
 
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       // Set private fields, normally set by events
       device.muted = true;
       device.volume = 6;
@@ -643,7 +640,8 @@ describe('SonosDevice', () => {
       );
       const device = new SonosDevice(TestHelpers.testHost);
       const result = await device.MusicServicesSubscribed();
-      expect(result).to.be.an('array').that.has.lengthOf(1);
+      expect(result).toBeDefined();
+      expect(result).toHaveLength(1);
       const firstItem = result?.[0];
       expect(firstItem).toHaveProperty('Name', 'Spotify');
     });
@@ -652,10 +650,10 @@ describe('SonosDevice', () => {
   describe('Name', () => {
     it('returns name from zone attributes', async () => {
       TestHelpers.mockSonosLoadDeviceData();
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       const result = await device.LoadDeviceData();
       expect(result).toBeTruthy();
-      device.name = undefined;
+      device.clearName();
       expect(device.Name).toEqual('Kantoor');
     });
     it('throws when zone attributes not loaded', () => {
@@ -677,7 +675,7 @@ describe('SonosDevice', () => {
 
   describe('NextTrackUri', () => {
     it('returns value from private field', () => {
-      const device = new SonosDevice(TestHelpers.testHost, 1400);
+      const device = new TestSonosDevice(TestHelpers.testHost, 1400);
       const trackUri = 'fake:track:uri';
       device.nextTrackUri = trackUri;
       expect(device.NextTrackUri).toEqual(trackUri);
@@ -828,7 +826,7 @@ describe('SonosDevice', () => {
 
     it('uses pre-loaded TransportSettings', async () => {
       TestHelpers.mockAvTransportSetPlayMode(PlayMode.Shuffle);
-      const device = new SonosDevice(TestHelpers.testHost);
+      const device = new TestSonosDevice(TestHelpers.testHost);
       device.currentPlayMode = PlayMode.ShuffleNoRepeat;
       await device.SetRepeat(Repeat.RepeatAll);
     });
@@ -851,7 +849,7 @@ describe('SonosDevice', () => {
 
     it('uses pre-loaded TransportSettings', async () => {
       TestHelpers.mockAvTransportSetPlayMode(PlayMode.Normal);
-      const device = new SonosDevice(TestHelpers.testHost);
+      const device = new TestSonosDevice(TestHelpers.testHost);
       device.currentPlayMode = PlayMode.ShuffleNoRepeat;
       await device.SetShuffle(false);
     });

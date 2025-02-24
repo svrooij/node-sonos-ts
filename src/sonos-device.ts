@@ -33,13 +33,13 @@ import XmlHelper from './helpers/xml-helper';
  * @extends {SonosDeviceBase}
  */
 export default class SonosDevice extends SonosDeviceBase {
-  private name: string | undefined;
+  protected name: string | undefined;
 
   private groupName: string | undefined;
 
   private groupId: string | undefined;
 
-  private coordinator: SonosDevice | undefined;
+  protected coordinator: SonosDevice | undefined;
 
   /**
    * Creates an instance of SonosDevice.
@@ -980,7 +980,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #endregion
 
   // #region Properties
-  private currentPlayMode?: PlayMode;
+  protected currentPlayMode?: PlayMode;
 
   /**
    * Current play mode, only set when subscribed to events.
@@ -993,7 +993,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.currentPlayMode;
   }
 
-  private currentTrackUri?: string;
+  protected currentTrackUri?: string;
 
   /**
    * Current track uri, only set when subscribed to events.
@@ -1006,7 +1006,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.currentTrackUri;
   }
 
-  private enqueuedTransportUri?: string;
+  protected enqueuedTransportUri?: string;
 
   /**
    * Current EnqueuedTransportUri only set when listening to events
@@ -1019,7 +1019,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.enqueuedTransportUri;
   }
 
-  private nextTrackUri?: string;
+  protected nextTrackUri?: string;
 
   /**
    * Next Track Uri only set when listening to events
@@ -1032,7 +1032,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.nextTrackUri;
   }
 
-  private currentTransportState?: ExtendedTransportState;
+  protected currentTransportState?: ExtendedTransportState;
 
   /**
    * Current transport state, only set when listening for events
@@ -1070,7 +1070,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public get Host(): string { return this.host; }
 
-  private muted?: boolean;
+  protected muted?: boolean;
 
   /**
    * Device muted, only set when subscribed for events.
@@ -1107,7 +1107,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public get Uuid(): string { return this.uuid; }
 
-  private volume?: number;
+  protected volume?: number;
 
   /**
    * Current volume of the player, only set when subscribed for events.

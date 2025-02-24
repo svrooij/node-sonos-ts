@@ -1,10 +1,10 @@
-import { expect }  from 'chai';
 import { randomUUID } from 'crypto';
 import SonosDevice from '../sonos-device';
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../sonos-event-listener';
 import AsyncHelper from '../helpers/async-helper';
 import fetch from 'node-fetch';
+import exp from 'constants';
 
 describe('SonosDevice - Events', () => {
   beforeAll(() => {
@@ -46,10 +46,11 @@ describe('SonosDevice - Events', () => {
 
     const statusAfter = SonosEventListener.DefaultInstance.GetStatus();
     expect(statusAfter.isListening).toBeTruthy();
-    expect(statusAfter.currentSubscriptions).to.be.an('array').that.has.lengthOf(2);
+    expect(statusAfter.currentSubscriptions).toBeDefined()
+    expect(statusAfter.currentSubscriptions).toHaveLength(2);
 
     const avSubscription = statusAfter.currentSubscriptions.find((s) => s.sid === avtransportSid);
-    expect(avSubscription).to.be.not.undefined;
+    expect(avSubscription).toBeDefined();
     expect(avSubscription?.uuid).toEqual(randomUuid);
     expect(avSubscription?.service).toEqual('AVTransport');
   });
@@ -88,13 +89,15 @@ describe('SonosDevice - Events', () => {
     await AsyncHelper.Delay(500); // Delay is needed because the subscription is registered out-of-band.
 
     const statusBefore = SonosEventListener.DefaultInstance.GetStatus();
-    expect(statusBefore.currentSubscriptions).to.be.an('array').that.has.lengthOf(2);
+    expect(statusBefore.currentSubscriptions).toBeDefined()
+    expect(statusBefore.currentSubscriptions).toHaveLength(2);
 
     device.Events.removeAllListeners('currentTrack');
     await AsyncHelper.Delay(500); // Delay is needed because the subscription is registered out-of-band.
 
     const statusAfter = SonosEventListener.DefaultInstance.GetStatus();
-    expect(statusAfter.currentSubscriptions).to.be.an('array').that.has.lengthOf(0);
+    expect(statusAfter.currentSubscriptions).toBeDefined();
+    expect(statusAfter.currentSubscriptions).toHaveLength(0);
     
   });
 
@@ -209,7 +212,7 @@ describe.skip('SonosEventListener - HTTP', () => {
     const response = await fetch('http://localhost:6329/nonexisting');
     
     expect(response.ok).toBe(false);
-    expect(response.status).toEqual(404, 'Status code should be 404');
+    expect(response.status).toEqual(404);
   }, 1000);
 
 });
