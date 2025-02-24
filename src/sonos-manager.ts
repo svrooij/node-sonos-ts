@@ -16,7 +16,7 @@ import SonosError from './models/sonos-error';
  * @class SonosManager
  */
 export default class SonosManager {
-  private readonly events: EventEmitter;
+  protected readonly events: EventEmitter;
 
   private readonly debug: Debugger;
 
