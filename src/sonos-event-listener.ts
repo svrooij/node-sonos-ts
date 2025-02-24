@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 import { networkInterfaces } from 'os';
 import {
   Server, createServer, IncomingMessage, ServerResponse,

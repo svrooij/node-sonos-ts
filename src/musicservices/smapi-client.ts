@@ -238,7 +238,7 @@ export class SmapiClient {
     try {
       return await this.handleRequestAndParseResponse<object, TResponse>(undefined, action);
     } catch (err) {
-      if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+      if (err instanceof SmapiError && (err.Fault as any).faultstring['#text'] === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequest<TResponse>(action, true);
       }
       throw err;
@@ -250,7 +250,7 @@ export class SmapiClient {
     try {
       return await this.handleRequestAndParseResponse<TBody, TResponse>(body, action);
     } catch (err) {
-      if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
+      if (err instanceof SmapiError && (err.Fault as any).faultstring['#text'] === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
         return await this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
       }
       throw err;

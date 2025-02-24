@@ -9,14 +9,6 @@ export type ServiceEvent<TEventType> = {
 };
 
 export enum ServiceEvents {
-  /**
-   * @deprecated switch to ServiceEvent
-   */
-  Data = 'serviceEvent',
-  /**
-   * @deprecated switch to ServiceEvent
-   */
-  LastChange = 'serviceEvent',
   ServiceEvent = 'serviceEvent',
   SubscriptionError = 'subscriptionError',
   Unprocessed = 'rawEvent',
