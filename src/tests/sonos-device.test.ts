@@ -3,7 +3,6 @@ import { randomUUID } from 'crypto';
 import SonosDevice from '../sonos-device';
 import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../sonos-event-listener';
-import { SmapiClient } from '../musicservices/smapi-client';
 import { ExtendedTransportState, PlayMode, Repeat, TransportState } from '../models';
 
 class TestSonosDevice extends SonosDevice {
@@ -353,7 +352,7 @@ describe('SonosDevice', () => {
       TestHelpers.getScope(1410).get('/xml/device_description.xml').reply(400, 'Bad Request');
       const device = new SonosDevice(TestHelpers.testHost, 1410);
       try {
-        const result = await device.GetDeviceDescription();
+        const _result = await device.GetDeviceDescription();
       } catch (err) {
         expect(err).toBeDefined();
         expect(err).toHaveProperty('message', 'Loading device description failed 400 Bad Request');
@@ -705,7 +704,7 @@ describe('SonosDevice', () => {
       const track = 'x-sonosapi-stream:s78122?sid=254&flags=8224&sn=0';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID><CurrentURI>x-sonosapi-stream:s78122?sid=254&amp;flags=8224&amp;sn=0</CurrentURI><CurrentURIMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;10092020_xxx_xxxx&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Some radio station&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.audioBroadcast&lt;/upnp:class&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;RINCON_AssociatedZPUDN&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonosapi-stream:s78122?sid=254&amp;flags=8224&amp;sn=0</CurrentURI><CurrentURIMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;10092020_xxx_xxxx&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Some radio station&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.audioBroadcast&lt;/upnp:class&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;RINCON_AssociatedZPUDN&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport',
       );
@@ -718,7 +717,7 @@ describe('SonosDevice', () => {
       const track = 'radio:s78122';
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#SetAVTransportURI"',
-        '<u:SetAVTransportURI xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID><CurrentURI>x-sonosapi-stream:s78122?sid=254&amp;flags=8224&amp;sn=0</CurrentURI><CurrentURIMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;10092020_xxx_xxxx&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Some radio station&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.audioBroadcast&lt;/upnp:class&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;RINCON_AssociatedZPUDN&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</CurrentURIMetaData></u:SetAVTransportURI>',
+        '<u:SetAVTransportURI xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID><CurrentURI>x-sonosapi-stream:s78122?sid=254&amp;flags=8224&amp;sn=0</CurrentURI><CurrentURIMetaData>&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;10092020_xxx_xxxx&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Some radio station&lt;/dc:title&gt;&lt;upnp:class&gt;object.item.audioItem.audioBroadcast&lt;/upnp:class&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;RINCON_AssociatedZPUDN&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;</CurrentURIMetaData></u:SetAVTransportURI>',
         'SetAVTransportURIResponse',
         'AVTransport',
       );
@@ -760,7 +759,7 @@ describe('SonosDevice', () => {
     it('executes correct command when set to true', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
-        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>1</DesiredValue></u:SetEQ>',
         'SetEQResponse',
         'RenderingControl',
         undefined,
@@ -772,7 +771,7 @@ describe('SonosDevice', () => {
     it('executes correct command when set to false', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#SetEQ"',
-        '<u:SetEQ xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
+        '<u:SetEQ xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><EQType>DialogLevel</EQType><DesiredValue>0</DesiredValue></u:SetEQ>',
         'SetEQResponse',
         'RenderingControl',
         undefined,
@@ -813,7 +812,7 @@ describe('SonosDevice', () => {
     it('loads TransportSettings', async () => {
       const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
-        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        '<u:GetTransportSettings xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportSettings>',
         'GetTransportSettingsResponse',
         'AVTransport',
         '<PlayMode>NORMAL</PlayMode><RecQualityMode>xxx</RecQualityMode>',
@@ -836,7 +835,7 @@ describe('SonosDevice', () => {
     it('loads TransportSettings', async () => {
       const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
-        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        '<u:GetTransportSettings xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportSettings>',
         'GetTransportSettingsResponse',
         'AVTransport',
         '<PlayMode>REPEAT_ALL</PlayMode><RecQualityMode>xxx</RecQualityMode>',
@@ -868,7 +867,7 @@ describe('SonosDevice', () => {
     it('executes the correct command', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume"',
-        '<u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>40</DesiredVolume></u:SetVolume>',
+        '<u:SetVolume xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>40</DesiredVolume></u:SetVolume>',
         'SetVolumeResponse',
         'RenderingControl',
       );
@@ -1237,22 +1236,22 @@ describe('SonosDevice', () => {
 
     it('checks all services and returns false', async () => {
       const device = new SonosDevice(TestHelpers.testHost, 1400);
-      device.AlarmClockService;
-      device.AudioInService;
-      device.AVTransportService;
-      device.ConnectionManagerService;
-      device.ContentDirectoryService;
-      device.DevicePropertiesService;
-      device.GroupManagementService;
-      device.GroupRenderingControlService;
-      device.HTControlService;
-      device.MusicServicesService;
-      device.QPlayService;
-      device.QueueService;
-      device.RenderingControlService;
-      device.SystemPropertiesService;
-      device.VirtualLineInService;
-      device.ZoneGroupTopologyService;
+      const _acs = device.AlarmClockService;
+      const _ais = device.AudioInService;
+      const _avts = device.AVTransportService;
+      const _cms = device.ConnectionManagerService;
+      const _cds = device.ContentDirectoryService;
+      const _dps = device.DevicePropertiesService;
+      const _gms = device.GroupManagementService;
+      const _grcs = device.GroupRenderingControlService;
+      const _hcs = device.HTControlService;
+      const _mss = device.MusicServicesService;
+      const _qps = device.QPlayService;
+      const _qs = device.QueueService;
+      const _rcs = device.RenderingControlService;
+      const _sps = device.SystemPropertiesService;
+      const _vlis = device.VirtualLineInService;
+      const _zts = device.ZoneGroupTopologyService;
 
       const result = await device.RefreshEventSubscriptions();
       expect(result).toBe(false);
@@ -1280,7 +1279,7 @@ describe('SonosDevice', () => {
       const name = 'Office';
       const uuid = 'fake-uuid';
       const emitter = new EventEmitter();
-      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
+      const _device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
       
       const subscriptions = emitter.eventNames();
       expect(subscriptions).toContain(uuid);

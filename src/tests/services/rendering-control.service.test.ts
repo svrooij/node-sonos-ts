@@ -7,7 +7,7 @@ describe('RenderingControlService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#GetBass"',
-        '<u:GetBass xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID></u:GetBass>',
+        '<u:GetBass xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID></u:GetBass>',
         'GetBassResponse',
         'RenderingControl',
         '<CurrentBass>0</CurrentBass>'
@@ -22,7 +22,7 @@ describe('RenderingControlService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#GetHeadphoneConnected"',
-        '<u:GetHeadphoneConnected xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID></u:GetHeadphoneConnected>',
+        '<u:GetHeadphoneConnected xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID></u:GetHeadphoneConnected>',
         'GetHeadphoneConnectedResponse',
         'RenderingControl',
         '<CurrentHeadphoneConnected>0</CurrentHeadphoneConnected>'
@@ -53,7 +53,7 @@ describe('RenderingControlService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#GetMute"',
-        '<u:GetMute xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetMute>',
+        '<u:GetMute xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><Channel>Master</Channel></u:GetMute>',
         'GetMuteResponse',
         'RenderingControl',
         '<CurrentMute>1</CurrentMute>'
@@ -171,7 +171,7 @@ describe('RenderingControlService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/RenderingControl/Control',
         '"urn:schemas-upnp-org:service:RenderingControl:1#SetVolume"',
-        '<u:SetVolume xmlns:u=\"urn:schemas-upnp-org:service:RenderingControl:1\"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>10</DesiredVolume></u:SetVolume>',
+        '<u:SetVolume xmlns:u="urn:schemas-upnp-org:service:RenderingControl:1"><InstanceID>0</InstanceID><Channel>Master</Channel><DesiredVolume>10</DesiredVolume></u:SetVolume>',
         'SetVolumeResponse',
         'RenderingControl'
       );

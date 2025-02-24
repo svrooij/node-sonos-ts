@@ -117,7 +117,6 @@ export default class XmlHelper {
       if (input instanceof XmlElement) {
         // itereate over the attributes and add them to the result
         // tell eslint to ignore the next line as it is a for of loop
-        // eslint-disable-next-line no-restricted-syntax
         for (const [key, value] of Object.entries(input.attributes)) {
           if (!key.startsWith('xmlns')) {
             const finalKey = removeNamespace ? key.replace(/.*:/, '') : key;

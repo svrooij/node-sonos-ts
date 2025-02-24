@@ -46,7 +46,7 @@ class TestSonosManager extends SonosManager {
     }, 5000);
     await manager.InitializeFromDevice(TestHelpers.testHost, port);
 
-    var device = await AsyncHelper.AsyncEvent(manager.events, 'NewDevice', 1000);
+    const device = await AsyncHelper.AsyncEvent(manager.events, 'NewDevice', 1000);
     expect(device).toBeDefined();
     manager.CancelSubscription();
     delete process.env.SONOS_DISABLE_EVENTS;
@@ -74,7 +74,7 @@ class TestSonosManager extends SonosManager {
     const manager = new SonosManager();
     const discovery = new SonosDeviceDiscovery();
     const interval = setInterval(async () => {
-      await TestHelpers.emitSsdpMessage(discovery.port).catch((err) => {});
+      await TestHelpers.emitSsdpMessage(discovery.port).catch((_err) => {});
     }, 800);
     await manager.InitializeWithDiscovery(3, discovery);
     manager.CancelSubscription();

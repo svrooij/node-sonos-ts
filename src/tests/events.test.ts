@@ -4,7 +4,6 @@ import { TestHelpers } from './test-helpers';
 import SonosEventListener from '../sonos-event-listener';
 import AsyncHelper from '../helpers/async-helper';
 import fetch from 'node-fetch';
-import exp from 'constants';
 
 describe('SonosDevice - Events', () => {
   beforeAll(() => {

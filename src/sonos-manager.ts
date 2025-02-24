@@ -101,7 +101,7 @@ export default class SonosManager {
       g.members.forEach((m) => {
         // Check if device exists
         if (this.devices.findIndex((v) => v.Uuid === m.uuid) === -1) {
-          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId }));
+          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId }))
         }
       });
     });

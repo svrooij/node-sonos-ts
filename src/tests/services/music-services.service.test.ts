@@ -60,7 +60,7 @@ describe('MusicServicesService', () => {
       //nock.cleanAll(); // Remove all current items.
       try {
         await service.ListAndParseAvailableServices(false);
-      } catch (error) {
+      } catch  {
         expect(true).toBeTruthy();
         return;
       }
@@ -84,7 +84,7 @@ describe('MusicServicesService', () => {
       //nock.cleanAll(); // Remove all current items.
       try {
         await service.ListAndParseAvailableServices();
-      } catch (error) {
+      } catch {
         expect(true).toBeTruthy();
         return;
       }

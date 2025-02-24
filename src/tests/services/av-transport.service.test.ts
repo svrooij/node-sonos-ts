@@ -67,6 +67,8 @@ describe('AVTransportService', () => {
       );
       const service = new AVTransportService(TestHelpers.testHost);
       const result = await service.GetCurrentTransportActions();
+      expect(result.Actions).toContain('Set');
+      expect(result.Actions).toContain('Play');
     });
   });
 
@@ -105,7 +107,7 @@ describe('AVTransportService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetMediaInfo"',
-        '<u:GetMediaInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetMediaInfo>',
+        '<u:GetMediaInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetMediaInfo>',
         'GetMediaInfoResponse',
         'AVTransport',
         '<NrTracks>300</NrTracks><MediaDuration>NOT_IMPLEMENTED</MediaDuration><CurrentURI>x-rincon-queue:RINCON_000xxx1400#0</CurrentURI><CurrentURIMetaData></CurrentURIMetaData><NextURI></NextURI><NextURIMetaData></NextURIMetaData><PlayMedium>NETWORK</PlayMedium><RecordMedium>NOT_IMPLEMENTED</RecordMedium><WriteStatus>NOT_IMPLEMENTED</WriteStatus>'
@@ -121,7 +123,7 @@ describe('AVTransportService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetPositionInfo"',
-        '<u:GetPositionInfo xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetPositionInfo>',
+        '<u:GetPositionInfo xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetPositionInfo>',
         'GetPositionInfoResponse',
         'AVTransport',
         `<Track>219</Track>
@@ -146,7 +148,7 @@ describe('AVTransportService', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportSettings"',
-        '<u:GetTransportSettings xmlns:u=\"urn:schemas-upnp-org:service:AVTransport:1\"><InstanceID>0</InstanceID></u:GetTransportSettings>',
+        '<u:GetTransportSettings xmlns:u="urn:schemas-upnp-org:service:AVTransport:1"><InstanceID>0</InstanceID></u:GetTransportSettings>',
         'GetTransportSettingsResponse',
         'AVTransport',
         '<PlayMode>REPEAT_ALL</PlayMode><RecQualityMode>xxx</RecQualityMode>'

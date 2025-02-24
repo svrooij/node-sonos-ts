@@ -231,7 +231,7 @@ export class TestHelpers {
         'X-RINCON-VARIANT: 0',
         `HOUSEHOLD.SMARTSPEAKER.AUDIO: ${householdId}.${smartSpeakerId}`,
       ].join('\r\n'));
-      socket.send(buffer, port, address, (err, bytes) => {
+      socket.send(buffer, port, address, (err, _bytes) => {
         if (err) {
           reject(err);
         } else {
@@ -242,19 +242,19 @@ export class TestHelpers {
     
   }
 
-  static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
-    let error: any = undefined;
-    try {
-      await method();
-    } catch (err) {
-      error = err;
-    }
-    expect(error).toBeDefined();
-    if (errorMessage) {
-      expect(error).toHaveProperty('message', errorMessage);
-    }
-    if (upnpErrorDescription) {
-      expect(error).toHaveProperty('UpnpErrorDescription', upnpErrorDescription);
-    }
-  }
+  // static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
+  //   let error: any = undefined;
+  //   try {
+  //     await method();
+  //   } catch (err) {
+  //     error = err;
+  //   }
+  //   expect(error).toBeDefined();
+  //   if (errorMessage) {
+  //     expect(error).toHaveProperty('message', errorMessage);
+  //   }
+  //   if (upnpErrorDescription) {
+  //     expect(error).toHaveProperty('UpnpErrorDescription', upnpErrorDescription);
+  //   }
+  // }
 }

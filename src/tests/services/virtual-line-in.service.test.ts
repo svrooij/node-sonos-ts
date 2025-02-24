@@ -7,7 +7,7 @@ describe('SystemPropertiesService', () => {
     it('works', (done) => {
       process.env.SONOS_DISABLE_EVENTS = 'true'
       const service = new VirtualLineInService(TestHelpers.testHost, 1400);
-      service.Events.once('serviceEvent', (data) => {
+      service.Events.once('serviceEvent', (_data) => {
 
         done()
       })

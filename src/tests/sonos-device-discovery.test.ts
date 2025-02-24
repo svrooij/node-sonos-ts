@@ -7,8 +7,8 @@ describe('SonosDeviceDiscovery', () => {
     it.skip('discovered fake device', async () => {
       const discovery = new SonosDeviceDiscovery();
       const interval = setInterval(async () => {
-        await TestHelpers.emitSsdpMessage(discovery.port).catch((err) => {});
-        await TestHelpers.emitSsdpMessage(discovery.port).catch((err) => {});
+        await TestHelpers.emitSsdpMessage(discovery.port).catch((_err) => {});
+        await TestHelpers.emitSsdpMessage(discovery.port).catch((_err) => {});
       }, 800);
   
       const device = await discovery.Search(5).catch(err => {
@@ -25,7 +25,7 @@ describe('SonosDeviceDiscovery', () => {
       const discovery = new SonosDeviceDiscovery();
       try {
         // Search for 2 seconds
-        const device = await discovery.Search(2);
+        const _device = await discovery.Search(2);
       } catch (err) {
         expect(err).toHaveProperty('message', 'No players found');
       }
@@ -37,7 +37,7 @@ describe('SonosDeviceDiscovery', () => {
     it('discovered fake device', async () => {
       const discovery = new SonosDeviceDiscovery();
       const interval = setInterval(() => {
-        TestHelpers.emitSsdpMessage(discovery.port).catch((err) => {});
+        TestHelpers.emitSsdpMessage(discovery.port).catch((_err) => {});
       }, 800);
   
       try {
@@ -51,7 +51,7 @@ describe('SonosDeviceDiscovery', () => {
     it.skip('throws after timeout', async () => {
       const discovery = new SonosDeviceDiscovery();
       try {
-        const device = await discovery.SearchOne(1);
+        const _device = await discovery.SearchOne(1);
       } catch (err) {
         expect(err).toHaveProperty('message', 'No players found');
       }
