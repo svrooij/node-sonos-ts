@@ -43,6 +43,64 @@ describe('AVTransportService', () => {
     });
   });
 
+  describe('BecomeCoordinatorOfStandaloneGroup', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'BecomeCoordinatorOfStandaloneGroup',
+        '<InstanceID>0</InstanceID>',
+        '<DelegatedGroupCoordinatorID>RINCON_0000000000001400</DelegatedGroupCoordinatorID><NewGroupID>RINCON_0000000000001400:4444</NewGroupID>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.BecomeCoordinatorOfStandaloneGroup();
+      expect(result).toBeDefined();
+      expect(result.DelegatedGroupCoordinatorID).toBeDefined();
+      expect(result.NewGroupID).toBeDefined();
+    });
+  });
+
+  describe('ChangeCoordinator', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'ChangeCoordinator',
+        '<InstanceID>0</InstanceID><CurrentCoordinator>RINCON_AA0000000001400</CurrentCoordinator><NewCoordinator>RINCON_000000000001400</NewCoordinator><NewTransportSettings></NewTransportSettings><CurrentAVTransportURI></CurrentAVTransportURI>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.ChangeCoordinator({ InstanceID: 0, CurrentCoordinator: 'RINCON_AA0000000001400',  NewCoordinator: 'RINCON_000000000001400', NewTransportSettings: '', CurrentAVTransportURI: ''});
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('DelegateGroupCoordinationTo', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'DelegateGroupCoordinationTo',
+        '<InstanceID>0</InstanceID><NewCoordinator>RINCON_000000000001400</NewCoordinator><RejoinGroup>1</RejoinGroup>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.DelegateGroupCoordinationTo({ InstanceID: 0, NewCoordinator: 'RINCON_000000000001400', RejoinGroup: true });
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('EndDirectControlSession', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'EndDirectControlSession',
+        '<InstanceID>0</InstanceID>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.EndDirectControlSession();
+      expect(result).toBeTruthy();
+    });
+  });
+
   describe('GetCrossfadeMode', () => {
     it('executes correct request', async () => {
       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
@@ -144,6 +202,22 @@ describe('AVTransportService', () => {
     });
   });
 
+  describe('GetRunningAlarmProperties', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'GetRunningAlarmProperties',
+        '<InstanceID>0</InstanceID>',
+        '<AlarmID>100</AlarmID><GroupID>FAKE_GROUP</GroupID><LoggedStartTime>2025-02-24T18:00:00z</LoggedStartTime>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.GetRunningAlarmProperties();
+      expect(result.AlarmID).toBe(100);
+      expect(result.GroupID).toBe('FAKE_GROUP');
+      expect(result.LoggedStartTime).toBeDefined();
+    });
+  });
+
   describe('GetTransportSettings()', () => {
     it('works', async () => {
       TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
@@ -159,6 +233,21 @@ describe('AVTransportService', () => {
       expect(result).toHaveProperty('PlayMode', PlayMode.RepeatAll);
       expect(result).toHaveProperty('RecQualityMode', 'xxx');
 
+    });
+  });
+
+  
+  describe('NotifyDeletedURI', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'NotifyDeletedURI',
+        '<InstanceID>0</InstanceID><DeletedURI>x-rincon-queue:RINCON_000xxx1400#0</DeletedURI>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.NotifyDeletedURI({InstanceID: 0, DeletedURI: 'x-rincon-queue:RINCON_000xxx1400#0'});
+      expect(result).toBe(true);
     });
   });
 
@@ -215,6 +304,49 @@ describe('AVTransportService', () => {
 
       const result = await service.Play({ InstanceID: 0, Speed: '1' });
       expect(result).toEqual(true);
+    });
+  });
+
+  describe('RemoveAllTracksFromQueue', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'RemoveAllTracksFromQueue',
+        '<InstanceID>0</InstanceID>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.RemoveAllTracksFromQueue();
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('SaveQueue', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'SaveQueue',
+        '<InstanceID>0</InstanceID><Title>My Queue</Title><ObjectID></ObjectID>',
+        '<AssignedObjectID>Q:0/10</AssignedObjectID>'
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.SaveQueue({InstanceID: 0, Title: 'My Queue', ObjectID: ''});
+      expect(result).toBeDefined();
+      expect(result.AssignedObjectID).toBe('Q:0/10');
+    });
+  });
+
+  describe('SnoozeAlarm', () => {
+    it('executes correct request', async () => {
+      TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'SnoozeAlarm',
+        '<InstanceID>0</InstanceID><Duration>00:12:00</Duration>',
+        ''
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+      const result = await service.SnoozeAlarm({InstanceID: 0, Duration: '00:12:00' });
+      expect(result).toBe(true);
     });
   });
 
