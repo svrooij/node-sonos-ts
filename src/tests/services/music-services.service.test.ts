@@ -113,7 +113,7 @@ describe('MusicServicesService', () => {
     it('works', (done) => {
       process.env.SONOS_DISABLE_EVENTS = 'true'
       const service = new MusicServicesService(TestHelpers.testHost, 1400);
-      service.Events.once(ServiceEvents.Data, (data) => {
+      service.Events.once(ServiceEvents.ServiceEvent, (data) => {
         expect(data.ServiceListVersion).toEqual('RINCON_xxx01400:990');
         done();
       })
