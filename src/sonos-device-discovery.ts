@@ -56,7 +56,13 @@ export default class SonosDeviceDiscovery {
     //   this.debug('Error with socket', err);
     // });
     this.socket.bind(() => {
-      this.debug('Bound to port %d', this.socket.address().port);
+      const multicastInterface = process.env.SONOS_MULTICAST_IF || process.env.IP_MULTICAST_IF;
+      if (multicastInterface) {
+        this.socket.setMulticastInterface(multicastInterface);
+        this.debug('Bound to port %d on interface %s', this.socket.address().port, multicastInterface);
+      } else {
+        this.debug('Bound to port %d (default interface)', this.socket.address().port);
+      }
       this.isBound = true;
     });
     this.debug('Device discovery created');
