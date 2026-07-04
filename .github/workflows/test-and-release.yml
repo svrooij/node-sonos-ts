@@ -88,6 +88,6 @@ jobs:
           scope: '@svrooij'
 
       - name: Publish to GitHub Package Registry
-        run: npm publish
+        run: npm publish --tag ${{ github.event.release.prerelease && 'beta' || 'latest' }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
