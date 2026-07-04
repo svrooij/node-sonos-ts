@@ -72,16 +72,16 @@ export class {{serviceName}}{{#if data.extended}}Base{{/if}} extends BaseService
   {{#if inputs}}
   async {{name}}(input: { {{#each inputs}}{{name}}: {{relatedStateVariable.dataType}}{{#unless @last}}; {{/unless}}{{/each}} }{{{sonos_if_only_instance_id inputs ' = { InstanceID: 0 }'}}}):
   {{#if outputs}}
-  Promise<{{name}}Response> { return await this.SoapRequestWithBody<typeof input, {{name}}Response>('{{name}}', input); }
+  Promise<{{name}}Response> { return this.SoapRequestWithBody<typeof input, {{name}}Response>('{{name}}', input); }
   {{else}}
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
   {{/if}}
   {{else}}
   async {{name}}():
   {{#if outputs}}
-  Promise<{{name}}Response> { return await this.SoapRequest<{{name}}Response>('{{name}}'); }
+  Promise<{{name}}Response> { return this.SoapRequest<{{name}}Response>('{{name}}'); }
   {{else}}
-  Promise<boolean> { return await this.SoapRequestNoResponse('{{name}}'); }
+  Promise<boolean> { return this.SoapRequestNoResponse('{{name}}'); }
   {{/if}}
   {{/if}}
   {{#unless @last}}
