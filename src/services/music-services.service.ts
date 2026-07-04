@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,17 +29,17 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async GetSessionId(input: { ServiceId: number; Username: string }):
+  GetSessionId(input: { ServiceId: number; Username: string }):
   Promise<GetSessionIdResponse> { return this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
 
   /**
    * Load music service list as xml
    * @remarks Some libraries also support ListAndParseAvailableServices
    */
-  async ListAvailableServices():
+  ListAvailableServices():
   Promise<ListAvailableServicesResponse> { return this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }
 
-  async UpdateAvailableServices():
+  UpdateAvailableServices():
   Promise<boolean> { return this.SoapRequestNoResponse('UpdateAvailableServices'); }
   // #endregion
 

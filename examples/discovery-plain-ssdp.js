@@ -1,8 +1,8 @@
-// This test file doesn't use the sonos library. Instead it uses plain sockets just to debug discovery. 
+// This test file doesn't use the sonos library. Instead it uses plain sockets just to debug discovery.
 
 // see https://github.com/svrooij/node-sonos-ts/issues/150#issuecomment-1006086581
 // credits: https://gist.github.com/chrishulbert/895382
-const dgram = require('dgram') 
+const dgram = require('dgram')
 
 // Broadcast to specific address, port with specific message
 const PORT = 1900
@@ -13,9 +13,9 @@ const ADDRESS = '239.255.255.250'
 //
 // To discover also NON-SONOS devices use:
 // ST ssdp:all
-// 
+//
 // MAN should use " " although SONOS works without.
-const messageAsBuffer = Buffer.from( 
+const messageAsBuffer = Buffer.from(
   'M-SEARCH * HTTP/1.1\r\n'
       + `HOST: ${ADDRESS}:${PORT}\r\n`
       + 'MAN: "ssdp:discover"\r\n'
@@ -29,7 +29,7 @@ socket.on('error', (err) => {
   console.log(JSON.stringify(err))
   socket.close()
 })
-socket.on('listening', () => { 
+socket.on('listening', () => {
   // following are not needed
   // socket.setBroadcast(true)
   // socket.addMembership(ADDRESS)
@@ -37,7 +37,7 @@ socket.on('listening', () => {
   console.log('Start listening ...')
 })
 socket.on('message', (msg, rinfo) => {
-  // msg is buffer and contains line breaks. 
+  // msg is buffer and contains line breaks.
   const msgArray = msg.toString().split(/\r\n|\n|\r/)
   // LOCATION is in line 4 -> so it is number 3
   console.log(rinfo.address + '-->' + msgArray[3].replace('LOCATION: ', '').trim())
@@ -45,8 +45,14 @@ socket.on('message', (msg, rinfo) => {
 
 // bind with random port and send broadcast. bind is async!
 socket.bind(() => {
-  console.log('random port:' + socket.address().port)
-  
+  const multicastInterface = process.env.SONOS_MULTICAST_IF || process.env.IP_MULTICAST_IF;
+  if (multicastInterface) {
+    socket.setMulticastInterface(multicastInterface);
+    console.log('random port: %d on interface %s', socket.address().port, multicastInterface)
+  } else {
+    console.log('random port: %d (default interface)', socket.address().port)
+  }
+
   socket.send(messageAsBuffer, 0, messageAsBuffer.length, PORT, ADDRESS, (err) => {
     if (err) {
       console.log(JSON.stringify(err))

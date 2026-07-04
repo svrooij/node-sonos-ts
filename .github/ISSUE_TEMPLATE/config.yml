@@ -1,5 +1,8 @@
-blank_issues_enabled: true
+blank_issues_enabled: false
 contact_links:
-  - name: Sonos-ts discourd
-    url: https://discord.gg/VMtG6Ft36J
-    about: For quick answers to your questions check out our community.
+  - name: Documentation
+    url: https://sonos-ts.svrooij.io/
+    about: Have you checked to documentation?
+  - name: Questions
+    url: https://github.com/svrooij/node-sonos-ts/discussions/categories/q-a
+    about: Not sure how something works, ask a question instead of creating an issue.

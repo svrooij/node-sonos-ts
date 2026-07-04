@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,25 +29,25 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
+  AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
   Promise<AddAccountXResponse> { return this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }
 
-  async AddOAuthAccountX(input: { AccountType: number; AccountToken: string; AccountKey: string; OAuthDeviceID: string; AuthorizationCode: string; RedirectURI: string; UserIdHashCode: string; AccountTier: number }):
+  AddOAuthAccountX(input: { AccountType: number; AccountToken: string; AccountKey: string; OAuthDeviceID: string; AuthorizationCode: string; RedirectURI: string; UserIdHashCode: string; AccountTier: number }):
   Promise<AddOAuthAccountXResponse> { return this.SoapRequestWithBody<typeof input, AddOAuthAccountXResponse>('AddOAuthAccountX', input); }
 
-  async DoPostUpdateTasks():
+  DoPostUpdateTasks():
   Promise<boolean> { return this.SoapRequestNoResponse('DoPostUpdateTasks'); }
 
-  async EditAccountMd(input: { AccountType: number; AccountID: string; NewAccountMd: string }):
+  EditAccountMd(input: { AccountType: number; AccountID: string; NewAccountMd: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountMd', input); }
 
-  async EditAccountPasswordX(input: { AccountType: number; AccountID: string; NewAccountPassword: string }):
+  EditAccountPasswordX(input: { AccountType: number; AccountID: string; NewAccountPassword: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountPasswordX', input); }
 
-  async EnableRDM(input: { RDMValue: boolean }):
+  EnableRDM(input: { RDMValue: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EnableRDM', input); }
 
-  async GetRDM():
+  GetRDM():
   Promise<GetRDMResponse> { return this.SoapRequest<GetRDMResponse>('GetRDM'); }
 
   /**
@@ -56,16 +56,16 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @param {string} input.VariableName - The key for this variable
    * @remarks Strings are saved in the system with SetString, every speaker should return the same data. Will error when not existing
    */
-  async GetString(input: { VariableName: string }):
+  GetString(input: { VariableName: string }):
   Promise<GetStringResponse> { return this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }
 
-  async GetWebCode(input: { AccountType: number }):
+  GetWebCode(input: { AccountType: number }):
   Promise<GetWebCodeResponse> { return this.SoapRequestWithBody<typeof input, GetWebCodeResponse>('GetWebCode', input); }
 
-  async ProvisionCredentialedTrialAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
+  ProvisionCredentialedTrialAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
   Promise<ProvisionCredentialedTrialAccountXResponse> { return this.SoapRequestWithBody<typeof input, ProvisionCredentialedTrialAccountXResponse>('ProvisionCredentialedTrialAccountX', input); }
 
-  async RefreshAccountCredentialsX(input: { AccountType: number; AccountUID: number; AccountToken: string; AccountKey: string }):
+  RefreshAccountCredentialsX(input: { AccountType: number; AccountUID: number; AccountToken: string; AccountKey: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshAccountCredentialsX', input); }
 
   /**
@@ -74,19 +74,19 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @param {string} input.VariableName - The key for this variable
    * @remarks Not sure what happens if you call this with a VariableName that doesn't exists.
    */
-  async Remove(input: { VariableName: string }):
+  Remove(input: { VariableName: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Remove', input); }
 
-  async RemoveAccount(input: { AccountType: number; AccountID: string }):
+  RemoveAccount(input: { AccountType: number; AccountID: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAccount', input); }
 
-  async ReplaceAccountX(input: { AccountUDN: string; NewAccountID: string; NewAccountPassword: string; AccountToken: string; AccountKey: string; OAuthDeviceID: string }):
+  ReplaceAccountX(input: { AccountUDN: string; NewAccountID: string; NewAccountPassword: string; AccountToken: string; AccountKey: string; OAuthDeviceID: string }):
   Promise<ReplaceAccountXResponse> { return this.SoapRequestWithBody<typeof input, ReplaceAccountXResponse>('ReplaceAccountX', input); }
 
-  async ResetThirdPartyCredentials():
+  ResetThirdPartyCredentials():
   Promise<boolean> { return this.SoapRequestNoResponse('ResetThirdPartyCredentials'); }
 
-  async SetAccountNicknameX(input: { AccountUDN: string; AccountNickname: string }):
+  SetAccountNicknameX(input: { AccountUDN: string; AccountNickname: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAccountNicknameX', input); }
 
   /**
@@ -96,7 +96,7 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @param {string} input.StringValue
    * @remarks Strings are saved in the system, retrieve values with GetString.
    */
-  async SetString(input: { VariableName: string; StringValue: string }):
+  SetString(input: { VariableName: string; StringValue: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   // #endregion
 

@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -32,35 +32,35 @@ export class ZoneGroupTopologyServiceBase extends BaseService<ZoneGroupTopologyS
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }):
+  BeginSoftwareUpdate(input: { UpdateURL: string; Flags: number; ExtraOptions: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('BeginSoftwareUpdate', input); }
 
-  async CheckForUpdate(input: { UpdateType: string; CachedOnly: boolean; Version: string }):
+  CheckForUpdate(input: { UpdateType: string; CachedOnly: boolean; Version: string }):
   Promise<CheckForUpdateResponse> { return this.SoapRequestWithBody<typeof input, CheckForUpdateResponse>('CheckForUpdate', input); }
 
   /**
    * Get information about the current Zone
    */
-  async GetZoneGroupAttributes():
+  GetZoneGroupAttributes():
   Promise<GetZoneGroupAttributesResponse> { return this.SoapRequest<GetZoneGroupAttributesResponse>('GetZoneGroupAttributes'); }
 
   /**
    * Get all the Sonos groups, (as XML)
    * @remarks Some libraries also support GetParsedZoneGroupState that parses the xml for you.
    */
-  async GetZoneGroupState():
+  GetZoneGroupState():
   Promise<GetZoneGroupStateResponse> { return this.SoapRequest<GetZoneGroupStateResponse>('GetZoneGroupState'); }
 
-  async RegisterMobileDevice(input: { MobileDeviceName: string; MobileDeviceUDN: string; MobileIPAndPort: string }):
+  RegisterMobileDevice(input: { MobileDeviceName: string; MobileDeviceUDN: string; MobileIPAndPort: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RegisterMobileDevice', input); }
 
-  async ReportAlarmStartedRunning():
+  ReportAlarmStartedRunning():
   Promise<boolean> { return this.SoapRequestNoResponse('ReportAlarmStartedRunning'); }
 
-  async ReportUnresponsiveDevice(input: { DeviceUUID: string; DesiredAction: string }):
+  ReportUnresponsiveDevice(input: { DeviceUUID: string; DesiredAction: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportUnresponsiveDevice', input); }
 
-  async SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
+  SubmitDiagnostics(input: { IncludeControllers: boolean; Type: string }):
   Promise<SubmitDiagnosticsResponse> { return this.SoapRequestWithBody<typeof input, SubmitDiagnosticsResponse>('SubmitDiagnostics', input); }
   // #endregion
 

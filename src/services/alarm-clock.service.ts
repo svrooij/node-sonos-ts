@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -55,7 +55,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
    * @param {number} input.Volume - Volume between 0 and 100
    * @param {boolean} input.IncludeLinkedZones - Should grouped players also play the alarm?
    */
-  async CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: Track | string; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
+  CreateAlarm(input: { StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: Track | string; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
   Promise<CreateAlarmResponse> { return this.SoapRequestWithBody<typeof input, CreateAlarmResponse>('CreateAlarm', input); }
 
   /**
@@ -63,53 +63,53 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
    *
    * @param {number} input.ID - The Alarm ID from ListAlarms
    */
-  async DestroyAlarm(input: { ID: number }):
+  DestroyAlarm(input: { ID: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DestroyAlarm', input); }
 
-  async GetDailyIndexRefreshTime():
+  GetDailyIndexRefreshTime():
   Promise<GetDailyIndexRefreshTimeResponse> { return this.SoapRequest<GetDailyIndexRefreshTimeResponse>('GetDailyIndexRefreshTime'); }
 
-  async GetFormat():
+  GetFormat():
   Promise<GetFormatResponse> { return this.SoapRequest<GetFormatResponse>('GetFormat'); }
 
-  async GetHouseholdTimeAtStamp(input: { TimeStamp: string }):
+  GetHouseholdTimeAtStamp(input: { TimeStamp: string }):
   Promise<GetHouseholdTimeAtStampResponse> { return this.SoapRequestWithBody<typeof input, GetHouseholdTimeAtStampResponse>('GetHouseholdTimeAtStamp', input); }
 
-  async GetTimeNow():
+  GetTimeNow():
   Promise<GetTimeNowResponse> { return this.SoapRequest<GetTimeNowResponse>('GetTimeNow'); }
 
-  async GetTimeServer():
+  GetTimeServer():
   Promise<GetTimeServerResponse> { return this.SoapRequest<GetTimeServerResponse>('GetTimeServer'); }
 
-  async GetTimeZone():
+  GetTimeZone():
   Promise<GetTimeZoneResponse> { return this.SoapRequest<GetTimeZoneResponse>('GetTimeZone'); }
 
-  async GetTimeZoneAndRule():
+  GetTimeZoneAndRule():
   Promise<GetTimeZoneAndRuleResponse> { return this.SoapRequest<GetTimeZoneAndRuleResponse>('GetTimeZoneAndRule'); }
 
-  async GetTimeZoneRule(input: { Index: number }):
+  GetTimeZoneRule(input: { Index: number }):
   Promise<GetTimeZoneRuleResponse> { return this.SoapRequestWithBody<typeof input, GetTimeZoneRuleResponse>('GetTimeZoneRule', input); }
 
   /**
    * Get the AlarmList as XML
    * @remarks Some libraries also provide a ListAndParseAlarms where the alarm list xml is parsed
    */
-  async ListAlarms():
+  ListAlarms():
   Promise<ListAlarmsResponse> { return this.SoapRequest<ListAlarmsResponse>('ListAlarms'); }
 
-  async SetDailyIndexRefreshTime(input: { DesiredDailyIndexRefreshTime: string }):
+  SetDailyIndexRefreshTime(input: { DesiredDailyIndexRefreshTime: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetDailyIndexRefreshTime', input); }
 
-  async SetFormat(input: { DesiredTimeFormat: string; DesiredDateFormat: string }):
+  SetFormat(input: { DesiredTimeFormat: string; DesiredDateFormat: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetFormat', input); }
 
-  async SetTimeNow(input: { DesiredTime: string; TimeZoneForDesiredTime: string }):
+  SetTimeNow(input: { DesiredTime: string; TimeZoneForDesiredTime: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeNow', input); }
 
-  async SetTimeServer(input: { DesiredTimeServer: string }):
+  SetTimeServer(input: { DesiredTimeServer: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeServer', input); }
 
-  async SetTimeZone(input: { Index: number; AutoAdjustDst: boolean }):
+  SetTimeZone(input: { Index: number; AutoAdjustDst: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTimeZone', input); }
 
   /**
@@ -128,7 +128,7 @@ export class AlarmClockServiceBase extends BaseService<AlarmClockServiceEvent> {
    * @param {boolean} input.IncludeLinkedZones - Should grouped players also play the alarm?
    * @remarks Some libraries support PatchAlarm where you can update a single parameter
    */
-  async UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: Track | string; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
+  UpdateAlarm(input: { ID: number; StartLocalTime: string; Duration: string; Recurrence: string; Enabled: boolean; RoomUUID: string; ProgramURI: string; ProgramMetaData: Track | string; PlayMode: PlayMode; Volume: number; IncludeLinkedZones: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('UpdateAlarm', input); }
   // #endregion
 

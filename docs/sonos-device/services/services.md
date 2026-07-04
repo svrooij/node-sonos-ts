@@ -19,7 +19,7 @@ Every sonos speaker has several soap services. Each service has one or more acti
 |:--------|:------------|
 | [**AlarmClock service**](alarm-clock-service.html) | Control the sonos alarms and times |
 | [**AudioIn service**](audio-in-service.html) | Control line in |
-| [**AVTransport service**](av-transport-service.html) | Service that controls stuff related to transport (play/pause/next/special urls) |
+| [**AVTransport service**](av-transport-service.html) | Service that controls stuff related to transport (play/pause/next/special URLs) |
 | [**ConnectionManager service**](connection-manager-service.html) | Services related to connections and protocols |
 | [**ContentDirectory service**](content-directory-service.html) | Browse for local content |
 | [**DeviceProperties service**](device-properties-service.html) | Modify device properties, like LED status and stereo pairs |

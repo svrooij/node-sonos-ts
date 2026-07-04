@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,94 +29,109 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async AddBondedZones(input: { ChannelMapSet: string }):
+  AddBondedZones(input: { ChannelMapSet: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('AddBondedZones', input); }
 
-  async AddHTSatellite(input: { HTSatChanMapSet: string }):
+  /**
+   * Adds satellites and/or a sub woofer to a (main) player. The satellites become hidden. The main player RINCON_* is mandatory. RR: right - rear, LF: left - front, SW: subwoofer
+   *
+   * @param {string} input.HTSatChanMapSet - example: `RINCON_000PPP1400:LF,RF;RINCON_000RRR1400:RR;RINCON_000SSS1400:LR;RINCON_000QQQ1400:SW`
+   * @remarks Not all speakers support satellites or sub woofer. Satellites should be of same type (e.g. Play:1)
+   */
+  AddHTSatellite(input: { HTSatChanMapSet: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('AddHTSatellite', input); }
 
   /**
    * Create a stereo pair (left, right speakers), right one becomes hidden
    *
    * @param {string} input.ChannelMapSet - example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF`
-   * @remarks No all speakers support StereoPairs
+   * @remarks Not all speakers support StereoPairs
    */
-  async CreateStereoPair(input: { ChannelMapSet: string }):
+  CreateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('CreateStereoPair', input); }
 
-  async EnterConfigMode(input: { Mode: string; Options: string }):
+  EnterConfigMode(input: { Mode: string; Options: string }):
   Promise<EnterConfigModeResponse> { return this.SoapRequestWithBody<typeof input, EnterConfigModeResponse>('EnterConfigMode', input); }
 
-  async ExitConfigMode(input: { Options: string }):
+  ExitConfigMode(input: { Options: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ExitConfigMode', input); }
 
-  async GetAutoplayLinkedZones(input: { Source: string }):
+  GetAutoplayLinkedZones(input: { Source: string }):
   Promise<GetAutoplayLinkedZonesResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayLinkedZonesResponse>('GetAutoplayLinkedZones', input); }
 
-  async GetAutoplayRoomUUID(input: { Source: string }):
+  GetAutoplayRoomUUID(input: { Source: string }):
   Promise<GetAutoplayRoomUUIDResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayRoomUUIDResponse>('GetAutoplayRoomUUID', input); }
 
-  async GetAutoplayVolume(input: { Source: string }):
+  GetAutoplayVolume(input: { Source: string }):
   Promise<GetAutoplayVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayVolumeResponse>('GetAutoplayVolume', input); }
 
   /**
    * Get the current button lock state
    */
-  async GetButtonLockState():
+  GetButtonLockState():
   Promise<GetButtonLockStateResponse> { return this.SoapRequest<GetButtonLockStateResponse>('GetButtonLockState'); }
 
-  async GetButtonState():
+  GetButtonState():
   Promise<GetButtonStateResponse> { return this.SoapRequest<GetButtonStateResponse>('GetButtonState'); }
 
-  async GetHouseholdID():
+  GetHouseholdID():
   Promise<GetHouseholdIDResponse> { return this.SoapRequest<GetHouseholdIDResponse>('GetHouseholdID'); }
+
+  GetHTForwardState():
+  Promise<GetHTForwardStateResponse> { return this.SoapRequest<GetHTForwardStateResponse>('GetHTForwardState'); }
 
   /**
    * Get the current LED state
    */
-  async GetLEDState():
+  GetLEDState():
   Promise<GetLEDStateResponse> { return this.SoapRequest<GetLEDStateResponse>('GetLEDState'); }
 
-  async GetUseAutoplayVolume(input: { Source: string }):
+  GetUseAutoplayVolume(input: { Source: string }):
   Promise<GetUseAutoplayVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetUseAutoplayVolumeResponse>('GetUseAutoplayVolume', input); }
 
-  async GetZoneAttributes():
+  GetZoneAttributes():
   Promise<GetZoneAttributesResponse> { return this.SoapRequest<GetZoneAttributesResponse>('GetZoneAttributes'); }
 
   /**
    * Get information about this specific speaker
    */
-  async GetZoneInfo():
+  GetZoneInfo():
   Promise<GetZoneInfoResponse> { return this.SoapRequest<GetZoneInfoResponse>('GetZoneInfo'); }
 
-  async RemoveBondedZones(input: { ChannelMapSet: string; KeepGrouped: boolean }):
+  RemoveBondedZones(input: { ChannelMapSet: string; KeepGrouped: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveBondedZones', input); }
 
-  async RemoveHTSatellite(input: { SatRoomUUID: string }):
+  /**
+   * Removes a satellite or a sub woofer from (main) player. The satellite becomes visible.
+   *
+   * @param {string} input.SatRoomUUID - example: `RINCON_000RRR1400`
+   * @remarks Not all speakers support satellites or sub woofer. Multiples RINCON_* are not allowed.
+   */
+  RemoveHTSatellite(input: { SatRoomUUID: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
-  async RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number }):
+  RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number; ChirpIfPlayingSwappableAudio: boolean }):
   Promise<RoomDetectionStartChirpingResponse> { return this.SoapRequestWithBody<typeof input, RoomDetectionStartChirpingResponse>('RoomDetectionStartChirping', input); }
 
-  async RoomDetectionStopChirping(input: { PlayId: number }):
+  RoomDetectionStopChirping(input: { PlayId: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RoomDetectionStopChirping', input); }
 
   /**
    * Separate a stereo pair
    *
    * @param {string} input.ChannelMapSet - example: `RINCON_B8E9375831C001400:LF,LF;RINCON_000E58FE3AEA01400:RF,RF`
-   * @remarks No all speakers support StereoPairs
+   * @remarks Not all speakers support StereoPairs
    */
-  async SeparateStereoPair(input: { ChannelMapSet: string }):
+  SeparateStereoPair(input: { ChannelMapSet: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SeparateStereoPair', input); }
 
-  async SetAutoplayLinkedZones(input: { IncludeLinkedZones: boolean; Source: string }):
+  SetAutoplayLinkedZones(input: { IncludeLinkedZones: boolean; Source: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayLinkedZones', input); }
 
-  async SetAutoplayRoomUUID(input: { RoomUUID: string; Source: string }):
+  SetAutoplayRoomUUID(input: { RoomUUID: string; Source: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayRoomUUID', input); }
 
-  async SetAutoplayVolume(input: { Volume: number; Source: string }):
+  SetAutoplayVolume(input: { Volume: number; Source: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayVolume', input); }
 
   /**
@@ -124,7 +139,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    *
    * @param {string} input.DesiredButtonLockState [ 'On' / 'Off' ]
    */
-  async SetButtonLockState(input: { DesiredButtonLockState: string }):
+  SetButtonLockState(input: { DesiredButtonLockState: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetButtonLockState', input); }
 
   /**
@@ -132,13 +147,13 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    *
    * @param {string} input.DesiredLEDState [ 'On' / 'Off' ]
    */
-  async SetLEDState(input: { DesiredLEDState: string }):
+  SetLEDState(input: { DesiredLEDState: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDState', input); }
 
-  async SetUseAutoplayVolume(input: { UseVolume: boolean; Source: string }):
+  SetUseAutoplayVolume(input: { UseVolume: boolean; Source: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetUseAutoplayVolume', input); }
 
-  async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string }):
+  SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string; DesiredTargetRoomName: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
 
@@ -150,11 +165,13 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       CurrentVolume: 'number',
       CurrentButtonLockState: 'string',
       CurrentHouseholdID: 'string',
+      IsHTForwardEnabled: 'boolean',
       CurrentLEDState: 'string',
       UseVolume: 'boolean',
       CurrentZoneName: 'string',
       CurrentIcon: 'string',
       CurrentConfiguration: 'string',
+      CurrentTargetRoomName: 'string',
       SerialNumber: 'string',
       SoftwareVersion: 'string',
       DisplaySoftwareVersion: 'string',
@@ -166,7 +183,6 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       HTAudioIn: 'number',
       Flags: 'number',
       PlayId: 'number',
-      ChirpIfPlayingSwappableAudio: 'boolean',
     };
   }
 
@@ -188,6 +204,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       Configuration: 'string',
       CopyrightInfo: 'string',
       DisplaySoftwareVersion: 'string',
+      EthLink: 'boolean',
       ExtraInfo: 'string',
       Flags: 'number',
       HardwareVersion: 'string',
@@ -196,6 +213,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
       HouseholdID: 'string',
       HTAudioIn: 'number',
       HTBondedZoneCommitState: 'number',
+      HTForwardEnabled: 'boolean',
       HTFreq: 'number',
       HTSatChanMapSet: 'string',
       Icon: 'string',
@@ -258,6 +276,10 @@ export interface GetHouseholdIDResponse {
   CurrentHouseholdID: string;
 }
 
+export interface GetHTForwardStateResponse {
+  IsHTForwardEnabled: boolean;
+}
+
 export interface GetLEDStateResponse {
   CurrentLEDState: string;
 }
@@ -270,6 +292,7 @@ export interface GetZoneAttributesResponse {
   CurrentZoneName: string;
   CurrentIcon: string;
   CurrentConfiguration: string;
+  CurrentTargetRoomName: string;
 }
 
 export interface GetZoneInfoResponse {
@@ -287,7 +310,6 @@ export interface GetZoneInfoResponse {
 
 export interface RoomDetectionStartChirpingResponse {
   PlayId: number;
-  ChirpIfPlayingSwappableAudio: boolean;
 }
 
 // Strong type event
@@ -307,6 +329,7 @@ export interface DevicePropertiesServiceEvent {
   Configuration?: string;
   CopyrightInfo?: string;
   DisplaySoftwareVersion?: string;
+  EthLink?: boolean;
   ExtraInfo?: string;
   Flags?: number;
   HardwareVersion?: string;
@@ -315,6 +338,7 @@ export interface DevicePropertiesServiceEvent {
   HouseholdID?: string;
   HTAudioIn?: number;
   HTBondedZoneCommitState?: number;
+  HTForwardEnabled?: boolean;
   HTFreq?: number;
   HTSatChanMapSet?: string;
   Icon?: string;

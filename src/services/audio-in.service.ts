@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,25 +29,25 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async GetAudioInputAttributes():
+  GetAudioInputAttributes():
   Promise<GetAudioInputAttributesResponse> { return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
 
-  async GetLineInLevel():
+  GetLineInLevel():
   Promise<GetLineInLevelResponse> { return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
 
-  async SelectAudio(input: { ObjectID: string }):
+  SelectAudio(input: { ObjectID: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
 
-  async SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
+  SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
 
-  async SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
+  SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
 
-  async StartTransmissionToGroup(input: { CoordinatorID: string }):
+  StartTransmissionToGroup(input: { CoordinatorID: string }):
   Promise<StartTransmissionToGroupResponse> { return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
 
-  async StopTransmissionToGroup(input: { CoordinatorID: string }):
+  StopTransmissionToGroup(input: { CoordinatorID: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
   // #endregion
 

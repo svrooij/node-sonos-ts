@@ -1,13 +1,12 @@
 import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import fetch from 'node-fetch';
-import { parse } from 'fast-xml-parser';
 import SonosDeviceBase from './sonos-device-base';
 import {
   GetZoneInfoResponse, GetZoneAttributesResponse, AddURIToQueueResponse, AVTransportServiceEvent, RenderingControlServiceEvent, MusicService, AccountData,
 } from './services';
 import {
-  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode,
+  PlayNotificationOptions, Alarm, TransportState, GroupTransportState, ExtendedTransportState, ServiceEvents, SonosEvents, PatchAlarm, PlayTtsOptions, BrowseResponse, ZoneGroup, ZoneMember, PlayMode, Repeat,
 } from './models';
 import { StrongSonosEvents } from './models/strong-sonos-events';
 import { EventsError } from './models/event-errors';
@@ -17,12 +16,14 @@ import { SmapiClient } from './musicservices/smapi-client';
 import IpHelper from './helpers/ip-helper';
 import JsonHelper from './helpers/json-helper';
 import TtsHelper from './helpers/tts-helper';
+import PlayModeHelper from './helpers/playmode-helper';
 import DeviceDescription from './models/device-description';
 import { SonosState } from './models/sonos-state';
 import {
   PlayNotificationTwoOptions, PlayTtsTwoOptions,
 } from './models/notificationQueue';
 import SonosDeviceNotifications from './sonos-notification-two';
+import XmlHelper from './helpers/xml-helper';
 
 /**
  * Main class to control a single sonos device.
@@ -32,11 +33,13 @@ import SonosDeviceNotifications from './sonos-notification-two';
  * @extends {SonosDeviceBase}
  */
 export default class SonosDevice extends SonosDeviceBase {
-  private name: string | undefined;
+  protected name: string | undefined;
 
   private groupName: string | undefined;
 
-  private coordinator: SonosDevice | undefined;
+  private groupId: string | undefined;
+
+  protected coordinator: SonosDevice | undefined;
 
   /**
    * Creates an instance of SonosDevice.
@@ -47,11 +50,12 @@ export default class SonosDevice extends SonosDeviceBase {
    * @param {({coordinator?: SonosDevice; name: string; managerEvents: EventEmitter} | undefined)} [groupConfig=undefined] groupConfig is used by the SonosManager to setup group change events.
    * @memberof SonosDevice
    */
-  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: { coordinator?: SonosDevice; name: string; managerEvents: EventEmitter } | undefined = undefined) {
+  constructor(host: string, port = 1400, uuid: string | undefined = undefined, name: string | undefined = undefined, groupConfig: { coordinator?: SonosDevice; name: string; managerEvents: EventEmitter, groupId?: string } | undefined = undefined) {
     super(host, port, uuid);
     this.name = name;
     if (groupConfig) {
       this.groupName = groupConfig.name;
+      this.groupId = groupConfig.groupId;
       if (groupConfig.coordinator !== undefined && uuid !== groupConfig.coordinator.uuid) {
         this.coordinator = groupConfig.coordinator;
         this.handleCoordinatorSimpleStateEvent(this.coordinator.currentTransportState === TransportState.Playing ? TransportState.Playing : TransportState.Stopped);
@@ -80,6 +84,13 @@ export default class SonosDevice extends SonosDeviceBase {
     return true;
   }
 
+  /**
+   * Returns true if this device has no coordinator, meaning it's the group coordinator.
+   */
+  public get IsCoordinator(): boolean {
+    return this.coordinator === undefined;
+  }
+
   // #region Added functionality
   /**
    * Add One track to the queue
@@ -93,7 +104,7 @@ export default class SonosDevice extends SonosDeviceBase {
   public async AddUriToQueue(trackUri: string, positionInQueue = 0, enqueueAsNext = true): Promise<AddURIToQueueResponse> {
     const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(trackUri);
 
-    return this.AVTransportService.AddURIToQueue({
+    return await this.AVTransportService.AddURIToQueue({
       InstanceID: 0,
       EnqueuedURI: guessedMetaData.trackUri,
       EnqueuedURIMetaData: guessedMetaData.metadata,
@@ -110,7 +121,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async AlarmList(): Promise<Alarm[]> {
-    return this.AlarmClockService.ListAndParseAlarms();
+    return await this.AlarmClockService.ListAndParseAlarms();
   }
 
   /**
@@ -129,7 +140,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async AlarmPatch(options: PatchAlarm): Promise<boolean> {
-    return this.AlarmClockService.PatchAlarm(options);
+    return await this.AlarmClockService.PatchAlarm(options);
   }
 
   /**
@@ -192,7 +203,7 @@ export default class SonosDevice extends SonosDeviceBase {
         }
         throw new Error(`Loading device description failed ${response.status} ${response.statusText}`);
       });
-    const { root: { device } } = parse(resp);
+    const { root: { device } } = XmlHelper.ParseXml(resp) as { root: { device: any } };
     return {
       manufacturer: device.manufacturer,
       modelNumber: device.modelNumber,
@@ -227,7 +238,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavoriteRadioShows(): Promise<BrowseResponse> {
-    return this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/1');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/1');
   }
 
   /**
@@ -237,7 +248,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavoriteRadioStations(): Promise<BrowseResponse> {
-    return this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/0');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('R:0/0');
   }
 
   /**
@@ -247,7 +258,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetFavorites(): Promise<BrowseResponse> {
-    return this.ContentDirectoryService.BrowseParsedWithDefaults('FV:2');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('FV:2');
   }
 
   /**
@@ -257,7 +268,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async GetQueue(): Promise<BrowseResponse> {
-    return this.ContentDirectoryService.BrowseParsedWithDefaults('Q:0');
+    return await this.ContentDirectoryService.BrowseParsedWithDefaults('Q:0');
   }
 
   /**
@@ -279,7 +290,7 @@ export default class SonosDevice extends SonosDeviceBase {
     if (groupToJoin.members.some((m: ZoneMember) => m.uuid === this.Uuid)) {
       return Promise.resolve(false); // Already in the group.
     }
-    return this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
+    return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon:${groupToJoin.coordinator.uuid}`, CurrentURIMetaData: '' });
   }
 
   public async LoadUuid(force = false): Promise<string> {
@@ -502,7 +513,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
-    return this.PlayNotification(notificationOptions);
+    return await this.PlayNotification(notificationOptions);
   }
 
   private async PlayNextNotification(originalState: TransportState, havePlayed?: boolean): Promise<boolean> {
@@ -598,7 +609,7 @@ export default class SonosDevice extends SonosDeviceBase {
 
     const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
 
-    return this.PlayNotificationTwo({
+    return await this.PlayNotificationTwo({
       ...notificationOptions,
       catchQueueErrors: options.catchQueueErrors,
       resolveAfterRevert: options.resolveAfterRevert,
@@ -609,6 +620,82 @@ export default class SonosDevice extends SonosDeviceBase {
 
   // #endregion
 
+  // #region Notification AudioClip
+  /**
+   * Play an audio clip through the native (local) AudioClip command
+   *
+   * @param {PlayNotificationOptions} options The options
+   * @param {string} [options.trackUri] The uri of the sound to play as notification, can be every supported sonos uri.
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @returns {Promise<true>} Returns true when the AudioClip is send to the speaker, false when stopped and onlyWhenPlaying === true
+   * @remarks This is only supported on S2 speakers, see: https://developer.sonos.com/reference/control-api/audioclip/
+   * @experimental This is experimental, do not depend on this.
+   * @memberof SonosDevice
+   */
+  public async PlayNotificationAudioClip(options: PlayNotificationOptions): Promise<boolean> {
+    this.debug('PlayNotificationAudioClip(%o)', options);
+    if (options.onlyWhenPlaying === true && this.CurrentTransportStateSimple === TransportState.Stopped) {
+      return false;
+    }
+
+    if (options.volume !== undefined && (options.volume < 1 || options.volume > 100)) {
+      throw new Error('Volume needs to be between 1 and 100');
+    }
+    const previousValue = process.env.NODE_TLS_REJECT_UNAUTHORIZED;
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+    // Have no idea if this should be public
+    // https://github.com/bencevans/node-sonos/issues/530#issuecomment-1430039043
+    const apiKey = '123e4567-e89b-12d3-a456-426655440000';
+    const body = {
+      name: 'Sonos TS Notification',
+      appId: 'io.svrooij.sonos-ts',
+      streamUrl: options.trackUri,
+      volume: options.volume ?? this.volume ?? 25,
+    };
+
+    return fetch(`https://${this.host}:1443/api/v1/players/local/audioClip`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Sonos-Api-Key': apiKey,
+        },
+        body: JSON.stringify(body),
+      }).then((response) => {
+      if (response.ok) {
+        return true;
+      }
+      throw new Error(`Playing AudioClip failed ${response.status} ${response.statusText}`);
+    }).finally(() => {
+      process.env.NODE_TLS_REJECT_UNAUTHORIZED = previousValue;
+    });
+  }
+
+  /**
+   * PlayTTS, but with (experimental) local AudioClip method
+   *
+   * @param {PlayTtsOptions} options
+   * @param {string} options.text Text to request a TTS file for.
+   * @param {string} options.lang Language to request tts file for.
+   * @param {string} [options.endpoint] TTS endpoint, see documentation, can also be set by environment variable 'SONOS_TTS_ENDPOINT'
+   * @param {string} [options.gender] Supply gender, some languages support both genders.
+   * @param {string} [options.name] Supply voice name, some services support several voices with different names.
+   * @param {boolean} [options.onlyWhenPlaying] Only play a notification if currently playing music. You don't have to check if the user is home ;)
+   * @param {number} [options.volume] Change the volume for the notification and revert afterwards.
+   * @returns {Promise<boolean>} Returns when added to queue or (for the first) when all notifications have played.
+   * @experimental This is experimental, do not depend on this.
+   * @memberof SonosDevice
+   */
+  public async PlayTTSAudioClip(options: PlayTtsOptions): Promise<boolean> {
+    this.debug('PlayTTSAudioClip(%o)', options);
+
+    const notificationOptions = await TtsHelper.TtsOptionsToNotification(options);
+
+    return await this.PlayNotificationAudioClip(notificationOptions);
+  }
+
+  // #endregion
   /**
    * Switch the playback to this url.
    *
@@ -618,7 +705,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SetAVTransportURI(trackUri: string): Promise<boolean> {
     const guessedMetaData = MetadataHelper.GuessMetaDataAndTrackUri(trackUri);
-    return this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metadata });
+    return await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: guessedMetaData.trackUri, CurrentURIMetaData: guessedMetaData.metadata });
   }
 
   /**
@@ -631,7 +718,7 @@ export default class SonosDevice extends SonosDeviceBase {
     await this.LoadUuid();
     await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-stream:${this.uuid}`, CurrentURIMetaData: '' });
-    return this.Play();
+    return await this.Play();
   }
 
   /**
@@ -642,7 +729,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SwitchToQueue(): Promise<boolean> {
     await this.LoadUuid();
-    return this.AVTransportService
+    return await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-rincon-queue:${this.uuid}#0`, CurrentURIMetaData: '' });
   }
 
@@ -656,7 +743,7 @@ export default class SonosDevice extends SonosDeviceBase {
     await this.LoadUuid();
     await this.AVTransportService
       .SetAVTransportURI({ InstanceID: 0, CurrentURI: `x-sonos-htastream:${this.uuid}:spdif`, CurrentURIMetaData: '' });
-    return this.Play();
+    return await this.Play();
   }
 
   /**
@@ -669,8 +756,8 @@ export default class SonosDevice extends SonosDeviceBase {
     // Load the Current state first, if not present (eg. not using events)
     const currentState = this.Coordinator.CurrentTransportStateSimple || (await this.Coordinator.AVTransportService.GetTransportInfo()).CurrentTransportState as TransportState;
     return currentState === TransportState.Playing || currentState === TransportState.Transitioning
-      ? this.Coordinator.Pause()
-      : this.Coordinator.Play();
+      ? await this.Coordinator.Pause()
+      : await this.Coordinator.Play();
   }
   // #endregion
 
@@ -707,7 +794,7 @@ export default class SonosDevice extends SonosDeviceBase {
     }
 
     // this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>; incorrect according to DeepSource
-    this.events = new EventEmitter();
+    this.events = new EventEmitter() as TypedEmitter<StrongSonosEvents>;
     this.events.on('removeListener', (eventName: string | symbol) => {
       this.debug('Listener removed for %s', eventName);
       if (eventName === SonosEvents.SubscriptionError) return;
@@ -816,7 +903,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #region Group stuff
   private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
-  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string }): void {
+  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string; groupdId: string | undefined }): void {
     if (data.coordinator && data.coordinator?.uuid !== this.Uuid && (!this.coordinator || this.coordinator?.Uuid !== data.coordinator?.Uuid)) {
       this.debug('Coordinator changed for %s', this.uuid);
       this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
@@ -848,6 +935,14 @@ export default class SonosDevice extends SonosDeviceBase {
         this.events.emit(SonosEvents.GroupName, this.groupName);
       }
     }
+
+    if (data.groupdId && data.groupdId !== this.groupId) {
+      this.groupId = data.groupdId;
+      this.debug('GroupId changed for %s to %s', this.uuid, this.groupId);
+      if (this.events !== undefined) {
+        this.events.emit(SonosEvents.GroupId, this.groupId);
+      }
+    }
   }
 
   /**
@@ -871,10 +966,21 @@ export default class SonosDevice extends SonosDeviceBase {
   public get GroupName(): string | undefined {
     return this.groupName;
   }
+
+  /**
+   * Get the GroupId, if device is created by the SonosManager.
+   *
+   * @readonly
+   * @type {(string | undefined)}
+   * @memberof SonosDevice
+   */
+  public get GroupId(): string | undefined {
+    return this.groupId;
+  }
   // #endregion
 
   // #region Properties
-  private currentPlayMode?: PlayMode;
+  protected currentPlayMode?: PlayMode;
 
   /**
    * Current play mode, only set when subscribed to events.
@@ -887,7 +993,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.currentPlayMode;
   }
 
-  private currentTrackUri?: string;
+  protected currentTrackUri?: string;
 
   /**
    * Current track uri, only set when subscribed to events.
@@ -900,7 +1006,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.currentTrackUri;
   }
 
-  private enqueuedTransportUri?: string;
+  protected enqueuedTransportUri?: string;
 
   /**
    * Current EnqueuedTransportUri only set when listening to events
@@ -913,7 +1019,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.enqueuedTransportUri;
   }
 
-  private nextTrackUri?: string;
+  protected nextTrackUri?: string;
 
   /**
    * Next Track Uri only set when listening to events
@@ -926,7 +1032,7 @@ export default class SonosDevice extends SonosDeviceBase {
     return this.nextTrackUri;
   }
 
-  private currentTransportState?: ExtendedTransportState;
+  protected currentTransportState?: ExtendedTransportState;
 
   /**
    * Current transport state, only set when listening for events
@@ -964,7 +1070,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public get Host(): string { return this.host; }
 
-  private muted?: boolean;
+  protected muted?: boolean;
 
   /**
    * Device muted, only set when subscribed for events.
@@ -1001,7 +1107,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public get Uuid(): string { return this.uuid; }
 
-  private volume?: number;
+  protected volume?: number;
 
   /**
    * Current volume of the player, only set when subscribed for events.
@@ -1025,8 +1131,32 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async GetNightMode(): Promise<boolean> {
-    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'NightMode' })).CurrentValue === 1;
+  public GetNightMode(): Promise<boolean> {
+    return this.RenderingControlService.GetNightMode();
+  }
+
+  /**
+   * Get repeat setting
+   * @returns {Repeat} Repeat part of PlayMode
+   */
+  public async GetRepeat(): Promise<Repeat> {
+    if (this.currentPlayMode === undefined) {
+      this.currentPlayMode = (await this.AVTransportService.GetTransportSettings()).PlayMode;
+    }
+
+    return PlayModeHelper.ComputeRepeat(this.currentPlayMode);
+  }
+
+  /**
+   * Get shuffle setting
+   * @returns Shuffle part of PlayMode
+   */
+  public async GetShuffle(): Promise<boolean> {
+    if (this.currentPlayMode === undefined) {
+      this.currentPlayMode = (await this.AVTransportService.GetTransportSettings()).PlayMode;
+    }
+
+    return PlayModeHelper.ComputeShuffle(this.currentPlayMode);
   }
 
   /**
@@ -1035,8 +1165,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async GetSpeechEnhancement(): Promise<boolean> {
-    return (await this.RenderingControlService.GetEQ({ InstanceID: 0, EQType: 'DialogLevel' })).CurrentValue === 1;
+  public GetSpeechEnhancement(): Promise<boolean> {
+    return this.RenderingControlService.GetSpeechEnhancement();
   }
 
   /**
@@ -1056,7 +1186,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<ZoneGroup[]>}
    * @memberof SonosDevice
    */
-  public async GetZoneGroupState(): Promise<ZoneGroup[]> { return this.ZoneGroupTopologyService.GetParsedZoneGroupState(); }
+  public async GetZoneGroupState(): Promise<ZoneGroup[]> { return await this.ZoneGroupTopologyService.GetParsedZoneGroupState(); }
 
   /**
    * GetZoneInfo shortcut to .DevicePropertiesService.GetZoneInfo()
@@ -1064,7 +1194,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<GetZoneInfoResponse>}
    * @memberof SonosDevice
    */
-  public async GetZoneInfo(): Promise<GetZoneInfoResponse> { return this.DevicePropertiesService.GetZoneInfo(); }
+  public async GetZoneInfo(): Promise<GetZoneInfoResponse> { return await this.DevicePropertiesService.GetZoneInfo(); }
 
   /**
    * Play next song, shortcut to .Coordinator.AVTransportService.Next()
@@ -1072,7 +1202,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async Next(): Promise<boolean> { return this.Coordinator.AVTransportService.Next(); }
+  public async Next(): Promise<boolean> { return await this.Coordinator.AVTransportService.Next(); }
 
   /**
    * Pause playback, shortcut to .Coordinator.AVTransportService.Pause()
@@ -1080,7 +1210,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async Pause(): Promise<boolean> { return this.Coordinator.AVTransportService.Pause(); }
+  public async Pause(): Promise<boolean> { return await this.Coordinator.AVTransportService.Pause(); }
 
   /**
    * Start playing, shortcut to .Coordinator.AVTransportService.Play({InstanceID: 0, Speed: '1'})
@@ -1088,7 +1218,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async Play(): Promise<boolean> { return this.Coordinator.AVTransportService.Play({ InstanceID: 0, Speed: '1' }); }
+  public async Play(): Promise<boolean> { return await this.Coordinator.AVTransportService.Play({ InstanceID: 0, Speed: '1' }); }
 
   /**
    * Play previous song, shortcut to .Coordinator.AVTransportService.Previous()
@@ -1096,7 +1226,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async Previous(): Promise<boolean> { return this.Coordinator.AVTransportService.Previous(); }
+  public async Previous(): Promise<boolean> { return await this.Coordinator.AVTransportService.Previous(); }
 
   /**
    * Seek position in the current track, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'REL_TIME', Target: trackTime})
@@ -1105,7 +1235,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SeekPosition(trackTime: string): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({ InstanceID: 0, Unit: 'REL_TIME', Target: trackTime }); }
+  public async SeekPosition(trackTime: string): Promise<boolean> { return await this.Coordinator.AVTransportService.Seek({ InstanceID: 0, Unit: 'REL_TIME', Target: trackTime }); }
 
   /**
    * Go to other track in queue, shortcut to .Coordinator.AVTransportService.Seek({InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString()})
@@ -1114,7 +1244,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SeekTrack(trackNr: number): Promise<boolean> { return this.Coordinator.AVTransportService.Seek({ InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString() }); }
+  public async SeekTrack(trackNr: number): Promise<boolean> { return await this.Coordinator.AVTransportService.Seek({ InstanceID: 0, Unit: 'TRACK_NR', Target: trackNr.toString() }); }
 
   /**
    * Turn on/off night mode, on your playbar.
@@ -1124,9 +1254,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SetNightMode(nightmode: boolean): Promise<boolean> {
-    return this.RenderingControlService
-      .SetEQ({ InstanceID: 0, EQType: 'NightMode', DesiredValue: nightmode === true ? 1 : 0 });
+  public SetNightMode(nightmode: boolean): Promise<boolean> {
+    return this.RenderingControlService.SetNightMode(nightmode);
   }
 
   /**
@@ -1137,7 +1266,7 @@ export default class SonosDevice extends SonosDeviceBase {
    * @memberof SonosDevice
    */
   public async SetRelativeGroupVolume(volumeAdjustment: number): Promise<number> {
-    return this.Coordinator.GroupRenderingControlService.SetRelativeGroupVolume({ InstanceID: 0, Adjustment: volumeAdjustment })
+    return await this.Coordinator.GroupRenderingControlService.SetRelativeGroupVolume({ InstanceID: 0, Adjustment: volumeAdjustment })
       .then((response) => response.NewVolume);
   }
 
@@ -1150,11 +1279,35 @@ export default class SonosDevice extends SonosDeviceBase {
    * @remarks Also saves the volume so it can be used by other methods that need the volume (and events aren't working)
    */
   public async SetRelativeVolume(volumeAdjustment: number): Promise<number> {
-    return this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
+    return await this.RenderingControlService.SetRelativeVolume({ InstanceID: 0, Channel: 'Master', Adjustment: volumeAdjustment })
       .then((response) => {
         this.volume = response.NewVolume;
         return response.NewVolume;
       });
+  }
+
+  /**
+   * Set PlayMode based on repeat only
+   * @param repeat New Repeat setting
+   */
+  public async SetRepeat(repeat: Repeat): Promise<void> {
+    const shuffle = await this.GetShuffle();
+    await this.setPlayMode(shuffle, repeat);
+  }
+
+  /**
+   * Set PlayMode based on shuffle only
+   * @param shuffle Shuffle on or off
+   */
+  public async SetShuffle(shuffle: boolean): Promise<void> {
+    const repeat = await this.GetRepeat();
+    await this.setPlayMode(shuffle, repeat);
+  }
+
+  private async setPlayMode(shuffle: boolean, repeat: Repeat): Promise<void> {
+    const newPlayMode = PlayModeHelper.ComputePlayMode(shuffle, repeat);
+    await this.AVTransportService.SetPlayMode({ InstanceID: 0, NewPlayMode: newPlayMode });
+    this.currentPlayMode = newPlayMode;
   }
 
   /**
@@ -1165,9 +1318,8 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
-    return this.RenderingControlService
-      .SetEQ({ InstanceID: 0, EQType: 'DialogLevel', DesiredValue: dialogLevel === true ? 1 : 0 });
+  public SetSpeechEnhancement(dialogLevel: boolean): Promise<boolean> {
+    return this.RenderingControlService.SetSpeechEnhancement(dialogLevel);
   }
 
   /**
@@ -1180,7 +1332,7 @@ export default class SonosDevice extends SonosDeviceBase {
    */
   public async SetVolume(volume: number): Promise<boolean> {
     if (volume < 0 || volume > 100) throw new Error('Volume should be between 0 and 100');
-    return this.RenderingControlService
+    return await this.RenderingControlService
       .SetVolume({ InstanceID: 0, Channel: 'Master', DesiredVolume: volume })
       .then((result: boolean) => {
         if (result === true && this.volume !== volume) {
@@ -1196,6 +1348,6 @@ export default class SonosDevice extends SonosDeviceBase {
    * @returns {Promise<boolean>}
    * @memberof SonosDevice
    */
-  public async Stop(): Promise<boolean> { return this.Coordinator.AVTransportService.Stop(); }
+  public async Stop(): Promise<boolean> { return await this.Coordinator.AVTransportService.Stop(); }
   // #endregion
 }

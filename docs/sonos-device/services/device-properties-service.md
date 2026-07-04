@@ -9,7 +9,7 @@ grand_parent: Sonos device
 
 Modify device properties, like LED status and stereo pairs
 
-The DeviceProperties service is available on these models: `v1-S1` / `v1-S5` / `v1-S9` / `v2-S13` / `v2-S14` / `v2-S27` / `v2-S3` / `v2-S6` / `v2-Sub`.
+The DeviceProperties service is available on these models: `v2-S1` / `v2-S13` / `v2-S14` / `v2-S18` / `v2-S21` / `v2-S27` / `v2-S3` / `v2-S33` / `v2-S38` / `v2-S6` / `v2-S9` / `v2-Sub`.
 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
@@ -40,6 +40,8 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### AddHTSatellite
 
+Adds satellites and/or a sub woofer to a (main) player. The satellites become hidden. The main player RINCON_* is mandatory. RR: right - rear, LF: left - front, SW: subwoofer
+
 ```js
 const result = await sonos.DevicePropertiesService.AddHTSatellite({ HTSatChanMapSet:... });
 ```
@@ -48,9 +50,11 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **HTSatChanMapSet** | `string` |  |
+| **HTSatChanMapSet** | `string` | example: `RINCON_000PPP1400:LF,RF;RINCON_000RRR1400:RR;RINCON_000SSS1400:LR;RINCON_000QQQ1400:SW` |
 
 This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Not all speakers support satellites or sub woofer. Satellites should be of same type (e.g. Play:1)
 
 ### CreateStereoPair
 
@@ -68,7 +72,7 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** No all speakers support StereoPairs
+**Remarks** Not all speakers support StereoPairs
 
 ### EnterConfigMode
 
@@ -195,6 +199,18 @@ Output object:
 |:----------|:-----|:------------|
 | **CurrentHouseholdID** | `string` |  |
 
+### GetHTForwardState
+
+```js
+const result = await sonos.DevicePropertiesService.GetHTForwardState();
+```
+
+Output object:
+
+| property | type | description |
+|:----------|:-----|:------------|
+| **IsHTForwardEnabled** | `boolean` |  |
+
 ### GetLEDState
 
 Get the current LED state
@@ -240,6 +256,7 @@ Output object:
 | **CurrentZoneName** | `string` |  |
 | **CurrentIcon** | `string` |  |
 | **CurrentConfiguration** | `string` |  |
+| **CurrentTargetRoomName** | `string` |  |
 
 ### GetZoneInfo
 
@@ -281,6 +298,8 @@ This actions returns a boolean whether or not the requests succeeded.
 
 ### RemoveHTSatellite
 
+Removes a satellite or a sub woofer from (main) player. The satellite becomes visible.
+
 ```js
 const result = await sonos.DevicePropertiesService.RemoveHTSatellite({ SatRoomUUID:... });
 ```
@@ -289,14 +308,16 @@ Input object:
 
 | property | type | description |
 |:----------|:-----|:------------|
-| **SatRoomUUID** | `string` |  |
+| **SatRoomUUID** | `string` | example: `RINCON_000RRR1400` |
 
 This actions returns a boolean whether or not the requests succeeded.
+
+**Remarks** Not all speakers support satellites or sub woofer. Multiples RINCON_* are not allowed.
 
 ### RoomDetectionStartChirping
 
 ```js
-const result = await sonos.DevicePropertiesService.RoomDetectionStartChirping({ Channel:..., DurationMilliseconds:... });
+const result = await sonos.DevicePropertiesService.RoomDetectionStartChirping({ Channel:..., DurationMilliseconds:..., ChirpIfPlayingSwappableAudio:... });
 ```
 
 Input object:
@@ -305,13 +326,13 @@ Input object:
 |:----------|:-----|:------------|
 | **Channel** | `number` |  |
 | **DurationMilliseconds** | `number` |  |
+| **ChirpIfPlayingSwappableAudio** | `boolean` |  |
 
 Output object:
 
 | property | type | description |
 |:----------|:-----|:------------|
 | **PlayId** | `number` |  |
-| **ChirpIfPlayingSwappableAudio** | `boolean` |  |
 
 ### RoomDetectionStopChirping
 
@@ -343,7 +364,7 @@ Input object:
 
 This actions returns a boolean whether or not the requests succeeded.
 
-**Remarks** No all speakers support StereoPairs
+**Remarks** Not all speakers support StereoPairs
 
 ### SetAutoplayLinkedZones
 
@@ -440,7 +461,7 @@ This actions returns a boolean whether or not the requests succeeded.
 ### SetZoneAttributes
 
 ```js
-const result = await sonos.DevicePropertiesService.SetZoneAttributes({ DesiredZoneName:..., DesiredIcon:..., DesiredConfiguration:... });
+const result = await sonos.DevicePropertiesService.SetZoneAttributes({ DesiredZoneName:..., DesiredIcon:..., DesiredConfiguration:..., DesiredTargetRoomName:... });
 ```
 
 Input object:
@@ -450,6 +471,7 @@ Input object:
 | **DesiredZoneName** | `string` |  |
 | **DesiredIcon** | `string` |  |
 | **DesiredConfiguration** | `string` |  |
+| **DesiredTargetRoomName** | `string` |  |
 
 This actions returns a boolean whether or not the requests succeeded.
 
@@ -482,6 +504,7 @@ The **DevicePropertiesService** emits events with these properties. Not all prop
 | **Configuration** | `string` |  | 
 | **CopyrightInfo** | `string` |  | 
 | **DisplaySoftwareVersion** | `string` |  | 
+| **EthLink** | `boolean` |  | 
 | **ExtraInfo** | `string` |  | 
 | **Flags** | `number` |  | 
 | **HardwareVersion** | `string` |  | 
@@ -490,6 +513,7 @@ The **DevicePropertiesService** emits events with these properties. Not all prop
 | **HouseholdID** | `string` |  | 
 | **HTAudioIn** | `number` |  | 
 | **HTBondedZoneCommitState** | `number` |  | 
+| **HTForwardEnabled** | `boolean` |  | 
 | **HTFreq** | `number` |  | 
 | **HTSatChanMapSet** | `string` |  | 
 | **Icon** | `string` |  | 

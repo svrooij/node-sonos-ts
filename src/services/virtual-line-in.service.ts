@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -25,28 +25,28 @@ export class VirtualLineInService extends BaseService<VirtualLineInServiceEvent>
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async Next(input: { InstanceID: number } = { InstanceID: 0 }):
+  Next(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Next', input); }
 
-  async Pause(input: { InstanceID: number } = { InstanceID: 0 }):
+  Pause(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Pause', input); }
 
-  async Play(input: { InstanceID: number; Speed: string }):
+  Play(input: { InstanceID: number; Speed: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Play', input); }
 
-  async Previous(input: { InstanceID: number } = { InstanceID: 0 }):
+  Previous(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Previous', input); }
 
-  async SetVolume(input: { InstanceID: number; DesiredVolume: number }):
+  SetVolume(input: { InstanceID: number; DesiredVolume: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
 
-  async StartTransmission(input: { InstanceID: number; CoordinatorID: string }):
+  StartTransmission(input: { InstanceID: number; CoordinatorID: string }):
   Promise<StartTransmissionResponse> { return this.SoapRequestWithBody<typeof input, StartTransmissionResponse>('StartTransmission', input); }
 
-  async Stop(input: { InstanceID: number } = { InstanceID: 0 }):
+  Stop(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Stop', input); }
 
-  async StopTransmission(input: { InstanceID: number; CoordinatorID: string }):
+  StopTransmission(input: { InstanceID: number; CoordinatorID: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmission', input); }
   // #endregion
 

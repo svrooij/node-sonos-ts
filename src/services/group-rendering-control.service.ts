@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -44,7 +44,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Should be send to coordinator only
    */
-  async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupMuteResponse> { return this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
 
   /**
@@ -53,7 +53,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Should be send to coordinator only
    */
-  async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetGroupVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
 
   /**
@@ -63,7 +63,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {boolean} input.DesiredMute
    * @remarks Should be send to coordinator only
    */
-  async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
+  SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
 
   /**
@@ -73,7 +73,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {number} input.DesiredVolume - New volume between 0 and 100
    * @remarks Should be send to coordinator only
    */
-  async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
+  SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
 
   /**
@@ -83,7 +83,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {number} input.Adjustment - Number between -100 and +100
    * @remarks Should be send to coordinator only
    */
-  async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
+  SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
   Promise<SetRelativeGroupVolumeResponse> { return this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
 
   /**
@@ -92,7 +92,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @remarks Should be send to coordinator only
    */
-  async SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
+  SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   // #endregion
 

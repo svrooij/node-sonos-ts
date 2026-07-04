@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -29,28 +29,28 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
   readonly errors: SonosUpnpError[] = SonosUpnpErrors.defaultErrors;
 
   // #region actions
-  async CommitLearnedIRCodes(input: { Name: string }):
+  CommitLearnedIRCodes(input: { Name: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('CommitLearnedIRCodes', input); }
 
-  async GetIRRepeaterState():
+  GetIRRepeaterState():
   Promise<GetIRRepeaterStateResponse> { return this.SoapRequest<GetIRRepeaterStateResponse>('GetIRRepeaterState'); }
 
-  async GetLEDFeedbackState():
+  GetLEDFeedbackState():
   Promise<GetLEDFeedbackStateResponse> { return this.SoapRequest<GetLEDFeedbackStateResponse>('GetLEDFeedbackState'); }
 
-  async IdentifyIRRemote(input: { Timeout: number }):
+  IdentifyIRRemote(input: { Timeout: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('IdentifyIRRemote', input); }
 
-  async IsRemoteConfigured():
+  IsRemoteConfigured():
   Promise<IsRemoteConfiguredResponse> { return this.SoapRequest<IsRemoteConfiguredResponse>('IsRemoteConfigured'); }
 
-  async LearnIRCode(input: { IRCode: string; Timeout: number }):
+  LearnIRCode(input: { IRCode: string; Timeout: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('LearnIRCode', input); }
 
-  async SetIRRepeaterState(input: { DesiredIRRepeaterState: string }):
+  SetIRRepeaterState(input: { DesiredIRRepeaterState: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetIRRepeaterState', input); }
 
-  async SetLEDFeedbackState(input: { LEDFeedbackState: string }):
+  SetLEDFeedbackState(input: { LEDFeedbackState: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
   // #endregion
 

@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 import BaseService from './base-service';
 import { SonosUpnpError } from '../models/sonos-upnp-error';
@@ -37,20 +37,20 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
    */
-  async GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetBass(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetBassResponse> { return this.SoapRequestWithBody<typeof input, GetBassResponse>('GetBass', input); }
 
   /**
    * Get equalizer value
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
-   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10)
    * @remarks Not all EQ types are available on every speaker
    */
-  async GetEQ(input: { InstanceID: number; EQType: string }):
+  GetEQ(input: { InstanceID: number; EQType: string }):
   Promise<GetEQResponse> { return this.SoapRequestWithBody<typeof input, GetEQResponse>('GetEQ', input); }
 
-  async GetHeadphoneConnected(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetHeadphoneConnected(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetHeadphoneConnectedResponse> { return this.SoapRequestWithBody<typeof input, GetHeadphoneConnectedResponse>('GetHeadphoneConnected', input); }
 
   /**
@@ -59,19 +59,19 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
    */
-  async GetLoudness(input: { InstanceID: number; Channel: string }):
+  GetLoudness(input: { InstanceID: number; Channel: string }):
   Promise<GetLoudnessResponse> { return this.SoapRequestWithBody<typeof input, GetLoudnessResponse>('GetLoudness', input); }
 
-  async GetMute(input: { InstanceID: number; Channel: string }):
+  GetMute(input: { InstanceID: number; Channel: string }):
   Promise<GetMuteResponse> { return this.SoapRequestWithBody<typeof input, GetMuteResponse>('GetMute', input); }
 
-  async GetOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetOutputFixedResponse> { return this.SoapRequestWithBody<typeof input, GetOutputFixedResponse>('GetOutputFixed', input); }
 
-  async GetRoomCalibrationStatus(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetRoomCalibrationStatus(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetRoomCalibrationStatusResponse> { return this.SoapRequestWithBody<typeof input, GetRoomCalibrationStatusResponse>('GetRoomCalibrationStatus', input); }
 
-  async GetSupportsOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetSupportsOutputFixed(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetSupportsOutputFixedResponse> { return this.SoapRequestWithBody<typeof input, GetSupportsOutputFixedResponse>('GetSupportsOutputFixed', input); }
 
   /**
@@ -79,7 +79,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
    */
-  async GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
+  GetTreble(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<GetTrebleResponse> { return this.SoapRequestWithBody<typeof input, GetTrebleResponse>('GetTreble', input); }
 
   /**
@@ -88,25 +88,25 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
    */
-  async GetVolume(input: { InstanceID: number; Channel: string }):
+  GetVolume(input: { InstanceID: number; Channel: string }):
   Promise<GetVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetVolumeResponse>('GetVolume', input); }
 
-  async GetVolumeDB(input: { InstanceID: number; Channel: string }):
+  GetVolumeDB(input: { InstanceID: number; Channel: string }):
   Promise<GetVolumeDBResponse> { return this.SoapRequestWithBody<typeof input, GetVolumeDBResponse>('GetVolumeDB', input); }
 
-  async GetVolumeDBRange(input: { InstanceID: number; Channel: string }):
+  GetVolumeDBRange(input: { InstanceID: number; Channel: string }):
   Promise<GetVolumeDBRangeResponse> { return this.SoapRequestWithBody<typeof input, GetVolumeDBRangeResponse>('GetVolumeDBRange', input); }
 
-  async RampToVolume(input: { InstanceID: number; Channel: string; RampType: string; DesiredVolume: number; ResetVolumeAfter: boolean; ProgramURI: string }):
+  RampToVolume(input: { InstanceID: number; Channel: string; RampType: string; DesiredVolume: number; ResetVolumeAfter: boolean; ProgramURI: string }):
   Promise<RampToVolumeResponse> { return this.SoapRequestWithBody<typeof input, RampToVolumeResponse>('RampToVolume', input); }
 
-  async ResetBasicEQ(input: { InstanceID: number } = { InstanceID: 0 }):
+  ResetBasicEQ(input: { InstanceID: number } = { InstanceID: 0 }):
   Promise<ResetBasicEQResponse> { return this.SoapRequestWithBody<typeof input, ResetBasicEQResponse>('ResetBasicEQ', input); }
 
-  async ResetExtEQ(input: { InstanceID: number; EQType: string }):
+  ResetExtEQ(input: { InstanceID: number; EQType: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ResetExtEQ', input); }
 
-  async RestoreVolumePriorToRamp(input: { InstanceID: number; Channel: string }):
+  RestoreVolumePriorToRamp(input: { InstanceID: number; Channel: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RestoreVolumePriorToRamp', input); }
 
   /**
@@ -115,21 +115,21 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {number} input.DesiredBass
    */
-  async SetBass(input: { InstanceID: number; DesiredBass: number }):
+  SetBass(input: { InstanceID: number; DesiredBass: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetBass', input); }
 
-  async SetChannelMap(input: { InstanceID: number; ChannelMap: string }):
+  SetChannelMap(input: { InstanceID: number; ChannelMap: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetChannelMap', input); }
 
   /**
    * Set equalizer value for different types
    *
    * @param {number} input.InstanceID - InstanceID should always be `0`
-   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = full, 1 = ambient)
+   * @param {string} input.EQType - Allowed values `DialogLevel` (bool) / `MusicSurroundLevel` (-15/+15) /  `NightMode` (bool) / `SubGain` (-10/+10) / `SurroundEnable` (bool) / `SurroundLevel` (-15/+15) / `SurroundMode` (0 = ambient, 1 = full) / `HeightChannelLevel` (-10/+10)
    * @param {number} input.DesiredValue - Booleans required `1` for true or `0` for false, rest number as specified
    * @remarks Not supported by all speakers, TV related
    */
-  async SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
+  SetEQ(input: { InstanceID: number; EQType: string; DesiredValue: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetEQ', input); }
 
   /**
@@ -139,22 +139,22 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * @param {string} input.Channel [ 'Master' / 'LF' / 'RF' ]
    * @param {boolean} input.DesiredLoudness
    */
-  async SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
+  SetLoudness(input: { InstanceID: number; Channel: string; DesiredLoudness: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLoudness', input); }
 
-  async SetMute(input: { InstanceID: number; Channel: string; DesiredMute: boolean }):
+  SetMute(input: { InstanceID: number; Channel: string; DesiredMute: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetMute', input); }
 
-  async SetOutputFixed(input: { InstanceID: number; DesiredFixed: boolean }):
+  SetOutputFixed(input: { InstanceID: number; DesiredFixed: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetOutputFixed', input); }
 
-  async SetRelativeVolume(input: { InstanceID: number; Channel: string; Adjustment: number }):
+  SetRelativeVolume(input: { InstanceID: number; Channel: string; Adjustment: number }):
   Promise<SetRelativeVolumeResponse> { return this.SoapRequestWithBody<typeof input, SetRelativeVolumeResponse>('SetRelativeVolume', input); }
 
-  async SetRoomCalibrationStatus(input: { InstanceID: number; RoomCalibrationEnabled: boolean }):
+  SetRoomCalibrationStatus(input: { InstanceID: number; RoomCalibrationEnabled: boolean }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationStatus', input); }
 
-  async SetRoomCalibrationX(input: { InstanceID: number; CalibrationID: string; Coefficients: string; CalibrationMode: string }):
+  SetRoomCalibrationX(input: { InstanceID: number; CalibrationID: string; Coefficients: string; CalibrationMode: string }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetRoomCalibrationX', input); }
 
   /**
@@ -163,13 +163,13 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
    * @param {number} input.InstanceID - InstanceID should always be `0`
    * @param {number} input.DesiredTreble - between -10 and 10
    */
-  async SetTreble(input: { InstanceID: number; DesiredTreble: number }):
+  SetTreble(input: { InstanceID: number; DesiredTreble: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetTreble', input); }
 
-  async SetVolume(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
+  SetVolume(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolume', input); }
 
-  async SetVolumeDB(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
+  SetVolumeDB(input: { InstanceID: number; Channel: string; DesiredVolume: number }):
   Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetVolumeDB', input); }
   // #endregion
 
@@ -208,6 +208,7 @@ export class RenderingControlServiceBase extends BaseService<RenderingControlSer
       DialogLevel: 'string',
       EQValue: 'number',
       HeadphoneConnected: 'boolean',
+      HeightChannelLevel: 'number',
       LastChange: 'string',
       Loudness: 'boolean',
       MusicSurroundLevel: 'string',
@@ -312,6 +313,7 @@ export interface RenderingControlServiceEvent {
   DialogLevel?: string;
   EQValue?: number;
   HeadphoneConnected?: boolean;
+  HeightChannelLevel?: number;
   LastChange?: string;
   Loudness?: boolean;
   MusicSurroundLevel?: string;
