@@ -41,7 +41,7 @@ jobs:
 
       - name: Run tests
         if: ${{ always() }}
-        run: npm run jest
+        run: npm run test:jest
 
       - name: Send data to Coveralls
         if: always() && matrix.node == 24
