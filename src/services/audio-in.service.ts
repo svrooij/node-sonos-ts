@@ -30,28 +30,28 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
 
   // #region actions
   async GetAudioInputAttributes():
-  Promise<GetAudioInputAttributesResponse> { return await this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
+  Promise<GetAudioInputAttributesResponse> { return this.SoapRequest<GetAudioInputAttributesResponse>('GetAudioInputAttributes'); }
 
   async GetLineInLevel():
-  Promise<GetLineInLevelResponse> { return await this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
+  Promise<GetLineInLevelResponse> { return this.SoapRequest<GetLineInLevelResponse>('GetLineInLevel'); }
 
   async SelectAudio(input: { ObjectID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SelectAudio', input); }
 
   async SetAudioInputAttributes(input: { DesiredName: string; DesiredIcon: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAudioInputAttributes', input); }
 
   async SetLineInLevel(input: { DesiredLeftLineInLevel: number; DesiredRightLineInLevel: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLineInLevel', input); }
 
   async StartTransmissionToGroup(input: { CoordinatorID: string }):
-  Promise<StartTransmissionToGroupResponse> { return await this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
+  Promise<StartTransmissionToGroupResponse> { return this.SoapRequestWithBody<typeof input, StartTransmissionToGroupResponse>('StartTransmissionToGroup', input); }
 
   async StopTransmissionToGroup(input: { CoordinatorID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('StopTransmissionToGroup', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentName: 'string',
       CurrentIcon: 'string',
@@ -62,7 +62,7 @@ export class AudioInService extends BaseService<AudioInServiceEvent> {
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AudioInputName: 'string',
       Icon: 'string',

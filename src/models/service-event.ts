@@ -12,12 +12,15 @@ export enum ServiceEvents {
   /**
    * @deprecated switch to ServiceEvent
    */
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   Data = 'serviceEvent',
   /**
    * @deprecated switch to ServiceEvent
    */
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   LastChange = 'serviceEvent',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   ServiceEvent = 'serviceEvent',
   SubscriptionError = 'subscriptionError',
-  Unprocessed = 'rawEvent'
+  Unprocessed = 'rawEvent',
 }

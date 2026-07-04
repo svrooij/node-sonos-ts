@@ -8,9 +8,9 @@ import AsyncHelper from '../src/helpers/async-helper';
 
 describe('SonosDevice - Notifications', () => {
   describe('PlayNotification(...)', () => {
-    afterEach(async (done) => {
+    afterEach(async () => {
       await SonosEventListener.DefaultInstance.StopListener().catch(err => {});
-      setTimeout(() => done(), 100);
+      await new Promise(resolve => setTimeout(resolve, 100));
 
     })
     // beforeAll(() => {
@@ -19,7 +19,7 @@ describe('SonosDevice - Notifications', () => {
     // afterAll(() => {
     //   delete process.env.SONOS_DISABLE_EVENTS;
     // })
-    it('executes right requests', async (done) => {
+    it('executes right requests', async () => {
       process.env.SONOS_DISABLE_LISTENER = 'disable';
       const currentVolume = 6;
       const notificationVolume = 10;
@@ -162,10 +162,9 @@ describe('SonosDevice - Notifications', () => {
       const nockResult = scope.isDone();
       expect(nockResult).to.be.true;
       delete process.env.SONOS_DISABLE_EVENTS;
-      done();
     });
 
-    it('returns false when not playing', async (done) => {
+    it('returns false when not playing', async () => {
       // GetTransportInfo
       const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
@@ -219,10 +218,9 @@ describe('SonosDevice - Notifications', () => {
         volume: 10
       });
       expect(result).to.be.false;
-      done();
     });
 
-    it('executes notification callback', async (done) => {
+    it('executes notification callback', async () => {
       // GetTransportInfo
       const scope = TestHelpers.mockRequest('/MediaRenderer/AVTransport/Control',
         '"urn:schemas-upnp-org:service:AVTransport:1#GetTransportInfo"',
@@ -276,13 +274,12 @@ describe('SonosDevice - Notifications', () => {
         volume: 10,
         notificationFired: (played) => {
           expect(played).to.be.false;
-          done();
         }
       });
       
     }, 2000);
 
-    it('plays two notifications', async (done) => {
+    it('plays two notifications', async () => {
       const currentVolume = 6;
       const notificationVolume = 10;
       const port = 1410;
@@ -390,7 +387,6 @@ describe('SonosDevice - Notifications', () => {
             notificationsPlayed++;
             await AsyncHelper.Delay(100);
             expect(notificationsPlayed).to.be.equal(2);
-            done();
           },
           timeout: 1,
           trackUri: 'spotify:artistRadio:37i9dQZF1E4lKH7XBCfxxx'
@@ -437,12 +433,12 @@ describe('SonosDevice - Notifications', () => {
   });
 
   describe('PlayTTS(...)', () => {
-    afterEach(async (done) => {
+    afterEach(async () => {
       await SonosEventListener.DefaultInstance.StopListener();
-      setTimeout(() => done(), 30);
+      await new Promise(resolve => setTimeout(resolve, 30));
     });
 
-    it('return false when not playing', async (done) => {
+    it('return false when not playing', async () => {
       const port = 1700;
       const scope = TestHelpers.getScope(port);
       // GetTransportInfo
@@ -511,19 +507,18 @@ describe('SonosDevice - Notifications', () => {
         volume: 10
       });
       expect(result).to.be.false;
-      done();
     });
 
   });
 })
 
 describe('PlayNotificationTwo(...) Queue Tests', () => {
-  afterEach(async (done) => {
+  afterEach(async () => {
     await SonosEventListener.DefaultInstance.StopListener();
-    setTimeout(() => done(), 30);
+    await new Promise(resolve => setTimeout(resolve, 30));
   });
 
-  it('returns false when timeout triggers', async (done) => {
+  it('returns false when timeout triggers', async () => {
 
     const currentVolume = 6;
     const notificationVolume = 10;
@@ -684,10 +679,9 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
     });
 
     expect(result).to.be.eq(false);
-    done();
   });
 
-  it('Notification Queue, "resolveAfterRevert" Option (Receive 2nd promise prior to first or third)', async (done) => {
+  it('Notification Queue, "resolveAfterRevert" Option (Receive 2nd promise prior to first or third)', async () => {
 
     const currentVolume = 6;
     const notificationVolume = 10;
@@ -915,7 +909,6 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       // expect(device.jestDebug.join('\n')).to.be.eq("");
       assert(false, `First promise got wrongly resolved (${result}) before 2nd`);
       // expect("First promise got wrongly resolved (" + result + ") before 2nd").to.be.eq("");
-      done();
     });
 
     device.PlayNotificationTwo({
@@ -928,7 +921,6 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
     }).then((result) => {
       secondNotificationFinished = true;
       expect(result).to.be.eq(true);
-      done();
     });
 
     device.PlayNotificationTwo({
@@ -944,11 +936,10 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       }
       assert(false, '3rd promise got wrongly resolved before 2nd');
       // expect("3rd promise got wrongly resolved before 2nd").to.be.eq("");
-      done();
     });
   });
 
-  it('Notification Queue, Receive both  promised resolved', async (done) => {
+  it('Notification Queue, Receive both  promised resolved', async () => {
 
     const currentVolume = 6;
     const notificationVolume = 10;
@@ -1159,11 +1150,10 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       } else if(!firstNotificationPlayed) {
         expect("First Notification wasn't resolved or played").to.be.eq("");
       }
-      done();
     });
   });
 
-  it('Notification Queue, Test specific Timeout on second queue item', async (done) => {
+  it('Notification Queue, Test specific Timeout on second queue item', async () => {
 
     const currentVolume = 6;
     const notificationVolume = 10;
@@ -1368,7 +1358,6 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       }
 
       if(secondTriggered) {
-        done();
       } else {
         expect("Second Notification wasn't resolved first").to.be.eq("");
       }
@@ -1389,7 +1378,6 @@ describe('PlayNotificationTwo(...) Queue Tests', () => {
       }
 
       if(firstNotificationPlayed) {
-        done();
       }
     });
   });

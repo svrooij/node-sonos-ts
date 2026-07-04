@@ -125,7 +125,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequest<TResponse>(action: string): Promise<TResponse> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
   }
 
   /**
@@ -142,7 +142,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBody<TBody, TResponse>(action: string, body: TBody): Promise<TResponse> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
   }
 
   /**
@@ -156,7 +156,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestNoResponse(action: string): Promise<boolean> {
     this.debug('%s()', action);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
+    return this.handleRequest(this.generateRequest<undefined>(action, undefined), action);
   }
 
   /**
@@ -172,7 +172,7 @@ export default abstract class BaseService <TServiceEvent> {
   protected async SoapRequestWithBodyNoResponse<TBody>(action: string, body: TBody): Promise<boolean> {
     this.debug('%s(%o)', action, body);
     await this.ResolveHostname();
-    return await this.handleRequest(this.generateRequest<TBody>(action, body), action);
+    return this.handleRequest(this.generateRequest<TBody>(action, body), action);
   }
   // #endregion
 
@@ -216,7 +216,7 @@ export default abstract class BaseService <TServiceEvent> {
       Object.entries(body).forEach((v) => {
         // Deconstruct v into key and value.
         const [key, value] = v;
-        if (typeof value === 'object' && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
+        if (typeof value === 'object' && value !== null && key.indexOf('MetaData') > -1) messageBody += `<${key}>${XmlHelper.EncodeXml(MetadataHelper.TrackToMetaData(value))}</${key}>`;
         else if (typeof value === 'string' && key.endsWith('URI')) messageBody += `<${key}>${XmlHelper.EncodeTrackUri(value)}</${key}>`;
         else if (typeof value === 'boolean') messageBody += `<${key}>${value === true ? '1' : '0'}</${key}>`;
         else messageBody += `<${key}>${value ?? ''}</${key}>`;
@@ -241,7 +241,7 @@ export default abstract class BaseService <TServiceEvent> {
     if (response.ok) {
       return true;
     }
-    return await this.handleErrorResponse<boolean>(action, response);
+    return this.handleErrorResponse<boolean>(action, response);
   }
 
   /**
@@ -293,7 +293,7 @@ export default abstract class BaseService <TServiceEvent> {
     throw new HttpError(action, response.status, response.statusText);
   }
 
-  protected abstract responseProperties(): {[key: string]: string};
+  protected abstract responseProperties(): { [key: string]: string };
 
   /**
    * parseEmbeddedXml will parse the value of some response properties
@@ -305,7 +305,7 @@ export default abstract class BaseService <TServiceEvent> {
    * @memberof BaseService
    */
   private parseEmbeddedXml<TResponse>(input: any): TResponse {
-    const output: {[key: string]: any } = {};
+    const output: { [key: string]: any } = {};
     const keys = Object.keys(input);
     keys.forEach((k) => {
       output[k] = this.parseValue(k, input[k], this.responseProperties()[k]);
@@ -502,7 +502,7 @@ export default abstract class BaseService <TServiceEvent> {
    */
   public async CheckEventListener(): Promise<boolean> {
     if (this.sid !== undefined) {
-      return await this.renewEventSubscription();
+      return this.renewEventSubscription();
     }
     return false;
   }
@@ -553,11 +553,11 @@ export default abstract class BaseService <TServiceEvent> {
     }
   }
 
-  protected abstract eventProperties(): {[key: string]: string};
+  protected abstract eventProperties(): { [key: string]: string };
 
   private cleanEventLastChange(inputRaw: any): TServiceEvent {
     const input = Array.isArray(inputRaw) ? inputRaw[0] : inputRaw;
-    const output: {[key: string]: any} = {};
+    const output: { [key: string]: any } = {};
 
     const inKeys = Object.keys(input).filter((k) => k !== 'val');
     const properties = this.eventProperties();
@@ -581,7 +581,7 @@ export default abstract class BaseService <TServiceEvent> {
 
   private cleanEventBody(input: any[]): TServiceEvent {
     // const output: {[key: string]: any} = {};
-    const temp: {[key: string]: string} = {};
+    const temp: { [key: string]: string } = {};
     input.forEach((v) => {
       Object.keys(v)
         .forEach((k) => {

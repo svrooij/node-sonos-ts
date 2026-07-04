@@ -30,20 +30,20 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
 
   // #region actions
   async GetSessionId(input: { ServiceId: number; Username: string }):
-  Promise<GetSessionIdResponse> { return await this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
+  Promise<GetSessionIdResponse> { return this.SoapRequestWithBody<typeof input, GetSessionIdResponse>('GetSessionId', input); }
 
   /**
    * Load music service list as xml
    * @remarks Some libraries also support ListAndParseAvailableServices
    */
   async ListAvailableServices():
-  Promise<ListAvailableServicesResponse> { return await this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }
+  Promise<ListAvailableServicesResponse> { return this.SoapRequest<ListAvailableServicesResponse>('ListAvailableServices'); }
 
   async UpdateAvailableServices():
-  Promise<boolean> { return await this.SoapRequestNoResponse('UpdateAvailableServices'); }
+  Promise<boolean> { return this.SoapRequestNoResponse('UpdateAvailableServices'); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       SessionId: 'string',
       AvailableServiceDescriptorList: 'string',
@@ -53,7 +53,7 @@ export class MusicServicesServiceBase extends BaseService<MusicServicesServiceEv
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       ServiceId: 'number',
       ServiceListVersion: 'string',

@@ -30,10 +30,10 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
 
   // #region actions
   async AddBondedZones(input: { ChannelMapSet: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('AddBondedZones', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('AddBondedZones', input); }
 
   async AddHTSatellite(input: { HTSatChanMapSet: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('AddHTSatellite', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('AddHTSatellite', input); }
 
   /**
    * Create a stereo pair (left, right speakers), right one becomes hidden
@@ -42,64 +42,64 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    * @remarks No all speakers support StereoPairs
    */
   async CreateStereoPair(input: { ChannelMapSet: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('CreateStereoPair', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('CreateStereoPair', input); }
 
   async EnterConfigMode(input: { Mode: string; Options: string }):
-  Promise<EnterConfigModeResponse> { return await this.SoapRequestWithBody<typeof input, EnterConfigModeResponse>('EnterConfigMode', input); }
+  Promise<EnterConfigModeResponse> { return this.SoapRequestWithBody<typeof input, EnterConfigModeResponse>('EnterConfigMode', input); }
 
   async ExitConfigMode(input: { Options: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ExitConfigMode', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ExitConfigMode', input); }
 
   async GetAutoplayLinkedZones(input: { Source: string }):
-  Promise<GetAutoplayLinkedZonesResponse> { return await this.SoapRequestWithBody<typeof input, GetAutoplayLinkedZonesResponse>('GetAutoplayLinkedZones', input); }
+  Promise<GetAutoplayLinkedZonesResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayLinkedZonesResponse>('GetAutoplayLinkedZones', input); }
 
   async GetAutoplayRoomUUID(input: { Source: string }):
-  Promise<GetAutoplayRoomUUIDResponse> { return await this.SoapRequestWithBody<typeof input, GetAutoplayRoomUUIDResponse>('GetAutoplayRoomUUID', input); }
+  Promise<GetAutoplayRoomUUIDResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayRoomUUIDResponse>('GetAutoplayRoomUUID', input); }
 
   async GetAutoplayVolume(input: { Source: string }):
-  Promise<GetAutoplayVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetAutoplayVolumeResponse>('GetAutoplayVolume', input); }
+  Promise<GetAutoplayVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetAutoplayVolumeResponse>('GetAutoplayVolume', input); }
 
   /**
    * Get the current button lock state
    */
   async GetButtonLockState():
-  Promise<GetButtonLockStateResponse> { return await this.SoapRequest<GetButtonLockStateResponse>('GetButtonLockState'); }
+  Promise<GetButtonLockStateResponse> { return this.SoapRequest<GetButtonLockStateResponse>('GetButtonLockState'); }
 
   async GetButtonState():
-  Promise<GetButtonStateResponse> { return await this.SoapRequest<GetButtonStateResponse>('GetButtonState'); }
+  Promise<GetButtonStateResponse> { return this.SoapRequest<GetButtonStateResponse>('GetButtonState'); }
 
   async GetHouseholdID():
-  Promise<GetHouseholdIDResponse> { return await this.SoapRequest<GetHouseholdIDResponse>('GetHouseholdID'); }
+  Promise<GetHouseholdIDResponse> { return this.SoapRequest<GetHouseholdIDResponse>('GetHouseholdID'); }
 
   /**
    * Get the current LED state
    */
   async GetLEDState():
-  Promise<GetLEDStateResponse> { return await this.SoapRequest<GetLEDStateResponse>('GetLEDState'); }
+  Promise<GetLEDStateResponse> { return this.SoapRequest<GetLEDStateResponse>('GetLEDState'); }
 
   async GetUseAutoplayVolume(input: { Source: string }):
-  Promise<GetUseAutoplayVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetUseAutoplayVolumeResponse>('GetUseAutoplayVolume', input); }
+  Promise<GetUseAutoplayVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetUseAutoplayVolumeResponse>('GetUseAutoplayVolume', input); }
 
   async GetZoneAttributes():
-  Promise<GetZoneAttributesResponse> { return await this.SoapRequest<GetZoneAttributesResponse>('GetZoneAttributes'); }
+  Promise<GetZoneAttributesResponse> { return this.SoapRequest<GetZoneAttributesResponse>('GetZoneAttributes'); }
 
   /**
    * Get information about this specific speaker
    */
   async GetZoneInfo():
-  Promise<GetZoneInfoResponse> { return await this.SoapRequest<GetZoneInfoResponse>('GetZoneInfo'); }
+  Promise<GetZoneInfoResponse> { return this.SoapRequest<GetZoneInfoResponse>('GetZoneInfo'); }
 
   async RemoveBondedZones(input: { ChannelMapSet: string; KeepGrouped: boolean }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveBondedZones', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveBondedZones', input); }
 
   async RemoveHTSatellite(input: { SatRoomUUID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveHTSatellite', input); }
 
   async RoomDetectionStartChirping(input: { Channel: number; DurationMilliseconds: number }):
-  Promise<RoomDetectionStartChirpingResponse> { return await this.SoapRequestWithBody<typeof input, RoomDetectionStartChirpingResponse>('RoomDetectionStartChirping', input); }
+  Promise<RoomDetectionStartChirpingResponse> { return this.SoapRequestWithBody<typeof input, RoomDetectionStartChirpingResponse>('RoomDetectionStartChirping', input); }
 
   async RoomDetectionStopChirping(input: { PlayId: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RoomDetectionStopChirping', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RoomDetectionStopChirping', input); }
 
   /**
    * Separate a stereo pair
@@ -108,16 +108,16 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    * @remarks No all speakers support StereoPairs
    */
   async SeparateStereoPair(input: { ChannelMapSet: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SeparateStereoPair', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SeparateStereoPair', input); }
 
   async SetAutoplayLinkedZones(input: { IncludeLinkedZones: boolean; Source: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayLinkedZones', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayLinkedZones', input); }
 
   async SetAutoplayRoomUUID(input: { RoomUUID: string; Source: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayRoomUUID', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayRoomUUID', input); }
 
   async SetAutoplayVolume(input: { Volume: number; Source: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayVolume', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAutoplayVolume', input); }
 
   /**
    * Set the button lock state
@@ -125,7 +125,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    * @param {string} input.DesiredButtonLockState [ 'On' / 'Off' ]
    */
   async SetButtonLockState(input: { DesiredButtonLockState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetButtonLockState', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetButtonLockState', input); }
 
   /**
    * Set the LED state
@@ -133,16 +133,16 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
    * @param {string} input.DesiredLEDState [ 'On' / 'Off' ]
    */
   async SetLEDState(input: { DesiredLEDState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDState', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDState', input); }
 
   async SetUseAutoplayVolume(input: { UseVolume: boolean; Source: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetUseAutoplayVolume', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetUseAutoplayVolume', input); }
 
   async SetZoneAttributes(input: { DesiredZoneName: string; DesiredIcon: string; DesiredConfiguration: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetZoneAttributes', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       State: 'string',
       IncludeLinkedZones: 'boolean',
@@ -171,7 +171,7 @@ export class DevicePropertiesService extends BaseService<DevicePropertiesService
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       AirPlayEnabled: 'boolean',
       AutoplayIncludeLinkedZones: 'boolean',

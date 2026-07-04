@@ -89,7 +89,7 @@ export interface DeviceAuthResponse {
 }
 
 export enum SmapiClientErrors {
-  TokenRefreshRequiredError = 'tokenRefreshRequired'
+  TokenRefreshRequiredError = 'tokenRefreshRequired',
 }
 
 /**
@@ -128,7 +128,7 @@ export class SmapiClient {
     }
 
     if (this.options.auth === 'DeviceLink') {
-      return await this.GetDeviceLinkCode();
+      return this.GetDeviceLinkCode();
     }
 
     throw new Error('Login not supported for this service');
@@ -142,7 +142,7 @@ export class SmapiClient {
    * @memberof SmapiClient
    */
   public async GetAppLink(): Promise<AppLinkResponse> {
-    return await this.SoapRequestWithBody<any, AppLinkResponse>('getAppLink',
+    return this.SoapRequestWithBody<any, AppLinkResponse>('getAppLink',
       {
         householdId: this.getHouseholdIdOrThrow(),
       });
@@ -156,7 +156,7 @@ export class SmapiClient {
    * @memberof SmapiClient
    */
   public async GetDeviceAuthToken(linkCode: string): Promise<DeviceAuthResponse> {
-    return await this.SoapRequestWithBody<any, DeviceAuthResponse>('getDeviceAuthToken',
+    return this.SoapRequestWithBody<any, DeviceAuthResponse>('getDeviceAuthToken',
       {
         householdId: this.getHouseholdIdOrThrow(),
         linkCode,
@@ -171,7 +171,7 @@ export class SmapiClient {
   }
 
   public async GetDeviceLinkCode(): Promise<DeviceLink> {
-    return await this.SoapRequestWithBody<any, DeviceLink>('getDeviceLinkCode',
+    return this.SoapRequestWithBody<any, DeviceLink>('getDeviceLinkCode',
       {
         householdId: this.getHouseholdIdOrThrow(),
       });
@@ -189,23 +189,23 @@ export class SmapiClient {
    * @memberof SmapiClient
    */
   public async GetMetadata(input: { id: string; index: number; count: number; recursive: boolean; }) : Promise<MediaList> {
-    return await this.SoapRequestWithBody('getMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
+    return this.SoapRequestWithBody('getMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
   public async GetExtendedMetadata(input: { id: string }): Promise<MediaList> {
-    return await this.SoapRequestWithBody('getExtendedMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
+    return this.SoapRequestWithBody('getExtendedMetadata', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
   public async GetMediaMetadata(input: { id: string }): Promise<any> {
-    return await this.SoapRequestWithBody('getMediaMetadata', input);
+    return this.SoapRequestWithBody('getMediaMetadata', input);
   }
 
   public async GetMediaUri(input: { id: string }): Promise<any> {
-    return await this.SoapRequestWithBody('getMediaURI', input);
+    return this.SoapRequestWithBody('getMediaURI', input);
   }
 
-  public async Search(input: {id: string; term: string; index: number; count: number}): Promise<MediaList> {
-    return await this.SoapRequestWithBody<any, any>('search', input).then((resp: any) => this.PostProcessMediaResult(resp));
+  public async Search(input: { id: string; term: string; index: number; count: number }): Promise<MediaList> {
+    return this.SoapRequestWithBody<any, any>('search', input).then((resp: any) => this.PostProcessMediaResult(resp));
   }
 
   private PostProcessMediaResult(input: any): MediaList {
@@ -240,7 +240,7 @@ export class SmapiClient {
       return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<undefined>(action, undefined), action);
     } catch (err) {
       if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
-        return await this.SoapRequest<TResponse>(action, true);
+        return this.SoapRequest<TResponse>(action, true);
       }
       throw err;
     }
@@ -252,7 +252,7 @@ export class SmapiClient {
       return await this.handleRequestAndParseResponse<TResponse>(this.generateRequest<TBody>(action, body), action);
     } catch (err) {
       if (err instanceof SmapiError && (err.Fault as any).faultstring === SmapiClientErrors.TokenRefreshRequiredError && !isRetryWithNewCredentials) {
-        return await this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
+        return this.SoapRequestWithBody<TBody, TResponse>(action, body, true);
       }
       throw err;
     }
@@ -340,7 +340,7 @@ export class SmapiClient {
     return this.options.householdId;
   }
 
-  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string;} = {}): string {
+  private generateCredentialHeader(options: { deviceId?: string; deviceCert?: string; zonePlayerId?: string; } = {}): string {
     let header = '  <s:credentials>\r\n';
 
     if (options.deviceId !== undefined) {

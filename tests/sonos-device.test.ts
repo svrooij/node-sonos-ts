@@ -810,14 +810,13 @@ describe('SonosDevice', () => {
   });
 
   describe('SetVolume()', () => {
-    it('throws error when invalid volume', async (done) => {
+    it('throws error when invalid volume', async () => {
 
       const device = new SonosDevice(TestHelpers.testHost);
       try {
         await device.SetVolume(105);
       } catch(err) {
         expect(err).to.not.be.undefined;
-        done();
       }
     });
     it('executes the correct command', async () => {
@@ -1219,7 +1218,7 @@ describe('SonosDevice', () => {
   });
 
   describe('Group options in constructor', () => {
-    it('returns correct groupname', (done) => {
+    it('returns correct groupname', () => {
       const groupName = 'Special sonos group';
       const name = 'Office';
       const uuid = 'fake-uuid';
@@ -1227,10 +1226,9 @@ describe('SonosDevice', () => {
       const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter });
       expect(device.GroupName).to.be.equal(groupName);
       expect(device.Name).to.be.equal(name);
-      done();
     });
 
-    it('subscribes for group updates', (done) => {
+    it('subscribes for group updates', () => {
       const groupName = 'Special sonos group';
       const name = 'Office';
       const uuid = 'fake-uuid';
@@ -1239,10 +1237,9 @@ describe('SonosDevice', () => {
       
       const subscriptions = emitter.eventNames();
       expect(subscriptions).to.be.an('array').that.contains(uuid);
-      done();
     });
 
-    it('Updates group name', (done) => {
+    it('Updates group name', () => {
       const groupName = 'Special sonos group';
       const newGroupName = 'Office-disco';
       const name = 'Office';
@@ -1252,7 +1249,6 @@ describe('SonosDevice', () => {
       
       emitter.emit(uuid, { name: newGroupName });
       expect(device.GroupName).to.be.equal(newGroupName);
-      done();
     });
   });
 });

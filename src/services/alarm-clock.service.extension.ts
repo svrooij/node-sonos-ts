@@ -77,6 +77,6 @@ export class AlarmClockService extends AlarmClockServiceBase {
     if (options.StartLocalTime !== undefined) alarm.StartLocalTime = options.StartLocalTime;
     if (options.Volume !== undefined) alarm.Volume = options.Volume;
 
-    return await this.UpdateAlarm(alarm);
+    return this.UpdateAlarm(alarm);
   }
 }

@@ -30,19 +30,19 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
 
   // #region actions
   async AddMember(input: { MemberID: string; BootSeq: number }):
-  Promise<AddMemberResponse> { return await this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
+  Promise<AddMemberResponse> { return this.SoapRequestWithBody<typeof input, AddMemberResponse>('AddMember', input); }
 
   async RemoveMember(input: { MemberID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveMember', input); }
 
   async ReportTrackBufferingResult(input: { MemberID: string; ResultCode: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('ReportTrackBufferingResult', input); }
 
   async SetSourceAreaIds(input: { DesiredSourceAreaIds: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetSourceAreaIds', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentTransportSettings: 'string',
       CurrentURI: 'string',
@@ -53,7 +53,7 @@ export class GroupManagementService extends BaseService<GroupManagementServiceEv
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       GroupCoordinatorIsLocal: 'boolean',
       LocalGroupUUID: 'string',

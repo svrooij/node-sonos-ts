@@ -45,7 +45,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async GetGroupMute(input: { InstanceID: number } = { InstanceID: 0 }):
-  Promise<GetGroupMuteResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
+  Promise<GetGroupMuteResponse> { return this.SoapRequestWithBody<typeof input, GetGroupMuteResponse>('GetGroupMute', input); }
 
   /**
    * Get the group volume.
@@ -54,7 +54,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async GetGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
-  Promise<GetGroupVolumeResponse> { return await this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
+  Promise<GetGroupVolumeResponse> { return this.SoapRequestWithBody<typeof input, GetGroupVolumeResponse>('GetGroupVolume', input); }
 
   /**
    * (Un-/)Mute the entire group
@@ -64,7 +64,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async SetGroupMute(input: { InstanceID: number; DesiredMute: boolean }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupMute', input); }
 
   /**
    * Change group volume. Players volume will be changed proportionally based on last snapshot
@@ -74,7 +74,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async SetGroupVolume(input: { InstanceID: number; DesiredVolume: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetGroupVolume', input); }
 
   /**
    * Relatively change group volume - returns final group volume. Players volume will be changed proportionally based on last snapshot
@@ -84,7 +84,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async SetRelativeGroupVolume(input: { InstanceID: number; Adjustment: number }):
-  Promise<SetRelativeGroupVolumeResponse> { return await this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
+  Promise<SetRelativeGroupVolumeResponse> { return this.SoapRequestWithBody<typeof input, SetRelativeGroupVolumeResponse>('SetRelativeGroupVolume', input); }
 
   /**
    * Creates a new group volume snapshot,  the volume ratio between all players. It is used by SetGroupVolume and SetRelativeGroupVolume
@@ -93,10 +93,10 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
    * @remarks Should be send to coordinator only
    */
   async SnapshotGroupVolume(input: { InstanceID: number } = { InstanceID: 0 }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SnapshotGroupVolume', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentMute: 'boolean',
       CurrentVolume: 'number',
@@ -105,7 +105,7 @@ export class GroupRenderingControlService extends BaseService<GroupRenderingCont
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       GroupMute: 'boolean',
       GroupVolume: 'number',

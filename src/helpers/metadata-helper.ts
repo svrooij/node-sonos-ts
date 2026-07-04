@@ -18,7 +18,7 @@ export default class MetadataHelper {
   static ParseDIDLTrack(didl: unknown, host: string, port = 1400): Track | undefined {
     if (typeof didl === 'undefined') return undefined;
     MetadataHelper.debug('Parsing DIDL %o', didl);
-    const parsedItem = didl as {[key: string]: any };
+    const parsedItem = didl as { [key: string]: any };
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
       Album: XmlHelper.DecodeHtml(didlItem['upnp:album']),

@@ -30,25 +30,25 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
 
   // #region actions
   async AddAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
-  Promise<AddAccountXResponse> { return await this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }
+  Promise<AddAccountXResponse> { return this.SoapRequestWithBody<typeof input, AddAccountXResponse>('AddAccountX', input); }
 
   async AddOAuthAccountX(input: { AccountType: number; AccountToken: string; AccountKey: string; OAuthDeviceID: string; AuthorizationCode: string; RedirectURI: string; UserIdHashCode: string; AccountTier: number }):
-  Promise<AddOAuthAccountXResponse> { return await this.SoapRequestWithBody<typeof input, AddOAuthAccountXResponse>('AddOAuthAccountX', input); }
+  Promise<AddOAuthAccountXResponse> { return this.SoapRequestWithBody<typeof input, AddOAuthAccountXResponse>('AddOAuthAccountX', input); }
 
   async DoPostUpdateTasks():
-  Promise<boolean> { return await this.SoapRequestNoResponse('DoPostUpdateTasks'); }
+  Promise<boolean> { return this.SoapRequestNoResponse('DoPostUpdateTasks'); }
 
   async EditAccountMd(input: { AccountType: number; AccountID: string; NewAccountMd: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountMd', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountMd', input); }
 
   async EditAccountPasswordX(input: { AccountType: number; AccountID: string; NewAccountPassword: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountPasswordX', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EditAccountPasswordX', input); }
 
   async EnableRDM(input: { RDMValue: boolean }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('EnableRDM', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('EnableRDM', input); }
 
   async GetRDM():
-  Promise<GetRDMResponse> { return await this.SoapRequest<GetRDMResponse>('GetRDM'); }
+  Promise<GetRDMResponse> { return this.SoapRequest<GetRDMResponse>('GetRDM'); }
 
   /**
    * Get a saved string.
@@ -57,16 +57,16 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @remarks Strings are saved in the system with SetString, every speaker should return the same data. Will error when not existing
    */
   async GetString(input: { VariableName: string }):
-  Promise<GetStringResponse> { return await this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }
+  Promise<GetStringResponse> { return this.SoapRequestWithBody<typeof input, GetStringResponse>('GetString', input); }
 
   async GetWebCode(input: { AccountType: number }):
-  Promise<GetWebCodeResponse> { return await this.SoapRequestWithBody<typeof input, GetWebCodeResponse>('GetWebCode', input); }
+  Promise<GetWebCodeResponse> { return this.SoapRequestWithBody<typeof input, GetWebCodeResponse>('GetWebCode', input); }
 
   async ProvisionCredentialedTrialAccountX(input: { AccountType: number; AccountID: string; AccountPassword: string }):
-  Promise<ProvisionCredentialedTrialAccountXResponse> { return await this.SoapRequestWithBody<typeof input, ProvisionCredentialedTrialAccountXResponse>('ProvisionCredentialedTrialAccountX', input); }
+  Promise<ProvisionCredentialedTrialAccountXResponse> { return this.SoapRequestWithBody<typeof input, ProvisionCredentialedTrialAccountXResponse>('ProvisionCredentialedTrialAccountX', input); }
 
   async RefreshAccountCredentialsX(input: { AccountType: number; AccountUID: number; AccountToken: string; AccountKey: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RefreshAccountCredentialsX', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshAccountCredentialsX', input); }
 
   /**
    * Remove a saved string
@@ -75,19 +75,19 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @remarks Not sure what happens if you call this with a VariableName that doesn't exists.
    */
   async Remove(input: { VariableName: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('Remove', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('Remove', input); }
 
   async RemoveAccount(input: { AccountType: number; AccountID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAccount', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RemoveAccount', input); }
 
   async ReplaceAccountX(input: { AccountUDN: string; NewAccountID: string; NewAccountPassword: string; AccountToken: string; AccountKey: string; OAuthDeviceID: string }):
-  Promise<ReplaceAccountXResponse> { return await this.SoapRequestWithBody<typeof input, ReplaceAccountXResponse>('ReplaceAccountX', input); }
+  Promise<ReplaceAccountXResponse> { return this.SoapRequestWithBody<typeof input, ReplaceAccountXResponse>('ReplaceAccountX', input); }
 
   async ResetThirdPartyCredentials():
-  Promise<boolean> { return await this.SoapRequestNoResponse('ResetThirdPartyCredentials'); }
+  Promise<boolean> { return this.SoapRequestNoResponse('ResetThirdPartyCredentials'); }
 
   async SetAccountNicknameX(input: { AccountUDN: string; AccountNickname: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetAccountNicknameX', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetAccountNicknameX', input); }
 
   /**
    * Save a string in the system
@@ -97,10 +97,10 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
    * @remarks Strings are saved in the system, retrieve values with GetString.
    */
   async SetString(input: { VariableName: string; StringValue: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetString', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       AccountUDN: 'string',
       AccountNickname: 'string',
@@ -113,7 +113,7 @@ export class SystemPropertiesServiceBase extends BaseService<SystemPropertiesSer
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       CustomerID: 'string',
       ThirdPartyHash: 'string',

@@ -14,6 +14,8 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
+  release:
+    types: [published]
 
 jobs:
   test:
@@ -21,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [12, 14, 16]
+        node: [24, 26]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
             node-version: ${{ matrix.node }}
 
@@ -42,24 +44,28 @@ jobs:
         run: npm run jest
 
       - name: Send data to Coveralls
-        if: always() && matrix.node == 16
-        uses: coverallsapp/github-action@master
+        if: always() && matrix.node == 24
+        uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}          
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
-  npm-release:
-    name: 'Release to npm'
+  npm-publish:
+    name: 'Publish to npm'
     runs-on: ubuntu-latest
     needs: [test]
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'release'
+    permissions:
+      contents: read
+      packages: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
 
-      - name: Use node 16
-        uses: actions/setup-node@v2
+      - name: Setup node for npm registry
+        uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: 24
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
         run: npm ci
@@ -67,32 +73,22 @@ jobs:
       - name: Build library
         run: npm run build
 
-      - uses: svrooij/secret-gate-action@v1
-        id: mygate
-        with:
-          inputsToCheck: 'NPM_TOKEN'
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Set version from release tag
+        run: npm version --no-git-tag-version "${{ github.event.release.tag_name }}"
 
-      - name: Semantic Release
-        uses: cycjimmy/semantic-release-action@v2
-        if: steps.mygate.outputs.inputsChecked == 'true'
-        id: semantic
+      - name: Publish to npm
+        run: npm publish --access public
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Setup node for Github Registry
-        if: steps.semantic.outputs.new_release_published == 'true'
-        uses: actions/setup-node@v2
+      - name: Setup node for GitHub Package Registry
+        uses: actions/setup-node@v6
         with:
-          node-version: 16
+          node-version: 24
           registry-url: 'https://npm.pkg.github.com'
-          scope: 'svrooij'
+          scope: '@svrooij'
 
-      - name: Publish To GitHub Package Registry
-        if: steps.semantic.outputs.new_release_published == 'true'
-        run: |
-          npm publish
+      - name: Publish to GitHub Package Registry
+        run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

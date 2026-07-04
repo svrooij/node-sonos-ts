@@ -232,7 +232,7 @@ export class TestHelpers {
   }
 
   static async expectThrowsAsync(method: Function, errorMessage?: string, upnpErrorDescription?: string) {
-    let error = undefined;
+    let error: unknown;
     try {
       await method();
     } catch (err) {
@@ -240,7 +240,7 @@ export class TestHelpers {
     }
     expect(error).to.be.an('Error')
     if (errorMessage) {
-      expect(error.message).to.equal(errorMessage)
+      expect((error as Error).message).to.equal(errorMessage)
     }
     if (upnpErrorDescription) {
       expect(error).to.have.nested.property('UpnpErrorDescription', upnpErrorDescription);

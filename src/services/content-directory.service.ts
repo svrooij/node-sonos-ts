@@ -71,55 +71,55 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
    * @remarks (1) If the title contains an apostrophe the returned uri will contain a `&apos;`. (2) Some libraries support a BrowseAndParse, so you don't have to parse the xml.
    */
   async Browse(input: { ObjectID: string; BrowseFlag: string; Filter: string; StartingIndex: number; RequestedCount: number; SortCriteria: string }):
-  Promise<BrowseResponse> { return await this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
+  Promise<BrowseResponse> { return this.SoapRequestWithBody<typeof input, BrowseResponse>('Browse', input); }
 
   async CreateObject(input: { ContainerID: string; Elements: string }):
-  Promise<CreateObjectResponse> { return await this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
+  Promise<CreateObjectResponse> { return this.SoapRequestWithBody<typeof input, CreateObjectResponse>('CreateObject', input); }
 
   async DestroyObject(input: { ObjectID: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('DestroyObject', input); }
 
   async FindPrefix(input: { ObjectID: string; Prefix: string }):
-  Promise<FindPrefixResponse> { return await this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
+  Promise<FindPrefixResponse> { return this.SoapRequestWithBody<typeof input, FindPrefixResponse>('FindPrefix', input); }
 
   async GetAlbumArtistDisplayOption():
-  Promise<GetAlbumArtistDisplayOptionResponse> { return await this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
+  Promise<GetAlbumArtistDisplayOptionResponse> { return this.SoapRequest<GetAlbumArtistDisplayOptionResponse>('GetAlbumArtistDisplayOption'); }
 
   async GetAllPrefixLocations(input: { ObjectID: string }):
-  Promise<GetAllPrefixLocationsResponse> { return await this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
+  Promise<GetAllPrefixLocationsResponse> { return this.SoapRequestWithBody<typeof input, GetAllPrefixLocationsResponse>('GetAllPrefixLocations', input); }
 
   async GetBrowseable():
-  Promise<GetBrowseableResponse> { return await this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
+  Promise<GetBrowseableResponse> { return this.SoapRequest<GetBrowseableResponse>('GetBrowseable'); }
 
   async GetLastIndexChange():
-  Promise<GetLastIndexChangeResponse> { return await this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
+  Promise<GetLastIndexChangeResponse> { return this.SoapRequest<GetLastIndexChangeResponse>('GetLastIndexChange'); }
 
   async GetSearchCapabilities():
-  Promise<GetSearchCapabilitiesResponse> { return await this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
+  Promise<GetSearchCapabilitiesResponse> { return this.SoapRequest<GetSearchCapabilitiesResponse>('GetSearchCapabilities'); }
 
   async GetShareIndexInProgress():
-  Promise<GetShareIndexInProgressResponse> { return await this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
+  Promise<GetShareIndexInProgressResponse> { return this.SoapRequest<GetShareIndexInProgressResponse>('GetShareIndexInProgress'); }
 
   async GetSortCapabilities():
-  Promise<GetSortCapabilitiesResponse> { return await this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
+  Promise<GetSortCapabilitiesResponse> { return this.SoapRequest<GetSortCapabilitiesResponse>('GetSortCapabilities'); }
 
   async GetSystemUpdateID():
-  Promise<GetSystemUpdateIDResponse> { return await this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
+  Promise<GetSystemUpdateIDResponse> { return this.SoapRequest<GetSystemUpdateIDResponse>('GetSystemUpdateID'); }
 
   async RefreshShareIndex(input: { AlbumArtistDisplayOption: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RefreshShareIndex', input); }
 
   async RequestResort(input: { SortOrder: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('RequestResort', input); }
 
   async SetBrowseable(input: { Browseable: boolean }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetBrowseable', input); }
 
   async UpdateObject(input: { ObjectID: string; CurrentTagValue: string; NewTagValue: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('UpdateObject', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       Result: 'string',
       NumberReturned: 'number',
@@ -140,7 +140,7 @@ export class ContentDirectoryServiceBase extends BaseService<ContentDirectorySer
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       Browseable: 'boolean',
       ContainerUpdateIDs: 'string',

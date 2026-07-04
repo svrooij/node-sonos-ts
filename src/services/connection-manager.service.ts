@@ -30,16 +30,16 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
 
   // #region actions
   async GetCurrentConnectionIDs():
-  Promise<GetCurrentConnectionIDsResponse> { return await this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
+  Promise<GetCurrentConnectionIDsResponse> { return this.SoapRequest<GetCurrentConnectionIDsResponse>('GetCurrentConnectionIDs'); }
 
   async GetCurrentConnectionInfo(input: { ConnectionID: number }):
-  Promise<GetCurrentConnectionInfoResponse> { return await this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
+  Promise<GetCurrentConnectionInfoResponse> { return this.SoapRequestWithBody<typeof input, GetCurrentConnectionInfoResponse>('GetCurrentConnectionInfo', input); }
 
   async GetProtocolInfo():
-  Promise<GetProtocolInfoResponse> { return await this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
+  Promise<GetProtocolInfoResponse> { return this.SoapRequest<GetProtocolInfoResponse>('GetProtocolInfo'); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       ConnectionIDs: 'string',
       RcsID: 'number',
@@ -55,7 +55,7 @@ export class ConnectionManagerService extends BaseService<ConnectionManagerServi
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       CurrentConnectionIDs: 'string',
       SinkProtocolInfo: 'string',

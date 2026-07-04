@@ -30,10 +30,10 @@ export class QPlayService extends BaseService<undefined> {
 
   // #region actions
   async QPlayAuth(input: { Seed: string }):
-  Promise<QPlayAuthResponse> { return await this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
+  Promise<QPlayAuthResponse> { return this.SoapRequestWithBody<typeof input, QPlayAuthResponse>('QPlayAuth', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       Code: 'string',
       MID: 'string',
@@ -42,7 +42,7 @@ export class QPlayService extends BaseService<undefined> {
   }
 
   // No properties in service description, throw error on retrieval.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     throw new Error('No event properties in service definition');
   }
 }

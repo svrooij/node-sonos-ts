@@ -30,31 +30,31 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
 
   // #region actions
   async CommitLearnedIRCodes(input: { Name: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('CommitLearnedIRCodes', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('CommitLearnedIRCodes', input); }
 
   async GetIRRepeaterState():
-  Promise<GetIRRepeaterStateResponse> { return await this.SoapRequest<GetIRRepeaterStateResponse>('GetIRRepeaterState'); }
+  Promise<GetIRRepeaterStateResponse> { return this.SoapRequest<GetIRRepeaterStateResponse>('GetIRRepeaterState'); }
 
   async GetLEDFeedbackState():
-  Promise<GetLEDFeedbackStateResponse> { return await this.SoapRequest<GetLEDFeedbackStateResponse>('GetLEDFeedbackState'); }
+  Promise<GetLEDFeedbackStateResponse> { return this.SoapRequest<GetLEDFeedbackStateResponse>('GetLEDFeedbackState'); }
 
   async IdentifyIRRemote(input: { Timeout: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('IdentifyIRRemote', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('IdentifyIRRemote', input); }
 
   async IsRemoteConfigured():
-  Promise<IsRemoteConfiguredResponse> { return await this.SoapRequest<IsRemoteConfiguredResponse>('IsRemoteConfigured'); }
+  Promise<IsRemoteConfiguredResponse> { return this.SoapRequest<IsRemoteConfiguredResponse>('IsRemoteConfigured'); }
 
   async LearnIRCode(input: { IRCode: string; Timeout: number }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('LearnIRCode', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('LearnIRCode', input); }
 
   async SetIRRepeaterState(input: { DesiredIRRepeaterState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetIRRepeaterState', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetIRRepeaterState', input); }
 
   async SetLEDFeedbackState(input: { LEDFeedbackState: string }):
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('SetLEDFeedbackState', input); }
   // #endregion
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
       CurrentIRRepeaterState: 'string',
       LEDFeedbackState: 'string',
@@ -63,7 +63,7 @@ export class HTControlService extends BaseService<HTControlServiceEvent> {
   }
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
       IRRepeaterState: 'string',
       LEDFeedbackState: 'string',

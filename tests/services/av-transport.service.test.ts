@@ -58,7 +58,7 @@ describe('AVTransportService', () => {
   });
 
   describe('GetCurrentTransportActions', () => {
-    it('executes correct request', async (done) => {
+    it('executes correct request', async () => {
       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
         'AVTransport',
         'GetCurrentTransportActions',
@@ -68,12 +68,11 @@ describe('AVTransportService', () => {
       const service = new AVTransportService(TestHelpers.testHost);
       const result = await service.GetCurrentTransportActions();
       expect(result.Actions).to.contain('Play');
-      done();
     });
   });
 
   describe('GetDeviceCapabilities', () => {
-    it('executes correct request', async (done) => {
+    it('executes correct request', async () => {
       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
         'AVTransport',
         'GetDeviceCapabilities',
@@ -85,12 +84,11 @@ describe('AVTransportService', () => {
       expect(result.PlayMedia).to.contain('NONE');
       expect(result.PlayMedia).to.contain('NETWORK');
       expect(result.RecMedia).to.contain('NOT_IMPLEMENTED');
-      done();
     });
   });
 
   describe('GetDeviceCapabilities', () => {
-    it('executes correct request', async (done) => {
+    it('executes correct request', async () => {
       TestHelpers.mockRequestToService('/MediaRenderer/AVTransport/Control',
         'AVTransport',
         'GetRemainingSleepTimerDuration',
@@ -101,7 +99,6 @@ describe('AVTransportService', () => {
       const result = await service.GetRemainingSleepTimerDuration();
       expect(result.RemainingSleepTimerDuration).to.be.equal('00:29:44');
       expect(result.CurrentSleepTimerGeneration).to.be.equal(1);
-      done();
     });
   });
 
@@ -221,7 +218,7 @@ describe('AVTransportService', () => {
   });
 
   describe('Event parsing', () => {
-    it('works', (done) => {
+    it('works', () => {
       process.env.SONOS_DISABLE_EVENTS = 'true'
       const service = new AVTransportService(TestHelpers.testHost, 1400);
       service.Events.once('serviceEvent', (data) => {
@@ -231,8 +228,6 @@ describe('AVTransportService', () => {
         expect(data.NumberOfTracks).to.be.equal(300);
         expect(data.TransportState).to.be.equal('PLAYING');
 
-
-        done()
       })
       service.ParseEvent('<e:propertyset xmlns:e="urn:schemas-upnp-org:event-1-0"><e:property><LastChange>&lt;Event xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/AVT/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;&lt;InstanceID val=&quot;0&quot;&gt;&lt;TransportState val=&quot;PLAYING&quot;/&gt;&lt;CurrentPlayMode val=&quot;SHUFFLE&quot;/&gt;&lt;CurrentCrossfadeMode val=&quot;0&quot;/&gt;&lt;NumberOfTracks val=&quot;300&quot;/&gt;&lt;CurrentTrack val=&quot;36&quot;/&gt;&lt;CurrentSection val=…=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;RecordStorageMedium val=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;PossiblePlaybackStorageMedia val=&quot;NONE, NETWORK&quot;/&gt;&lt;PossibleRecordStorageMedia val=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;RecordMediumWriteStatus val=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;CurrentRecordQualityMode val=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;PossibleRecordQualityModes val=&quot;NOT_IMPLEMENTED&quot;/&gt;&lt;/InstanceID&gt;&lt;/Event&gt;</LastChange></e:property></e:propertyset>');
       delete process.env.SONOS_DISABLE_EVENTS
