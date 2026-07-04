@@ -21,7 +21,7 @@ export default class AsyncHelper {
    * @memberof AsyncHelper
    */
   static async AsyncEvent<TResult>(eventEmitter: EventEmitter, eventName: string, timeout?: number): Promise<TResult> {
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let timer: NodeJS.Timeout | undefined;
       if (timeout !== undefined && timeout > 0) {
         timer = setTimeout(() => {

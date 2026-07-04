@@ -41,7 +41,7 @@ export default class SonosManager {
     this.debug('InitializeFromDevice %s', host);
     const ip = IpHelper.IsIpv4(host) ? host : await IpHelper.ResolveHostname(host);
     this.zoneService = new ZoneGroupTopologyService(ip, port);
-    return await this.Initialize();
+    return this.Initialize();
   }
 
   /**
@@ -56,7 +56,7 @@ export default class SonosManager {
     const player = await discovery.SearchOne(timeoutInSeconds);
     this.debug('Discovery found player with ip: %s', player.host);
     this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
-    return await this.Initialize();
+    return this.Initialize();
   }
 
   private async Initialize(): Promise<boolean> {
@@ -78,7 +78,7 @@ export default class SonosManager {
   private async LoadAllGroups(): Promise<ZoneGroup[]> {
     this.debug('LoadAllGroups()');
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
-    return await this.zoneService.GetParsedZoneGroupState();
+    return this.zoneService.GetParsedZoneGroupState();
   }
 
   private async LoadAllGroupsWithEvent(): Promise<ZoneGroup[]> {
@@ -221,7 +221,7 @@ export default class SonosManager {
       return false;
     }
 
-    return await this.PlayNotification(notificationOptions);
+    return this.PlayNotification(notificationOptions);
   }
 
   /**
