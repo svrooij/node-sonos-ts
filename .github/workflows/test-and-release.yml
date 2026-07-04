@@ -56,6 +56,7 @@ jobs:
     if: github.event_name == 'release'
     permissions:
       contents: read
+      id-token: write
       packages: write
     steps:
       - name: Checkout
@@ -77,9 +78,7 @@ jobs:
         run: npm version --no-git-tag-version "${{ github.event.release.tag_name }}"
 
       - name: Publish to npm
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public --provenance --tag ${{ github.event.release.prerelease && 'beta' || 'latest' }}
 
       - name: Setup node for GitHub Package Registry
         uses: actions/setup-node@v6
