@@ -363,6 +363,132 @@ describe('MetadataHelper', () => {
     });
   })
 
+  describe('GetSimpleUri', () => {
+    describe('Spotify', () => {
+      it('reverses spotify track URI', () => {
+        expect(MetadataHelper.GetSimpleUri(completeTrackUri)).toEqual(spotifyTrack);
+      });
+
+      it('reverses encoded spotify track URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonos-spotify:spotify%3atrack%3a6sYJuVcEu4gFHmeTLdHzRz?sid=9&amp;flags=8224&amp;sn=7')).toEqual(spotifyTrack);
+      });
+
+      it('reverses spotify album URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1004206cspotify:album:5nD7RkUvn3TRlDcQSABOjo?sid=9&flags=8300&sn=7')).toEqual('spotify:album:5nD7RkUvn3TRlDcQSABOjo');
+      });
+
+      it('reverses spotify playlist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1006206cspotify:playlist:37i9dQZEVXbLoATJ81JYX?sid=9&flags=8300&sn=7')).toEqual('spotify:playlist:37i9dQZEVXbLoATJ81JYX');
+      });
+
+      it('reverses spotify artist top tracks URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:100e206cspotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv?sid=9&flags=8300&sn=7')).toEqual('spotify:artistTopTracks:72qVrKXRp9GeFQOesj0Pmv');
+      });
+
+      it('reverses spotify user playlist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:10062a6cspotify:user:spotify:playlist:37i9dQZF1DWSBi5svWQ9Nk?sid=9&flags=10860&sn=7')).toEqual('spotify:user:spotify:playlist:37i9dQZF1DWSBi5svWQ9Nk');
+      });
+
+      it('reverses spotify artist radio URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonosapi-radio:spotify:artistRadio:72qVrKXRp9GeFQOesj0Pmv?sid=9&flags=8300&sn=7')).toEqual('spotify:artistRadio:72qVrKXRp9GeFQOesj0Pmv');
+      });
+
+      it('round-trips spotify track', () => {
+        const simple = 'spotify:track:6sYJuVcEu4gFHmeTLdHzRz';
+        const data = MetadataHelper.GuessMetaDataAndTrackUri(simple);
+        expect(MetadataHelper.GetSimpleUri(data.trackUri)).toEqual(simple);
+      });
+    });
+
+    describe('Deezer', () => {
+      it('reverses deezer track URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonos-http:tr:1121931512.mp3?sid=2&flags=8224&sn=23')).toEqual('deezer:track:1121931512');
+      });
+
+      it('reverses encoded deezer track URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonos-http:tr%3a1121931512.mp3?sid=2&amp;flags=8224&amp;sn=23')).toEqual('deezer:track:1121931512');
+      });
+
+      it('reverses deezer album URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1004006calbum-169734362?sid=2&flags=108&sn=23')).toEqual('deezer:album:169734362');
+      });
+
+      it('reverses deezer artist top tracks URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:10fe206ctracks-artist-6049784?sid=2&flags=8300&sn=23')).toEqual('deezer:artistTopTracks:6049784');
+      });
+
+      it('reverses deezer playlist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-1371651955?sid=2&flags=108&sn=23')).toEqual('deezer:playlist:1371651955');
+      });
+
+      it('round-trips deezer track', () => {
+        const simple = 'deezer:track:1121931512';
+        const data = MetadataHelper.GuessMetaDataAndTrackUri(simple);
+        expect(MetadataHelper.GetSimpleUri(data.trackUri)).toEqual(simple);
+      });
+    });
+
+    describe('Apple Music', () => {
+      it('reverses apple track URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonos-http:song:1025212410.mp4?sid=204')).toEqual('apple:track:1025212410');
+      });
+
+      it('reverses apple librarytrack URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonos-http:librarytrack:i.m3g9uLvzB7.mp4?sid=204')).toEqual('apple:librarytrack:i.m3g9uLvzB7');
+      });
+
+      it('reverses apple album URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1004206calbum:1025210938?sid=204')).toEqual('apple:album:1025210938');
+      });
+
+      it('reverses apple libraryalbum URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1004206clibraryalbum:l.OIdA15a?sid=204')).toEqual('apple:libraryalbum:l.OIdA15a');
+      });
+
+      it('reverses apple playlist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1006206cplaylist:pl.cf589c8b40dc40cd9ddc2e61493d5efd?sid=204')).toEqual('apple:playlist:pl.cf589c8b40dc40cd9ddc2e61493d5efd');
+      });
+
+      it('reverses apple libraryplaylist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-rincon-cpcontainer:1006206clibraryplaylist:p.rQ5rCxE48W?sid=204')).toEqual('apple:libraryplaylist:p.rQ5rCxE48W');
+      });
+
+      it('round-trips apple track', () => {
+        const simple = 'apple:track:1025212410';
+        const data = MetadataHelper.GuessMetaDataAndTrackUri(simple);
+        expect(MetadataHelper.GetSimpleUri(data.trackUri)).toEqual(simple);
+      });
+    });
+
+    describe('Radio', () => {
+      it('reverses internet radio URI', () => {
+        expect(MetadataHelper.GetSimpleUri('x-sonosapi-stream:s24896?sid=254&flags=8224&sn=0')).toEqual('radio:s24896');
+      });
+
+      it('round-trips radio URI', () => {
+        const simple = 'radio:s24896';
+        const data = MetadataHelper.GuessMetaDataAndTrackUri(simple);
+        expect(MetadataHelper.GetSimpleUri(data.trackUri)).toEqual(simple);
+      });
+    });
+
+    describe('Sonos playlist', () => {
+      it('reverses sonos playlist URI', () => {
+        expect(MetadataHelper.GetSimpleUri('file:///jffs/settings/savedqueues.rsq#7')).toEqual('sonos:playlist:7');
+      });
+
+      it('round-trips sonos playlist URI', () => {
+        const simple = 'sonos:playlist:7';
+        const data = MetadataHelper.GuessMetaDataAndTrackUri(simple);
+        expect(MetadataHelper.GetSimpleUri(data.trackUri)).toEqual(simple);
+      });
+    });
+
+    it('returns undefined for unsupported URI', () => {
+      expect(MetadataHelper.GetSimpleUri('x-rincon-mp3radio://http://stream.example.com/live.mp3')).toBeUndefined();
+    });
+  });
+
   describe('ParseDIDLTrack', () => {
     it('returns undefined for undefined input', () => {
       const result = MetadataHelper.ParseDIDLTrack(undefined, 'fake_host');
