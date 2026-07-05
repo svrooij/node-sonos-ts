@@ -104,6 +104,93 @@ export default class MetadataHelper {
     };
   }
 
+  /**
+   * GetSimpleUri will convert an internal Sonos track URI back to a simple service URI
+   * that can be used with GuessTrack or GuessMetaDataAndTrackUri.
+   *
+   * @static
+   * @param {string} trackUri Internal Sonos track URI (e.g. from currently playing track)
+   * @returns {string | undefined} Simple service URI (e.g. spotify:track:xxx) or undefined if not supported
+   * @memberof MetadataHelper
+   */
+  static GetSimpleUri(trackUri: string): string | undefined {
+    // Normalize: decode percent-encoded colons and HTML-encoded ampersands, strip query string
+    const normalized = trackUri.replace(/%3a/gi, ':').replace(/&amp;/g, '&');
+    const withoutQuery = normalized.split('?')[0];
+
+    // Spotify track: x-sonos-spotify:spotify:track:xxx
+    if (withoutQuery.startsWith('x-sonos-spotify:')) {
+      return withoutQuery.slice('x-sonos-spotify:'.length);
+    }
+
+    // Spotify album: x-rincon-cpcontainer:1004206cspotify:album:xxx
+    if (withoutQuery.startsWith('x-rincon-cpcontainer:1004206cspotify:')) {
+      return withoutQuery.slice('x-rincon-cpcontainer:1004206c'.length);
+    }
+
+    // Spotify playlist: x-rincon-cpcontainer:1006206cspotify:playlist:xxx
+    if (withoutQuery.startsWith('x-rincon-cpcontainer:1006206cspotify:')) {
+      return withoutQuery.slice('x-rincon-cpcontainer:1006206c'.length);
+    }
+
+    // Spotify artist top tracks: x-rincon-cpcontainer:100e206cspotify:artistTopTracks:xxx
+    if (withoutQuery.startsWith('x-rincon-cpcontainer:100e206cspotify:')) {
+      return withoutQuery.slice('x-rincon-cpcontainer:100e206c'.length);
+    }
+
+    // Spotify user playlist: x-rincon-cpcontainer:10062a6cspotify:user:xxx
+    if (withoutQuery.startsWith('x-rincon-cpcontainer:10062a6cspotify:')) {
+      return withoutQuery.slice('x-rincon-cpcontainer:10062a6c'.length);
+    }
+
+    // Spotify artist radio: x-sonosapi-radio:spotify:artistRadio:xxx
+    if (withoutQuery.startsWith('x-sonosapi-radio:spotify:')) {
+      return withoutQuery.slice('x-sonosapi-radio:'.length);
+    }
+
+    // Deezer track: x-sonos-http:tr:xxx.mp3
+    const deezerTrackMatch = /^x-sonos-http:tr:(\d+)\.mp3/.exec(withoutQuery);
+    if (deezerTrackMatch) return `deezer:track:${deezerTrackMatch[1]}`;
+
+    // Deezer album: x-rincon-cpcontainer:1004006calbum-xxx
+    const deezerAlbumMatch = /^x-rincon-cpcontainer:1004006calbum-(\d+)/.exec(withoutQuery);
+    if (deezerAlbumMatch) return `deezer:album:${deezerAlbumMatch[1]}`;
+
+    // Deezer artist top tracks: x-rincon-cpcontainer:10fe206ctracks-artist-xxx
+    const deezerArtistMatch = /^x-rincon-cpcontainer:10fe206ctracks-artist-(\d+)/.exec(withoutQuery);
+    if (deezerArtistMatch) return `deezer:artistTopTracks:${deezerArtistMatch[1]}`;
+
+    // Deezer playlist: x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-xxx (or with decoded colon)
+    const deezerPlaylistMatch = /^x-rincon-cpcontainer:1006006cplaylist_spotify(?:%3a|:)playlist-(\d+)/.exec(normalized.split('?')[0]);
+    if (deezerPlaylistMatch) return `deezer:playlist:${deezerPlaylistMatch[1]}`;
+
+    // Apple Music track: x-sonos-http:song:xxx.mp4 or x-sonos-http:librarytrack:xxx.mp4
+    const appleTrackMatch = /^x-sonos-http:(song|librarytrack):([.\d\w]+)\.mp4/.exec(withoutQuery);
+    if (appleTrackMatch) {
+      const kind = appleTrackMatch[1] === 'song' ? 'track' : appleTrackMatch[1];
+      return `apple:${kind}:${appleTrackMatch[2]}`;
+    }
+
+    // Apple Music album: x-rincon-cpcontainer:1004206c(libraryalbum|album):xxx
+    const appleAlbumMatch = /^x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)/.exec(withoutQuery);
+    if (appleAlbumMatch) return `apple:${appleAlbumMatch[1]}:${appleAlbumMatch[2]}`;
+
+    // Apple Music playlist: x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):xxx
+    const applePlaylistMatch = /^x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)/.exec(withoutQuery);
+    if (applePlaylistMatch) return `apple:${applePlaylistMatch[1]}:${applePlaylistMatch[2]}`;
+
+    // Internet radio: x-sonosapi-stream:sXXX
+    const radioMatch = /^x-sonosapi-stream:(s\d+)/.exec(withoutQuery);
+    if (radioMatch) return `radio:${radioMatch[1]}`;
+
+    // Sonos playlist: file:///jffs/settings/savedqueues.rsq#7
+    const sonosPlaylistMatch = /^file:\/\/\/jffs\/settings\/savedqueues\.rsq#(\d+)/.exec(withoutQuery);
+    if (sonosPlaylistMatch) return `sonos:playlist:${sonosPlaylistMatch[1]}`;
+
+    MetadataHelper.debug('Don\'t know how to reverse this TrackUri %s', trackUri);
+    return undefined;
+  }
+
   static GuessTrack(trackUri: string, musicServiceRegion?: string): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
