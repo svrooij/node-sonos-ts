@@ -34,6 +34,128 @@ describe('MetadataHelper', () => {
     });
   });
 
+  describe('GuessTrack -> NAS file (x-file-cifs)', () => {
+    it('Guess metadata for x-file-cifs URI with spaces', () => {
+      const uri = 'x-file-cifs://server/music/My%20Song.mp3';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('TrackUri', uri);
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.musicTrack');
+      expect(track).toHaveProperty('ParentId', 'A:TRACKS');
+      expect(track).toHaveProperty('CdUdn', 'RINCON_AssociatedZPUDN');
+    });
+
+    it('Extracts title from x-file-cifs URI', () => {
+      const uri = 'x-file-cifs://server/music/MySong.mp3';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('Title', 'MySong');
+    });
+  });
+
+  describe('GuessTrack -> Local library playlist (x-rincon-playlist)', () => {
+    it('Guess metadata for x-rincon-playlist from A:TRACKS', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:TRACKS/MySong';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.musicTrack');
+      expect(track).toHaveProperty('ParentId', 'A:TRACKS');
+      expect(track).toHaveProperty('CdUdn', 'RINCON_AssociatedZPUDN');
+    });
+
+    it('Guess metadata for x-rincon-playlist from A:ALBUMS', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:ALBUMS/MyAlbum';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.musicAlbum');
+      expect(track).toHaveProperty('ParentId', 'A:ALBUMS');
+    });
+
+    it('Guess metadata for x-rincon-playlist from A:ALBUMARTIST', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:ALBUMARTIST/MyArtist';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.musicArtist');
+      expect(track).toHaveProperty('ParentId', 'A:ALBUMARTIST');
+    });
+
+    it('Guess metadata for x-rincon-playlist from A:GENRE', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:GENRE/MyGenre';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.container.genre.musicGenre');
+      expect(track).toHaveProperty('ParentId', 'A:GENRE');
+    });
+
+    it('Guess metadata for x-rincon-playlist from A:COMPOSER', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:COMPOSER/MyComposer';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.container.person.composer');
+      expect(track).toHaveProperty('ParentId', 'A:COMPOSER');
+    });
+
+    it('Throws when x-rincon-playlist URI has no parentID', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX_no_hash';
+      expect(() => MetadataHelper.GuessTrack(uri)).toThrow('ParentID not found');
+    });
+  });
+
+  describe('GuessTrack -> Internet radio (x-sonosapi-stream)', () => {
+    it('Guess metadata for x-sonosapi-stream URI', () => {
+      const uri = 'x-sonosapi-stream:s24896?sid=254&flags=8224&sn=0';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.audioBroadcast');
+      expect(track).toHaveProperty('Title', 'Some radio station');
+      expect(track).toHaveProperty('ItemId', '10092020_xxx_xxxx');
+    });
+  });
+
+  describe('GuessTrack -> MP3 radio (x-rincon-mp3radio)', () => {
+    it('Guess metadata for x-rincon-mp3radio URI', () => {
+      const uri = 'x-rincon-mp3radio://http://stream.example.com/live.mp3';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('TrackUri', uri);
+      expect(track).toHaveProperty('ItemId', '-1');
+    });
+  });
+
+  describe('GuessTrack -> Amazon Prime (x-rincon-cpcontainer catalog)', () => {
+    it('Guess metadata for Amazon Prime container', () => {
+      const uri = 'x-rincon-cpcontainer:1006206ccatalog%2falbums%2fB07J43XNVP%2f%23albumTracks';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('TrackUri', uri);
+      expect(track).toHaveProperty('ItemId', '1006206ccatalog%2falbums%2fB07J43XNVP%2f%23albumTracks');
+      expect(track).toHaveProperty('UpnpClass', 'object.container.playlistContainer');
+    });
+  });
+
+  describe('GuessTrack -> SoundCloud (x-rincon-cpcontainer)', () => {
+    it('Guess metadata for SoundCloud likes', () => {
+      const uri = 'x-rincon-cpcontainer:100d206cuser-fav:soundcloud:user:123456789';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('TrackUri', uri);
+      expect(track).toHaveProperty('ItemId', '100d206cuser-fav:soundcloud:user:123456789');
+      expect(track).toHaveProperty('UpnpClass', 'object.container.albumList');
+      expect(track).toHaveProperty('CdUdn', 'SA_RINCON40967_X_#Svc40967-0-Token');
+    });
+  });
+
+  describe('GuessTrack -> radio shorthand (radio:s)', () => {
+    it('Guess metadata for radio shorthand URI', () => {
+      const uri = 'radio:s24896';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.audioBroadcast');
+      expect(track).toHaveProperty('Title', 'Some radio station');
+      expect(track).toHaveProperty('TrackUri', 'x-sonosapi-stream:s24896?sid=254&flags=8224&sn=0');
+    });
+  });
+
   describe('GuessTrack -> Apple Music', () => {
     it('Guess metadata for apple:album:1025210938', () => {
       const track = MetadataHelper.GuessTrack('apple:album:1025210938');
@@ -242,6 +364,61 @@ describe('MetadataHelper', () => {
   })
 
   describe('ParseDIDLTrack', () => {
+    it('returns undefined for undefined input', () => {
+      const result = MetadataHelper.ParseDIDLTrack(undefined, 'fake_host');
+      expect(result).toBeUndefined();
+    });
+
+    it('parses res property for duration, TrackUri and ProtocolInfo', (done) => {
+      const trackUri = 'http://example.com/track.mp3';
+      const duration = '0:03:45';
+      const protocolInfo = 'http-get:*:audio/mpeg:*';
+      const didl = {
+        'dc:title': 'Test Track',
+        res: {
+          '#text': trackUri,
+          duration: duration,
+          protocolInfo: protocolInfo,
+        },
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('TrackUri', trackUri);
+      expect(result).toHaveProperty('Duration', duration);
+      expect(result).toHaveProperty('ProtocolInfo', protocolInfo);
+      done();
+    });
+
+    it('parses DIDL-Lite format with nested item', (done) => {
+      const title = 'Nested Track';
+      const artist = 'Some Artist';
+      const didl = {
+        'DIDL-Lite': {
+          item: {
+            'dc:title': title,
+            'dc:creator': artist,
+          },
+        },
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('Title', title);
+      expect(result).toHaveProperty('Artist', artist);
+      done();
+    });
+
+    it('resolves absolute albumArtURI without prepending host', (done) => {
+      const absoluteArtUri = 'http://external.example.com/art.jpg';
+      const didl = {
+        'upnp:albumArtURI': absoluteArtUri,
+        'dc:title': 'Track',
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('AlbumArtUri', absoluteArtUri);
+      done();
+    });
+
     it('decodes html entities', (done) => {
       const album = 'Christmas &amp; New Year';
       const title = 'Bell&apos;s';
