@@ -26,7 +26,7 @@ export class AlarmClockService extends AlarmClockServiceBase {
     if (alarmList.CurrentAlarmList === undefined || alarmList.CurrentAlarmList === '') {
       return [];
     }
-    const parsedList = XmlHelper.DecodeAndParseXml(alarmList.CurrentAlarmList, '');
+    const parsedList = XmlHelper.DecodeAndParseXml(alarmList.CurrentAlarmList);
     const alarms = ArrayHelper.ForceArray<any>((parsedList as any).Alarms.Alarm);
     const results: Array<Alarm> = [];
     alarms.forEach((alarm: any) => {
@@ -38,7 +38,7 @@ export class AlarmClockService extends AlarmClockServiceBase {
           IncludeLinkedZones: alarm.IncludeLinkedZones === '1',
           PlayMode: alarm.PlayMode,
           ProgramMetaData: MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port),
-          ProgramURI: XmlHelper.DecodeTrackUri(alarm.ProgramURI),
+          ProgramURI: alarm.ProgramURI, // XmlHelper.DecodeTrackUri(alarm.ProgramURI),
           Recurrence: alarm.Recurrence,
           RoomUUID: alarm.RoomUUID,
           StartLocalTime: alarm.StartTime,
@@ -77,6 +77,6 @@ export class AlarmClockService extends AlarmClockServiceBase {
     if (options.StartLocalTime !== undefined) alarm.StartLocalTime = options.StartLocalTime;
     if (options.Volume !== undefined) alarm.Volume = options.Volume;
 
-    return await this.UpdateAlarm(alarm);
+    return this.UpdateAlarm(alarm);
   }
 }

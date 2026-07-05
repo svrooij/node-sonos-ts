@@ -3,7 +3,7 @@ import { Track } from './track';
 import { AVTransportServiceEvent, RenderingControlServiceEvent } from '../services/index';
 import { EventsError } from './event-errors';
 
-export interface StrongSonosEvents {
+export type StrongSonosEvents = {
   avtransport: (data: AVTransportServiceEvent) => void;
   currentTrack: (track: Track) => void;
   currentTrackUri: (trachUri: string) => void;
@@ -20,6 +20,7 @@ export interface StrongSonosEvents {
   volume: (volume: number) => void;
 
   coordinator: (uuid: string) => void;
+  groupid: (id: string) => void;
   groupname: (name: string) => void;
 
   subscriptionError: (error: EventsError) => void;
@@ -27,4 +28,4 @@ export interface StrongSonosEvents {
   // For internal use to unsubscribe on last user.
   removeListener: (eventName: string | symbol) => void;
   newListener: (eventName: string | symbol) => void;
-}
+};

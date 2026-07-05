@@ -13,11 +13,7 @@ on you machine:
 
 ## Fork library
 
-You should start by creating a [fork](https://github.com/svrooij/node-sonos-ts/fork). And create a new branch of the **beta** branch, all pull requests should be against the beta branch.
-
-### Install Pull application (optional)
-
-We like to use the Github [pull](https://github.com/apps/pull) application, to keep our beta branch and the forks up-to-date. You have to install this application yourself, but it will work automatically.
+You should start by creating a [fork](https://github.com/svrooij/node-sonos-ts/fork). And create a new branch of the **main** branch, all pull requests should be against the main branch.
 
 ## Install node dependencies
 
@@ -50,8 +46,8 @@ The used test framework is jest, you can also use [Jest test explorer for VSCode
 
 ## Contributing/Submitting changes
 
-- Check out a new branch based on `beta` and name it to what you intend to do:
-  - Example: `git checkout -b BRANCH_NAME origin/beta`
+- Check out a new branch based on `main` and name it to what you intend to do:
+  - Example: `git checkout -b BRANCH_NAME origin/main`
     If you get an error, you may need to fetch canary first by using `git remote update && git fetch`
   - Use one branch per fix/feature
 - Make your changes
@@ -65,7 +61,7 @@ The used test framework is jest, you can also use [Jest test explorer for VSCode
     Also use closing keywords in the commit, like `Fixed #xx` to auto-close some issues.
   - Commit to the forked repository.
 - Make a pull request
-  - Make sure you send the PR to the `beta` branch.
+  - Make sure you send the PR to the `main` branch.
   - Github Actions are watching you!
 
 If you follow these instructions, your PR will land pretty safely in the main repo!

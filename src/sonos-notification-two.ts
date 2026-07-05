@@ -90,7 +90,7 @@ export default class SonosDeviceNotifications {
     if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
       this.debug('General timeout for Notification ("%s") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.generalTimeout.fireTime);
       // The Timeout already fired so play next item
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
 
     const currentOptions = currentItem.options;
@@ -99,7 +99,7 @@ export default class SonosDeviceNotifications {
 
       await this.resolvePlayingQueueItem(currentItem, false);
 
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
 
     if (currentItem.options.specificTimeout) {
@@ -136,7 +136,7 @@ export default class SonosDeviceNotifications {
     });
     if (typeof setAvResult !== 'boolean') {
       this.resolvePlayingQueueItem(currentItem, false);
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
     if (currentOptions.volume !== undefined) {
       this.notificationQueue.volumeChanged = true;
@@ -152,7 +152,7 @@ export default class SonosDeviceNotifications {
 
     if (currentItem.individualTimeout !== undefined && currentItem.individualTimeout.timeLeft() < 0) {
       this.debug('Specific timeout for Notification ("") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.individualTimeout?.fireTime);
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
 
     if (currentItem.generalTimeout !== undefined && currentItem.generalTimeout.timeLeft() < 0) {
@@ -161,7 +161,7 @@ export default class SonosDeviceNotifications {
         clearTimeout(currentItem.individualTimeout.timeout);
       }
       this.debug('General timeout for Notification ("%s") fired already current Timestamp: %o, FireTime: %o', currentName, (new Date()).getTime(), currentItem.individualTimeout?.fireTime);
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
 
     this.debug('playQueue: Initiating notification playing for current Queue Item ("%s").', currentName);
@@ -194,7 +194,7 @@ export default class SonosDeviceNotifications {
       if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
       this.debug('Playing notification("%s") finished successfully', currentName);
       this.resolvePlayingQueueItem(currentItem, true);
-      return await this.playNextQueueItem(originalState);
+      return this.playNextQueueItem(originalState);
     }
 
     const timeLeft = currentItem.individualTimeout.timeLeft();
@@ -206,7 +206,7 @@ export default class SonosDeviceNotifications {
     if (currentOptions.delayMs !== undefined) await AsyncHelper.Delay(currentOptions.delayMs);
     this.debug('Playing notification("%s") finished with %d ms left on specific timeout', currentName, timeLeft);
 
-    return await this.playNextQueueItem(originalState);
+    return this.playNextQueueItem(originalState);
   }
 
   private resolvePlayingQueueItem(currentItem: NotificationQueueItem, resolveValue: boolean) {
@@ -228,7 +228,7 @@ export default class SonosDeviceNotifications {
 
     if (this.notificationQueue.queue.length > 0) {
       this.debug('There are some items left in the queue --> play them');
-      return await this.playQueue(originalState);
+      return this.playQueue(originalState);
     }
 
     this.debug('There are no items left in the queue --> Resolve Play Queue promise');

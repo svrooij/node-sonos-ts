@@ -32,6 +32,27 @@ sonos.PlayNotification({
   })
 ```
 
+## Notifications with AudioClip
+
+Sonos has a [native](https://developer.sonos.com/reference/control-api/audioclip/) way to play an audio clip through the music, this used to be cloud only functionality. Until [Thomas discovered](https://github.com/bencevans/node-sonos/issues/530#issuecomment-1430039043) it was also available on the local network. We now have experimental support for this audio clip endpoint, which only works on speakers that are compatible with the S2 app, and we are probably going to replace the custom build version with the native version.
+
+The native AudioClip does not pause the music, the clip is played over it, not having to revert back to the original music because it is not replaced. Sample code available in [examples](https://github.com/svrooij/node-sonos-ts/tree/master/examples)
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+
+sonos.PlayNotificationAudioClip({
+    trackUri: 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3', // Can be any uri sonos understands
+    // trackUri: 'https://cdn.smartersoft-group.com/various/someone-at-the-door.mp3', // Cached text-to-speech file.
+    onlyWhenPlaying: false, // make sure that it only plays when you're listening to music. So it won't play when you're sleeping.
+    volume: 15, // Set the volume for the notification (and revert back afterwards)
+  })
+  .then(queued => {
+    console.log('Queued notification %o', queued)
+  })
+```
+
 ## Text to speech
 
 A lot of people want to send text to sonos to use for notifications (or a welcome message in your B&B).
@@ -58,6 +79,25 @@ The server I've build is based on Amazon Polly, but I invite everybody to build 
 ```js
 const SonosDevice = require('@svrooij/sonos').SonosDevice
 const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
+sonos.PlayTTSAudioClip({
+    text: 'Someone at the front-door',
+    lang: 'en-US',
+    gender: 'male',
+    volume: 50,
+    endpoint: 'https://your.tts.endpoint/api/generate'
+  })
+  .then(queued => {
+    console.log('Queued notification %o', queued)
+  })
+```
+
+### TTS AudioClip
+
+Text to speech but with the AudioClip endpoint, see [Notifications with Audio Clip](#notifications-with-audioclip) for differences.
+
+```js
+const SonosDevice = require('@svrooij/sonos').SonosDevice
+const sonos = new SonosDevice(process.env.SONOS_HOST || '192.168.96.56')
 sonos.PlayTTS({
     text: 'Someone at the front-door',
     lang: 'en-US',
@@ -73,6 +113,7 @@ sonos.PlayTTS({
     }, 500)
   })
 ```
+
 
 ## Notifications on all speakers
 

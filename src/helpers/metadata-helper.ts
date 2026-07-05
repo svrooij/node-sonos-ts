@@ -18,7 +18,7 @@ export default class MetadataHelper {
   static ParseDIDLTrack(didl: unknown, host: string, port = 1400): Track | undefined {
     if (typeof didl === 'undefined') return undefined;
     MetadataHelper.debug('Parsing DIDL %o', didl);
-    const parsedItem = didl as {[key: string]: any };
+    const parsedItem = didl as { [key: string]: any };
     const didlItem = (parsedItem['DIDL-Lite'] && parsedItem['DIDL-Lite'].item) ? parsedItem['DIDL-Lite'].item : parsedItem;
     const track: Track = {
       Album: XmlHelper.DecodeHtml(didlItem['upnp:album']),
@@ -27,8 +27,8 @@ export default class MetadataHelper {
       Title: XmlHelper.DecodeHtml(didlItem['dc:title']),
       UpnpClass: didlItem['upnp:class'],
       Duration: undefined,
-      ItemId: didlItem._id,
-      ParentId: didlItem._parentID,
+      ItemId: didlItem.id ?? didlItem._id, // the previous xml parser was prefixing all attributes with _
+      ParentId: didlItem.parentID ?? didlItem.parentID,
       TrackUri: undefined,
       ProtocolInfo: undefined,
     };
@@ -49,14 +49,17 @@ export default class MetadataHelper {
       const uri = Array.isArray(didlItem['upnp:albumArtURI']) ? didlItem['upnp:albumArtURI'][0] : didlItem['upnp:albumArtURI'];
       // Github user @hklages discovered that the album uri sometimes doesn't work because of encoding:
       // See https://github.com/svrooij/node-sonos-ts/issues/93 if you found and album art uri that doesn't work.
-      const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
-      track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
+      if (typeof uri === 'string' && uri.length > 0) {
+        const art = (uri as string).replace(/&amp;/gi, '&'); // .replace(/%25/g, '%').replace(/%3a/gi, ':');
+        track.AlbumArtUri = art.startsWith('http') ? art : `http://${host}:${port}${art}`;
+      }
     }
 
     if (didlItem.res) {
-      track.Duration = didlItem.res._duration;
+      // the previous xml parser was prefixing all attributes with _
+      track.Duration = didlItem.res.duration ?? didlItem.res._duration;
       track.TrackUri = XmlHelper.DecodeTrackUri(didlItem.res['#text']);
-      track.ProtocolInfo = didlItem.res._protocolInfo;
+      track.ProtocolInfo = didlItem.res.protocolInfo ?? didlItem.res._protocolInfo;
     }
 
     return track;
@@ -92,8 +95,8 @@ export default class MetadataHelper {
     return metadata;
   }
 
-  static GuessMetaDataAndTrackUri(trackUri: string, spotifyRegion = '2311'): { trackUri: string; metadata: Track | string } {
-    const metadata = MetadataHelper.GuessTrack(trackUri, spotifyRegion);
+  static GuessMetaDataAndTrackUri(trackUri: string, musicServiceRegion?: string): { trackUri: string; metadata: Track | string } {
+    const metadata = MetadataHelper.GuessTrack(trackUri, musicServiceRegion);
 
     return {
       trackUri: metadata === undefined || metadata.TrackUri === undefined ? trackUri : XmlHelper.DecodeTrackUri(metadata.TrackUri) ?? '',
@@ -101,7 +104,7 @@ export default class MetadataHelper {
     };
   }
 
-  static GuessTrack(trackUri: string, spotifyRegion = '2311'): Track | undefined {
+  static GuessTrack(trackUri: string, musicServiceRegion?: string): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
     // Can someone create a test for the next line.
@@ -149,6 +152,13 @@ export default class MetadataHelper {
       return track;
     }
 
+    if (trackUri.startsWith('x-rincon-mp3radio://http')) {
+      track.TrackUri = trackUri;
+      track.ItemId = '-1';
+      //track.UpnpClass = 'object.item.audioItem.audioBroadcast';
+      return track;
+    }
+
     if (trackUri.startsWith('x-rincon-cpcontainer:1006206ccatalog')) { // Amazon prime container
       track.TrackUri = trackUri;
       track.ItemId = trackUri.replace('x-rincon-cpcontainer:', '');
@@ -181,51 +191,51 @@ export default class MetadataHelper {
 
     const appleAlbumItem = /x-rincon-cpcontainer:1004206c(libraryalbum|album):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (appleAlbumItem) { // Apple Music Album
-      return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2]);
+      return MetadataHelper.appleMetadata(appleAlbumItem[1], appleAlbumItem[2], musicServiceRegion);
     }
 
     const applePlaylistItem = /x-rincon-cpcontainer:1006206c(libraryplaylist|playlist):([.\d\w]+)(?:\?|$)/.exec(trackUri);
     if (applePlaylistItem) { // Apple Music Playlist
-      return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2]);
+      return MetadataHelper.appleMetadata(applePlaylistItem[1], applePlaylistItem[2], musicServiceRegion);
     }
 
     const appleTrackItem = /x-sonos-http:(librarytrack|song):([.\d\w]+)\.mp4\?.*sid=204/.exec(trackUri);
     if (appleTrackItem) { // Apple Music Track
-      return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2]);
+      return MetadataHelper.appleMetadata(appleTrackItem[1], appleTrackItem[2], musicServiceRegion);
     }
 
     if (trackUri.startsWith('x-rincon-cpcontainer:10fe206ctracks-artist-')) { // Deezer Artists Top Tracks
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
-        return MetadataHelper.deezerMetadata('artistTopTracks', numbers[2]);
+        return MetadataHelper.deezerMetadata('artistTopTracks', numbers[2], musicServiceRegion);
       }
     }
 
     if (trackUri.startsWith('x-rincon-cpcontainer:1006006cplaylist_spotify%3aplaylist-')) { // Deezer Playlist
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 3) {
-        return MetadataHelper.deezerMetadata('playlist', numbers[2]);
+        return MetadataHelper.deezerMetadata('playlist', numbers[2], musicServiceRegion);
       }
     }
 
     if (trackUri.startsWith('x-sonos-http:tr%3a') && trackUri.includes('sid=2')) { // Deezer Track
       const numbers = trackUri.match(/\d+/g);
       if (numbers && numbers.length >= 2) {
-        return MetadataHelper.deezerMetadata('track', numbers[1]);
+        return MetadataHelper.deezerMetadata('track', numbers[1], musicServiceRegion);
       }
     }
 
     const parts = trackUri.split(':');
     if ((parts.length === 3 || parts.length === 5) && parts[0] === 'spotify') {
-      return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], spotifyRegion);
+      return MetadataHelper.guessSpotifyMetadata(trackUri, parts[1], musicServiceRegion);
     }
 
     if (parts.length === 3 && parts[0] === 'deezer') {
-      return MetadataHelper.deezerMetadata(parts[1], parts[2]);
+      return MetadataHelper.deezerMetadata(parts[1], parts[2], musicServiceRegion);
     }
 
     if (parts.length === 3 && parts[0] === 'apple') {
-      return MetadataHelper.appleMetadata(parts[1], parts[2]);
+      return MetadataHelper.appleMetadata(parts[1], parts[2], musicServiceRegion);
     }
 
     if (parts.length === 2 && parts[0] === 'radio' && parts[1].startsWith('s')) {
@@ -241,7 +251,8 @@ export default class MetadataHelper {
     return undefined;
   }
 
-  private static guessSpotifyMetadata(trackUri: string, kind: string, region: string): Track | undefined {
+  private static guessSpotifyMetadata(trackUri: string, kind: string, spotifyRegion?: string): Track | undefined {
+    const region = spotifyRegion ?? process.env.SONOS_REGION_SPOTIFY ?? '2311';
     const spotifyUri = trackUri.replace(/:/g, '%3a');
     const track: Track = {
       Title: '',
@@ -293,7 +304,8 @@ export default class MetadataHelper {
     return track;
   }
 
-  private static deezerMetadata(kind: 'album' | 'artistTopTracks' | 'playlist' | 'track' | unknown, id: string, region = '519'): Track | undefined {
+  private static deezerMetadata(kind: 'album' | 'artistTopTracks' | 'playlist' | 'track' | unknown, id: string, deezerRegion?: string): Track | undefined {
+    const region = deezerRegion ?? process.env.SONOS_REGION_DEEZER ?? '519';
     const track: Track = {
       CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,
     };
@@ -325,7 +337,8 @@ export default class MetadataHelper {
   }
 
   private static appleMetadata(kind: 'album' | 'libraryalbum' | 'track' | 'librarytrack' | 'song' | 'playlist' | 'libraryplaylist' | unknown,
-    id: string, region = '52231'): Track | undefined {
+    id: string, appleRegion?: string): Track | undefined {
+    const region = appleRegion ?? process.env.SONOS_REGION_APPLE ?? '52231';
     const track: Track = {
       Title: '',
       CdUdn: `SA_RINCON${region}_X_#Svc${region}-0-Token`,

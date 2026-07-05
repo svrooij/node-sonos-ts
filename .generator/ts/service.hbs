@@ -4,7 +4,7 @@
  * Stephan van Rooij
  * https://svrooij.io
  *
- * This file is generated, do not edit manually. https://svrooij.io/sonos-api-docs
+ * This file is generated, do not edit manually. https://sonos.svrooij.io/
  */
 {{#if data.importUrl}}
 import { URL } from 'url';
@@ -70,18 +70,18 @@ export class {{serviceName}}{{#if data.extended}}Base{{/if}} extends BaseService
    */
   {{/if}}
   {{#if inputs}}
-  async {{name}}(input: { {{#each inputs}}{{name}}: {{relatedStateVariable.dataType}}{{#unless @last}}; {{/unless}}{{/each}} }{{{sonos_if_only_instance_id inputs ' = { InstanceID: 0 }'}}}):
+  {{name}}(input: { {{#each inputs}}{{name}}: {{relatedStateVariable.dataType}}{{#unless @last}}; {{/unless}}{{/each}} }{{{sonos_if_only_instance_id inputs ' = { InstanceID: 0 }'}}}):
   {{#if outputs}}
-  Promise<{{name}}Response> { return await this.SoapRequestWithBody<typeof input, {{name}}Response>('{{name}}', input); }
+  Promise<{{name}}Response> { return this.SoapRequestWithBody<typeof input, {{name}}Response>('{{name}}', input); }
   {{else}}
-  Promise<boolean> { return await this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
+  Promise<boolean> { return this.SoapRequestWithBodyNoResponse<typeof input>('{{name}}', input); }
   {{/if}}
   {{else}}
-  async {{name}}():
+  {{name}}():
   {{#if outputs}}
-  Promise<{{name}}Response> { return await this.SoapRequest<{{name}}Response>('{{name}}'); }
+  Promise<{{name}}Response> { return this.SoapRequest<{{name}}Response>('{{name}}'); }
   {{else}}
-  Promise<boolean> { return await this.SoapRequestNoResponse('{{name}}'); }
+  Promise<boolean> { return this.SoapRequestNoResponse('{{name}}'); }
   {{/if}}
   {{/if}}
   {{#unless @last}}
@@ -91,7 +91,7 @@ export class {{serviceName}}{{#if data.extended}}Base{{/if}} extends BaseService
   // #endregion
   {{#if outputVariables}}
 
-  protected responseProperties(): {[key: string]: string} {
+  protected responseProperties(): { [key: string]: string } {
     return {
     {{#each outputVariables}}
       {{@key}}: '{{{this}}}',
@@ -102,7 +102,7 @@ export class {{serviceName}}{{#if data.extended}}Base{{/if}} extends BaseService
   {{#if eventVariables}}
 
   // Event properties from service description.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     return {
     {{#each eventVariables}}
       {{name}}: '{{#if (or (are_equal name 'Volume') (are_equal name 'Mute'))}}{{#if (are_equal name 'Mute')}}ChannelValue<boolean>{{else}}ChannelValue<number>{{/if}}{{else}}{{{dataType}}}{{/if}}',
@@ -112,7 +112,7 @@ export class {{serviceName}}{{#if data.extended}}Base{{/if}} extends BaseService
   {{else}}
 
   // No properties in service description, throw error on retrieval.
-  protected eventProperties(): {[key: string]: string} {
+  protected eventProperties(): { [key: string]: string } {
     throw new Error('No event properties in service definition');
   }
   {{/if}}

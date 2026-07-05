@@ -21,7 +21,7 @@ export class SystemPropertiesService extends SystemPropertiesServiceBase {
    * @memberof SystemPropertiesService
    */
   public async GetStringSafe(VariableName: string): Promise<string | undefined> {
-    return await this.GetString({ VariableName })
+    return this.GetString({ VariableName })
       .then((resp) => resp.StringValue)
       .catch(() => undefined);
   }

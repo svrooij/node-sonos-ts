@@ -5,7 +5,7 @@ export { BrowseResponse } from './browse-response';
 export { ChannelValue } from './channel-value';
 export * from './sonos-events';
 export { PatchAlarm, Alarm } from './alarm';
-export { PlayMode } from './playmode';
+export { PlayMode, Repeat } from './playmode';
 export * from './requests';
 export { ServiceEvent, ServiceEvents } from './service-event';
 export { SonosDeviceDescription } from './sonos-device-description';

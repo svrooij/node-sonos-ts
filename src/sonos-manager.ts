@@ -7,6 +7,8 @@ import SonosDeviceDiscovery from './sonos-device-discovery';
 import { ServiceEvents, PlayNotificationOptions, PlayTtsOptions } from './models';
 import IpHelper from './helpers/ip-helper';
 import TtsHelper from './helpers/tts-helper';
+import AsyncHelper from './helpers/async-helper';
+import SonosError from './models/sonos-error';
 /**
  * The SonosManager will manage the logical devices for you. It will also manage group updates so be sure to call .Close on exit to remove open listeners.
  *
@@ -14,13 +16,13 @@ import TtsHelper from './helpers/tts-helper';
  * @class SonosManager
  */
 export default class SonosManager {
-  private readonly events: EventEmitter;
+  protected readonly events: EventEmitter;
 
   private readonly debug: Debugger;
 
   private devices: SonosDevice[] = [];
 
-  private zoneService: ZoneGroupTopologyService | undefined;
+  protected zoneService: ZoneGroupTopologyService | undefined;
 
   constructor() {
     this.events = new EventEmitter();
@@ -39,7 +41,7 @@ export default class SonosManager {
     this.debug('InitializeFromDevice %s', host);
     const ip = IpHelper.IsIpv4(host) ? host : await IpHelper.ResolveHostname(host);
     this.zoneService = new ZoneGroupTopologyService(ip, port);
-    return await this.Initialize();
+    return this.Initialize();
   }
 
   /**
@@ -54,29 +56,52 @@ export default class SonosManager {
     const player = await discovery.SearchOne(timeoutInSeconds);
     this.debug('Discovery found player with ip: %s', player.host);
     this.zoneService = new ZoneGroupTopologyService(player.host, player.port);
-    return await this.Initialize();
+    return this.Initialize();
   }
 
   private async Initialize(): Promise<boolean> {
     this.debug('Initialize()');
-    const groups = await this.LoadAllGroups();
+    const groups = await this
+      .LoadAllGroups()
+      .catch((err) => {
+        this.debug('Error loading groups with pull %o', err);
+        if (err instanceof SonosError && err.UpnpErrorCode === 501) {
+          // This happens with big systems, try loading with events
+          return this.LoadAllGroupsWithEvent();
+        }
+        throw err;
+      });
     const success = this.InitializeWithGroups(groups);
     return this.SubscribeForGroupEvents(success);
   }
 
   private async LoadAllGroups(): Promise<ZoneGroup[]> {
+    this.debug('LoadAllGroups()');
     if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
-    return await this.zoneService.GetParsedZoneGroupState();
+    return this.zoneService.GetParsedZoneGroupState();
+  }
+
+  private async LoadAllGroupsWithEvent(): Promise<ZoneGroup[]> {
+    this.debug('LoadAllGroupsWithEvent()');
+    if (this.zoneService === undefined) throw new Error('Manager is\'t initialized');
+    return await AsyncHelper
+      .AsyncEvent<ZoneGroupTopologyServiceEvent>(this.zoneService.Events, ServiceEvents.ServiceEvent, 5)
+      .then((data) => {
+        if (!Array.isArray(data.ZoneGroupState)) {
+          throw new Error('No groups in event');
+        }
+        return data.ZoneGroupState;
+      });
   }
 
   private InitializeWithGroups(groups: ZoneGroup[]): boolean {
     groups.forEach((g) => {
-      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events });
+      const coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { name: g.name, managerEvents: this.events, groupId: g.groupId });
       if (this.devices.findIndex((v) => v.Uuid === coordinator.Uuid) === -1) this.devices.push(coordinator);
       g.members.forEach((m) => {
         // Check if device exists
         if (this.devices.findIndex((v) => v.Uuid === m.uuid) === -1) {
-          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events }));
+          this.devices.push(new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId }))
         }
       });
     });
@@ -97,7 +122,7 @@ export default class SonosManager {
       data.ZoneGroupState.forEach((g) => {
         let coordinator = this.devices.find((d) => d.Uuid === g.coordinator.uuid);
         if (coordinator === undefined) {
-          coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { coordinator: undefined, name: g.name, managerEvents: this.events });
+          coordinator = new SonosDevice(g.coordinator.host, g.coordinator.port, g.coordinator.uuid, g.coordinator.name, { coordinator: undefined, name: g.name, managerEvents: this.events, groupId: g.groupId });
           this.devices.push(coordinator);
           this.events.emit('NewDevice', coordinator);
         }
@@ -106,13 +131,13 @@ export default class SonosManager {
         g.members
           .filter((m) => !this.devices.some((d) => d.Uuid === m.uuid))
           .forEach((m) => {
-            const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events });
+            const newDevice = new SonosDevice(m.host, m.port, m.uuid, m.name, { coordinator: m.uuid === g.coordinator.uuid ? undefined : coordinator, name: g.name, managerEvents: this.events, groupId: g.groupId });
             this.devices.push(newDevice);
             this.events.emit('NewDevice', newDevice);
           });
 
         g.members.forEach((m) => {
-          this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name });
+          this.events.emit(m.uuid, { coordinator: g.coordinator.uuid === m.uuid ? undefined : coordinator, name: g.name, groupId: g.groupId });
         });
       });
     }
@@ -166,8 +191,8 @@ export default class SonosManager {
     this.debug('PlayNotification(%o)', options);
 
     const commands = this.Devices
-      .filter((d) => d.Coordinator.Uuid === d.Uuid)
-      .map((d) => d.PlayNotification(options));
+      .filter((d) => d.IsCoordinator)
+      .map((d) => d.PlayNotification(options).catch(() => false));
     return Promise
       .all(commands)
       .then((values) => values.some((v) => v));
@@ -196,7 +221,7 @@ export default class SonosManager {
       return false;
     }
 
-    return await this.PlayNotification(notificationOptions);
+    return this.PlayNotification(notificationOptions);
   }
 
   /**
@@ -207,6 +232,6 @@ export default class SonosManager {
    */
   public async CheckAllEventSubscriptions(): Promise<void> {
     await this.zoneService?.CheckEventListener();
-    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions()));
+    await Promise.all(this.devices.map((device) => device.RefreshEventSubscriptions().catch()));
   }
 }

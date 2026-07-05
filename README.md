@@ -5,20 +5,22 @@
 [![Sonos api documentation][badge_sonos-docs]][link_sonos-docs]
 [![Sonos2mqtt][badge_sonos-mqtt]][link_sonos-mqtt]
 [![Sonos cli][badge_sonos-cli]][link_sonos-cli]
-[![Join us on Discord][badge_discord]][link_discord]
+
 [![Support me on Github][badge_sponsor]][link_sponsor]
+[![Follow on Twitter][badge_twitter]][link_twitter]
 
 [![Run tests and publish][badge_build]][link_build]
 [![github issues][badge_issues]][link_issues]
-[![Coverage Status](https://coveralls.io/repos/github/svrooij/node-sonos-ts/badge.svg?branch=master)](https://coveralls.io/github/svrooij/node-sonos-ts?branch=master)
-[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](//github.com/semantic-release/semantic-release)
+[![All Contributors][badge_contrib]](#contributors-)
+[![Coverage Status][badge_coverage]](https://coveralls.io/github/svrooij/node-sonos-ts?branch=main)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg?style=for-the-badge)](//github.com/semantic-release/semantic-release)
 
-Typescript library to control your sonos speakers. Can be used in other typescript (or node) apps.
+Typescript library to control your Sonos speakers. Can be used in other typescript (or node) apps.
 
 ---
 ## Key features
 
-- [x] Auto generated client (supporting all features the normal app does). [Sonos api documentation and generator](https://svrooij.io/sonos-api-docs/)
+- [x] Auto generated client (supporting all features the normal app does). [Sonos api documentation and generator][link_sonos-docs]
 - [x] Auto discovery or one known device as starting point.
 - [x] Support for logical devices (grouped speakers) from the start.
 - [x] Access to all (generated) services.
@@ -30,11 +32,11 @@ Typescript library to control your sonos speakers. Can be used in other typescri
 
 To use the library just add it to your project. `npm install @svrooij/sonos`. And start using it. This library isn't meant to be used by itself, as you see in the [examples](./examples) you still need to use node (or typescript).
 
-See **[Documentation](https://svrooij.github.io/node-sonos-ts/getting-started.html)**
+See **[Documentation](https://sonos-ts.svrooij.io/getting-started.html)**
 
-[![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript] [![Join us on Discord][badge_discord]][link_discord]
+[![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
 
-If you need help using this library, [join us on discord][link_discord].
+If you need help using this library, check out the [questions section](https://github.com/svrooij/node-sonos-ts/discussions/categories/q-a) on this repository.
 
 ## Use Sonos manager (recommended)
 
@@ -115,6 +117,7 @@ sonos.PlayTTS({ text: 'Someone at the front-door', lang: 'en-US', gender: 'male'
 |----|----------|----------|
 |[sonos2mqtt](https://github.com/svrooij/sonos2mqtt)|[@svrooij](https://github.com/svrooij)|A bridge between sonos and mqtt, so you can control all your sonos devices right from your mqtt server|
 |[sonos-cli](https://github.com/svrooij/sonos-cli)|[@svrooij](https://github.com/svrooij)|An experimental command line interface for your sonos devices.|
+|[node-red-contrib-sonos-plus](https://github.com/hklages/node-red-contrib-sonos-plus)|[@hklages](https://github.com/hklages)|A node-red node to control your sonos devices|
 
 Also using this library, but not in the list? Send a PR.
 
@@ -124,7 +127,8 @@ Also using this library, but not in the list? Send a PR.
 [![Sonos2mqtt][badge_sonos-mqtt]][link_sonos-mqtt]
 [![Sonos cli][badge_sonos-cli]][link_sonos-cli]
 [![Sonos typescript this library][badge_sonos-typescript]][link_sonos-typescript]
-[![Join us on Discord][badge_discord]][link_discord]
+[![Support me on Github][badge_sponsor]][link_sponsor]
+[![Follow on Twitter][badge_twitter]][link_twitter]
 
 You can contribute in many ways. Asking good questions, solving bugs, sponsoring me on github. This library is build in my spare time, so don't be rude about it.
 
@@ -138,9 +142,7 @@ The values you'll be looking for are `ProtocolInfo`, `TrackUri`, `UpnpClass`, `I
 
 ## Contributors ✨
 
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
+[![All Contributors][badge_contrib]](#contributors-)
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -149,14 +151,16 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <!-- markdownlint-disable -->
 <table>
   <tr>
-    <td align="center"><a href="https://svrooij.nl"><img src="https://avatars2.githubusercontent.com/u/1292510?v=4" width="100px;" alt=""/><br /><sub><b>Stephan van Rooij</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=svrooij" title="Code">💻</a> <a href="https://github.com/svrooij/node-sonos-ts/commits?author=svrooij" title="Documentation">📖</a> <a href="#ideas-svrooij" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-svrooij" title="Maintenance">🚧</a></td>
-    <td align="center"><a href="https://github.com/cheanrod"><img src="https://avatars3.githubusercontent.com/u/35066927?v=4" width="100px;" alt=""/><br /><sub><b>Sven Werner</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=cheanrod" title="Code">💻</a></td>
-    <td align="center"><a href="https://github.com/hklages"><img src="https://avatars3.githubusercontent.com/u/17273119?v=4" width="100px;" alt=""/><br /><sub><b>H. Klages</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=hklages" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://svrooij.nl"><img src="https://avatars2.githubusercontent.com/u/1292510?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stephan van Rooij</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=svrooij" title="Code">💻</a> <a href="https://github.com/svrooij/node-sonos-ts/commits?author=svrooij" title="Documentation">📖</a> <a href="#ideas-svrooij" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-svrooij" title="Maintenance">🚧</a></td>
+    <td align="center"><a href="https://github.com/cheanrod"><img src="https://avatars3.githubusercontent.com/u/35066927?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sven Werner</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=cheanrod" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/hklages"><img src="https://avatars3.githubusercontent.com/u/17273119?v=4?s=100" width="100px;" alt=""/><br /><sub><b>H. Klages</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=hklages" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/jkossis"><img src="https://avatars.githubusercontent.com/u/1247832?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jason Kossis</b></sub></a><br /><a href="https://github.com/svrooij/node-sonos-ts/commits?author=jkossis" title="Code">💻</a></td>
   </tr>
 </table>
 
-<!-- markdownlint-enable -->
+<!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors)
@@ -190,22 +194,24 @@ Most of this library is generated by the [generator](https://github.com/svrooij/
 Creating a library from scratch is quite hard, and I'm using a lot of stuff from
 [node-sonos](https://github.com/bencevans/node-sonos/). That wouldn't exists without the [contributors](https://github.com/bencevans/node-sonos/graphs/contributors).
 
-[badge_build]: https://github.com/svrooij/node-sonos-ts/workflows/Run%20tests%20and%20publish/badge.svg
-[badge_discord]: https://img.shields.io/discord/782374564054564875?style=flat-square
-[badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=flat-square
-[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=flat-square
-[badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=flat-square
-[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=flat-square
-[badge_sonos-mqtt]: https://img.shields.io/badge/sonos-mqtt-blue?style=flat-square
-[badge_sonos-typescript]: https://img.shields.io/badge/sonos-typescript-blue?style=flat-square
-[badge_sponsor]: https://img.shields.io/badge/Sponsor-on%20Github-red?style=flat-square
+[badge_build]: https://img.shields.io/github/actions/workflow/status/svrooij/node-sonos-ts/test-and-release.yml?branch=main&style=for-the-badge
+[badge_contrib]: https://img.shields.io/github/all-contributors/svrooij/node-sonos-ts?style=for-the-badge
+[badge_coverage]: https://img.shields.io/coverallsCoverage/github/svrooij/node-sonos-ts?style=for-the-badge&branch=main
+[badge_issues]: https://img.shields.io/github/issues/svrooij/node-sonos-ts?style=for-the-badge
+[badge_npm]: https://img.shields.io/npm/v/@svrooij/sonos?style=for-the-badge
+[badge_sonos-cli]: https://img.shields.io/badge/sonos-cli-blue?style=for-the-badge
+[badge_sonos-docs]: https://img.shields.io/badge/sonos-api-blue?style=for-the-badge
+[badge_sonos-mqtt]: https://img.shields.io/badge/sonos-mqtt-blue?style=for-the-badge
+[badge_sonos-typescript]: https://img.shields.io/badge/sonos-typescript-blue?style=for-the-badge
+[badge_sponsor]: https://img.shields.io/github/sponsors/svrooij?style=for-the-badge&logo=github
+[badge_twitter]: https://img.shields.io/twitter/follow/svrooij?logo=twitter&style=for-the-badge
 
 [link_build]: https://github.com/svrooij/node-sonos-ts/actions
-[link_discord]: https://discord.gg/VMtG6Ft36J
 [link_issues]: https://github.com/svrooij/node-sonos-ts/issues
 [link_npm]: https://www.npmjs.com/package/@svrooij/sonos
 [link_sonos-cli]: https://github.com/svrooij/sonos-cli
-[link_sonos-docs]: https://svrooij.io/sonos-api-docs
-[link_sonos-mqtt]: https://svrooij.io/sonos2mqtt
-[link_sonos-typescript]: https://svrooij.io/node-sonos-ts
+[link_sonos-docs]: https://sonos.svrooij.io/
+[link_sonos-mqtt]: https://sonos2mqtt.svrooij.io/
+[link_sonos-typescript]: https://sonos-ts.svrooij.io/
 [link_sponsor]: https://github.com/sponsors/svrooij
+[link_twitter]: https://twitter.com/svrooij
