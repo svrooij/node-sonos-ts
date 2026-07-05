@@ -281,7 +281,7 @@ export class SmapiClient {
     }
     if (typeof result.Envelope.Body.Fault !== 'undefined') {
       const fault = result.Envelope.Body.Fault;
-      if (!isRetryWithNewCredentials && fault.faultstring === 'tokenRefreshRequired') {
+      if (!isRetryWithNewCredentials && fault.faultstring['#text'] === SmapiClientErrors.TokenRefreshRequiredError) {
         this.debug('Saving new tokens');
         // Set new tokens, maybe result in event?
         this.authToken = fault.detail?.refreshAuthTokenResult?.authToken;
