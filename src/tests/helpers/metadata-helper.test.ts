@@ -499,6 +499,33 @@ describe('MetadataHelper', () => {
     });
   });
 
+  describe('IsRadioStream', () => {
+    it('returns false for undefined', () => {
+      expect(MetadataHelper.IsRadioStream(undefined)).toBe(false);
+    });
+
+    it.each([
+      'x-sonosapi-stream:s24896?sid=254&flags=8224&sn=0',
+      'x-sonosapi-radio:spotify:artistRadio:1234?sid=9',
+      'x-sonosapi-hls:sn2vrdgs.stream?sid=284',
+      'x-rincon-stream:RINCON_000FFFFFF01400',
+      'x-rincon-mp3radio://http://stream.example.com/live.mp3',
+      'aac:http://stream.example.com/live.aac',
+      'pndrradio:1234?sid=236',
+      'x-sonos-http:track-abc123-DZR:1.mp4?sid=519',
+    ])('returns true for radio-style URI %s', (uri) => {
+      expect(MetadataHelper.IsRadioStream(uri)).toBe(true);
+    });
+
+    it('returns false for a regular Deezer library track', () => {
+      expect(MetadataHelper.IsRadioStream('x-sonos-http:tr:123456789.mp3?sid=519')).toBe(false);
+    });
+
+    it('returns false for a regular skippable track', () => {
+      expect(MetadataHelper.IsRadioStream('x-sonos-spotify:spotify:track:6sYJuVcEu4gFHmeTLdHzRz?sid=9')).toBe(false);
+    });
+  });
+
   describe('ParseDIDLTrack', () => {
     it('returns undefined for undefined input', () => {
       const result = MetadataHelper.ParseDIDLTrack(undefined, 'fake_host');

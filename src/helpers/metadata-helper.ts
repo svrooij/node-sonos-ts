@@ -105,6 +105,36 @@ export default class MetadataHelper {
   }
 
   /**
+   * IsRadioStream checks if a (currently playing) track URI is a live/radio-style stream, as
+   * opposed to a regular skippable track. Useful to decide whether to disable next/previous/
+   * shuffle controls in a UI.
+   *
+   * This is a synchronous, URI-pattern based guess with no device round-trip, intended for
+   * callers that already have a `TrackUri` (e.g. from a `GetPositionInfo` poll or an AVTransport
+   * event) and need an answer on every such event without an extra request per track change.
+   * If a live round-trip to the device is acceptable, `AVTransportService.GetCurrentTransportActions()`
+   * is the more authoritative source, since it reflects the actual current playback session.
+   *
+   * @static
+   * @param {string | undefined} trackUri Internal Sonos track URI (e.g. from currently playing track)
+   * @returns {boolean} true if the URI is a live stream that shouldn't be treated as skippable
+   * @memberof MetadataHelper
+   */
+  static IsRadioStream(trackUri: string | undefined): boolean {
+    if (!trackUri) return false;
+    return trackUri.startsWith('x-sonosapi-stream:')
+      || trackUri.startsWith('x-sonosapi-radio:')
+      || trackUri.startsWith('x-sonosapi-hls:')
+      || trackUri.startsWith('x-rincon-stream:')
+      || trackUri.startsWith('x-rincon-mp3radio:')
+      || trackUri.startsWith('aac:')
+      || trackUri.startsWith('pndrradio:')
+      // Sonos Radio (Deezer-powered) delivers individual tracks via x-sonos-http, but they
+      // are part of a radio stream and not individually skippable.
+      || (trackUri.startsWith('x-sonos-http:') && trackUri.includes('-DZR:'));
+  }
+
+  /**
    * GetSimpleUri will convert an internal Sonos track URI back to a simple service URI
    * that can be used with GuessTrack or GuessMetaDataAndTrackUri.
    *
