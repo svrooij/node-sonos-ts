@@ -1298,5 +1298,20 @@ describe('SonosDevice', () => {
       expect(device.GroupName).toEqual(newGroupName);
       done();
     });
+
+    it('Updates group id', (done) => {
+      const groupName = 'Special sonos group';
+      const groupId = 'RINCON_000FFFFFF4AA01400:1';
+      const newGroupId = 'RINCON_000FFFFFF4AA01400:2';
+      const name = 'Office';
+      const uuid = 'fake-uuid';
+      const emitter = new EventEmitter();
+      const device = new SonosDevice('localhost', 1400, uuid, name, { name: groupName, managerEvents: emitter, groupId });
+      expect(device.GroupId).toEqual(groupId);
+
+      emitter.emit(uuid, { name: groupName, groupId: newGroupId });
+      expect(device.GroupId).toEqual(newGroupId);
+      done();
+    });
   });
 });
