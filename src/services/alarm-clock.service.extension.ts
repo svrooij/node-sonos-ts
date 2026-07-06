@@ -33,9 +33,9 @@ export class AlarmClockService extends AlarmClockServiceBase {
       if (alarm.ID !== undefined) {
         results.push({
           Duration: alarm.Duration,
-          Enabled: alarm.Enabled === '1',
+          Enabled: alarm.Enabled == 1,
           ID: parseInt(alarm.ID, 10),
-          IncludeLinkedZones: alarm.IncludeLinkedZones === '1',
+          IncludeLinkedZones: alarm.IncludeLinkedZones == 1,
           PlayMode: alarm.PlayMode,
           ProgramMetaData: MetadataHelper.ParseDIDLTrack(XmlHelper.DecodeAndParseXml(alarm.ProgramMetaData), this.host, this.port),
           ProgramURI: alarm.ProgramURI, // XmlHelper.DecodeTrackUri(alarm.ProgramURI),

@@ -167,6 +167,20 @@ describe('AlarmClockService', () => {
       expect(alarms).toBeDefined();
       expect(alarms.length).toBe(2);
     });
+
+    it('parses Enabled and IncludeLinkedZones correctly', async () => {
+      TestHelpers.mockAlarmListResponse();
+      const service = new AlarmClockService(TestHelpers.testHost, 1400);
+      const alarms = await service.ListAndParseAlarms();
+      const disabledAlarm = alarms.find(a => a.ID === 1712);
+      const enabledAlarm = alarms.find(a => a.ID === 1715);
+      expect(disabledAlarm).toBeDefined();
+      expect(disabledAlarm?.Enabled).toBe(false);
+      expect(disabledAlarm?.IncludeLinkedZones).toBe(false);
+      expect(enabledAlarm).toBeDefined();
+      expect(enabledAlarm?.Enabled).toBe(true);
+      expect(enabledAlarm?.IncludeLinkedZones).toBe(false);
+    });
   });
 
   describe('PatchAlarm()', () => {
