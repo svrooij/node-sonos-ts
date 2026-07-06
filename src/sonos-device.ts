@@ -918,7 +918,7 @@ export default class SonosDevice extends SonosDeviceBase {
   // #region Group stuff
   private boundHandleGroupUpdate = this.handleGroupUpdate.bind(this);
 
-  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string; groupdId: string | undefined }): void {
+  private handleGroupUpdate(data: { coordinator: SonosDevice | undefined; name: string; groupId: string | undefined }): void {
     if (data.coordinator && data.coordinator?.uuid !== this.Uuid && (!this.coordinator || this.coordinator?.Uuid !== data.coordinator?.Uuid)) {
       this.debug('Coordinator changed for %s', this.uuid);
       this.coordinator?.events?.removeListener('simpleTransportState', this.boundHandleCoordinatorSimpleStateEvent);
@@ -951,8 +951,8 @@ export default class SonosDevice extends SonosDeviceBase {
       }
     }
 
-    if (data.groupdId && data.groupdId !== this.groupId) {
-      this.groupId = data.groupdId;
+    if (data.groupId && data.groupId !== this.groupId) {
+      this.groupId = data.groupId;
       this.debug('GroupId changed for %s to %s', this.uuid, this.groupId);
       if (this.events !== undefined) {
         this.events.emit(SonosEvents.GroupId, this.groupId);
