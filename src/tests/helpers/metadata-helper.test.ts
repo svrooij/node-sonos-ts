@@ -645,6 +645,29 @@ describe('MetadataHelper', () => {
       expect(result).toHaveProperty('ItemId', id);
       done();
     });
+
+    it('decodes r:resMD into the raw DIDL-Lite metadata of the underlying resource', (done) => {
+      const innerDidl = '<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:r="urn:schemas-rinconnetworks-com:metadata-1-0/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/"><item id="F00090020s106914" parentID="F000c0008s106914" restricted="true"><dc:title>Q-Dance Hard</dc:title><upnp:class>object.item.audioItem.audioBroadcast</upnp:class><desc id="cdudn" nameSpace="urn:schemas-rinconnetworks-com:metadata-1-0/">SA_RINCON65031_</desc></item></DIDL-Lite>';
+      // As it arrives from the XML parser, still one level of html-entity-encoding away from innerDidl.
+      const encodedResMd = innerDidl.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      const didl = {
+        'dc:title': 'Q-Dance Hard',
+        'upnp:class': 'object.itemobject.item.sonos-favorite',
+        'r:resMD': encodedResMd,
+      };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('ResMD', innerDidl);
+      done();
+    });
+
+    it('leaves ResMD undefined when r:resMD is absent', (done) => {
+      const didl = { 'dc:title': 'No favorite metadata here' };
+      const result = MetadataHelper.ParseDIDLTrack(didl, 'fake_host');
+      expect(result).toBeDefined();
+      expect(result).toHaveProperty('ResMD', undefined);
+      done();
+    });
   });
 
   describe('TrackToMetaData', () => {
