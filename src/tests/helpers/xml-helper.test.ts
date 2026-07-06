@@ -17,6 +17,32 @@ describe('XmlHelper', () => {
     });
   });
 
+  describe('ParseXml()', () => {
+
+    it('parses xml with unencoded & in url without throwing', () => {
+      const xml = '<root><item url="https://example.com/image?w=60&amp;image=test" /></root>';
+      expect(() => XmlHelper.ParseXml(xml)).not.toThrow();
+    });
+
+    it('parses xml with bare & in attribute value without throwing', () => {
+      const xml = '<root><item url="https://example.com/image?w=60&image=test" /></root>';
+      expect(() => XmlHelper.ParseXml(xml)).not.toThrow();
+    });
+
+    it('parses xml with bare & in text content without throwing', () => {
+      const xml = '<root><item>https://cdn.example.com/i/image?w=60&image=https%3A%2F%2Fcdn-profiles.tune</item></root>';
+      expect(() => XmlHelper.ParseXml(xml)).not.toThrow();
+    });
+
+    it('preserves valid xml entities when sanitizing', () => {
+      const xml = '<root><item title="Rock &amp; Roll" /></root>';
+      expect(() => XmlHelper.ParseXml(xml)).not.toThrow();
+      const result = XmlHelper.ParseXml(xml) as Record<string, unknown>;
+      expect((result['root'] as Record<string, unknown>)['item']).toEqual({ title: 'Rock & Roll' });
+    });
+
+  });
+
   describe('DecodeAndParseXml()', () => {
 
     it('returns undefined when input is undefined', () => {

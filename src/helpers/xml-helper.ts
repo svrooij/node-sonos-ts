@@ -76,7 +76,7 @@ export default class XmlHelper {
     if (input.indexOf('<') === -1) return input;
     const inputToParse = input.indexOf('\\"') > -1 ? input.replace('\\"', '"') : input;
 
-    const xmlDocument = parseXml(inputToParse as string);
+    const xmlDocument = parseXml(this.SanitizeXml(inputToParse as string));
 
     const result = this.NormalizeXml(xmlDocument, true);
     return result;
@@ -84,10 +84,24 @@ export default class XmlHelper {
 
   static ParseXml(input: unknown, removeNamespace = false): Record<string, unknown> | unknown {
     if (typeof input !== 'string' || input === '') return undefined;
-    const xmlDocument = parseXml(input);
+    const xmlDocument = parseXml(this.SanitizeXml(input));
 
     const result = this.NormalizeXml(xmlDocument, removeNamespace);
     return result;
+  }
+
+  /**
+   * SanitizeXml replaces unencoded `&` characters in XML strings with `&amp;`
+   * to prevent XML parsing errors when Sonos returns XML with bare `&` in URLs.
+   *
+   * @static
+   * @param {string} input Raw XML string
+   * @returns {string} Sanitized XML string
+   * @memberof XmlHelper
+   */
+  private static SanitizeXml(input: string): string {
+    // Replace & not already part of a valid XML entity reference or character reference
+    return input.replace(/&(?!(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);)/g, '&amp;');
   }
 
   private static ParseValue(input: unknown): unknown {
