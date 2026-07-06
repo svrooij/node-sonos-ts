@@ -109,6 +109,12 @@ export default class MetadataHelper {
    * opposed to a regular skippable track. Useful to decide whether to disable next/previous/
    * shuffle controls in a UI.
    *
+   * This is a synchronous, URI-pattern based guess with no device round-trip, intended for
+   * callers that already have a `TrackUri` (e.g. from a `GetPositionInfo` poll or an AVTransport
+   * event) and need an answer on every such event without an extra request per track change.
+   * If a live round-trip to the device is acceptable, `AVTransportService.GetCurrentTransportActions()`
+   * is the more authoritative source, since it reflects the actual current playback session.
+   *
    * @static
    * @param {string | undefined} trackUri Internal Sonos track URI (e.g. from currently playing track)
    * @returns {boolean} true if the URI is a live stream that shouldn't be treated as skippable
