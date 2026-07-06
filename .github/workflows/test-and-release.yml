@@ -3,9 +3,7 @@ name: Run tests and publish
 on:
   push:
     branches:
-      - master
-      - beta
-      # - feature/*
+      - main
     paths-ignore:
       - 'docs/**'
       - 'examples/**'
@@ -13,6 +11,7 @@ on:
   pull_request:
     paths-ignore:
       - 'docs/**'
+      - 'examples/**'
       - 'README.md'
   release:
     types: [published]
@@ -23,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [24, 26]
+        node: [26, 24]
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v6
@@ -44,7 +43,7 @@ jobs:
         run: npm run test:jest
 
       - name: Send data to Coveralls
-        if: always() && matrix.node == 24
+        if: always() && matrix.node == 26
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
