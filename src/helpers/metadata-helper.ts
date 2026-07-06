@@ -233,9 +233,11 @@ export default class MetadataHelper {
     }
 
     if (trackUri.startsWith('x-sonosapi-stream:')) {
+      const stationIdMatch = /^x-sonosapi-stream:([^?]+)/.exec(trackUri);
+      const stationId = stationIdMatch ? stationIdMatch[1] : '';
       track.UpnpClass = 'object.item.audioItem.audioBroadcast';
       track.Title = 'Some radio station';
-      track.ItemId = '10092020_xxx_xxxx'; // Add station ID from url (regex?)
+      track.ItemId = `10092020${stationId}`;
       return track;
     }
 
@@ -329,7 +331,7 @@ export default class MetadataHelper {
       const [, stationId] = parts;
       track.UpnpClass = 'object.item.audioItem.audioBroadcast';
       track.Title = 'Some radio station';
-      track.ItemId = '10092020_xxx_xxxx'; // Add station ID from url (regex?)
+      track.ItemId = `10092020${stationId}`;
       track.TrackUri = `x-sonosapi-stream:${stationId}?sid=254&flags=8224&sn=0`;
       return track;
     }

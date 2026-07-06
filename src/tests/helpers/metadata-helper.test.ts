@@ -108,7 +108,16 @@ describe('MetadataHelper', () => {
       expect(track).toBeDefined();
       expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.audioBroadcast');
       expect(track).toHaveProperty('Title', 'Some radio station');
-      expect(track).toHaveProperty('ItemId', '10092020_xxx_xxxx');
+      expect(track).toHaveProperty('ItemId', '10092020s24896');
+    });
+
+    it('Guess metadata for x-sonosapi-stream URI with tunein station id', () => {
+      const uri = 'x-sonosapi-stream:tunein%3a9464?sid=303&flags=8232&sn=2';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toBeDefined();
+      expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.audioBroadcast');
+      expect(track).toHaveProperty('Title', 'Some radio station');
+      expect(track).toHaveProperty('ItemId', '10092020tunein%3a9464');
     });
   });
 
@@ -153,6 +162,7 @@ describe('MetadataHelper', () => {
       expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.audioBroadcast');
       expect(track).toHaveProperty('Title', 'Some radio station');
       expect(track).toHaveProperty('TrackUri', 'x-sonosapi-stream:s24896?sid=254&flags=8224&sn=0');
+      expect(track).toHaveProperty('ItemId', '10092020s24896');
     });
   });
 

@@ -394,7 +394,22 @@ export default class SonosDevice extends SonosDeviceBase {
     const isBroadcast = typeof state.mediaInfo.CurrentURIMetaData !== 'string' // Should not happen, is parsed in the service
                         && state.mediaInfo.CurrentURIMetaData?.UpnpClass === 'object.item.audioItem.audioBroadcast'; // This UpnpClass should for sure be skipped.
 
-    await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: state.mediaInfo.CurrentURI, CurrentURIMetaData: state.mediaInfo.CurrentURIMetaData });
+    let currentURIMetaData: typeof state.mediaInfo.CurrentURIMetaData = state.mediaInfo.CurrentURIMetaData;
+    if (state.mediaInfo.CurrentURI.startsWith('x-sonosapi-stream:') && typeof currentURIMetaData !== 'string') {
+      const storedItemId = currentURIMetaData?.ItemId;
+      if (storedItemId === undefined || String(storedItemId) === '-1') {
+        const guessedTrack = MetadataHelper.GuessTrack(state.mediaInfo.CurrentURI);
+        if (guessedTrack !== undefined) {
+          currentURIMetaData = {
+            ...guessedTrack,
+            Title: currentURIMetaData?.Title ?? guessedTrack.Title,
+            AlbumArtUri: currentURIMetaData?.AlbumArtUri ?? guessedTrack.AlbumArtUri,
+          };
+        }
+      }
+    }
+
+    await this.AVTransportService.SetAVTransportURI({ InstanceID: 0, CurrentURI: state.mediaInfo.CurrentURI, CurrentURIMetaData: currentURIMetaData });
     if (delayBetweenCommands !== undefined) await AsyncHelper.Delay(delayBetweenCommands);
 
     if (state.positionInfo.Track > 1 && state.mediaInfo.NrTracks > 1) {
