@@ -414,6 +414,7 @@ describe('SonosDevice', () => {
       expect(result).toHaveProperty('NumberReturned', 6);
       expect(result).toHaveProperty('TotalMatches', 6);
       expect(result).toHaveProperty('UpdateID', 3);
+      expect(result.Result[0]).toHaveProperty('ResMD', '<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:r="urn:schemas-rinconnetworks-com:metadata-1-0/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/"><item id="10032020spotify%3atrack%3a7nDoBWDvf02SyD8kEQuuPO" parentID="100e206cspotify%3aartistTopTracks%3a5q8HGNo0BjLWaTAhRtbwxa" restricted="true"><dc:title>Bottoms Up</dc:title><upnp:class>object.item.audioItem.musicTrack</upnp:class><desc id="cdudn" nameSpace="urn:schemas-rinconnetworks-com:metadata-1-0/">SA_RINCON2311_X_#Svc2311-0-Token</desc></item></DIDL-Lite>');
     });
   });
 

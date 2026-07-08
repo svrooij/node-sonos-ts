@@ -31,6 +31,7 @@ export default class MetadataHelper {
       ParentId: didlItem.parentID ?? didlItem.parentID,
       TrackUri: undefined,
       ProtocolInfo: undefined,
+      ResMD: XmlHelper.DecodeHtml(didlItem['r:resMD']),
     };
     if (didlItem['r:streamContent'] && typeof didlItem['r:streamContent'] === 'string' && track.Artist === undefined) {
       const streamContent = didlItem['r:streamContent'].split('-');
