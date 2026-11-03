@@ -474,6 +474,7 @@ export default abstract class BaseService <TServiceEvent> {
     this.debug('Cancelling event subscription');
     if (this.eventRenewInterval !== undefined) {
       clearInterval(this.eventRenewInterval);
+      this.eventRenewInterval = undefined;
     }
 
     if (this.sid !== undefined) {
