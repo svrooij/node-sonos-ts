@@ -2,7 +2,7 @@ import {
   XmlCdata,
   XmlComment,
   XmlDeclaration,
-  XmlDocument, XmlDocumentType, XmlElement, XmlProcessingInstruction, XmlText, parseXml,
+  XmlDocument, XmlDocumentType, XmlElement, XmlError, XmlProcessingInstruction, XmlText, parseXml,
 } from '@rgrove/parse-xml';
 import { encode, decode } from 'html-entities';
 
@@ -76,7 +76,7 @@ export default class XmlHelper {
     if (input.indexOf('<') === -1) return input;
     const inputToParse = input.indexOf('\\"') > -1 ? input.replace('\\"', '"') : input;
 
-    const xmlDocument = parseXml(this.SanitizeXml(inputToParse as string));
+    const xmlDocument = this.ParseXmlDocument(inputToParse as string);
 
     const result = this.NormalizeXml(xmlDocument, true);
     return result;
@@ -84,7 +84,7 @@ export default class XmlHelper {
 
   static ParseXml(input: unknown, removeNamespace = false): Record<string, unknown> | unknown {
     if (typeof input !== 'string' || input === '') return undefined;
-    const xmlDocument = parseXml(this.SanitizeXml(input));
+    const xmlDocument = this.ParseXmlDocument(input);
 
     const result = this.NormalizeXml(xmlDocument, removeNamespace);
     return result;
@@ -102,6 +102,63 @@ export default class XmlHelper {
   private static SanitizeXml(input: string): string {
     // Replace & not already part of a valid XML entity reference or character reference
     return input.replace(/&(?!(?:#\d+|#x[0-9a-fA-F]+|[a-zA-Z][a-zA-Z0-9]*);)/g, '&amp;');
+  }
+
+  /**
+   * Parse XML strictly first. If Sonos returned a bare attribute without a
+   * value, remove only that invalid attribute and retry. Other XML errors are
+   * still surfaced to the caller.
+   *
+   * @param {string} input Raw XML string
+   * @returns {XmlDocument} Parsed XML document
+   */
+  private static ParseXmlDocument(input: string): XmlDocument {
+    let xml = this.SanitizeXml(input);
+
+    // A malformed tag can contain multiple bare attributes. Keep the retry
+    // count bounded so unexpected input can never cause an endless loop.
+    for (let attempt = 0; attempt < 16; attempt += 1) {
+      try {
+        return parseXml(xml);
+      } catch (error) {
+        if (!(error instanceof XmlError) || !error.message.startsWith('Attribute value expected')) {
+          throw error;
+        }
+
+        const recovered = this.RemoveMalformedAttribute(xml, error.pos);
+        if (recovered === xml) throw error;
+        xml = recovered;
+      }
+    }
+
+    return parseXml(xml);
+  }
+
+  /**
+   * Remove the bare attribute immediately before a parser error position.
+   * Attribute names are located from the parser-provided offset, so text,
+   * comments, and valid quoted attribute values are left untouched.
+   *
+   * @param {string} input XML string
+   * @param {number} errorPosition Parser error offset
+   * @returns {string} XML with the malformed attribute removed
+   */
+  private static RemoveMalformedAttribute(input: string, errorPosition: number): string {
+    let attributeEnd = errorPosition;
+    while (attributeEnd > 0 && /\s/.test(input[attributeEnd - 1])) attributeEnd -= 1;
+
+    let attributeStart = attributeEnd;
+    while (attributeStart > 0 && /[^\s<>=/'"]/.test(input[attributeStart - 1])) attributeStart -= 1;
+
+    let whitespaceStart = attributeStart;
+    while (whitespaceStart > 0 && /\s/.test(input[whitespaceStart - 1])) whitespaceStart -= 1;
+
+    const tagStart = input.lastIndexOf('<', whitespaceStart);
+    const tagType = input[tagStart + 1];
+    const isStartTag = tagStart >= 0 && !['/', '!', '?'].includes(tagType);
+    if (!isStartTag || whitespaceStart === attributeStart || attributeStart <= tagStart + 1) return input;
+
+    return input.slice(0, whitespaceStart) + input.slice(attributeEnd);
   }
 
   private static ParseValue(input: unknown): unknown {
