@@ -1,4 +1,5 @@
 import MetadataHelper from '../../helpers/metadata-helper';
+import XmlHelper from '../../helpers/xml-helper';
 
 const { GenerateMetadata } = require('./legacy-helpers');
 
@@ -698,6 +699,35 @@ describe('MetadataHelper', () => {
   });
 
   describe('TrackToMetaData', () => {
+    it('escapes XML special characters in track metadata', () => {
+      const metadata = MetadataHelper.TrackToMetaData({
+        ItemId: 'item&"1',
+        ParentId: 'parent<1',
+        TrackUri: 'https://example.com/track?id=1&quality=high',
+        ProtocolInfo: 'http-get:*:audio/mpeg&x="y"',
+        Duration: '00:01:00',
+        AlbumArtUri: 'https://example.com/art?a=1&b=2',
+        Title: 'Rock & Roll',
+        Artist: 'Tom <3',
+        Album: 'Greatest > Hits',
+        UpnpClass: 'object.item&audioItem',
+        CdUdn: 'RINCON&TEST',
+      }, true);
+
+      expect(metadata).toContain('id="item&amp;&quot;1"');
+      expect(metadata).toContain('parentID="parent&lt;1"');
+      expect(metadata).toContain('protocolInfo="http-get:*:audio/mpeg&amp;x=&quot;y&quot;"');
+      expect(metadata).toContain('<res protocolInfo=');
+      expect(metadata).toContain('https://example.com/track?id=1&amp;quality=high</res>');
+      expect(metadata).toContain('https://example.com/art?a=1&amp;b=2</upnp:albumArtURI>');
+      expect(metadata).toContain('<dc:title>Rock &amp; Roll</dc:title>');
+      expect(metadata).toContain('<dc:creator>Tom &lt;3</dc:creator>');
+      expect(metadata).toContain('<upnp:album>Greatest &gt; Hits</upnp:album>');
+      expect(metadata).toContain('<upnp:class>object.item&amp;audioItem</upnp:class>');
+      expect(metadata).toContain('>RINCON&amp;TEST</desc>');
+      expect(() => XmlHelper.ParseXml(metadata)).not.toThrow();
+    });
+
     it('includes resource', () => {
       const trackUri = 'https://cdn.smartersoft-group.com/various/pull-bell-short.mp3';
       const albumUri = 'https://avatars2.githubusercontent.com/u/1292510?v=4'

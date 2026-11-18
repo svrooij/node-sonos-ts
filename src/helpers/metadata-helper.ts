@@ -82,16 +82,17 @@ export default class MetadataHelper {
     const localCdudn = track.CdUdn ?? cdudn;
     const protocolInfo = track.ProtocolInfo ?? 'http-get:*:audio/mpeg:*';
     const itemId = track.ItemId ?? '-1';
+    const encode = (value: string | undefined) => XmlHelper.EncodeXml(`${value}`);
 
     let metadata = '<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:r="urn:schemas-rinconnetworks-com:metadata-1-0/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/">';
-    metadata += `<item id="${itemId}" restricted="true"${track.ParentId !== undefined ? ` parentID="${track.ParentId}">` : '>'}`;
-    if (includeResource) metadata += `<res protocolInfo="${protocolInfo}" duration="${track.Duration}">${track.TrackUri}</res>`;
-    if (track.AlbumArtUri !== undefined) metadata += `<upnp:albumArtURI>${track.AlbumArtUri}</upnp:albumArtURI>`;
-    if (track.Title !== undefined) metadata += `<dc:title>${track.Title}</dc:title>`;
-    if (track.Artist !== undefined) metadata += `<dc:creator>${track.Artist}</dc:creator>`;
-    if (track.Album !== undefined) metadata += `<upnp:album>${track.Album}</upnp:album>`;
-    if (track.UpnpClass !== undefined) metadata += `<upnp:class>${track.UpnpClass}</upnp:class>`;
-    metadata += `<desc id="cdudn" nameSpace="urn:schemas-rinconnetworks-com:metadata-1-0/">${localCdudn}</desc>`;
+    metadata += `<item id="${encode(itemId)}" restricted="true"${track.ParentId !== undefined ? ` parentID="${encode(track.ParentId)}">` : '>'}`;
+    if (includeResource) metadata += `<res protocolInfo="${encode(protocolInfo)}" duration="${encode(track.Duration)}">${encode(track.TrackUri)}</res>`;
+    if (track.AlbumArtUri !== undefined) metadata += `<upnp:albumArtURI>${encode(track.AlbumArtUri)}</upnp:albumArtURI>`;
+    if (track.Title !== undefined) metadata += `<dc:title>${encode(track.Title)}</dc:title>`;
+    if (track.Artist !== undefined) metadata += `<dc:creator>${encode(track.Artist)}</dc:creator>`;
+    if (track.Album !== undefined) metadata += `<upnp:album>${encode(track.Album)}</upnp:album>`;
+    if (track.UpnpClass !== undefined) metadata += `<upnp:class>${encode(track.UpnpClass)}</upnp:class>`;
+    metadata += `<desc id="cdudn" nameSpace="urn:schemas-rinconnetworks-com:metadata-1-0/">${encode(localCdudn)}</desc>`;
     metadata += '</item></DIDL-Lite>';
     return metadata;
   }

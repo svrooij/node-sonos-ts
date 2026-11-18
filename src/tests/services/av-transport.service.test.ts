@@ -4,6 +4,24 @@ import { PlayMode } from '../../models';
 import { AVTransportService } from '../../services/av-transport.service';
 
 describe('AVTransportService', () => {
+  describe('SetAVTransportURI', () => {
+    it('escapes ampersands in the URI in the SOAP request', async () => {
+      TestHelpers.mockRequestToService(
+        '/MediaRenderer/AVTransport/Control',
+        'AVTransport',
+        'SetAVTransportURI',
+        '<InstanceID>0</InstanceID><CurrentURI>http://radio.example/stream.mp3?id=1&amp;quality=high</CurrentURI><CurrentURIMetaData></CurrentURIMetaData>',
+      );
+      const service = new AVTransportService(TestHelpers.testHost);
+
+      await expect(service.SetAVTransportURI({
+        InstanceID: 0,
+        CurrentURI: 'http://radio.example/stream.mp3?id=1&quality=high',
+        CurrentURIMetaData: '',
+      })).resolves.toBe(true);
+    });
+  });
+
   describe('AddURIToQueue', () => {
     it('parses response', async () => {
       const track = 'http://livingears.com/music/SceneNotHeard/091909/Do You Mind Kyla.mp3';

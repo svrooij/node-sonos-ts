@@ -19,7 +19,7 @@ export default class XmlHelper {
     if (typeof text !== 'string' || text === '') {
       return undefined;
     }
-    if (typeof text === 'string' && !text.startsWith('$lt;')) {
+    if (typeof text === 'string' && !text.startsWith('&lt;')) {
       return text;
     }
 
@@ -183,11 +183,11 @@ export default class XmlHelper {
   }
 
   static EncodeTrackUri(trackUri: string): string {
-    if (trackUri.startsWith('http')) return encodeURI(trackUri);
+    if (trackUri.startsWith('http')) return this.EncodeXml(encodeURI(trackUri));
     if (
       trackUri.startsWith('x-sonos-hta')
       || trackUri.startsWith('x-rincon-mp3radio')
-    ) return trackUri;
+    ) return this.EncodeXml(trackUri);
 
     if (trackUri.startsWith('x-rincon-playlist:')) {
       const index = trackUri.indexOf('/');
