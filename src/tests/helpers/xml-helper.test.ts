@@ -56,6 +56,10 @@ describe('XmlHelper', () => {
       const result = XmlHelper.DecodeAndParseXml(xml);
       expect(result).toBeUndefined();
     });
+
+    it('decodes and parses XML encoded with XML entities', () => {
+      expect(XmlHelper.DecodeAndParseXml('&lt;a&gt;x&lt;/a&gt;')).toEqual({ a: 'x' });
+    });
   });
 
   describe('DecodeAndParseXmlNoNS()', () => {
@@ -94,6 +98,14 @@ describe('XmlHelper', () => {
       const uri = 'x-rincon-mp3radio://cde:8000/stream'
       const result = XmlHelper.EncodeTrackUri(uri);
       expect(result).toBe(uri);
+    });
+
+    it.each([
+      'http://radio.example/stream.mp3?id=1&quality=high',
+      'x-rincon-mp3radio://radio.example/stream?id=1&quality=high',
+      'x-sonos-hta://radio.example/stream?id=1&quality=high',
+    ])('escapes ampersands in %s', (uri) => {
+      expect(XmlHelper.EncodeTrackUri(uri)).toBe(uri.replace(/&/g, '&amp;'));
     });
 
     it('encodes a local playlist url correctly', () => {
