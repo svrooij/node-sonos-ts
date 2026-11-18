@@ -41,6 +41,30 @@ describe('XmlHelper', () => {
       expect((result['root'] as Record<string, unknown>)['item']).toEqual({ title: 'Rock & Roll' });
     });
 
+    it('recovers malformed bare attributes in Sonos line-in metadata', () => {
+      const uri = 'x-rincon-stream:RINCON_XXXXXXXXXXXXXXX00:0';
+      const xml = `<DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns:r="urn:schemas-rinconnetworks-com:metadata-1-0/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/"><item id="playback" parentID="0" restricted="false"><dc:title>loadLineIn</dc:title><upnp:class>object.item.audioItem.linein</upnp:class><res x-rincon-stream>${uri}</res></item></DIDL-Lite>`;
+      const result = XmlHelper.ParseXml(xml) as Record<string, unknown>;
+      const didl = result['DIDL-Lite'] as Record<string, unknown>;
+      const item = didl['item'] as Record<string, unknown>;
+
+      expect(item['res']).toBe(uri);
+    });
+
+    it('removes multiple bare attributes while preserving valid attributes', () => {
+      const xml = '<root><item first-invalid second-invalid valid="kept">value</item></root>';
+      const result = XmlHelper.ParseXml(xml) as Record<string, unknown>;
+      const root = result['root'] as Record<string, unknown>;
+
+      expect(root['item']).toEqual({ valid: 'kept', '#text': 'value' });
+    });
+
+    it('still throws for unrelated malformed xml', () => {
+      const xml = '<root><item></root>';
+
+      expect(() => XmlHelper.ParseXml(xml)).toThrow('Missing end tag');
+    });
+
   });
 
   describe('DecodeAndParseXml()', () => {
