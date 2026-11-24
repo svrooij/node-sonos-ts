@@ -223,6 +223,17 @@ export default class MetadataHelper {
     return undefined;
   }
 
+  /**
+   * Decode the percent-encoded last part of an uri, returns the input if it isn't valid percent-encoding.
+   */
+  private static decodeTitle(title: string): string {
+    try {
+      return decodeURIComponent(title);
+    } catch {
+      return title;
+    }
+  }
+
   static GuessTrack(trackUri: string, musicServiceRegion?: string): Track | undefined {
     MetadataHelper.debug('Guessing metadata for %s', trackUri);
     let title = '';
@@ -235,7 +246,7 @@ export default class MetadataHelper {
     };
     if (trackUri.startsWith('x-file-cifs')) {
       track.ItemId = trackUri.replace('x-file-cifs', 'S').replace(/\s/g, '%20');
-      track.Title = title.replace('%20', ' ');
+      track.Title = MetadataHelper.decodeTitle(title);
       track.ParentId = 'A:TRACKS';
       track.UpnpClass = this.GetUpnpClass(track.ParentId);
       track.TrackUri = trackUri;
@@ -257,7 +268,7 @@ export default class MetadataHelper {
       if (parentMatch === null) throw new Error('ParentID not found');
       const parentID = parentMatch[1];
       track.ItemId = `${parentID}/${title.replace(/\s/g, '%20')}`;
-      track.Title = title.replace('%20', ' ');
+      track.Title = MetadataHelper.decodeTitle(title);
       track.UpnpClass = this.GetUpnpClass(parentID);
       track.ParentId = parentID;
       track.CdUdn = 'RINCON_AssociatedZPUDN';
