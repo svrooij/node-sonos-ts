@@ -46,6 +46,18 @@ describe('MetadataHelper', () => {
       expect(track).toHaveProperty('CdUdn', 'RINCON_AssociatedZPUDN');
     });
 
+    it('Decodes all encoded characters in the title of x-file-cifs URI', () => {
+      const uri = 'x-file-cifs://server/music/01%20Caf%c3%a9%20del%20Mar%20%26%20more.mp3';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toHaveProperty('Title', '01 Café del Mar & more');
+      expect(track).toHaveProperty('ItemId', 'S://server/music/01%20Caf%c3%a9%20del%20Mar%20%26%20more.mp3');
+    });
+
+    it('Keeps the title of x-file-cifs URI that is not encoded', () => {
+      const track = MetadataHelper.GuessTrack('x-file-cifs://server/music/100% Pure Love.mp3');
+      expect(track).toHaveProperty('Title', '100% Pure Love');
+    });
+
     it('Extracts title from x-file-cifs URI', () => {
       const uri = 'x-file-cifs://server/music/MySong.mp3';
       const track = MetadataHelper.GuessTrack(uri);
@@ -62,6 +74,13 @@ describe('MetadataHelper', () => {
       expect(track).toHaveProperty('UpnpClass', 'object.item.audioItem.musicTrack');
       expect(track).toHaveProperty('ParentId', 'A:TRACKS');
       expect(track).toHaveProperty('CdUdn', 'RINCON_AssociatedZPUDN');
+    });
+
+    it('Decodes all encoded characters in the title of x-rincon-playlist', () => {
+      const uri = 'x-rincon-playlist:RINCON_XXX#A:ALBUM/The%20Best%20Of%20AC%2fDC';
+      const track = MetadataHelper.GuessTrack(uri);
+      expect(track).toHaveProperty('Title', 'The Best Of AC/DC');
+      expect(track).toHaveProperty('ItemId', 'A:ALBUM/The%20Best%20Of%20AC%2fDC');
     });
 
     it('Guess metadata for x-rincon-playlist from A:ALBUMS', () => {
